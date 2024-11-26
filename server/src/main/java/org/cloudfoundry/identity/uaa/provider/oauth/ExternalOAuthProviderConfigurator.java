@@ -110,7 +110,7 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
             uriBuilder.queryParam("nonce", nonceGenerator.generate());
 
             Map<String, String> additionalParameters = ofNullable(((OIDCIdentityProviderDefinition) definition).getAdditionalAuthzParameters()).orElse(emptyMap());
-            additionalParameters.keySet().stream().forEach(e -> uriBuilder.queryParam(e, additionalParameters.get(e)));
+            additionalParameters.keySet().forEach(e -> uriBuilder.queryParam(e, additionalParameters.get(e)));
         }
 
         return uriBuilder.build().toUriString();
@@ -248,8 +248,7 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
 
     private List<IdentityProvider> overlayConfigurationsOfOidcIdps(final List<IdentityProvider> providers) {
         final List<IdentityProvider> overlayedProviders = new ArrayList<>();
-        providers.stream()
-                .forEach(p -> {
+        providers.forEach(p -> {
                     if (p.getType().equals(OIDC10)) {
                         try {
                             final OIDCIdentityProviderDefinition overlayedDefinition = overlay(

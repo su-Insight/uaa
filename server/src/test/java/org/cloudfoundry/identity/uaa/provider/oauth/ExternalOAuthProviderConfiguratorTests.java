@@ -1,6 +1,6 @@
 package org.cloudfoundry.identity.uaa.provider.oauth;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cloudfoundry.identity.uaa.extensions.PollutionPreventionExtension;
 import org.cloudfoundry.identity.uaa.provider.AbstractExternalOAuthIdentityProviderDefinition;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
@@ -76,8 +76,6 @@ class ExternalOAuthProviderConfiguratorTests {
     private static final AlphanumericRandomValueStringGenerator RANDOM_STRING_GENERATOR =
             new AlphanumericRandomValueStringGenerator(6);
 
-    private final String UAA_BASE_URL = "https://localhost:8443/uaa";
-
     private OIDCIdentityProviderDefinition oidc;
     private RawExternalOAuthIdentityProviderDefinition oauth;
 
@@ -144,7 +142,7 @@ class ExternalOAuthProviderConfiguratorTests {
         oauthProvider.setConfig(new RawExternalOAuthIdentityProviderDefinition());
 
         mockHttpServletRequest = new MockHttpServletRequest();
-        mockHttpServletRequest.setRequestURI(UAA_BASE_URL);
+        mockHttpServletRequest.setRequestURI("https://localhost:8443/uaa");
     }
 
     @Test

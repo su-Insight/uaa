@@ -1,16 +1,11 @@
 package org.cloudfoundry.identity.uaa.provider;
 
-import static java.sql.Types.VARCHAR;
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.joining;
-import static org.cloudfoundry.identity.uaa.util.UaaStringUtils.isNotEmpty;
-
+import lombok.extern.slf4j.Slf4j;
 import org.cloudfoundry.identity.uaa.audit.event.SystemDeletable;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.ObjectUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,10 +25,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.sql.Types.VARCHAR;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.joining;
+import static org.cloudfoundry.identity.uaa.util.UaaStringUtils.isNotEmpty;
+
+@Slf4j
 @Component("identityProviderProvisioning")
 public class JdbcIdentityProviderProvisioning implements IdentityProviderProvisioning, SystemDeletable {
-
-    private static Logger logger = LoggerFactory.getLogger(JdbcIdentityProviderProvisioning.class);
 
     public static final String ID_PROVIDER_FIELDS = "id,version,created,lastmodified,name,origin_key,type,config,identity_zone_id,active,alias_id,alias_zid,external_key";
 
@@ -221,7 +220,7 @@ public class JdbcIdentityProviderProvisioning implements IdentityProviderProvisi
 
     @Override
     public Logger getLogger() {
-        return logger;
+        return log;
     }
 
     private static final class IdentityProviderRowMapper implements RowMapper<IdentityProvider> {

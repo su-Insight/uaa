@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UaaAuthenticationFailureHandler implements AuthenticationFailureHandler, LogoutHandler {
-    private ExceptionMappingAuthenticationFailureHandler delegate;
-    private CurrentUserCookieFactory currentUserCookieFactory;
+    private final ExceptionMappingAuthenticationFailureHandler delegate;
+    private final CurrentUserCookieFactory currentUserCookieFactory;
 
     public UaaAuthenticationFailureHandler(ExceptionMappingAuthenticationFailureHandler delegate, CurrentUserCookieFactory currentUserCookieFactory) {
         this.delegate = delegate;
@@ -39,13 +39,12 @@ public class UaaAuthenticationFailureHandler implements AuthenticationFailureHan
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         addCookie(response);
-        if(exception != null) {
-            if (exception instanceof PasswordChangeRequiredException) {
-                SessionUtils.setForcePasswordExpiredUser(request.getSession(),
-                        ((PasswordChangeRequiredException) exception).getAuthentication());
-            }
+        if (exception instanceof PasswordChangeRequiredException passwordChangeRequiredException) {
+            SessionUtils.setForcePasswordExpiredUser(request.getSession(),
+                    passwordChangeRequiredException.getAuthentication());
         }
-        if (delegate!=null) {
+
+        if (delegate != null) {
             delegate.onAuthenticationFailure(request, response, exception);
         }
     }
