@@ -18,7 +18,7 @@ import org.cloudfoundry.identity.uaa.audit.AuditEventType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-public class ClientAuthenticationFailureEvent extends AbstractUaaAuthenticationEvent{
+public class ClientAuthenticationFailureEvent extends AbstractUaaAuthenticationEvent {
 
     private String clientId;
     private AuthenticationException ex;
@@ -32,7 +32,7 @@ public class ClientAuthenticationFailureEvent extends AbstractUaaAuthenticationE
     @Override
     public AuditEvent getAuditEvent() {
         return createAuditRecord(clientId, AuditEventType.ClientAuthenticationFailure,
-            getOrigin(getAuthenticationDetails()), ex.getMessage());
+                getOrigin(getAuthenticationDetails()), ex.getMessage());
     }
 
     public String getClientId() {

@@ -70,14 +70,14 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
         test_oauth_authorize_without_csrf();
         MockHttpSession session = getAuthenticatedSession(user1);
         mockMvc.perform(
-            post("/profile")
-                .with(cookieCsrf())
-                .param("delete", "true")
-                .param("clientId", client1.getClientId())
-                .session(session)
+                post("/profile")
+                        .with(cookieCsrf())
+                        .param("delete", "true")
+                        .param("clientId", client1.getClientId())
+                        .session(session)
         )
-            .andExpect(status().isFound())
-            .andExpect(header().string("Location", "profile"));
+        .andExpect(status().isFound())
+                .andExpect(header().string("Location", "profile"));
 
     }
 
@@ -86,14 +86,14 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
         test_oauth_authorize_without_csrf();
         MockHttpSession session = getAuthenticatedSession(user1);
         mockMvc.perform(
-            post("/profile")
-                .with(cookieCsrf())
-                .param("delete", "true")
-                .param("clientId", "invalid_id")
-                .session(session)
+                post("/profile")
+                        .with(cookieCsrf())
+                        .param("delete", "true")
+                        .param("clientId", "invalid_id")
+                        .session(session)
         )
-            .andExpect(status().isFound())
-            .andExpect(header().string("Location", "profile?error_message_code=request.invalid_parameter"));
+        .andExpect(status().isFound())
+                .andExpect(header().string("Location", "profile?error_message_code=request.invalid_parameter"));
     }
 
     @Test
@@ -102,12 +102,12 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
 
         MockHttpSession session = getAuthenticatedSession(user1);
         mockMvc.perform(
-            get("/oauth/authorize")
-                .session(session)
-                .param(RESPONSE_TYPE, "code")
-                .param(STATE, state)
-                .param(CLIENT_ID, client1.getClientId()))
-            .andExpect(status().isOk()); //200 means the approvals page
+                get("/oauth/authorize")
+                        .session(session)
+                        .param(RESPONSE_TYPE, "code")
+                        .param(STATE, state)
+                        .param(CLIENT_ID, client1.getClientId()))
+                .andExpect(status().isOk()); //200 means the approvals page
 
 
         assertNotNull(session.getAttribute(UaaAuthorizationEndpoint.AUTHORIZATION_REQUEST));
@@ -115,48 +115,48 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
 
         //no token
         mockMvc.perform(
-            post("/oauth/authorize")
-                .session(session)
-                .param(USER_OAUTH_APPROVAL, "true")
-                .param("scope.0","scope.test.scope1")
+                post("/oauth/authorize")
+                        .session(session)
+                        .param(USER_OAUTH_APPROVAL, "true")
+                        .param("scope.0", "scope.test.scope1")
         )
-            .andExpect(status().is4xxClientError());
+        .andExpect(status().is4xxClientError());
 
         //invalid token
         mockMvc.perform(
-            post("/oauth/authorize")
-                .with(cookieCsrf().useInvalidToken())
-                .session(session)
-                .param(USER_OAUTH_APPROVAL, "true")
-                .param("scope.0","scope.test.scope1")
+                post("/oauth/authorize")
+                        .with(cookieCsrf().useInvalidToken())
+                        .session(session)
+                        .param(USER_OAUTH_APPROVAL, "true")
+                        .param("scope.0", "scope.test.scope1")
         )
-            .andExpect(status().is4xxClientError());
+        .andExpect(status().is4xxClientError());
 
         assertNotNull(session.getAttribute(UaaAuthorizationEndpoint.AUTHORIZATION_REQUEST));
         assertNotNull(session.getAttribute(UaaAuthorizationEndpoint.ORIGINAL_AUTHORIZATION_REQUEST));
 
         //valid token
         mockMvc.perform(
-            post("/oauth/authorize")
-                .with(cookieCsrf())
-                .session(session)
-                .param(USER_OAUTH_APPROVAL, "true")
-                .param("scope.0","scope.test.scope1")
-                .param("scope.1","scope.test.scope2")
+                post("/oauth/authorize")
+                        .with(cookieCsrf())
+                        .session(session)
+                        .param(USER_OAUTH_APPROVAL, "true")
+                        .param("scope.0", "scope.test.scope1")
+                        .param("scope.1", "scope.test.scope2")
         )
-            .andExpect(status().isFound())
-            .andExpect(redirectedUrlPattern("**/*code=*"));
+        .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("**/*code=*"));
 
         assertNull(session.getAttribute(UaaAuthorizationEndpoint.AUTHORIZATION_REQUEST));
         assertNull(session.getAttribute(UaaAuthorizationEndpoint.ORIGINAL_AUTHORIZATION_REQUEST));
 
         mockMvc.perform(
-            get("/oauth/authorize")
-                .session(session)
-                .param(RESPONSE_TYPE, "code")
-                .param(STATE, state)
-                .param(CLIENT_ID, client1.getClientId()))
-            .andExpect(status().isFound()); //approval page no longer showing up
+                get("/oauth/authorize")
+                        .session(session)
+                        .param(RESPONSE_TYPE, "code")
+                        .param(STATE, state)
+                        .param(CLIENT_ID, client1.getClientId()))
+                .andExpect(status().isFound()); //approval page no longer showing up
     }
 
     @Test
@@ -165,28 +165,28 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
 
         MockHttpSession session = getAuthenticatedSession(user1);
         mockMvc.perform(
-            get("/oauth/authorize")
-                .session(session)
-                .param(RESPONSE_TYPE, "code")
-                .param(STATE, state)
-                .param(CLIENT_ID, client1.getClientId()))
-            .andExpect(status().isOk()); //200 means the approvals page
+                get("/oauth/authorize")
+                        .session(session)
+                        .param(RESPONSE_TYPE, "code")
+                        .param(STATE, state)
+                        .param(CLIENT_ID, client1.getClientId()))
+                .andExpect(status().isOk()); //200 means the approvals page
 
 
         assertNotNull(session.getAttribute(UaaAuthorizationEndpoint.AUTHORIZATION_REQUEST));
         assertNotNull(session.getAttribute(UaaAuthorizationEndpoint.ORIGINAL_AUTHORIZATION_REQUEST));
 
         mockMvc.perform(
-            post("/oauth/authorize")
-                .with(cookieCsrf())
-                .session(session)
-                .param(USER_OAUTH_APPROVAL, "true")
-                .param("scope.0","scope.different.scope")
-                .param("scope.1","scope.test.scope2")
+                post("/oauth/authorize")
+                        .with(cookieCsrf())
+                        .session(session)
+                        .param(USER_OAUTH_APPROVAL, "true")
+                        .param("scope.0", "scope.different.scope")
+                        .param("scope.1", "scope.test.scope2")
         )
         .andDo(print())
-        .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrlPattern("http://test.example.org/redirect?error=invalid_scope&error_description=The%20requested%20scopes%20are%20invalid.%20Please%20use%20valid%20scope%20names%20in%20the%20request*"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("http://test.example.org/redirect?error=invalid_scope&error_description=The%20requested%20scopes%20are%20invalid.%20Please%20use%20valid%20scope%20names%20in%20the%20request*"));
 
         assertNull(session.getAttribute(UaaAuthorizationEndpoint.AUTHORIZATION_REQUEST));
         assertNull(session.getAttribute(UaaAuthorizationEndpoint.ORIGINAL_AUTHORIZATION_REQUEST));
@@ -197,11 +197,11 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
         test_oauth_authorize_without_csrf();
         MockHttpSession session = getAuthenticatedSession(user1);
         mockMvc.perform(
-            get("/profile")
-                .session(session)
+                get("/profile")
+                        .session(session)
         )
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString(client1.getClientId() + "-test.scope1")));
+        .andExpect(status().isOk())
+                .andExpect(content().string(containsString(client1.getClientId() + "-test.scope1")));
     }
 
     @Test
@@ -209,23 +209,23 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
         test_get_approvals();
         MockHttpSession session = getAuthenticatedSession(user1);
         MockHttpServletRequestBuilder post = post("/profile")
-            .session(session)
-            .param("checkScopes", client1.getClientId() + "-test.scope1", client1.getClientId() + "-test.scope2");
+                .session(session)
+                .param("checkScopes", client1.getClientId() + "-test.scope1", client1.getClientId() + "-test.scope2");
         mockMvc.perform(
-            post
+                post
         )
-            .andDo(print())
-            .andExpect(status().isForbidden());
+        .andDo(print())
+                .andExpect(status().isForbidden());
 
         mockMvc.perform(
-            post.with(cookieCsrf().useInvalidToken())
+                post.with(cookieCsrf().useInvalidToken())
         ).andExpect(status().isForbidden());
 
         mockMvc.perform(
-            post.with(cookieCsrf())
+                post.with(cookieCsrf())
         )
-            .andExpect(status().isFound())
-            .andExpect(redirectedUrlPattern("**/profile"));
+        .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("**/profile"));
     }
 
     public MockHttpSession getAuthenticatedSession(ScimUser user) {
@@ -236,8 +236,8 @@ public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
         SecurityContextHolder.getContext().setAuthentication(auth);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(
-            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-            new MockMvcUtils.MockSecurityContext(auth)
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                new MockMvcUtils.MockSecurityContext(auth)
         );
         return session;
     }

@@ -29,7 +29,7 @@ public class SamlLoginAuthenticationFailureHandler extends SimpleUrlAuthenticati
 
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response,
-                                        final AuthenticationException exception) throws IOException, ServletException {
+            final AuthenticationException exception) throws IOException, ServletException {
 
         String redirectTo = null;
         if (exception instanceof SamlLoginException) {

@@ -37,9 +37,9 @@ public class UaaDelegatingLogoutSuccessHandler implements LogoutSuccessHandler {
     private final RelyingPartyRegistrationResolver relyingPartyRegistrationResolver;
 
     public UaaDelegatingLogoutSuccessHandler(ZoneAwareWhitelistLogoutSuccessHandler zoneAwareWhitelistLogoutHandler,
-                                             Saml2RelyingPartyInitiatedLogoutSuccessHandler saml2RelyingPartyInitiatedLogoutSuccessHandler,
-                                             ExternalOAuthLogoutSuccessHandler externalOAuthLogoutHandler,
-                                             RelyingPartyRegistrationResolver relyingPartyRegistrationResolver) {
+            Saml2RelyingPartyInitiatedLogoutSuccessHandler saml2RelyingPartyInitiatedLogoutSuccessHandler,
+            ExternalOAuthLogoutSuccessHandler externalOAuthLogoutHandler,
+            RelyingPartyRegistrationResolver relyingPartyRegistrationResolver) {
         this.zoneAwareWhitelistLogoutHandler = zoneAwareWhitelistLogoutHandler;
         this.saml2RelyingPartyInitiatedLogoutSuccessHandler = saml2RelyingPartyInitiatedLogoutSuccessHandler;
         this.externalOAuthLogoutHandler = externalOAuthLogoutHandler;

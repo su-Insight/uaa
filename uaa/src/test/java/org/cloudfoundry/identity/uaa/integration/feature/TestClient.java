@@ -44,7 +44,7 @@ public class TestClient {
     private final String baseUrl;
 
     public TestClient(final RestTemplate restTemplate,
-                      final String baseUrl) {
+            final String baseUrl) {
         this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
     }
@@ -56,6 +56,7 @@ public class TestClient {
     public String getOAuthAccessToken(String username, String password, String grantType, String scope) {
         return getOAuthAccessToken(baseUrl, username, password, grantType, scope);
     }
+
     public String getOAuthAccessToken(String baseUrl, String username, String password, String grantType, String scope) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", getBasicAuthHeaderValue(username, password));
@@ -63,7 +64,9 @@ public class TestClient {
         MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<String, String>();
         postParameters.add("grant_type", grantType);
         postParameters.add("client_id", username);
-        if(scope != null) { postParameters.add("scope", scope); }
+        if (scope != null) {
+            postParameters.add("scope", scope);
+        }
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(postParameters, headers);
 
@@ -74,9 +77,9 @@ public class TestClient {
 
     public void createClient(String adminAccessToken, UaaClientDetails clientDetails) {
         restfulCreate(
-            adminAccessToken,
-            JsonUtils.writeValueAsString(clientDetails),
-            baseUrl + "/oauth/clients"
+                adminAccessToken,
+                JsonUtils.writeValueAsString(clientDetails),
+                baseUrl + "/oauth/clients"
         );
     }
 

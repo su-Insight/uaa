@@ -33,7 +33,7 @@ public class ClientMetadataAdminEndpoints {
 
     public ClientMetadataAdminEndpoints(final @Qualifier("jdbcClientMetadataProvisioning") ClientMetadataProvisioning clientMetadataProvisioning) {
         this.clientMetadataProvisioning = clientMetadataProvisioning;
-        this.messageConverters = new HttpMessageConverter[] {
+        this.messageConverters = new HttpMessageConverter[]{
                 new ExceptionReportHttpMessageConverter()
         };
     }
@@ -60,7 +60,7 @@ public class ClientMetadataAdminEndpoints {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ClientMetadata updateClientMetadata(@RequestBody ClientMetadata clientMetadata,
-                                               @PathVariable("client") String clientId) {
+            @PathVariable("client") String clientId) {
 
         if (StringUtils.hasText(clientMetadata.getClientId())) {
             if (!clientId.equals(clientMetadata.getClientId())) {

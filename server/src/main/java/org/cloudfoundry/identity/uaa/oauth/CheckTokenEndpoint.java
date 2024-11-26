@@ -66,7 +66,7 @@ public class CheckTokenEndpoint implements InitializingBean {
     private Boolean allowQueryString = null;
 
     public boolean isAllowQueryString() {
-        return (allowQueryString == null) ? true : allowQueryString;
+        return allowQueryString == null ? true : allowQueryString;
     }
 
     @Autowired
@@ -83,9 +83,9 @@ public class CheckTokenEndpoint implements InitializingBean {
     @RequestMapping(value = "/check_token", method = POST)
     @ResponseBody
     @Deprecated
-    public Claims checkToken(@RequestParam(name = "token",  required = false, defaultValue = "") String value,
-                             @RequestParam(name = "scopes", required = false, defaultValue = "") List<String> scopes,
-                             HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
+    public Claims checkToken(@RequestParam(name = "token", required = false, defaultValue = "") String value,
+            @RequestParam(name = "scopes", required = false, defaultValue = "") List<String> scopes,
+            HttpServletRequest request) throws HttpRequestMethodNotSupportedException {
 
         if (!hadParsedAllArgs(request)) {
             throw new ParameterParsingException();

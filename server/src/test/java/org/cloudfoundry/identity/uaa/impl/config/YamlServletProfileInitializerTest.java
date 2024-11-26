@@ -483,8 +483,8 @@ class YamlServletProfileInitializerTest {
             String validFileName = createRandomSecretsFile();
             String inValidFileName = createSecretsFile("doesNotEndInYml");
 
-            when(context.getResource("file:" + validFileName)).thenReturn(new ByteArrayResource(("isValid: true").getBytes()));
-            when(context.getResource("file:" + inValidFileName)).thenReturn(new ByteArrayResource(("isNotValid: true").getBytes()));
+            when(context.getResource("file:" + validFileName)).thenReturn(new ByteArrayResource("isValid: true".getBytes()));
+            when(context.getResource("file:" + inValidFileName)).thenReturn(new ByteArrayResource("isNotValid: true".getBytes()));
 
             initializer.initialize(context);
             assertEquals("true", environment.getProperty("isValid"));
@@ -509,11 +509,11 @@ class YamlServletProfileInitializerTest {
     }
 
     private static void assertActiveProfilesAre(
-        final AbstractEnvironment environment,
-        final String... profiles
+            final AbstractEnvironment environment,
+            final String... profiles
     ) {
         assertThat(Arrays.asList(environment.getActiveProfiles()),
-            containsInAnyOrder(profiles));
+                containsInAnyOrder(profiles));
     }
 
 }

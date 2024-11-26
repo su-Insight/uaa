@@ -102,7 +102,7 @@ class TokenKeyEndpointDocs extends EndpointDocs {
                         ASYMM_TOKEN_KEY_REQUEST_HEADERS,
                         responseFields,
                         TOKEN_KEY_RESPONSE_HEADERS
-                        )
+                )
                 );
     }
 
@@ -111,7 +111,7 @@ class TokenKeyEndpointDocs extends EndpointDocs {
         setUp("key");
         try {
             String basicDigestHeaderValue = "Basic "
-                    + new String(Base64.encodeBase64(("app:appclientsecret").getBytes()));
+                    + new String(Base64.encodeBase64("app:appclientsecret".getBytes()));
 
             Snippet responseFields = responseFields(
                     fieldWithPath("kid").type(STRING).description("Key ID of key to be used for verification of the token."),
@@ -139,7 +139,7 @@ class TokenKeyEndpointDocs extends EndpointDocs {
     @Test
     void checkTokenKeysValues() throws Exception {
         String basicDigestHeaderValue = "Basic "
-                + new String(Base64.encodeBase64(("app:appclientsecret").getBytes()));
+                + new String(Base64.encodeBase64("app:appclientsecret".getBytes()));
 
         Snippet responseFields = responseFields(
                 fieldWithPath("keys.[].kid").type(STRING).description("Key ID of key to be used for verification of the token."),
@@ -157,7 +157,7 @@ class TokenKeyEndpointDocs extends EndpointDocs {
                         .header("Authorization", basicDigestHeaderValue)
                         .header("If-None-Match", "1501570800000")
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andDo(
                         document(
                                 "{ClassName}/{methodName}",

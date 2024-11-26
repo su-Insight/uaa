@@ -28,14 +28,14 @@ public class PrincipalAuthenticationFailureEvent extends AbstractUaaPrincipalEve
     private String name;
 
     public PrincipalAuthenticationFailureEvent(String name, UaaAuthenticationDetails details, String zoneId) {
-        super(details==null?UaaAuthenticationDetails.UNKNOWN:details, zoneId);
+        super(details == null ? UaaAuthenticationDetails.UNKNOWN : details, zoneId);
         this.name = name;
     }
 
     @Override
     public AuditEvent getAuditEvent() {
         return createAuditRecord(name, AuditEventType.PrincipalAuthenticationFailure,
-                        getOrigin(getAuthenticationDetails()));
+                getOrigin(getAuthenticationDetails()));
     }
 
     public String getName() {

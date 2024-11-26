@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public abstract class ScimCore<T extends ScimCore> {
 
-    public static final String[] SCHEMAS = new String[] { "urn:scim:schemas:core:1.0" };
+    public static final String[] SCHEMAS = new String[]{"urn:scim:schemas:core:1.0"};
 
     private String id;
 

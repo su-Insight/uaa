@@ -52,7 +52,7 @@ public class UaaMapUtils {
 
 
     public static Map<String, Object> getPropertiesStartingWith(ConfigurableEnvironment aEnv,
-                                                                String aKeyPrefix) {
+            String aKeyPrefix) {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> map = getAllProperties(aEnv);
         for (Entry<String, Object> entry : map.entrySet()) {
@@ -112,24 +112,24 @@ public class UaaMapUtils {
         return new AbstractMap.SimpleEntry<>(key, value);
     }
 
-    public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeys(Map<K,V> map) {
+    public static <K extends Comparable<? super K>, V> Map<K, V> sortByKeys(Map<K, V> map) {
         List<Entry<K, V>> sortedEntries = map
-            .entrySet()
-            .stream()
-            .sorted(comparingByKey())
-            .collect(Collectors.toList());
+                .entrySet()
+                .stream()
+                .sorted(comparingByKey())
+                .collect(Collectors.toList());
         LinkedHashMap<K, V> result = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : sortedEntries) {
             Object value = entry.getValue();
             if (value instanceof Map) {
                 value = sortByKeys((Map) value);
             }
-            result.put(entry.getKey(), (V)value);
+            result.put(entry.getKey(), (V) value);
         }
         return result;
     }
 
-    public static <K extends Comparable<? super K>, V> String prettyPrintYaml(Map<K,V> map) {
+    public static <K extends Comparable<? super K>, V> String prettyPrintYaml(Map<K, V> map) {
         Yaml yaml = new Yaml(UaaYamlUtils.getDefaultDumperOptions());
         return yaml.dump(sortByKeys(map));
     }
@@ -147,11 +147,11 @@ public class UaaMapUtils {
             Object value = map.get(key);
             if (value == null) {
                 result.put(key, value);
-             } else if (value instanceof Map) {
+            } else if (value instanceof Map) {
                 @SuppressWarnings("unchecked")
                 Map<String, ?> bare = (Map<String, ?>) value;
                 result.put(key, redactValues(bare));
-            } else if (value instanceof String && StringUtils.isEmpty(value)){
+            } else if (value instanceof String && StringUtils.isEmpty(value)) {
                 result.put(key, "");
             } else {
                 result.put(key, "<redacted>");

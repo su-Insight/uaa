@@ -59,12 +59,13 @@ public final class UaaTokenUtils {
 
     public static final Pattern jwtPattern = Pattern.compile("[a-zA-Z0-9_\\-\\\\=]*\\.[a-zA-Z0-9_\\-\\\\=]*\\.[a-zA-Z0-9_\\-\\\\=]*");
 
-    private UaaTokenUtils() { }
+    private UaaTokenUtils() {
+    }
 
     public static String getRevocationHash(List<String> salts) {
         String result = "";
         for (String s : salts) {
-            byte[] hashable = (result+ "###" + s).getBytes();
+            byte[] hashable = (result + "###" + s).getBytes();
             result = Integer.toHexString(murmurhash3x8632(hashable, 0, hashable.length, 0xF0F0));
         }
         return result;
@@ -100,13 +101,13 @@ public final class UaaTokenUtils {
         // tail
         int k1 = 0;
 
-        switch(len & 0x03) {
+        switch (len & 0x03) {
             case 3:
                 k1 = (data[roundedEnd + 2] & 0xff) << 16;
-                // fallthrough
+            // fallthrough
             case 2:
                 k1 |= (data[roundedEnd + 1] & 0xff) << 8;
-                // fallthrough
+            // fallthrough
             case 1:
                 k1 |= data[roundedEnd] & 0xff;
                 k1 *= c1;
@@ -131,7 +132,7 @@ public final class UaaTokenUtils {
 
     public static Set<String> retainAutoApprovedScopes(Collection<String> requestedScopes, Set<String> autoApprovedScopes) {
         HashSet<String> result = new HashSet<>();
-        if(autoApprovedScopes == null){
+        if (autoApprovedScopes == null) {
             return result;
         }
         if (autoApprovedScopes.contains("true")) {
@@ -149,10 +150,10 @@ public final class UaaTokenUtils {
     }
 
     public static boolean isUserToken(Map<String, Object> claims) {
-        if (claims.get(GRANT_TYPE)!=null) {
+        if (claims.get(GRANT_TYPE) != null) {
             return !GRANT_TYPE_CLIENT_CREDENTIALS.equals(claims.get(GRANT_TYPE));
         }
-        if (claims.get(SUB)!=null) {
+        if (claims.get(SUB) != null) {
             if (claims.get(SUB).equals(claims.get(USER_ID))) {
                 return true;
             } else if (claims.get(SUB).equals(claims.get(CID))) {
@@ -171,19 +172,19 @@ public final class UaaTokenUtils {
     }
 
     public static String getRevocableTokenSignature(UaaUser user, String tokenSalt, String clientId, String clientSecret) {
-        String[] salts = new String[] {
-            clientId,
-            clientSecret,
-            tokenSalt,
-            user == null ? null : user.getId(),
-            user == null ? null : user.getPassword(),
-            user == null ? null : user.getSalt(),
-            user == null ? null : user.getEmail(),
-            user == null ? null : user.getUsername(),
+        String[] salts = new String[]{
+                clientId,
+                clientSecret,
+                tokenSalt,
+                user == null ? null : user.getId(),
+                user == null ? null : user.getPassword(),
+                user == null ? null : user.getSalt(),
+                user == null ? null : user.getEmail(),
+                user == null ? null : user.getUsername(),
         };
         List<String> saltlist = new LinkedList<>();
         for (String s : salts) {
-            if (s!=null) {
+            if (s != null) {
                 saltlist.add(s);
             }
         }
@@ -210,7 +211,7 @@ public final class UaaTokenUtils {
         URI uri;
         if (!identityZone.isUaa()) {
             String zone_issuer = identityZone.getConfig() != null ? identityZone.getConfig().getIssuer() : null;
-            if(zone_issuer != null) {
+            if (zone_issuer != null) {
                 uri = validateIssuer(zone_issuer);
                 return UriComponentsBuilder.fromUri(uri).pathSegment("oauth/token").build().toUriString();
             }
@@ -234,16 +235,16 @@ public final class UaaTokenUtils {
 
     public static boolean hasRequiredUserAuthorities(Collection<String> requiredGroups, Collection<? extends GrantedAuthority> userGroups) {
         return hasRequiredUserGroups(requiredGroups,
-                                     ofNullable(userGroups).orElse(emptySet())
-                                        .stream()
-                                        .map(GrantedAuthority::getAuthority)
-                                        .collect(Collectors.toList())
+                ofNullable(userGroups).orElse(emptySet())
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
         );
     }
 
     public static boolean hasRequiredUserGroups(Collection<String> requiredGroups, Collection<String> userGroups) {
         return ofNullable(userGroups).orElse(emptySet())
-            .containsAll(ofNullable(requiredGroups).orElse(emptySet()));
+                .containsAll(ofNullable(requiredGroups).orElse(emptySet()));
     }
 
     public static <T> T getClaims(String jwtToken, Class<T> toClazz) {

@@ -63,6 +63,7 @@ public class UaaException extends OAuth2Exception {
         this.errorString = error;
         this.status = status;
     }
+
     /**
      * The error code.
      *

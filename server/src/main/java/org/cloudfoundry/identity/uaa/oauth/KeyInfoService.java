@@ -55,8 +55,8 @@ public class KeyInfoService {
         Map<String, KeyInfo> keys = new HashMap<>();
         for (Map.Entry<String, TokenPolicy.KeyInformation> entry : config.getTokenPolicy().getKeys().entrySet()) {
             KeyInfo keyInfo = KeyInfoBuilder.build(entry.getKey(), entry.getValue().getSigningKey(), addSubdomainToUrl(uaaBaseURL, IdentityZoneHolder.get().getSubdomain()),
-                sigAlg != null ? sigAlg : entry.getValue().getSigningAlg(),
-                entry.getValue().getSigningCert());
+                    sigAlg != null ? sigAlg : entry.getValue().getSigningAlg(),
+                    entry.getValue().getSigningCert());
             keys.put(entry.getKey(), keyInfo);
         }
 

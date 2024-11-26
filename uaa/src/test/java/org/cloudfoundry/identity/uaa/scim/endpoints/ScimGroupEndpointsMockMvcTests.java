@@ -524,7 +524,7 @@ public class ScimGroupEndpointsMockMvcTests {
             );
         }
     }
-    
+
     List<String> getSystemScopes(String containing) {
         List<String> systemScopes = ZoneManagementScopes.getSystemScopes();
         if (hasText(containing)) {
@@ -1123,7 +1123,7 @@ public class ScimGroupEndpointsMockMvcTests {
                         .header("Authorization", "Bearer " + scimWriteToken)
                         .header("Content-Type", APPLICATION_JSON_VALUE)
         )
-                .andDo(print())
+        .andDo(print())
                 .andExpect(header().string("Location", "http://localhost/login?error=invalid_login_request"))
                 .andExpect(status().isFound()); //gets caught by the ui filter for unknown URIs but wantsJson;
     }

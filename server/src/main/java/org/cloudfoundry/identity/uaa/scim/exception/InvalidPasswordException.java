@@ -56,5 +56,7 @@ public class InvalidPasswordException extends ScimException {
     }
 
     @Override
-    public String getMessage() { return getMessagesAsOneString(); }
+    public String getMessage() {
+        return getMessagesAsOneString();
+    }
 }

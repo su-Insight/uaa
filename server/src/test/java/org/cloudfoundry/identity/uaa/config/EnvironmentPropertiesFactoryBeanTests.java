@@ -51,7 +51,7 @@ public class EnvironmentPropertiesFactoryBeanTests {
 
     private Properties getProperties(String input) {
         return StringUtils.splitArrayElementsIntoProperties(
-                        StringUtils.commaDelimitedListToStringArray(input), "=");
+                StringUtils.commaDelimitedListToStringArray(input), "=");
     }
 
 }

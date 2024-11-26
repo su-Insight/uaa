@@ -269,8 +269,8 @@ public class ScimGroupEndpoints {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ScimGroupExternalMember unmapExternalGroup(@PathVariable String groupId,
-                                                      @PathVariable String externalGroup,
-                                                      @PathVariable String origin) {
+            @PathVariable String externalGroup,
+            @PathVariable String origin) {
         try {
             if (!hasText(origin)) {
                 origin = LDAP;
@@ -308,8 +308,8 @@ public class ScimGroupEndpoints {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public ScimGroupExternalMember unmapExternalGroupUsingName(@PathVariable String displayName,
-                                                               @PathVariable String externalGroup,
-                                                               @PathVariable String origin) {
+            @PathVariable String externalGroup,
+            @PathVariable String origin) {
         try {
             if (!hasText(origin)) {
                 origin = LDAP;
@@ -389,8 +389,8 @@ public class ScimGroupEndpoints {
     @RequestMapping(value = {"/Groups/{groupId}"}, method = RequestMethod.PUT)
     @ResponseBody
     public ScimGroup updateGroup(@RequestBody ScimGroup group, @PathVariable String groupId,
-                                 @RequestHeader(value = "If-Match", required = false) String etag,
-                                 HttpServletResponse httpServletResponse) {
+            @RequestHeader(value = "If-Match", required = false) String etag,
+            HttpServletResponse httpServletResponse) {
         if (etag == null) {
             throw new ScimException("Missing If-Match for PUT", HttpStatus.BAD_REQUEST);
         }
@@ -432,9 +432,9 @@ public class ScimGroupEndpoints {
     @RequestMapping(value = {"/Groups/{groupId}"}, method = RequestMethod.PATCH)
     @ResponseBody
     public ScimGroup patchGroup(@RequestBody ScimGroup patch, @PathVariable
-            String groupId,
-                                @RequestHeader(value = "If-Match", required = false) String etag,
-                                HttpServletResponse httpServletResponse) {
+    String groupId,
+            @RequestHeader(value = "If-Match", required = false) String etag,
+            HttpServletResponse httpServletResponse) {
         if (etag == null) {
             throw new ScimException("Missing If-Match for PATCH", HttpStatus.BAD_REQUEST);
         }
@@ -449,8 +449,8 @@ public class ScimGroupEndpoints {
     @RequestMapping(value = {"/Groups/{groupId}"}, method = RequestMethod.DELETE)
     @ResponseBody
     public ScimGroup deleteGroup(@PathVariable String groupId,
-                                 @RequestHeader(value = "If-Match", required = false, defaultValue = "*") String etag,
-                                 HttpServletResponse httpServletResponse) {
+            @RequestHeader(value = "If-Match", required = false, defaultValue = "*") String etag,
+            HttpServletResponse httpServletResponse) {
         ScimGroup group = getGroup(groupId, httpServletResponse);
         logger.debug("deleting group: " + group);
         try {
@@ -509,9 +509,9 @@ public class ScimGroupEndpoints {
     @ResponseBody
     @Deprecated
     public ScimGroup deleteZoneScope(@PathVariable String userId,
-                                     @PathVariable String zoneId,
-                                     @PathVariable String scope,
-                                     HttpServletResponse httpServletResponse) {
+            @PathVariable String zoneId,
+            @PathVariable String scope,
+            HttpServletResponse httpServletResponse) {
 
         String groupName = "zones." + zoneId + "." + scope;
         if (!groupName.matches(ZONE_MANAGING_SCOPE_REGEX)) {
@@ -545,8 +545,8 @@ public class ScimGroupEndpoints {
 
     @RequestMapping(value = "/Groups/{groupId}/members", method = RequestMethod.GET)
     public ResponseEntity<List<ScimGroupMember>> listGroupMemberships(@PathVariable String groupId,
-                                                                      @RequestParam(required = false, defaultValue = "false") boolean returnEntities,
-                                                                      @RequestParam(required = false, defaultValue = "", name = "filter") String deprecatedFilter) {
+            @RequestParam(required = false, defaultValue = "false") boolean returnEntities,
+            @RequestParam(required = false, defaultValue = "", name = "filter") String deprecatedFilter) {
         dao.retrieve(groupId, identityZoneManager.getCurrentIdentityZoneId());
         List<ScimGroupMember> members = membershipManager.getMembers(groupId,
                 returnEntities,

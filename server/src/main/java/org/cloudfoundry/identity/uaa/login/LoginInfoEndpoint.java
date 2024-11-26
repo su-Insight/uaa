@@ -223,9 +223,9 @@ public class LoginInfoEndpoint {
 
     @RequestMapping(value = {"/login"}, headers = "Accept=text/html, */*")
     public String loginForHtml(Model model,
-                               Principal principal,
-                               HttpServletRequest request,
-                               @RequestHeader(value = "Accept", required = false) List<MediaType> headers)
+            Principal principal,
+            HttpServletRequest request,
+            @RequestHeader(value = "Accept", required = false) List<MediaType> headers)
             throws HttpMediaTypeNotAcceptableException {
 
         boolean match =
@@ -811,7 +811,7 @@ public class LoginInfoEndpoint {
     @PostMapping(value = "/autologin")
     @ResponseBody
     public AutologinResponse generateAutologinCode(@RequestBody AutologinRequest request,
-                                                   @RequestHeader(value = "Authorization", required = false) String auth) {
+            @RequestHeader(value = "Authorization", required = false) String auth) {
 
         if (auth == null || (!auth.startsWith("Basic"))) {
             throw new BadCredentialsException("No basic authorization client information in request");

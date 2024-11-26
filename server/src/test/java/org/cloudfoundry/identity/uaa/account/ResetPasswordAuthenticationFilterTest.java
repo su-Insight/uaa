@@ -141,7 +141,7 @@ class ResetPasswordAuthenticationFilterTest {
         if (!StringUtils.hasText(redirectUri) || redirectUri.equals("home")) {
             verify(response, times(1)).sendRedirect(request.getContextPath() + "/login?success=password_reset");
         } else {
-            verify(response, times(1)).sendRedirect(request.getContextPath() + "/login?success=password_reset&form_redirect_uri="+ redirectUri);
+            verify(response, times(1)).sendRedirect(request.getContextPath() + "/login?success=password_reset&form_redirect_uri=" + redirectUri);
         }
         verify(chain, times(0)).doFilter(any(), any());
     }
@@ -154,7 +154,7 @@ class ResetPasswordAuthenticationFilterTest {
         assertTrue(e instanceof AuthenticationException);
         assertNotNull(e.getCause());
         assertTrue(e.getCause() instanceof PasswordConfirmationException);
-        PasswordConfirmationException pe = (PasswordConfirmationException)e.getCause();
+        PasswordConfirmationException pe = (PasswordConfirmationException) e.getCause();
         assertEquals("form_error", pe.getMessageCode());
         assertEquals(email, pe.getEmail());
     }
@@ -198,7 +198,6 @@ class ResetPasswordAuthenticationFilterTest {
 
         return exception;
     }
-
 
 
 }

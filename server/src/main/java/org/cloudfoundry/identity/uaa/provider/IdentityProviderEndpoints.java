@@ -229,7 +229,7 @@ public class IdentityProviderEndpoints implements ApplicationEventPublisherAware
     }
 
     private ResponseEntity<IdentityProvider> persistIdentityProviderChange(IdentityProvider body, boolean rawConfig, String zoneId,
-                                                                           IdentityProvider existing, HttpStatus status) {
+            IdentityProvider existing, HttpStatus status) {
         final IdentityProvider<?> updatedIdp;
         try {
             updatedIdp = transactionTemplate.execute(txStatus -> {

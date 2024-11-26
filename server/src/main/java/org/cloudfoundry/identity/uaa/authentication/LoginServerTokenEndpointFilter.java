@@ -37,6 +37,7 @@ public class LoginServerTokenEndpointFilter extends TokenEndpointAuthenticationF
 
 
     private List<String> parameterNames = Collections.emptyList();
+
     /**
      * @param authenticationManager an AuthenticationManager for the incoming request
      */
@@ -50,7 +51,7 @@ public class LoginServerTokenEndpointFilter extends TokenEndpointAuthenticationF
         super.onSuccessfulAuthentication(request, response, authResult);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof OAuth2Authentication) {
-            ((OAuth2Authentication)auth).setAuthenticated(true);
+            ((OAuth2Authentication) auth).setAuthenticated(true);
         }
     }
 
@@ -58,14 +59,14 @@ public class LoginServerTokenEndpointFilter extends TokenEndpointAuthenticationF
     protected Authentication extractCredentials(HttpServletRequest request) {
         String grantType = request.getParameter("grant_type");
         if (grantType != null && grantType.equals(GRANT_TYPE_PASSWORD)) {
-            Map<String,String> loginInfo = new HashMap<>();
+            Map<String, String> loginInfo = new HashMap<>();
             for (String p : parameterNames) {
                 String value = request.getParameter(p);
                 if (StringUtils.hasText(value)) {
                     loginInfo.put(p, value);
                 }
             }
-            return new AuthzAuthenticationRequest(loginInfo,new UaaAuthenticationDetails(request));
+            return new AuthzAuthenticationRequest(loginInfo, new UaaAuthenticationDetails(request));
         }
         return null;
     }

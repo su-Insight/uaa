@@ -100,12 +100,12 @@ public class UaaClientDetails implements ClientDetails {
     }
 
     public UaaClientDetails(String clientId, String resourceIds,
-        String scopes, String grantTypes, String authorities, String redirectUris) {
+            String scopes, String grantTypes, String authorities, String redirectUris) {
         this.clientId = clientId;
 
         if (StringUtils.hasText(resourceIds)) {
             Set<String> resources = StringUtils
-                .commaDelimitedListToSet(resourceIds);
+                    .commaDelimitedListToSet(resourceIds);
             if (!resources.isEmpty()) {
                 this.resourceIds = resources;
             }
@@ -120,25 +120,25 @@ public class UaaClientDetails implements ClientDetails {
 
         if (StringUtils.hasText(grantTypes)) {
             this.authorizedGrantTypes = StringUtils
-                .commaDelimitedListToSet(grantTypes);
+                    .commaDelimitedListToSet(grantTypes);
         } else {
             this.authorizedGrantTypes = new HashSet<>(Arrays.asList(
-                "authorization_code", "refresh_token"));
+                    "authorization_code", "refresh_token"));
         }
 
         if (StringUtils.hasText(authorities)) {
             this.authorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList(authorities);
+                    .commaSeparatedStringToAuthorityList(authorities);
         }
 
         if (StringUtils.hasText(redirectUris)) {
             this.registeredRedirectUris = StringUtils
-                .commaDelimitedListToSet(redirectUris);
+                    .commaDelimitedListToSet(redirectUris);
         }
     }
 
     public UaaClientDetails(String clientId, String resourceIds,
-        String scopes, String grantTypes, String authorities) {
+            String scopes, String grantTypes, String authorities) {
         this(clientId, resourceIds, scopes, grantTypes, authorities, null);
     }
 
@@ -198,8 +198,8 @@ public class UaaClientDetails implements ClientDetails {
 
     public void setScope(Collection<String> scope) {
         this.scope = scope == null ? Collections.emptySet() : scope.stream()
-            .flatMap(s -> Arrays.stream(s.split(",")))
-            .collect(Collectors.toSet());
+                .flatMap(s -> Arrays.stream(s.split(",")))
+                .collect(Collectors.toSet());
     }
 
     @JsonIgnore
@@ -227,7 +227,7 @@ public class UaaClientDetails implements ClientDetails {
 
     public void setRegisteredRedirectUri(Set<String> registeredRedirectUris) {
         this.registeredRedirectUris = registeredRedirectUris == null ? null
-            : new LinkedHashSet<>(registeredRedirectUris);
+                : new LinkedHashSet<>(registeredRedirectUris);
     }
 
     @JsonProperty("authorities")
@@ -239,7 +239,7 @@ public class UaaClientDetails implements ClientDetails {
     @JsonDeserialize(using = Jackson2ArrayOrStringDeserializer.class)
     private void setAuthoritiesAsStrings(Set<String> values) {
         setAuthorities(AuthorityUtils.createAuthorityList(values
-            .toArray(new String[values.size()])));
+                .toArray(new String[values.size()])));
     }
 
     @JsonIgnore
@@ -249,7 +249,7 @@ public class UaaClientDetails implements ClientDetails {
 
     @JsonIgnore
     public void setAuthorities(
-        Collection<? extends GrantedAuthority> authorities) {
+            Collection<? extends GrantedAuthority> authorities) {
         this.authorities = new ArrayList<>(authorities);
     }
 
@@ -268,13 +268,13 @@ public class UaaClientDetails implements ClientDetails {
     }
 
     public void setRefreshTokenValiditySeconds(
-        Integer refreshTokenValiditySeconds) {
+            Integer refreshTokenValiditySeconds) {
         this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
     }
 
     public void setAdditionalInformation(Map<String, ?> additionalInformation) {
         this.additionalInformation = new LinkedHashMap<>(
-            additionalInformation);
+                additionalInformation);
     }
 
     @JsonAnyGetter
@@ -345,31 +345,31 @@ public class UaaClientDetails implements ClientDetails {
         final int prime = 31;
         int result = 1;
         result = prime
-            * result
-            + ((accessTokenValiditySeconds == null) ? 0
-            : accessTokenValiditySeconds);
+                * result
+                + (accessTokenValiditySeconds == null ? 0
+                : accessTokenValiditySeconds);
         result = prime
-            * result
-            + ((refreshTokenValiditySeconds == null) ? 0
-            : refreshTokenValiditySeconds);
+                * result
+                + (refreshTokenValiditySeconds == null ? 0
+                : refreshTokenValiditySeconds);
         result = prime * result
-            + ((authorities == null) ? 0 : authorities.hashCode());
+                + (authorities == null ? 0 : authorities.hashCode());
         result = prime
-            * result
-            + ((authorizedGrantTypes == null) ? 0 : authorizedGrantTypes
-            .hashCode());
+                * result
+                + (authorizedGrantTypes == null ? 0 : authorizedGrantTypes
+                .hashCode());
         result = prime * result
-            + ((clientId == null) ? 0 : clientId.hashCode());
+                + (clientId == null ? 0 : clientId.hashCode());
         result = prime * result
-            + ((clientSecret == null) ? 0 : clientSecret.hashCode());
+                + (clientSecret == null ? 0 : clientSecret.hashCode());
         result = prime
-            * result
-            + ((registeredRedirectUris == null) ? 0
-            : registeredRedirectUris.hashCode());
+                * result
+                + (registeredRedirectUris == null ? 0
+                : registeredRedirectUris.hashCode());
         result = prime * result
-            + ((resourceIds == null) ? 0 : resourceIds.hashCode());
-        result = prime * result + ((scope == null) ? 0 : scope.hashCode());
-        result = prime * result + ((additionalInformation == null) ? 0 : additionalInformation.hashCode());
+                + (resourceIds == null ? 0 : resourceIds.hashCode());
+        result = prime * result + (scope == null ? 0 : scope.hashCode());
+        result = prime * result + (additionalInformation == null ? 0 : additionalInformation.hashCode());
         result = prime * result + (clientJwtConfig == null ? 0 : clientJwtConfig.hashCode());
         return result;
     }

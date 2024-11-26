@@ -34,7 +34,8 @@ public interface ResetPasswordService {
         @JsonProperty("client_id")
         private String clientId;
 
-        public ResetPasswordResponse() {}
+        public ResetPasswordResponse() {
+        }
 
         public ResetPasswordResponse(ScimUser user, String redirectUri, String clientId) {
             this.user = user;

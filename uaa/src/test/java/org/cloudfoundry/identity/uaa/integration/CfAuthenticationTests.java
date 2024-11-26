@@ -63,11 +63,11 @@ public class CfAuthenticationTests {
     @Test
     public void testDefaultScopes() {
         params.set(
-                        "credentials",
-                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
-                                        testAccounts.getPassword()));
+                "credentials",
+                String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
+                        testAccounts.getPassword()));
         ResponseEntity<Void> response = serverRunning.postForResponse(serverRunning.getAuthorizationUri(), headers,
-                        params);
+                params);
         assertEquals(HttpStatus.FOUND, response.getStatusCode());
         String location = response.getHeaders().getLocation().toString();
         assertTrue("Not authenticated (no access token): " + location, location.contains("access_token"));
@@ -76,12 +76,12 @@ public class CfAuthenticationTests {
     @Test
     public void testInvalidScopes() {
         params.set(
-                        "credentials",
-                        String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
-                                        testAccounts.getPassword()));
+                "credentials",
+                String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
+                        testAccounts.getPassword()));
         params.set("scope", "read");
         ResponseEntity<Void> response = serverRunning.postForResponse(serverRunning.getAuthorizationUri(), headers,
-                        params);
+                params);
         assertEquals(HttpStatus.FOUND, response.getStatusCode());
         String location = response.getHeaders().getLocation().toString();
         // System.err.println(location);

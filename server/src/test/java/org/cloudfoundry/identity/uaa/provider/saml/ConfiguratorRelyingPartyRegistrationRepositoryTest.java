@@ -87,7 +87,7 @@ class ConfiguratorRelyingPartyRegistrationRepositoryTest {
     void constructorWithNullConfiguratorThrows() {
         List<SignatureAlgorithm> signatureAlgorithms = List.of();
         assertThatThrownBy(() -> new ConfiguratorRelyingPartyRegistrationRepository(
-                ENTITY_ID, ENTITY_ID_ALIAS, null, signatureAlgorithms, DEFAULT_NAME_ID)
+                        ENTITY_ID, ENTITY_ID_ALIAS, null, signatureAlgorithms, DEFAULT_NAME_ID)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 

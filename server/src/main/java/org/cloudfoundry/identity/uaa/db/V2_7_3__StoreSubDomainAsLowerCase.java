@@ -57,12 +57,12 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
         for (String s : duplicates) {
             logger.debug("Processing zone duplicates for subdomain:" + s);
             List<IdentityZone> dupZones = zones.get(s);
-            for (int i=1; i<dupZones.size(); i++) {
+            for (int i = 1; i < dupZones.size(); i++) {
                 IdentityZone dupZone = dupZones.get(i);
                 String newsubdomain = null;
-                while (newsubdomain==null) {
-                    String potentialsubdomain = (dupZone.getSubdomain() +"-"+ generator.generate()).toLowerCase();
-                    if (zones.get(potentialsubdomain)==null) {
+                while (newsubdomain == null) {
+                    String potentialsubdomain = (dupZone.getSubdomain() + "-" + generator.generate()).toLowerCase();
+                    if (zones.get(potentialsubdomain) == null) {
                         newsubdomain = potentialsubdomain;
                     }
                 }
@@ -74,7 +74,7 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
         }
         for (IdentityZone zone : identityZones) {
             String subdomain = zone.getSubdomain();
-            if (StringUtils.hasText(subdomain) && !(subdomain.toLowerCase().equals(subdomain))) {
+            if (StringUtils.hasText(subdomain) && !subdomain.toLowerCase().equals(subdomain)) {
                 logger.debug(String.format("Lowercasing zone subdomain for id:%s; old subdomain: %s; new subdomain: %s;", zone.getId(), zone.getSubdomain(), zone.getSubdomain().toLowerCase()));
                 zone.setSubdomain(subdomain.toLowerCase());
                 updateIdentityZone(zone, jdbcTemplate);
@@ -109,7 +109,7 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
         try {
             return jdbcTemplate.queryForObject(IDENTITY_ZONE_BY_ID_QUERY, mapper, id);
         } catch (EmptyResultDataAccessException x) {
-            throw new ZoneDoesNotExistsException("Zone["+id+"] not found.", x);
+            throw new ZoneDoesNotExistsException("Zone[" + id + "] not found.", x);
         }
     }
 
@@ -118,16 +118,16 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
     }
 
     private void addToMap(IdentityZone zone, Map<String, List<IdentityZone>> zones, Set<String> duplicates) {
-        if (zone==null || zone.getSubdomain()==null) {
+        if (zone == null || zone.getSubdomain() == null) {
             return;
         }
         String subdomain = zone.getSubdomain().toLowerCase();
-        if (zones.get(subdomain)==null) {
+        if (zones.get(subdomain) == null) {
             List<IdentityZone> list = new LinkedList<>();
             list.add(zone);
             zones.put(subdomain, list);
         } else {
-            logger.warn("Found duplicate zone for subdomain:"+subdomain);
+            logger.warn("Found duplicate zone for subdomain:" + subdomain);
             duplicates.add(subdomain);
             zones.get(subdomain).add(zone);
         }

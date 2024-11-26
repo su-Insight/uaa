@@ -17,9 +17,9 @@ public class MultitenancyFixture {
 
     public static <D extends AbstractIdentityProviderDefinition> IdentityProvider<D> identityProvider(String originKey, String zoneId) {
         IdentityProvider<D> idp = new IdentityProvider<>();
-        idp.setName(originKey+" name");
+        idp.setName(originKey + " name");
         idp.setOriginKey(originKey);
-        idp.setType(originKey+" type");
+        idp.setType(originKey + " type");
         idp.setIdentityZoneId(zoneId);
         return idp;
     }

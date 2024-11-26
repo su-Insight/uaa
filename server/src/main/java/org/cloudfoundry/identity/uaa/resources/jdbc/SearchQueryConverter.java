@@ -22,7 +22,7 @@ public interface SearchQueryConverter {
 
     final class ProcessedFilter {
         public static final String ORDER_BY_NO_SPACE = "ORDER BY";
-        public static final String ORDER_BY = " "+ORDER_BY_NO_SPACE+" ";
+        public static final String ORDER_BY = " " + ORDER_BY_NO_SPACE + " ";
         private final String sql;
         private final Map<String, Object> params;
         private final boolean hasOrderBy;
@@ -63,7 +63,7 @@ public interface SearchQueryConverter {
 
     ProcessedFilter convert(String filter, String sortBy, boolean ascending, String zoneId);
 
-    MultiValueMap<String,Object> getFilterValues(String filter, List<String> validAttributes) throws IllegalArgumentException;
+    MultiValueMap<String, Object> getFilterValues(String filter, List<String> validAttributes) throws IllegalArgumentException;
 
     String map(String attribute);
 

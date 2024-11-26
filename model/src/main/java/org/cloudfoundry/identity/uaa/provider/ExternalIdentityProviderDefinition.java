@@ -47,7 +47,7 @@ public class ExternalIdentityProviderDefinition extends AbstractIdentityProvider
     }
 
     public void setExternalGroupsWhitelist(List<String> externalGroupsWhitelist) {
-        this.externalGroupsWhitelist = new LinkedList<>(externalGroupsWhitelist!=null ? externalGroupsWhitelist : emptyList());
+        this.externalGroupsWhitelist = new LinkedList<>(externalGroupsWhitelist != null ? externalGroupsWhitelist : emptyList());
     }
 
     @JsonIgnore
@@ -56,7 +56,7 @@ public class ExternalIdentityProviderDefinition extends AbstractIdentityProvider
     }
 
     public void setAttributeMappings(Map<String, Object> attributeMappings) {
-        this.attributeMappings = new HashMap<>(attributeMappings!=null?attributeMappings: emptyMap());
+        this.attributeMappings = new HashMap<>(attributeMappings != null ? attributeMappings : emptyMap());
     }
 
     public Map<String, Object> getAttributeMappings() {
@@ -91,7 +91,7 @@ public class ExternalIdentityProviderDefinition extends AbstractIdentityProvider
         ExternalIdentityProviderDefinition that = (ExternalIdentityProviderDefinition) o;
 
         if (addShadowUserOnLogin != that.addShadowUserOnLogin) return false;
-        if(this.isStoreCustomAttributes() != that.isStoreCustomAttributes()) return false;
+        if (this.isStoreCustomAttributes() != that.isStoreCustomAttributes()) return false;
         if (getExternalGroupsWhitelist() != null ? !getExternalGroupsWhitelist().equals(that.getExternalGroupsWhitelist()) : that.getExternalGroupsWhitelist() != null)
             return false;
         return Objects.equals(attributeMappings, that.attributeMappings);

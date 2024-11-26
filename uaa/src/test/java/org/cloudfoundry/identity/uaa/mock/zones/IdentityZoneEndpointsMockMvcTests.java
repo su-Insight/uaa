@@ -274,17 +274,17 @@ class IdentityZoneEndpointsMockMvcTests {
         IdentityZone zone = createZoneUsingToken(uaaAdminClientToken);
         for (String token : Arrays.asList(uaaAdminClientToken, uaaAdminUserToken)) {
             mockMvc.perform(
-                            get("/identity-zones")
-                                    .header("Authorization", "Bearer " + token)
-                                    .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                    )
-                    .andExpect(status().isOk());
+                    get("/identity-zones")
+                            .header("Authorization", "Bearer " + token)
+                            .header("Accept", MediaType.APPLICATION_JSON_VALUE)
+            )
+            .andExpect(status().isOk());
             mockMvc.perform(
-                            get("/identity-zones/{id}", zone.getId())
-                                    .header("Authorization", "Bearer " + token)
-                                    .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                    )
-                    .andExpect(status().isOk());
+                    get("/identity-zones/{id}", zone.getId())
+                            .header("Authorization", "Bearer " + token)
+                            .header("Accept", MediaType.APPLICATION_JSON_VALUE)
+            )
+            .andExpect(status().isOk());
         }
     }
 
@@ -309,9 +309,9 @@ class IdentityZoneEndpointsMockMvcTests {
         for (String token : Arrays.asList(uaaAdminClientToken, uaaAdminUserToken)) {
             IdentityZone zone = createZoneUsingToken(token);
             mockMvc.perform(
-                            delete("/identity-zones/{id}", zone.getId())
-                                    .header("Authorization", "Bearer " + token)
-                                    .accept(APPLICATION_JSON))
+                    delete("/identity-zones/{id}", zone.getId())
+                            .header("Authorization", "Bearer " + token)
+                            .accept(APPLICATION_JSON))
                     .andExpect(status().isOk());
         }
     }
@@ -327,8 +327,8 @@ class IdentityZoneEndpointsMockMvcTests {
     @ArgumentsSource(IdentityZonesBaseUrlsArgumentsSource.class)
     void readWith_Write_TokenShouldNotFail(String url) throws Exception {
         mockMvc.perform(
-                        get(url)
-                                .header("Authorization", "Bearer " + identityClientZonesWriteToken))
+                get(url)
+                        .header("Authorization", "Bearer " + identityClientZonesWriteToken))
                 .andExpect(status().isOk());
     }
 
@@ -336,8 +336,8 @@ class IdentityZoneEndpointsMockMvcTests {
     @ArgumentsSource(IdentityZonesBaseUrlsArgumentsSource.class)
     void readWith_Read_TokenShouldSucceed(String url) throws Exception {
         mockMvc.perform(
-                        get(url)
-                                .header("Authorization", "Bearer " + identityClientZonesReadToken))
+                get(url)
+                        .header("Authorization", "Bearer " + identityClientZonesReadToken))
                 .andExpect(status().isOk());
     }
 
@@ -408,13 +408,13 @@ class IdentityZoneEndpointsMockMvcTests {
         IdentityZone created = createZone(id, HttpStatus.CREATED, identityClientToken, new IdentityZoneConfiguration());
 
         mockMvc.perform(
-                        get("/identity-zones/")
-                                .header("Authorization", "Bearer " + lowPrivilegeToken))
+                get("/identity-zones/")
+                        .header("Authorization", "Bearer " + lowPrivilegeToken))
                 .andExpect(status().isForbidden());
 
         MvcResult result = mockMvc.perform(
-                        get("/identity-zones/")
-                                .header("Authorization", "Bearer " + identityClientToken))
+                get("/identity-zones/")
+                        .header("Authorization", "Bearer " + identityClientToken))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -473,10 +473,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.setName(null);
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.error").value("invalid_identity_zone"))
                 .andExpect(jsonPath("$.error_description").value("The identity zone must be given a name."));
@@ -491,10 +491,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.setSubdomain(null);
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.error").value("invalid_identity_zone"))
                 .andExpect(jsonPath("$.error_description").value("The subdomain must be provided."));
@@ -510,10 +510,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().getUserConfig().setAllowedGroups(Collections.emptyList()); // no groups allowed
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.error").value("invalid_identity_zone"))
                 .andExpect(jsonPath("$.error_description").value("The identity zone details are invalid. " +
@@ -949,17 +949,17 @@ class IdentityZoneEndpointsMockMvcTests {
         identityZone.setConfig(definition.setSamlConfig(samlConfig));
 
         mockMvc.perform(
-                        post(url)
-                                .header("Authorization", "Bearer " + identityClientZonesReadToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post(url)
+                        .header("Authorization", "Bearer " + identityClientZonesReadToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().isForbidden());
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().isCreated());
 
         checkZoneAuditEventInUaa(1, AuditEventType.IdentityZoneCreatedEvent);
@@ -989,10 +989,10 @@ class IdentityZoneEndpointsMockMvcTests {
         tokenPolicy.setActiveKeyId("nonexistent_key");
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -1008,10 +1008,10 @@ class IdentityZoneEndpointsMockMvcTests {
         tokenPolicy.setKeys(jwtKeys);
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().isCreated());
     }
 
@@ -1025,10 +1025,10 @@ class IdentityZoneEndpointsMockMvcTests {
         tokenPolicy.setRefreshTokenRotate(true);
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.config.tokenPolicy.refreshTokenUnique").value(true))
                 .andExpect(jsonPath("$.config.tokenPolicy.refreshTokenRotate").value(true))
@@ -1057,10 +1057,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String contentAsString = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andReturn().getResponse().getContentAsString();
         IdentityZone createdZone = JsonUtils.readValue(contentAsString, IdentityZone.class);
 
@@ -1082,10 +1082,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String contentAsString = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andReturn().getResponse().getContentAsString();
         IdentityZone createdZone = JsonUtils.readValue(contentAsString, IdentityZone.class);
 
@@ -1106,10 +1106,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String contentAsString = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andReturn().getResponse().getContentAsString();
         IdentityZone createdZone = JsonUtils.readValue(contentAsString, IdentityZone.class);
 
@@ -1130,10 +1130,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String contentAsString = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1154,10 +1154,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         MockHttpServletResponse response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn().getResponse();
 
@@ -1178,10 +1178,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1190,10 +1190,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getBanner().setLink(invalidUrl);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn()
                 .getResponse();
@@ -1211,10 +1211,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1224,10 +1224,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getConsent().setLink("http://localhost/some-updated-link");
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -1249,10 +1249,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1261,10 +1261,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getConsent().setLink(null);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -1286,10 +1286,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1298,10 +1298,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getConsent().setText(null);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn()
                 .getResponse();
@@ -1319,10 +1319,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1333,10 +1333,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getConsent().setLink(invalidConsentLink);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn()
                 .getResponse();
@@ -1358,10 +1358,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn().getResponse();
 
@@ -1382,10 +1382,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1394,10 +1394,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getBanner().setBackgroundColor(invalidColor);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn()
                 .getResponse();
@@ -1419,10 +1419,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn().getResponse();
 
@@ -1443,10 +1443,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1455,10 +1455,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getBanner().setTextColor(invalidColor);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn()
                 .getResponse();
@@ -1481,10 +1481,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn().getResponse();
 
@@ -1507,10 +1507,10 @@ class IdentityZoneEndpointsMockMvcTests {
         zone.getConfig().setBranding(branding);
 
         String response = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(zone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(zone)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -1519,10 +1519,10 @@ class IdentityZoneEndpointsMockMvcTests {
         createdZone.getConfig().getBranding().getBanner().setLogo(invalidLogo);
 
         MockHttpServletResponse mvcResult = mockMvc.perform(
-                        put("/identity-zones/" + createdZone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(createdZone)))
+                put("/identity-zones/" + createdZone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(createdZone)))
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn()
                 .getResponse();
@@ -1602,10 +1602,10 @@ class IdentityZoneEndpointsMockMvcTests {
         identityZone.setConfig(definition.setSamlConfig(samlConfig));
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -1630,27 +1630,27 @@ class IdentityZoneEndpointsMockMvcTests {
         client.addAdditionalInformation("foo", "bar");
         for (String url : Arrays.asList("", "/")) {
             mockMvc.perform(
-                            post("/identity-zones/" + zone.getId() + "/clients" + url)
-                                    .header("Authorization", "Bearer " + identityClientZonesReadToken)
-                                    .contentType(APPLICATION_JSON)
-                                    .accept(APPLICATION_JSON)
-                                    .content(JsonUtils.writeValueAsString(client)))
+                    post("/identity-zones/" + zone.getId() + "/clients" + url)
+                            .header("Authorization", "Bearer " + identityClientZonesReadToken)
+                            .contentType(APPLICATION_JSON)
+                            .accept(APPLICATION_JSON)
+                            .content(JsonUtils.writeValueAsString(client)))
                     .andExpect(status().isForbidden());
         }
 
         //create client without token
         mockMvc.perform(post("/identity-zones/" + zone.getId() + "/clients")
-                        .contentType(APPLICATION_JSON)
-                        .accept(APPLICATION_JSON)
-                        .content(JsonUtils.writeValueAsString(client)))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(JsonUtils.writeValueAsString(client)))
                 .andExpect(status().isUnauthorized());
 
         MvcResult result = mockMvc.perform(
-                        post("/identity-zones/" + zone.getId() + "/clients")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(client)))
+                post("/identity-zones/" + zone.getId() + "/clients")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(client)))
                 .andExpect(status().isCreated()).andReturn();
         UaaClientDetails created = JsonUtils.readValue(result.getResponse().getContentAsString(), UaaClientDetails.class);
         assertThat(created.getClientSecret()).isNull();
@@ -1694,14 +1694,14 @@ class IdentityZoneEndpointsMockMvcTests {
 
         //failed authenticated user
         mockMvc.perform(
-                        post("/login.do")
-                                .header("Host", zone.getSubdomain() + ".localhost")
-                                .with(cookieCsrf())
-                                .accept(TEXT_HTML_VALUE)
-                                .param("username", user.getUserName())
-                                .param("password", "adasda")
-                )
-                .andExpect(status().isFound());
+                post("/login.do")
+                        .header("Host", zone.getSubdomain() + ".localhost")
+                        .with(cookieCsrf())
+                        .accept(TEXT_HTML_VALUE)
+                        .param("username", user.getUserName())
+                        .param("password", "adasda")
+        )
+        .andExpect(status().isFound());
 
         //ensure we have some audit records
         //this doesn't work yet
@@ -1724,15 +1724,15 @@ class IdentityZoneEndpointsMockMvcTests {
 
         //perform zone delete
         mockMvc.perform(
-                        delete("/identity-zones/{id}", zone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .accept(APPLICATION_JSON))
+                delete("/identity-zones/{id}", zone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(
-                        delete("/identity-zones/{id}", zone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .accept(APPLICATION_JSON))
+                delete("/identity-zones/{id}", zone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         assertThat(template.queryForObject("select count(*) from identity_zone where id=?", new Object[]{zone.getId()}, Integer.class)).isZero();
@@ -1760,9 +1760,9 @@ class IdentityZoneEndpointsMockMvcTests {
         uaaEventListener.clearEvents();
 
         ResultActions result = mockMvc.perform(
-                        delete("/identity-zones/{id}", zone.getId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .accept(APPLICATION_JSON))
+                delete("/identity-zones/{id}", zone.getId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
         IdentityZone deletedZone = JsonUtils.readValue(result.andReturn().getResponse().getContentAsString(), IdentityZone.class);
         assertThat(deletedZone.getConfig().getTokenPolicy().getKeys()).isEqualTo(emptyMap());
@@ -1821,20 +1821,20 @@ class IdentityZoneEndpointsMockMvcTests {
         client.addAdditionalInformation("foo", "bar");
         for (String url : Arrays.asList("", "/")) {
             mockMvc.perform(
-                            post("/identity-zones/" + zone.getId() + "/clients" + url)
-                                    .header("Authorization", "Bearer " + identityClientZonesReadToken)
-                                    .contentType(APPLICATION_JSON)
-                                    .accept(APPLICATION_JSON)
-                                    .content(JsonUtils.writeValueAsString(client)))
+                    post("/identity-zones/" + zone.getId() + "/clients" + url)
+                            .header("Authorization", "Bearer " + identityClientZonesReadToken)
+                            .contentType(APPLICATION_JSON)
+                            .accept(APPLICATION_JSON)
+                            .content(JsonUtils.writeValueAsString(client)))
                     .andExpect(status().isForbidden());
         }
 
         MvcResult result = mockMvc.perform(
-                        post("/identity-zones/" + zone.getId() + "/clients")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(client)))
+                post("/identity-zones/" + zone.getId() + "/clients")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(client)))
                 .andExpect(status().isCreated()).andReturn();
         UaaClientDetails created = JsonUtils.readValue(result.getResponse().getContentAsString(), UaaClientDetails.class);
         assertThat(created.getClientSecret()).isNull();
@@ -1846,15 +1846,15 @@ class IdentityZoneEndpointsMockMvcTests {
 
         for (String url : Arrays.asList("", "/")) {
             mockMvc.perform(
-                            delete("/identity-zones/" + zone.getId() + "/clients/" + created.getClientId(), IdentityZone.getUaaZoneId() + url)
-                                    .header("Authorization", "Bearer " + identityClientZonesReadToken)
-                                    .accept(APPLICATION_JSON))
+                    delete("/identity-zones/" + zone.getId() + "/clients/" + created.getClientId(), IdentityZone.getUaaZoneId() + url)
+                            .header("Authorization", "Bearer " + identityClientZonesReadToken)
+                            .accept(APPLICATION_JSON))
                     .andExpect(status().isForbidden());
         }
         mockMvc.perform(
-                        delete("/identity-zones/" + zone.getId() + "/clients/" + created.getClientId(), IdentityZone.getUaaZoneId())
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .accept(APPLICATION_JSON))
+                delete("/identity-zones/" + zone.getId() + "/clients/" + created.getClientId(), IdentityZone.getUaaZoneId())
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         checkAuditEventListener(1, AuditEventType.ClientDeleteSuccess, clientDeleteEventListener, id, "http://localhost:8080/uaa/oauth/token", "identity");
@@ -1867,18 +1867,18 @@ class IdentityZoneEndpointsMockMvcTests {
         client.setClientSecret("secret");
         client.addAdditionalInformation(ClientConstants.ALLOWED_PROVIDERS, Collections.singletonList(UAA));
         mockMvc.perform(
-                        post("/identity-zones/uaa/clients")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(client)))
+                post("/identity-zones/uaa/clients")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(client)))
                 .andExpect(status().isForbidden());
         assertThat(clientCreateEventListener.getEventCount()).isZero();
 
         mockMvc.perform(
-                        delete("/identity-zones/uaa/clients/admin")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .accept(APPLICATION_JSON))
+                delete("/identity-zones/uaa/clients/admin")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 
         assertThat(clientDeleteEventListener.getEventCount()).isZero();
@@ -1892,11 +1892,11 @@ class IdentityZoneEndpointsMockMvcTests {
                 new UaaClientDetails("admin-client", null, null, "client_credentials", "clients.write");
         client.setClientSecret("secret");
         mockMvc.perform(
-                        post("/identity-zones/" + zone.getId() + "/clients")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(client)))
+                post("/identity-zones/" + zone.getId() + "/clients")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(client)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -1908,21 +1908,21 @@ class IdentityZoneEndpointsMockMvcTests {
         IdentityZone identityZone1 = MultitenancyFixture.identityZone(id1, subdomain);
         IdentityZone identityZone2 = MultitenancyFixture.identityZone(id2, subdomain);
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone1)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone1)))
                 .andExpect(status().isCreated());
 
         checkZoneAuditEventInUaa(1, AuditEventType.IdentityZoneCreatedEvent);
 
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + identityClientToken)
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone2)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + identityClientToken)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone2)))
                 .andExpect(status().isConflict());
 
         assertThat(zoneModifiedEventListener.getEventCount()).isEqualTo(1);
@@ -1937,10 +1937,10 @@ class IdentityZoneEndpointsMockMvcTests {
         IdentityZoneCreationResult result2 = MockMvcUtils.createOtherIdentityZoneAndReturnResult(zone2, mockMvc, webApplicationContext, null, IdentityZoneHolder.getCurrentZoneId());
 
         MvcResult result = mockMvc.perform(
-                        get("/identity-zones")
-                                .header("Authorization", "Bearer " + result1.getZoneAdminToken())
-                                .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
-                                .accept(APPLICATION_JSON))
+                get("/identity-zones")
+                        .header("Authorization", "Bearer " + result1.getZoneAdminToken())
+                        .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -1952,32 +1952,32 @@ class IdentityZoneEndpointsMockMvcTests {
 
         //test write your own
         mockMvc.perform(
-                        put("/identity-zones/" + result1.getIdentityZone().getId())
-                                .header("Authorization", "Bearer " + result1.getZoneAdminToken())
-                                .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(result1.getIdentityZone())))
+                put("/identity-zones/" + result1.getIdentityZone().getId())
+                        .header("Authorization", "Bearer " + result1.getZoneAdminToken())
+                        .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(result1.getIdentityZone())))
                 .andExpect(status().isOk());
 
         //test write someone elses
         mockMvc.perform(
-                        put("/identity-zones/" + result2.getIdentityZone().getId())
-                                .header("Authorization", "Bearer " + result1.getZoneAdminToken())
-                                .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(result2.getIdentityZone())))
+                put("/identity-zones/" + result2.getIdentityZone().getId())
+                        .header("Authorization", "Bearer " + result1.getZoneAdminToken())
+                        .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(result2.getIdentityZone())))
                 .andExpect(status().isForbidden());
 
         //test create as zone admin
         mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + result1.getZoneAdminToken())
-                                .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
-                                .contentType(APPLICATION_JSON)
-                                .accept(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(result2.getIdentityZone())))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + result1.getZoneAdminToken())
+                        .header(IdentityZoneSwitchingFilter.HEADER, result1.getIdentityZone().getId())
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(result2.getIdentityZone())))
                 .andExpect(status().isForbidden());
 
     }
@@ -2106,21 +2106,21 @@ class IdentityZoneEndpointsMockMvcTests {
             group.setDisplayName(zoneReadScope);
             group.setMembers(Collections.singletonList(new ScimGroupMember(user.getId())));
             mockMvc.perform(
-                            post("/Groups/zones")
-                                    .header("Authorization", "Bearer " + identityClientToken)
-                                    .contentType(APPLICATION_JSON)
-                                    .accept(APPLICATION_JSON)
-                                    .content(JsonUtils.writeValueAsString(group)))
+                    post("/Groups/zones")
+                            .header("Authorization", "Bearer " + identityClientToken)
+                            .contentType(APPLICATION_JSON)
+                            .accept(APPLICATION_JSON)
+                            .content(JsonUtils.writeValueAsString(group)))
                     .andExpect(status().isCreated());
         }
 
         String userAccessToken = MockMvcUtils.getUserOAuthAccessTokenAuthCode(mockMvc, "identity", "identitysecret", user.getId(), user.getUserName(), user.getPassword(), "zones." + identityZone.getId() + ".read", IdentityZoneHolder.getCurrentZoneId());
 
         MvcResult result = mockMvc.perform(
-                        get("/identity-zones/" + identityZone.getId())
-                                .header("Authorization", "Bearer " + userAccessToken)
-                                .header(IdentityZoneSwitchingFilter.HEADER, identityZone.getId())
-                                .accept(APPLICATION_JSON))
+                get("/identity-zones/" + identityZone.getId())
+                        .header("Authorization", "Bearer " + userAccessToken)
+                        .header(IdentityZoneSwitchingFilter.HEADER, identityZone.getId())
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -2134,10 +2134,10 @@ class IdentityZoneEndpointsMockMvcTests {
         String userAccessTokenReadAndAdmin = MockMvcUtils.getUserOAuthAccessTokenAuthCode(mockMvc, "identity", "identitysecret", user.getId(), user.getUserName(), user.getPassword(), "zones." + identityZone.getId() + ".read " + "zones." + identityZone.getId() + ".admin ", IdentityZoneHolder.getCurrentZoneId());
 
         result = mockMvc.perform(
-                        get("/identity-zones/" + identityZone.getId())
-                                .header("Authorization", "Bearer " + userAccessTokenReadAndAdmin)
-                                .header(IdentityZoneSwitchingFilter.HEADER, identityZone.getId())
-                                .accept(APPLICATION_JSON))
+                get("/identity-zones/" + identityZone.getId())
+                        .header("Authorization", "Bearer " + userAccessTokenReadAndAdmin)
+                        .header(IdentityZoneSwitchingFilter.HEADER, identityZone.getId())
+                        .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -2352,8 +2352,8 @@ class IdentityZoneEndpointsMockMvcTests {
 
     private IdentityZone getIdentityZone(String id, HttpStatus expect, String token) throws Exception {
         MvcResult result = mockMvc.perform(
-                        get("/identity-zones/" + id)
-                                .header("Authorization", "Bearer " + token))
+                get("/identity-zones/" + id)
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().is(expect.value()))
                 .andReturn();
 
@@ -2381,10 +2381,10 @@ class IdentityZoneEndpointsMockMvcTests {
         identityZone.getConfig().getSamlConfig().setCertificate(serviceProviderCertificate);
 
         MvcResult result = mockMvc.perform(
-                        post("/identity-zones")
-                                .header("Authorization", "Bearer " + token)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                post("/identity-zones")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andExpect(status().is(expect.value()))
                 .andExpect(content().string(containsString(expectedContent)))
                 .andReturn();
@@ -2397,10 +2397,10 @@ class IdentityZoneEndpointsMockMvcTests {
 
     private IdentityZone updateZone(String id, IdentityZone identityZone, HttpStatus expect, String expectedContent, String token) throws Exception {
         MvcResult result = mockMvc.perform(
-                        put("/identity-zones/" + id)
-                                .header("Authorization", "Bearer " + token)
-                                .contentType(APPLICATION_JSON)
-                                .content(JsonUtils.writeValueAsString(identityZone)))
+                put("/identity-zones/" + id)
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON)
+                        .content(JsonUtils.writeValueAsString(identityZone)))
                 .andDo(print())
                 .andExpect(status().is(expect.value()))
                 .andExpect(content().string(containsString(expectedContent)))

@@ -81,11 +81,9 @@ public class DefaultRedirectResolver implements RedirectResolver {
 
         if (redirectUris != null && !redirectUris.isEmpty()) {
             return obtainMatchingRedirect(redirectUris, requestedRedirect);
-        }
-        else if (StringUtils.hasText(requestedRedirect)) {
+        } else if (StringUtils.hasText(requestedRedirect)) {
             return requestedRedirect;
-        }
-        else {
+        } else {
             throw new InvalidRequestException("A redirect_uri must be supplied.");
         }
 

@@ -27,7 +27,8 @@ public final class SessionUtils {
     private static final String EXTERNAL_OAUTH_STATE_ATTRIBUTE_PREFIX = "external-oauth-state-";
     private static final String EXTERNAL_OAUTH_CODE_VERIFIER_ATTRIBUTE_PREFIX = "external-oauth-verifier-";
 
-    private SessionUtils() {}
+    private SessionUtils() {
+    }
 
     public static boolean isPasswordChangeRequired(HttpSession session) {
         Object passwordChangeRequired = session.getAttribute(PASSWORD_CHANGE_REQUIRED);

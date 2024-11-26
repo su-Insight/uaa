@@ -99,8 +99,8 @@ public final class WhitelistLogoutSuccessHandler extends SimpleUrlLogoutSuccessH
 
         Set<String> clientWhitelist = getClientWhitelist(request);
         Set<String> combinedWhitelist = Stream.of(
-                        Optional.ofNullable(whitelist).orElse(List.of()),
-                        Optional.ofNullable(clientWhitelist).orElse(Set.of()))
+                Optional.ofNullable(whitelist).orElse(List.of()),
+                Optional.ofNullable(clientWhitelist).orElse(Set.of()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 

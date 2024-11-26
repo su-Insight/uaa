@@ -39,8 +39,8 @@ public class UaaAuthenticationTestFactory {
 
     public static UaaAuthentication getAuthentication(String id, String name, String email, @NotNull Set<String> scopes) {
         return new UaaAuthentication(getPrincipal(id, name, email),
-                                     scopes.stream().map(scope -> new SimpleGrantedAuthority(scope)).collect(Collectors.toSet()),
-                                     null);
+                scopes.stream().map(scope -> new SimpleGrantedAuthority(scope)).collect(Collectors.toSet()),
+                null);
     }
 
     public static AuthzAuthenticationRequest getAuthenticationRequest(String name) {

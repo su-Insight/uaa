@@ -227,7 +227,7 @@ public final class TestOpenSamlObjects {
     }
 
     static <T extends SignableSAMLObject> T signed(T signable, Saml2X509Credential credential, String entityId,
-                                                   String signAlgorithmUri) {
+            String signAlgorithmUri) {
         SignatureSigningParameters parameters = new SignatureSigningParameters();
         Credential signingCredential = getSigningCredential(credential, entityId);
         parameters.setSigningCredential(signingCredential);
@@ -570,8 +570,8 @@ public final class TestOpenSamlObjects {
     }
 
     public static String getEncodedAssertion(String issuerEntityId,
-                                             String format, String username,
-                                             String spEndpoint, String audienceEntityID, boolean sign) {
+            String format, String username,
+            String spEndpoint, String audienceEntityID, boolean sign) {
         final Instant now = Instant.now();
         final Instant until = now.plus(1, java.time.temporal.ChronoUnit.HOURS);
 

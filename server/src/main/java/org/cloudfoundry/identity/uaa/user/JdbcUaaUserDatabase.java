@@ -207,22 +207,22 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
     private UaaUserPrototype getUaaUserPrototype(ResultSet rs) throws SQLException {
         String id = rs.getString("id");
         UaaUserPrototype prototype = new UaaUserPrototype().withId(id)
-            .withUsername(rs.getString("username"))
-            .withPassword(rs.getString("password"))
-            .withEmail(rs.getString("email"))
-            .withGivenName(rs.getString("givenName"))
-            .withFamilyName(rs.getString("familyName"))
-            .withCreated(rs.getTimestamp("created"))
-            .withModified(rs.getTimestamp("lastModified"))
-            .withOrigin(rs.getString("origin"))
-            .withExternalId(rs.getString("external_id"))
-            .withVerified(rs.getBoolean("verified"))
-            .withZoneId(rs.getString("identity_zone_id"))
-            .withSalt(rs.getString("salt"))
-            .withPasswordLastModified(rs.getTimestamp("passwd_lastmodified"))
-            .withPhoneNumber(rs.getString("phoneNumber"))
-            .withLegacyVerificationBehavior(rs.getBoolean("legacy_verification_behavior"))
-            .withPasswordChangeRequired(rs.getBoolean("passwd_change_required"));
+                .withUsername(rs.getString("username"))
+                .withPassword(rs.getString("password"))
+                .withEmail(rs.getString("email"))
+                .withGivenName(rs.getString("givenName"))
+                .withFamilyName(rs.getString("familyName"))
+                .withCreated(rs.getTimestamp("created"))
+                .withModified(rs.getTimestamp("lastModified"))
+                .withOrigin(rs.getString("origin"))
+                .withExternalId(rs.getString("external_id"))
+                .withVerified(rs.getBoolean("verified"))
+                .withZoneId(rs.getString("identity_zone_id"))
+                .withSalt(rs.getString("salt"))
+                .withPasswordLastModified(rs.getTimestamp("passwd_lastmodified"))
+                .withPhoneNumber(rs.getString("phoneNumber"))
+                .withLegacyVerificationBehavior(rs.getBoolean("legacy_verification_behavior"))
+                .withPasswordChangeRequired(rs.getBoolean("passwd_change_required"));
 
         Long lastLogon = rs.getLong("last_logon_success_time");
         if (rs.wasNull()) {
@@ -233,7 +233,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
             previousLogon = null;
         }
         prototype.withLastLogonSuccess(lastLogon)
-            .withPreviousLogonSuccess(previousLogon);
+                .withPreviousLogonSuccess(previousLogon);
         return prototype;
     }
 
@@ -257,7 +257,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
         public UaaUser mapRow(ResultSet rs, int rowNum) throws SQLException {
             UaaUserPrototype prototype = getUaaUserPrototype(rs);
             List<GrantedAuthority> authorities =
-                AuthorityUtils.commaSeparatedStringToAuthorityList(getAuthorities(prototype.getId()));
+                    AuthorityUtils.commaSeparatedStringToAuthorityList(getAuthorities(prototype.getId()));
             return new UaaUser(prototype.withAuthorities(authorities));
         }
 
@@ -295,7 +295,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
             getAuthorities(authorities, newMemberIdList);
         }
 
-        private List<Map<String,Object>> executeAuthoritiesQuery(List<String> memberList) {
+        private List<Map<String, Object>> executeAuthoritiesQuery(List<String> memberList) {
             Vendor dbVendor = databaseUrlModifier.getDatabaseType();
             if (Vendor.postgresql.equals(dbVendor)) {
                 return executeAuthoritiesQueryPostgresql(memberList);
@@ -307,7 +307,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
         }
 
         private List<Map<String, Object>> executeAuthoritiesQueryDefault(List<String> memberList) {
-            List<Map<String,Object>> results = new ArrayList<>();
+            List<Map<String, Object>> results = new ArrayList<>();
             while (!memberList.isEmpty()) {
                 StringBuilder dynamicAuthoritiesQuery = new StringBuilder("select g.id,g.displayName from ")
                         .append(quotedGroupsIdentifier)
@@ -318,7 +318,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
                 }
                 dynamicAuthoritiesQuery.append("?);");
 
-                Object[] parameterList = ArrayUtils.addAll(new Object[] { identityZoneManager.getCurrentIdentityZoneId() }, memberList.subList(0, size).toArray());
+                Object[] parameterList = ArrayUtils.addAll(new Object[]{identityZoneManager.getCurrentIdentityZoneId()}, memberList.subList(0, size).toArray());
 
                 results.addAll(jdbcTemplate.queryForList(dynamicAuthoritiesQuery.toString(), parameterList));
                 memberList = memberList.subList(size, memberList.size());
@@ -328,13 +328,13 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
 
         private List<Map<String, Object>> executeAuthoritiesQueryPostgresql(List<String> memberList) {
             String arrayAuthoritiesQuery = "select g.id,g.displayName from groups g, group_membership m where g.id = m.group_id  and g.identity_zone_id=? and m.member_id = ANY(?)";
-            Object[] parameterList = new Object[] { identityZoneManager.getCurrentIdentityZoneId() , memberList.toArray(new String[0])};
+            Object[] parameterList = new Object[]{identityZoneManager.getCurrentIdentityZoneId(), memberList.toArray(new String[0])};
             return jdbcTemplate.queryForList(arrayAuthoritiesQuery, parameterList);
         }
 
         private List<Map<String, Object>> executeAuthoritiesQueryHSQL(List<String> memberList) {
             String arrayAuthoritiesQuery = "select g.id,g.displayName from groups g, group_membership m where g.id = m.group_id  and g.identity_zone_id=? and m.member_id IN (UNNEST(?))";
-            Object[] parameterList = new Object[] { identityZoneManager.getCurrentIdentityZoneId() , memberList.toArray(new String[0])};
+            Object[] parameterList = new Object[]{identityZoneManager.getCurrentIdentityZoneId(), memberList.toArray(new String[0])};
             return jdbcTemplate.queryForList(arrayAuthoritiesQuery, parameterList);
         }
     }

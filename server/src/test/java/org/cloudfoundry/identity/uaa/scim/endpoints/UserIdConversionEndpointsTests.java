@@ -248,7 +248,7 @@ class UserIdConversionEndpointsTests {
         final boolean lastPageIncomplete = expectedUsers.size() % resultsPerPage != 0;
         final int expectedPages = expectedUsers.size() / resultsPerPage + (lastPageIncomplete ? 1 : 0);
 
-        final Function<Integer, SearchResults<Map<String, Object>>> fetchNextPage = (startIndex) -> {
+        final Function<Integer, SearchResults<Map<String, Object>>> fetchNextPage = startIndex -> {
             final ResponseEntity<Object> response = endpoints.findUsers(
                     filter, "ascending", startIndex, resultsPerPage, includeInactive
             );
@@ -279,7 +279,7 @@ class UserIdConversionEndpointsTests {
         }
 
         // check next page -> should be empty
-        final SearchResults<Map<String, Object>> responseBody = fetchNextPage.apply(currentStartIndex);;
+        final SearchResults<Map<String, Object>> responseBody = fetchNextPage.apply(currentStartIndex);
         assertThat(responseBody.getTotalResults()).isEqualTo(expectedUsers.size());
         assertThat(responseBody.getResources()).isNotNull().isEmpty();
 

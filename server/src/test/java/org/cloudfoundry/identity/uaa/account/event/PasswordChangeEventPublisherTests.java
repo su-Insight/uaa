@@ -145,7 +145,7 @@ class PasswordChangeEventPublisherTests {
     private ScimUser scimUserFrom(String userName, List<String> emailAddresses) {
         ScimUser scimUser = new ScimUser(userName, userName, userName, userName);
         if (emailAddresses != null) {
-            List<ScimUser.Email> emails = emailAddresses.stream().map((emailAddress) -> {
+            List<ScimUser.Email> emails = emailAddresses.stream().map(emailAddress -> {
                 ScimUser.Email email = new ScimUser.Email();
                 email.setValue(emailAddress);
                 return email;

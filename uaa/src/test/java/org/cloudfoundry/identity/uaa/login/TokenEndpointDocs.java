@@ -854,13 +854,13 @@ class TokenEndpointDocs extends AbstractTokenMockMvcTests {
 
 
         mockMvc.perform(get
-                        .header("Authorization", "Bearer " + adminToken))
+                .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()), requestHeaders, pathParameters));
 
         mockMvc.perform(
-                        get("/oauth/clients")
-                                .header("Authorization", "Bearer " + userInfoToken))
+                get("/oauth/clients")
+                        .header("Authorization", "Bearer " + userInfoToken))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("\"error\":\"invalid_token\"")));
     }
@@ -911,26 +911,26 @@ class TokenEndpointDocs extends AbstractTokenMockMvcTests {
         );
 
         mockMvc.perform(
-                        get("/userinfo")
-                                .header("Authorization", "Bearer " + userInfoTokenToRevoke))
+                get("/userinfo")
+                        .header("Authorization", "Bearer " + userInfoTokenToRevoke))
                 .andExpect(status().isOk());
 
         MockHttpServletRequestBuilder get = RestDocumentationRequestBuilders.get("/oauth/token/revoke/user/{userId}/client/{clientId}", user.getId(), client.getClientId());
 
         mockMvc.perform(get
-                        .header("Authorization", "Bearer " + adminToken))
+                .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()), requestHeaders, pathParameters));
 
         mockMvc.perform(
-                        get("/userinfo")
-                                .header("Authorization", "Bearer " + userInfoTokenToRevoke))
+                get("/userinfo")
+                        .header("Authorization", "Bearer " + userInfoTokenToRevoke))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("\"error\":\"invalid_token\"")));
 
         mockMvc.perform(
-                        get("/userinfo")
-                                .header("Authorization", "Bearer " + userInfoTokenToRemainValid))
+                get("/userinfo")
+                        .header("Authorization", "Bearer " + userInfoTokenToRemainValid))
                 .andExpect(status().isOk());
     }
 
@@ -962,13 +962,13 @@ class TokenEndpointDocs extends AbstractTokenMockMvcTests {
         Snippet pathParameters = pathParameters(parameterWithName("clientId").description("The id of the client"));
         MockHttpServletRequestBuilder get = RestDocumentationRequestBuilders.get("/oauth/token/revoke/client/{clientId}", client.getClientId());
         mockMvc.perform(get
-                        .header("Authorization", "Bearer " + adminToken))
+                .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()), requestHeaders, pathParameters));
 
         mockMvc.perform(
-                        get("/oauth/clients")
-                                .header("Authorization", "Bearer " + readClientsToken))
+                get("/oauth/clients")
+                        .header("Authorization", "Bearer " + readClientsToken))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("\"error\":\"invalid_token\"")));
     }
@@ -1016,7 +1016,7 @@ class TokenEndpointDocs extends AbstractTokenMockMvcTests {
         MockHttpServletRequestBuilder delete = RestDocumentationRequestBuilders.delete("/oauth/token/revoke/{tokenId}", userInfoToken);
 
         mockMvc.perform(delete
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + userInfoToken))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + userInfoToken))
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()), requestHeaders, pathParameters));
     }
@@ -1054,9 +1054,9 @@ class TokenEndpointDocs extends AbstractTokenMockMvcTests {
         MockHttpServletRequestBuilder get = RestDocumentationRequestBuilders.get("/oauth/token/list/client/{clientId}", client.getClientId());
 
         mockMvc.perform(
-                        get
-                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + clientToken)
-                                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+                get
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + clientToken)
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()), requestHeaders, pathParameters, listTokenResponseFields));
     }
@@ -1105,9 +1105,9 @@ class TokenEndpointDocs extends AbstractTokenMockMvcTests {
         MockHttpServletRequestBuilder get = RestDocumentationRequestBuilders.get("/oauth/token/list/user/{userId}", user.getId());
 
         mockMvc.perform(
-                        get
-                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + clientToken)
-                                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
+                get
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + clientToken)
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()), requestHeaders, pathParameters, listTokenResponseFields));
     }

@@ -70,7 +70,7 @@ public class UaaMapUtilsTest {
 
     @Test
     public void testFlatten() {
-        Map<String,Object> flat = UaaMapUtils.flatten(top);
+        Map<String, Object> flat = UaaMapUtils.flatten(top);
         assertSame(emptyMap, flat.get("secondB.thirdC.emptyMap"));
         assertSame(secondA, flat.get("secondA"));
         assertEquals("valueC", flat.get("secondB.thirdC.keyC"));
@@ -94,19 +94,19 @@ public class UaaMapUtilsTest {
     @Test
     public void sort_nested_map() {
         List<String> expectedOrder = Arrays.asList(
-            "secondA",
-            "thirdA",
-            "keyA",
-            "thirdB",
-            "keyB",
-            "secondB",
-            "thirdB",
-            "keyB",
-            "thirdC",
-            "emptyMap",
-            "emptyString",
-            "keyC",
-            "nullValue"
+                "secondA",
+                "thirdA",
+                "keyA",
+                "thirdB",
+                "keyB",
+                "secondB",
+                "thirdB",
+                "keyB",
+                "thirdC",
+                "emptyMap",
+                "emptyString",
+                "keyC",
+                "nullValue"
         );
         assertNotEquals(expectedOrder, visit_all_keys(top));
         assertEquals(expectedOrder, visit_all_keys(sortByKeys(top)));
@@ -115,49 +115,49 @@ public class UaaMapUtilsTest {
     @Test
     public void print_sorted_yaml() {
         String expected = "---\n" +
-            "secondA:\n" +
-            "  thirdA:\n" +
-            "    keyA: valueA\n" +
-            "  thirdB:\n" +
-            "    keyB: valueB\n" +
-            "secondB:\n" +
-            "  thirdB:\n" +
-            "    keyB: valueB\n" +
-            "  thirdC:\n" +
-            "    emptyMap: {\n" +
-            "      }\n" +
-            "    emptyString: ''\n" +
-            "    keyC: valueC\n" +
-            "    nullValue: null\n";
+                "secondA:\n" +
+                "  thirdA:\n" +
+                "    keyA: valueA\n" +
+                "  thirdB:\n" +
+                "    keyB: valueB\n" +
+                "secondB:\n" +
+                "  thirdB:\n" +
+                "    keyB: valueB\n" +
+                "  thirdC:\n" +
+                "    emptyMap: {\n" +
+                "      }\n" +
+                "    emptyString: ''\n" +
+                "    keyC: valueC\n" +
+                "    nullValue: null\n";
         assertEquals(expected, prettyPrintYaml(top));
     }
 
     @Test
     public void testHideConfigValues() {
         String expected = "---\n" +
-            "secondA:\n" +
-            "  thirdA:\n" +
-            "    keyA: <redacted>\n" +
-            "  thirdB:\n" +
-            "    keyB: <redacted>\n" +
-            "secondB:\n" +
-            "  thirdB:\n" +
-            "    keyB: <redacted>\n" +
-            "  thirdC:\n" +
-            "    emptyMap: {\n" +
-            "      }\n" +
-            "    emptyString: ''\n" +
-            "    keyC: <redacted>\n" +
-            "    nullValue: null\n";
+                "secondA:\n" +
+                "  thirdA:\n" +
+                "    keyA: <redacted>\n" +
+                "  thirdB:\n" +
+                "    keyB: <redacted>\n" +
+                "secondB:\n" +
+                "  thirdB:\n" +
+                "    keyB: <redacted>\n" +
+                "  thirdC:\n" +
+                "    emptyMap: {\n" +
+                "      }\n" +
+                "    emptyString: ''\n" +
+                "    keyC: <redacted>\n" +
+                "    nullValue: null\n";
         assertEquals(expected, prettyPrintYaml(redactValues(top)));
     }
 
-    private void checkRedacted(Map<String,?> map) {
+    private void checkRedacted(Map<String, ?> map) {
         for (String key : map.keySet()) {
             Object value = map.get(key);
             if (value instanceof Map) {
-                checkRedacted((Map)value);
-            } else  {
+                checkRedacted((Map) value);
+            } else {
                 assertEquals("<redacted>", value);
             }
         }

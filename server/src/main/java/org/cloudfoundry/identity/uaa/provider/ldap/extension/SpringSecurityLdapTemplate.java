@@ -95,7 +95,7 @@ public class SpringSecurityLdapTemplate extends LdapTemplate {
                 ctls.setReturningAttributes(NO_ATTRS);
                 ctls.setSearchScope(SearchControls.OBJECT_SCOPE);
 
-                NamingEnumeration<SearchResult> results = ctx.search(dn, comparisonFilter, new Object[] {value}, ctls);
+                NamingEnumeration<SearchResult> results = ctx.search(dn, comparisonFilter, new Object[]{value}, ctls);
 
                 Boolean match = results.hasMore();
                 LdapUtils.closeEnumeration(results);
@@ -118,15 +118,15 @@ public class SpringSecurityLdapTemplate extends LdapTemplate {
     public DirContextOperations retrieveEntry(final String dn, final String[] attributesToRetrieve) {
 
         return (DirContextOperations) executeReadOnly(new ContextExecutor() {
-                public Object executeWithContext(DirContext ctx) throws NamingException {
-                    Attributes attrs = ctx.getAttributes(dn, attributesToRetrieve);
+            public Object executeWithContext(DirContext ctx) throws NamingException {
+                Attributes attrs = ctx.getAttributes(dn, attributesToRetrieve);
 
-                    // Object object = ctx.lookup(LdapUtils.getRelativeName(dn, ctx));
+                // Object object = ctx.lookup(LdapUtils.getRelativeName(dn, ctx));
 
-                    return new DirContextAdapter(attrs, new DistinguishedName(dn),
-                            new DistinguishedName(ctx.getNameInNamespace()));
-                }
-            });
+                return new DirContextAdapter(attrs, new DistinguishedName(dn),
+                        new DistinguishedName(ctx.getNameInNamespace()));
+            }
+        });
     }
 
     /**
@@ -148,7 +148,7 @@ public class SpringSecurityLdapTemplate extends LdapTemplate {
         // Escape the params acording to RFC2254
         Object[] encodedParams = new String[params.length];
 
-        for (int i=0; i < params.length; i++) {
+        for (int i = 0; i < params.length; i++) {
             encodedParams[i] = LdapEncoder.filterEncode(params[i].toString());
         }
 
@@ -169,7 +169,7 @@ public class SpringSecurityLdapTemplate extends LdapTemplate {
                         record.put(attributeName, values);
                     }
                 }
-                record.put(DN_KEY, new String[] {adapter.getDn().toString()});
+                record.put(DN_KEY, new String[]{adapter.getDn().toString()});
                 set.add(record);
                 return null;
             }
@@ -198,12 +198,12 @@ public class SpringSecurityLdapTemplate extends LdapTemplate {
      */
     public Set<String> searchForSingleAttributeValues(final String base, final String filter, final Object[] params,
             final String attributeName) {
-        String[] attributeNames = new String[] {attributeName};
-        Set<Map<String,String[]>> multipleAttributeValues = searchForMultipleAttributeValues(base,filter,params,attributeNames);
+        String[] attributeNames = new String[]{attributeName};
+        Set<Map<String, String[]>> multipleAttributeValues = searchForMultipleAttributeValues(base, filter, params, attributeNames);
         Set<String> result = new HashSet<String>();
-        for (Map<String,String[]> map : multipleAttributeValues) {
+        for (Map<String, String[]> map : multipleAttributeValues) {
             String[] values = map.get(attributeName);
-            if (values!=null && values.length>0) {
+            if (values != null && values.length > 0) {
                 result.addAll(Arrays.asList(values));
             }
         }
@@ -229,9 +229,9 @@ public class SpringSecurityLdapTemplate extends LdapTemplate {
     public DirContextOperations searchForSingleEntry(final String base, final String filter, final Object[] params) {
 
         return (DirContextOperations) executeReadOnly(new ContextExecutor() {
-                public Object executeWithContext(DirContext ctx) throws NamingException {
-                    return searchForSingleEntryInternal(ctx, searchControls, base, filter, params);
-                }
+            public Object executeWithContext(DirContext ctx) throws NamingException {
+                return searchForSingleEntryInternal(ctx, searchControls, base, filter, params);
+            }
         });
     }
 

@@ -73,7 +73,7 @@ public class AccessController {
 
     @RequestMapping("/oauth/confirm_access")
     public String confirm(Map<String, Object> model, final HttpServletRequest request, Principal principal,
-                          SessionStatus sessionStatus) {
+            SessionStatus sessionStatus) {
 
         if (!(principal instanceof Authentication)) {
             sessionStatus.setComplete();
@@ -95,7 +95,7 @@ public class AccessController {
 
             Map<String, Object> additionalInfo = client.getAdditionalInformation();
             String clientDisplayName = (String) additionalInfo.get(ClientConstants.CLIENT_NAME);
-            model.put("client_display_name", (clientDisplayName != null) ? clientDisplayName : clientId);
+            model.put("client_display_name", clientDisplayName != null ? clientDisplayName : clientId);
 
             // Find the auto approved scopes for this clients
             Set<String> autoApproved = client.getAutoApproveScopes();
@@ -112,7 +112,7 @@ public class AccessController {
             // Remove auto approved scopes
             List<Approval> approvals = approvalStore.getApprovals(Origin.getUserId((Authentication) principal), clientId, IdentityZoneHolder.get().getId());
             for (Approval approval : approvals) {
-                if (!(autoApprovedScopes.contains(approval.getScope()))) {
+                if (!autoApprovedScopes.contains(approval.getScope())) {
                     filteredApprovals.add(approval);
                 }
             }

@@ -76,7 +76,7 @@ public class ScimUserEndpointsIntegrationTests {
 
     @Before
     public void createRestTemplate() {
-        client = (RestTemplate)serverRunning.getRestTemplate();
+        client = (RestTemplate) serverRunning.getRestTemplate();
         client.setErrorHandler(new OAuth2ErrorHandler(context.getResource()) {
             // Pass errors through in response entity for status code analysis
             @Override
@@ -95,7 +95,7 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + version + "\"");
         return client.exchange(serverRunning.getUrl(userEndpoint + "/{id}"), HttpMethod.DELETE, new HttpEntity<Void>(
-            headers), Map.class, id);
+                headers), Map.class, id);
     }
 
     private ResponseEntity<ScimUser> createUser(String username, String firstName, String lastName, String email) {
@@ -109,7 +109,7 @@ public class ScimUserEndpointsIntegrationTests {
     }
 
     private ResponseEntity<ScimUser> createUser(String username, String firstName, String lastName,
-                    String email, boolean verified) {
+            String email, boolean verified) {
         ScimUser user = new ScimUser();
         user.setPassword("password");
         user.setUserName(username);
@@ -168,7 +168,7 @@ public class ScimUserEndpointsIntegrationTests {
         assertEquals(joe1.getId(), joe2.getId());
         assertFalse(joe2.isVerified());
         ScimUser joe3 = client.getForObject(serverRunning.getUrl(userEndpoint + "/{id}/verify"), ScimUser.class,
-                        joe1.getId());
+                joe1.getId());
         assertTrue(joe3.isVerified());
         ScimUser joe4 = client.getForObject(serverRunning.getUrl(userEndpoint + "/{id}"), ScimUser.class, joe1.getId());
         assertTrue(joe4.isVerified());
@@ -182,10 +182,10 @@ public class ScimUserEndpointsIntegrationTests {
     public void verifyUserNotFound() {
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<Map> response = client.exchange(serverRunning.getUrl(userEndpoint + "/{id}/verify"),
-            HttpMethod.GET,
-            new HttpEntity<Void>(headers),
-            Map.class,
-            "this-user-id-doesnt-exist");
+                HttpMethod.GET,
+                new HttpEntity<Void>(headers),
+                Map.class,
+                "this-user-id-doesnt-exist");
 
         @SuppressWarnings("unchecked")
         Map<String, String> error = response.getBody();
@@ -218,7 +218,7 @@ public class ScimUserEndpointsIntegrationTests {
 
         // Check we can GET the user
         ResponseEntity<ScimUser> result = client.getForEntity(serverRunning.getUrl(userEndpoint + "/{id}"),
-                        ScimUser.class, joe.getId());
+                ScimUser.class, joe.getId());
         assertEquals("\"" + joe.getVersion() + "\"", result.getHeaders().getFirst("ETag"));
     }
 
@@ -237,7 +237,7 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
         response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}", HttpMethod.PUT,
-                        new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
+                new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
         ScimUser joe1 = response.getBody();
         assertEquals(JOE, joe1.getUserName());
 
@@ -256,7 +256,7 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
         response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}", HttpMethod.PUT,
-                        new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
+                new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
         ScimUser joe1 = response.getBody();
         assertEquals(JOE + "new", joe1.getUserName());
 
@@ -264,7 +264,7 @@ public class ScimUserEndpointsIntegrationTests {
 
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void updateUserWithBadAttributeFails() {
 
@@ -273,17 +273,17 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
         Map<String, Object> map = new HashMap<String, Object>(JsonUtils.readValue(JsonUtils.writeValueAsString(joe),
-            Map.class));
+                Map.class));
         map.put("nottheusername", JOE + "0");
         ResponseEntity<Map> response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}", HttpMethod.PUT,
-            new HttpEntity<Map>(map, headers), Map.class, joe.getId());
+                new HttpEntity<Map>(map, headers), Map.class, joe.getId());
         Map<String, Object> joe1 = response.getBody();
         assertTrue("Wrong message: " + joe1, ((String) joe1.get("message")).toLowerCase()
-            .contains("unrecognized field"));
+                .contains("unrecognized field"));
 
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void testJsonCaseInsensitivity() {
 
@@ -292,12 +292,12 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
         Map<String, Object> map = new HashMap<String, Object>(JsonUtils.readValue(JsonUtils.writeValueAsString(joe),
-                        Map.class));
+                Map.class));
         map.put("username", JOE + "0");
         map.remove("userName");
         ResponseEntity<ScimUser> response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}",
-            HttpMethod.PUT,
-            new HttpEntity<Map>(map, headers), ScimUser.class, joe.getId());
+                HttpMethod.PUT,
+                new HttpEntity<Map>(map, headers), ScimUser.class, joe.getId());
         ScimUser joe1 = response.getBody();
         assertEquals(JOE + "0", joe1.getUserName());
     }
@@ -313,13 +313,13 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
         response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}", HttpMethod.PUT,
-                        new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
+                new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
         ScimUser joe1 = response.getBody();
         assertEquals(JOE, joe1.getUserName());
 
         assertEquals(joe.getId(), joe1.getId());
         assertNull(joe1.getUserType()); // check that authorities was not
-                                        // updated
+        // updated
 
     }
 
@@ -335,7 +335,7 @@ public class ScimUserEndpointsIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
         response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}", HttpMethod.PUT,
-                        new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
+                new HttpEntity<ScimUser>(joe, headers), ScimUser.class, joe.getId());
         ScimUser joe1 = response.getBody();
         assertEquals(JOE, joe1.getUserName());
 
@@ -423,7 +423,7 @@ public class ScimUserEndpointsIntegrationTests {
 
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = client.exchange(serverRunning.getUrl(userEndpoint + "/{id}"), HttpMethod.DELETE,
-            new HttpEntity<Void>((Void) null), Map.class, deleteMe.getId());
+                new HttpEntity<Void>((Void) null), Map.class, deleteMe.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -431,7 +431,7 @@ public class ScimUserEndpointsIntegrationTests {
     public void getReturnsNotFoundForNonExistentUser() {
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = client.exchange(serverRunning.getUrl(userEndpoint + "/{id}"), HttpMethod.GET,
-            new HttpEntity<Void>((Void) null), Map.class, "9999");
+                new HttpEntity<Void>((Void) null), Map.class, "9999");
         @SuppressWarnings("unchecked")
         Map<String, String> error = response.getBody();
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -461,7 +461,7 @@ public class ScimUserEndpointsIntegrationTests {
     }
 
     @Test
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void findUsersWithAttributes() {
         ResponseEntity<Map> response = serverRunning.getForObject(usersEndpoint + "?attributes=id,userName", Map.class);
         Map<String, Object> results = response.getBody();
@@ -512,17 +512,17 @@ public class ScimUserEndpointsIntegrationTests {
     public void findUsersWithExtremePagination() {
         for (int i = 0; i < 501; i++) {
             ResponseEntity<ScimUser> scimUserResponseEntity = createUser(
-                new RandomValueStringGenerator().generate().toLowerCase(),
-                new RandomValueStringGenerator().generate().toLowerCase(),
-                new RandomValueStringGenerator().generate().toLowerCase(),
-                new RandomValueStringGenerator().generate().toLowerCase()
+                    new RandomValueStringGenerator().generate().toLowerCase(),
+                    new RandomValueStringGenerator().generate().toLowerCase(),
+                    new RandomValueStringGenerator().generate().toLowerCase(),
+                    new RandomValueStringGenerator().generate().toLowerCase()
             );
             scimUsers.add(scimUserResponseEntity.getBody());
         }
 
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = serverRunning
-                        .getForObject(usersEndpoint + "?startIndex=0&count=501", Map.class);
+                .getForObject(usersEndpoint + "?startIndex=0&count=501", Map.class);
         @SuppressWarnings("unchecked")
         Map<String, Object> results = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());

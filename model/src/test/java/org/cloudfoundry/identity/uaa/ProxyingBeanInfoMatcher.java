@@ -24,7 +24,7 @@ public class ProxyingBeanInfoMatcher<S>
     public static <S, T extends Matcher<S>> T proxying(Class<T> proxyClass) {
         return (T) Proxy.newProxyInstance(
                 proxyClass.getClassLoader(),
-                new Class<?>[] { proxyClass },
+                new Class<?>[]{proxyClass},
                 new ProxyingBeanInfoMatcher<>());
     }
 

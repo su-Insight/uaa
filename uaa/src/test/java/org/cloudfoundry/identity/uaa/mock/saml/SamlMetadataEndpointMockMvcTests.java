@@ -90,7 +90,7 @@ class SamlMetadataEndpointMockMvcTests {
         String subdomain = spZone.getSubdomain();
 
         mockMvc.perform(get(new URI("/saml/metadata"))
-                        .header(HOST, subdomain + ".localhost:8080"))
+                .header(HOST, subdomain + ".localhost:8080"))
                 .andDo(print())
                 .andExpectAll(
                         status().isOk(),
@@ -137,7 +137,7 @@ class SamlMetadataEndpointMockMvcTests {
             String subdomain = spZone.getSubdomain();
 
             mockMvc.perform(get(new URI("/saml/metadata"))
-                            .header(HOST, subdomain + ".localhost:8080"))
+                    .header(HOST, subdomain + ".localhost:8080"))
                     .andDo(print())
                     .andExpectAll(
                             status().isOk(),
@@ -159,7 +159,7 @@ class SamlMetadataEndpointMockMvcTests {
             String zoneSubdomain = alternativeSpZone.getSubdomain();
 
             mockMvc.perform(get(new URI("/saml/metadata"))
-                            .header(HOST, zoneSubdomain + ".localhost:8080"))
+                    .header(HOST, zoneSubdomain + ".localhost:8080"))
                     .andDo(print())
                     .andExpectAll(
                             status().isOk(),

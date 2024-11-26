@@ -28,7 +28,7 @@ import static java.util.Collections.emptyMap;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OIDCIdentityProviderDefinition extends AbstractExternalOAuthIdentityProviderDefinition<OIDCIdentityProviderDefinition>
-implements Cloneable {
+        implements Cloneable {
     private URL discoveryUrl;
     private boolean passwordGrantEnabled = false;
     private boolean setForwardHeader = false;
@@ -86,7 +86,7 @@ implements Cloneable {
     }
 
     public void setAdditionalAuthzParameters(final Map<String, String> additonalAuthzParameters) {
-        this.additionalAuthzParameters = new HashMap<>(additonalAuthzParameters!=null?additonalAuthzParameters: emptyMap());
+        this.additionalAuthzParameters = new HashMap<>(additonalAuthzParameters != null ? additonalAuthzParameters : emptyMap());
     }
 
     @Override

@@ -215,7 +215,7 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
                     .attributes(key("constraints").value("Optional"))
                     .optional().type(STRING)
                     .description(ALIAS_ZID_DESC_CREATE + " If set and the identity provider did not reference an alias before, an alias identity provider is created in the referenced zone and `" + FIELD_ALIAS_ID + "` is set accordingly. " +
-                    "If the identity provider already referenced an alias identity provider before the update, this field must be left unchanged.")
+                            "If the identity provider already referenced an alias identity provider before the update, this field must be left unchanged.")
     };
 
     private FieldDescriptor[] attributeMappingFields = {
@@ -606,14 +606,14 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
                 fieldWithPath("config.attributeMappings.user_name").optional("sub").type(STRING).description("Map `user_name` to the attribute for user name in the provider assertion or token. The default for OpenID Connect is `sub`"),
                 fieldWithPath("config.groupMappingMode").optional(AbstractExternalOAuthIdentityProviderDefinition.OAuthGroupMappingMode.EXPLICITLY_MAPPED).type(STRING).description("Either ``EXPLICITLY_MAPPED`` in order to map external claim values to OAuth scopes using the group mappings, or ``AS_SCOPES`` to use claim values names as scopes. You need to define also ``external_groups`` for the mapping in order to use this feature."),
                 fieldWithPath("config.authMethod").optional("client_secret_basic").type(STRING).description("<small><mark>UAA 77.10.0</mark></small> Define an explicit method to authenticate against the identity provider. Supported values are `client_secret_basic`, `client_secret_post`, `private_key_jwt`, and `none`. Remark: If you switch the method from `client_secret_basic` to `private_key_jwt` or to `none`, your existing `config.relyingPartySecret` will be removed from UAA database. If you want to switch back to `client_secret_basic`, provide again a `config.relyingPartySecret` in the configuration."),
-                fieldWithPath("config.jwtClientAuthentication").constrained("Required if `config.authMethod` is set to `private_key_jwt`").type(OBJECT).description("<small><mark>UAA 76.5.0</mark></small> Only effective if relyingPartySecret is not set or null. Creates private_key_jwt client authentication according to OIDC or OAuth2 (RFC 7523) standard. "+
-                "<br>For standard OIDC compliance, set this field to `true`. Alternatively, you can further configure the created JWT for client authentication by setting this parameter to an Object containing sub-parameters, e.g. if your IdP follows OAuth2 standard according to RFC 7523. The supported sub-parameters are" +
-                "<ul><li>    `kid`  <small><mark>UAA 76.18.0</mark></small> Optional custom key from your defined keys, defaults to `activeKeyId` from token policy section</li>" +
-                "<li>        `key`  <small><mark>UAA 77.4.0</mark></small> Optional custom private key, used to generate the client JWT signature, defaults to key from token policy, depending on `kid` </li>" +
-                "<li>        `cert` <small><mark>UAA 77.4.0</mark></small> Optional custom X509 certificate, related to key, used to generate the client JWT with x5t header, defaults to a cert from token policy or omits x5t header </li>" +
-                "<li>        `iss`  Optional custom issuer, see RFC 7523, defaults to `relyingPartyId` for OIDC compliance</li>" +
-                "<li>        `aud`  Optional custom audience, see RFC 7523, defaults to `tokenUrl` for OIDC compliance</li></ul><p>"+
-                "The values in the list can be a reference to another section in uaa yaml, e.g. define for key a reference like ${\"jwt.client.key\"}. This will load the private key from yaml context jwt.client.key. The advantage is, that you can use a single key for many IdP configurations and the key itself is not persistent in the UAA DB.</p>"),
+                fieldWithPath("config.jwtClientAuthentication").constrained("Required if `config.authMethod` is set to `private_key_jwt`").type(OBJECT).description("<small><mark>UAA 76.5.0</mark></small> Only effective if relyingPartySecret is not set or null. Creates private_key_jwt client authentication according to OIDC or OAuth2 (RFC 7523) standard. " +
+                        "<br>For standard OIDC compliance, set this field to `true`. Alternatively, you can further configure the created JWT for client authentication by setting this parameter to an Object containing sub-parameters, e.g. if your IdP follows OAuth2 standard according to RFC 7523. The supported sub-parameters are" +
+                        "<ul><li>    `kid`  <small><mark>UAA 76.18.0</mark></small> Optional custom key from your defined keys, defaults to `activeKeyId` from token policy section</li>" +
+                        "<li>        `key`  <small><mark>UAA 77.4.0</mark></small> Optional custom private key, used to generate the client JWT signature, defaults to key from token policy, depending on `kid` </li>" +
+                        "<li>        `cert` <small><mark>UAA 77.4.0</mark></small> Optional custom X509 certificate, related to key, used to generate the client JWT with x5t header, defaults to a cert from token policy or omits x5t header </li>" +
+                        "<li>        `iss`  Optional custom issuer, see RFC 7523, defaults to `relyingPartyId` for OIDC compliance</li>" +
+                        "<li>        `aud`  Optional custom audience, see RFC 7523, defaults to `tokenUrl` for OIDC compliance</li></ul><p>" +
+                        "The values in the list can be a reference to another section in uaa yaml, e.g. define for key a reference like ${\"jwt.client.key\"}. This will load the private key from yaml context jwt.client.key. The advantage is, that you can use a single key for many IdP configurations and the key itself is not persistent in the UAA DB.</p>"),
         }, attributeMappingFields));
 
         Snippet requestFields = requestFields(
@@ -717,13 +717,13 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
                 fieldWithPath("config.passwordGrantEnabled").optional(false).type(BOOLEAN).description("Enable Resource Owner Password Grant flow for this identity provider."),
                 fieldWithPath("config.setForwardHeader").optional(false).type(BOOLEAN).description("Only effective if Password Grant enabled. Set X-Forward-For header in Password Grant request to this identity provider."),
                 fieldWithPath("config.authMethod").optional("client_secret_basic").type(STRING).description("<small><mark>UAA 77.10.0</mark></small> Define an explicit method to authenticate against the identity provider. Supported values are `client_secret_basic`, `client_secret_post`, `private_key_jwt`, and `none`. Remark: If you switch the method from `client_secret_basic` to `private_key_jwt` or to `none`, your existing `config.relyingPartySecret` will be removed from UAA database. If you want to switch back to `client_secret_basic`, provide again a `config.relyingPartySecret` in the configuration."),
-                fieldWithPath("config.jwtClientAuthentication").constrained("Required if `config.authMethod` is set to `private_key_jwt`").type(OBJECT).description("<small><mark>UAA 76.5.0</mark></small> Only effective if relyingPartySecret is not set or null. Creates private_key_jwt client authentication according to OIDC or OAuth2 (RFC 7523) standard. "+
+                fieldWithPath("config.jwtClientAuthentication").constrained("Required if `config.authMethod` is set to `private_key_jwt`").type(OBJECT).description("<small><mark>UAA 76.5.0</mark></small> Only effective if relyingPartySecret is not set or null. Creates private_key_jwt client authentication according to OIDC or OAuth2 (RFC 7523) standard. " +
                         "<br>For standard OIDC compliance, set this field to `true`. Alternatively, you can further configure the created JWT for client authentication by setting this parameter to an Object containing sub-parameters, e.g. if your IdP follows OAuth2 standard according to RFC 7523. The supported sub-parameters are" +
                         "<ul><li>    `kid`  <small><mark>UAA 76.18.0</mark></small> Optional custom key from your defined keys, defaults to `activeKeyId` from token policy section</li>" +
                         "<li>        `key`  <small><mark>UAA 77.4.0</mark></small> Optional custom private key, used to generate the client JWT signature, defaults to key from token policy, depending on `kid` </li>" +
                         "<li>        `cert` <small><mark>UAA 77.4.0</mark></small> Optional custom X509 certificate, related to key, used to generate the client JWT with x5t header, defaults to a cert from token policy or omits x5t header </li>" +
                         "<li>        `iss`  Optional custom issuer, see RFC 7523, defaults to `relyingPartyId` for OIDC compliance</li>" +
-                        "<li>        `aud`  Optional custom audience, see RFC 7523, defaults to `tokenUrl` for OIDC compliance</li></ul><p>"+
+                        "<li>        `aud`  Optional custom audience, see RFC 7523, defaults to `tokenUrl` for OIDC compliance</li></ul><p>" +
                         "The values in the list can be a reference to another section in uaa yaml, e.g. define for key a reference like ${\"jwt.client.key\"}. This will load the private key from yaml context jwt.client.key. The advantage is, that you can use a single key for many IdP configurations and the key itself is not persistent in the UAA DB.</p>"),
                 fieldWithPath("config.attributeMappings.user_name").optional("sub").type(STRING).description("Map `user_name` to the attribute for user name in the provider assertion or token. The default for OpenID Connect is `sub`."),
                 fieldWithPath("config.additionalAuthzParameters").optional(null).type(OBJECT).description("<small><mark>UAA 76.17.0</mark></small>Map of key-value pairs that are added as additional parameters for grant type `authorization_code`. For example, configure an entry with key `token_format` and value `jwt`."),
@@ -864,8 +864,8 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
     }
 
     void createLDAPProvider(IdentityProvider<LdapIdentityProviderDefinition> identityProvider,
-                            FieldDescriptor[] fields,
-                            String name) throws Exception {
+            FieldDescriptor[] fields,
+            String name) throws Exception {
         Map<String, Object> attributeMappings = new HashedMap(identityProvider.getConfig().getAttributeMappings());
         attributeMappings.put(EMAIL_VERIFIED_ATTRIBUTE_NAME, "emailVerified");
         identityProvider.getConfig().setAttributeMappings(attributeMappings);
@@ -931,7 +931,7 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
                         .param("username", "marissa4")
                         .param("password", "ldap4")
         )
-                .andExpect(status().isFound())
+        .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/"));
 
     }
@@ -975,20 +975,20 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
     @Test
     void getFilteredIdentityProviders() throws Exception {
         Snippet responseFields = responseFields(
-            fieldWithPath("[].type").description("Type of the identity provider."),
-            fieldWithPath("[].originKey").description("Unique identifier for the identity provider."),
-            fieldWithPath("[].name").description(NAME_DESC),
-            fieldWithPath("[].config").description(CONFIG_DESCRIPTION),
-            fieldWithPath("[]." + FIELD_ALIAS_ID).description(ALIAS_ID_DESC).attributes(key("constraints").value("Optional")).optional().type(STRING),
-            fieldWithPath("[]." + FIELD_ALIAS_ZID).description(ALIAS_ZID_DESC).attributes(key("constraints").value("Optional")).optional().type(STRING),
+                fieldWithPath("[].type").description("Type of the identity provider."),
+                fieldWithPath("[].originKey").description("Unique identifier for the identity provider."),
+                fieldWithPath("[].name").description(NAME_DESC),
+                fieldWithPath("[].config").description(CONFIG_DESCRIPTION),
+                fieldWithPath("[]." + FIELD_ALIAS_ID).description(ALIAS_ID_DESC).attributes(key("constraints").value("Optional")).optional().type(STRING),
+                fieldWithPath("[]." + FIELD_ALIAS_ZID).description(ALIAS_ZID_DESC).attributes(key("constraints").value("Optional")).optional().type(STRING),
 
-            fieldWithPath("[].version").description(VERSION_DESC),
-            fieldWithPath("[].active").description(ACTIVE_DESC),
+                fieldWithPath("[].version").description(VERSION_DESC),
+                fieldWithPath("[].active").description(ACTIVE_DESC),
 
-            fieldWithPath("[].id").description(ID_DESC),
-            fieldWithPath("[].identityZoneId").description(IDENTITY_ZONE_ID_DESC),
-            fieldWithPath("[].created").description(CREATED_DESC),
-            fieldWithPath("[].last_modified").description(LAST_MODIFIED_DESC)
+                fieldWithPath("[].id").description(ID_DESC),
+                fieldWithPath("[].identityZoneId").description(IDENTITY_ZONE_ID_DESC),
+                fieldWithPath("[].created").description(CREATED_DESC),
+                fieldWithPath("[].last_modified").description(LAST_MODIFIED_DESC)
         );
 
         mockMvc.perform(get("/identity-providers")
@@ -997,20 +997,20 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
                 .param("originKey", "my-oauth2-provider")
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(document("{ClassName}/{methodName}",
-                preprocessResponse(prettyPrint()),
-                requestHeaders(
-                    headerWithName("Authorization").description("Bearer token containing `zones.<zone id>.admin` or `zones.<zone id>.idps.read` or `uaa.admin` or `idps.read` (only in the same zone that you are a user of)"),
-                    headerWithName("X-Identity-Zone-Id").description("May include this header to administer another zone if using `zones.<zoneId>.admin` or `zones.<zone id>.idps.read` or `uaa.admin` scope against the default UAA zone.").optional(),
-                    IDENTITY_ZONE_SUBDOMAIN_HEADER
-                ),
-                requestParameters(
-                    parameterWithName("rawConfig").optional("false").type(BOOLEAN).description("Flag indicating whether the response should use raw, unescaped JSON for the `config` field of the IDP, rather than the default behavior of encoding the JSON as a string."),
-                    parameterWithName("active_only").optional("false").type(BOOLEAN).description("Flag indicating whether only active IdPs should be returned or all."),
-                    parameterWithName("originKey").optional(null).type(STRING).description("<small><mark>UAA 77.10.0</mark></small> Return only IdPs with specific origin.")
-                ),
-                responseFields));
+                .andExpect(status().isOk())
+                .andDo(document("{ClassName}/{methodName}",
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer token containing `zones.<zone id>.admin` or `zones.<zone id>.idps.read` or `uaa.admin` or `idps.read` (only in the same zone that you are a user of)"),
+                                headerWithName("X-Identity-Zone-Id").description("May include this header to administer another zone if using `zones.<zoneId>.admin` or `zones.<zone id>.idps.read` or `uaa.admin` scope against the default UAA zone.").optional(),
+                                IDENTITY_ZONE_SUBDOMAIN_HEADER
+                        ),
+                        requestParameters(
+                                parameterWithName("rawConfig").optional("false").type(BOOLEAN).description("Flag indicating whether the response should use raw, unescaped JSON for the `config` field of the IDP, rather than the default behavior of encoding the JSON as a string."),
+                                parameterWithName("active_only").optional("false").type(BOOLEAN).description("Flag indicating whether only active IdPs should be returned or all."),
+                                parameterWithName("originKey").optional(null).type(STRING).description("<small><mark>UAA 77.10.0</mark></small> Return only IdPs with specific origin.")
+                        ),
+                        responseFields));
     }
 
     @Test

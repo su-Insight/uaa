@@ -90,10 +90,10 @@ public class EncryptionService {
 
     private byte[] generateKey(byte[] salt) {
         PasswordBasedDeriver<FipsPBKD.Parameters> gen = new FipsPBKD.DeriverFactory().createDeriver(
-            FipsPBKD.PBKDF2.using(FipsSHS.Algorithm.SHA256_HMAC,
-                    PasswordConverter.UTF8.convert(this.passphrase.toCharArray()))
-                .withIterationCount(PBKDF2_ITERATIONS)
-                .withSalt(salt)
+                FipsPBKD.PBKDF2.using(FipsSHS.Algorithm.SHA256_HMAC,
+                        PasswordConverter.UTF8.convert(this.passphrase.toCharArray()))
+                        .withIterationCount(PBKDF2_ITERATIONS)
+                        .withSalt(salt)
         );
         return gen.deriveKey(PasswordBasedDeriver.KeyType.CIPHER, (AES_KEY_LENGTH_BITS + 7) / 8);
     }

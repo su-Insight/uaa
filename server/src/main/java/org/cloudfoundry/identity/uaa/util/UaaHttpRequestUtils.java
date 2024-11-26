@@ -81,8 +81,8 @@ public abstract class UaaHttpRequestUtils {
 
     protected static HttpClientBuilder getClientBuilder(boolean skipSslValidation, int poolSize, int defaultMaxPerRoute, int maxKeepAlive) {
         HttpClientBuilder builder = HttpClients.custom()
-            .useSystemProperties()
-            .setRedirectStrategy(new DefaultRedirectStrategy());
+                .useSystemProperties()
+                .setRedirectStrategy(new DefaultRedirectStrategy());
         PoolingHttpClientConnectionManager cm;
         if (skipSslValidation) {
             SSLContext sslContext = getNonValidatingSslContext();
@@ -90,7 +90,7 @@ public abstract class UaaHttpRequestUtils {
             final String[] supportedCipherSuites = split(System.getProperty("https.cipherSuites"));
             HostnameVerifier hostnameVerifierCopy = new NoopHostnameVerifier();
             SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, supportedProtocols, supportedCipherSuites, hostnameVerifierCopy);
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create()
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("https", sslSocketFactory)
                     .register("http", PlainConnectionSocketFactory.getSocketFactory())
                     .build();
@@ -121,8 +121,8 @@ public abstract class UaaHttpRequestUtils {
 
     public static String paramsToQueryString(Map<String, String[]> parameterMap) {
         return parameterMap.entrySet().stream()
-          .flatMap(param -> stream(param.getValue()).map(value -> param.getKey() + "=" + encodeParameter(value)))
-          .collect(Collectors.joining("&"));
+                .flatMap(param -> stream(param.getValue()).map(value -> param.getKey() + "=" + encodeParameter(value)))
+                .collect(Collectors.joining("&"));
     }
 
     private static String encodeParameter(String value) {
@@ -132,9 +132,9 @@ public abstract class UaaHttpRequestUtils {
     public static boolean isAcceptedInvitationAuthentication() {
         try {
             RequestAttributes attr = RequestContextHolder.currentRequestAttributes();
-            if (attr!=null) {
+            if (attr != null) {
                 Boolean result = (Boolean) attr.getAttribute("IS_INVITE_ACCEPTANCE", RequestAttributes.SCOPE_SESSION);
-                if (result!=null) {
+                if (result != null) {
                     return result;
                 }
             }
@@ -156,7 +156,8 @@ public abstract class UaaHttpRequestUtils {
             this.connectionKeepAliveMax = connectionKeepAliveMax;
         }
 
-        @Override public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
+        @Override
+        public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
             HeaderElementIterator elementIterator = new BasicHeaderElementIterator(httpResponse.headerIterator(HTTP.CONN_KEEP_ALIVE));
             long result = connectionKeepAliveMax;
 
@@ -194,8 +195,8 @@ public abstract class UaaHttpRequestUtils {
                 if (value.startsWith("{")) {
                     try {
                         Map<String, String> jsonCredentials = JsonUtils.readValue(value,
-                            new TypeReference<>() {
-                            });
+                                new TypeReference<>() {
+                                });
                         credentials.putAll(jsonCredentials);
                     } catch (JsonUtils.JsonUtilException e) {
                         logger.warn("Unknown format of value for request param: {}. Ignoring.", paramName);

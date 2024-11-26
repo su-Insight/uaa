@@ -56,8 +56,7 @@ public class ExtendedUaaAuthority implements GrantedAuthority {
         ExtendedUaaAuthority e = (ExtendedUaaAuthority) obj;
         if (Objects.equals(e.getAuthority(), authority) && e.additionalInfo.equals(additionalInfo)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

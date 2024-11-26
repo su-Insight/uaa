@@ -59,9 +59,9 @@ public class InvitationsEndpoint {
     private final ExpiringCodeStore expiringCodeStore;
 
     public InvitationsEndpoint(final ScimUserProvisioning scimUserProvisioning,
-                               final IdentityProviderProvisioning identityProviderProvisioning,
-                               final MultitenantClientServices multitenantClientServices,
-                               final ExpiringCodeStore expiringCodeStore) {
+            final IdentityProviderProvisioning identityProviderProvisioning,
+            final MultitenantClientServices multitenantClientServices,
+            final ExpiringCodeStore expiringCodeStore) {
         this.scimUserProvisioning = scimUserProvisioning;
         this.identityProviderProvisioning = identityProviderProvisioning;
         this.multitenantClientServices = multitenantClientServices;
@@ -70,8 +70,8 @@ public class InvitationsEndpoint {
 
     @RequestMapping(value = "/invite_users", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<InvitationsResponse> inviteUsers(@RequestBody InvitationsRequest invitations,
-                                                           @RequestParam(value = "client_id", required = false) String clientId,
-                                                           @RequestParam(value = "redirect_uri") String redirectUri) {
+            @RequestParam(value = "client_id", required = false) String clientId,
+            @RequestParam(value = "redirect_uri") String redirectUri) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof OAuth2Authentication) {

@@ -50,9 +50,9 @@ public class SamlUaaAuthenticationUserManager implements ApplicationEventPublish
     private final UaaUserDatabase userDatabase;
 
     protected UaaUser createIfMissing(UaaPrincipal samlPrincipal,
-                                      boolean addNew,
-                                      Collection<? extends GrantedAuthority> authorities,
-                                      MultiValueMap<String, String> userAttributes) {
+            boolean addNew,
+            Collection<? extends GrantedAuthority> authorities,
+            MultiValueMap<String, String> userAttributes) {
 
         CreateIfMissingContext context = new CreateIfMissingContext(addNew, false, new LinkedMultiValueMap<>(userAttributes));
         UaaUser user = getAcceptedInvitationUser(samlPrincipal, context);
@@ -173,7 +173,7 @@ public class SamlUaaAuthenticationUserManager implements ApplicationEventPublish
 
     @Data
     @AllArgsConstructor
-    public static class CreateIfMissingContext{
+    public static class CreateIfMissingContext {
         boolean addNew;
         boolean userModified;
         MultiValueMap<String, String> userAttributes;

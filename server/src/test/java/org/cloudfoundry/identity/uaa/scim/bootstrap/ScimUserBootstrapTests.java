@@ -750,12 +750,12 @@ class ScimUserBootstrapTests {
 
         List<GrantedAuthority> authorities = getAuthorities(externalAuthorities);
         authorities.addAll(getAuthorities(externalAuthorities));
-        assertEquals(2*externalAuthorities.length, authorities.size());
+        assertEquals(2 * externalAuthorities.length, authorities.size());
         verify(spy, times(externalAuthorities.length)).addMember(any(), any(), any());
 
         bootstrap.onApplicationEvent(new ExternalGroupAuthorizationEvent(user, true, authorities, true));
 
-        verify(spy, times(externalAuthorities.length*2)).addMember(any(), any(), any());
+        verify(spy, times(externalAuthorities.length * 2)).addMember(any(), any(), any());
     }
 
     @Test
@@ -873,7 +873,7 @@ class ScimUserBootstrapTests {
         String externalId = null;
         String userId = new RandomValueStringGenerator().generate();
         String username = new RandomValueStringGenerator().generate();
-        UaaUser user = getUaaUser(new String[] {}, origin, email, firstName, lastName, password, externalId, userId, username);
+        UaaUser user = getUaaUser(new String[]{}, origin, email, firstName, lastName, password, externalId, userId, username);
         ScimUserBootstrap bootstrap = new ScimUserBootstrap(
                 jdbcScimUserProvisioning,
                 scimUserService,

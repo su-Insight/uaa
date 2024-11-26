@@ -35,15 +35,15 @@ public class IdentityProviderModifiedEvent extends AbstractUaaEvent {
 
     @Override
     public AuditEvent getAuditEvent() {
-        IdentityProvider provider = (IdentityProvider)source;
+        IdentityProvider provider = (IdentityProvider) source;
         return createAuditRecord(getSource().toString(),
-                                 eventType,
-                                 getOrigin(getAuthentication()),
-                                 String.format(IdentityProviderModifiedEvent.dataFormat,
-                                               provider.getId(),
-                                               provider.getType(),
-                                               provider.getOriginKey(),
-                                               provider.getIdentityZoneId())
+                eventType,
+                getOrigin(getAuthentication()),
+                String.format(IdentityProviderModifiedEvent.dataFormat,
+                        provider.getId(),
+                        provider.getType(),
+                        provider.getOriginKey(),
+                        provider.getIdentityZoneId())
         );
     }
 

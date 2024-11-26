@@ -45,7 +45,7 @@ public class TokenKeyEndpoint {
     @RequestMapping(value = "/token_key", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<VerificationKeyResponse> getKey(Principal principal,
-                                                          @RequestHeader(value = "If-None-Match", required = false, defaultValue = "NaN") String eTag) {
+            @RequestHeader(value = "If-None-Match", required = false, defaultValue = "NaN") String eTag) {
         String lastModified = ((Long) IdentityZoneHolder.get().getLastModified().getTime()).toString();
         if (unmodifiedResource(eTag, lastModified)) {
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
@@ -60,7 +60,7 @@ public class TokenKeyEndpoint {
     @RequestMapping(value = "/token_keys", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<VerificationKeysListResponse> getKeys(Principal principal,
-                                                                @RequestHeader(value = "If-None-Match", required = false, defaultValue = "NaN") String eTag) {
+            @RequestHeader(value = "If-None-Match", required = false, defaultValue = "NaN") String eTag) {
         String lastModified = ((Long) IdentityZoneHolder.get().getLastModified().getTime()).toString();
         if (unmodifiedResource(eTag, lastModified)) {
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

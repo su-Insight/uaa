@@ -11,17 +11,17 @@ public class ScimGroupsTypeResolvingFactoryBean {
     public ScimGroupsTypeResolvingFactoryBean(Object o) {
         if (o instanceof String) {
             groups = StringUtils.commaDelimitedListToSet((String) o).stream()
-                .map(g -> g.split("\\|"))
-                .collect(new MapCollector<>(
-                        gd -> gd[0],
-                        gd -> gd.length > 1 ? gd[1] : null)
-                );
+                    .map(g -> g.split("\\|"))
+                    .collect(new MapCollector<>(
+                            gd -> gd[0],
+                            gd -> gd.length > 1 ? gd[1] : null)
+                    );
         } else {
             groups = new HashMap<>((Map<String, String>) o);
         }
     }
 
-    private HashMap<String,String> groups;
+    private HashMap<String, String> groups;
 
     public HashMap<String, String> getGroups() {
         return groups;

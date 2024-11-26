@@ -120,7 +120,7 @@ public final class TestCustomOpenSamlObjects {
          * @param namespacePrefix the prefix for the given namespace
          */
         protected CustomOpenSamlObjectImpl(@Nullable String namespaceURI, @Nonnull String elementLocalName,
-                                           @Nullable String namespacePrefix) {
+                @Nullable String namespacePrefix) {
             super(namespaceURI, elementLocalName, namespacePrefix);
             super.getNamespaceManager().registerNamespaceDeclaration(new Namespace(CUSTOM_NS, TYPE_CUSTOM_PREFIX));
             this.unknownXMLObjects = new IndexedXMLObjectChildrenList<>(this);
@@ -171,7 +171,7 @@ public final class TestCustomOpenSamlObjects {
         @Nonnull
         @Override
         public CustomOpenSamlObject buildObject(@Nullable String namespaceURI, @Nonnull String localName,
-                                                @Nullable String namespacePrefix) {
+                @Nullable String namespacePrefix) {
             return new CustomOpenSamlObjectImpl(namespaceURI, localName, namespacePrefix);
         }
 

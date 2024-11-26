@@ -53,63 +53,63 @@ import java.util.Collection;
  */
 final class OpenSamlDecryptionUtils {
 
-	private static final EncryptedKeyResolver encryptedKeyResolver = new ChainingEncryptedKeyResolver(
-			Arrays.asList(new InlineEncryptedKeyResolver(), new EncryptedElementTypeEncryptedKeyResolver(),
-					new SimpleRetrievalMethodEncryptedKeyResolver()));
+    private static final EncryptedKeyResolver encryptedKeyResolver = new ChainingEncryptedKeyResolver(
+            Arrays.asList(new InlineEncryptedKeyResolver(), new EncryptedElementTypeEncryptedKeyResolver(),
+                    new SimpleRetrievalMethodEncryptedKeyResolver()));
 
-	static void decryptResponseElements(Response response, RelyingPartyRegistration registration) {
-		Decrypter decrypter = decrypter(registration);
-		for (EncryptedAssertion encryptedAssertion : response.getEncryptedAssertions()) {
-			try {
-				Assertion assertion = decrypter.decrypt(encryptedAssertion);
-				response.getAssertions().add(assertion);
-			}
-			catch (Exception ex) {
-				throw new Saml2Exception(ex.getMessage(), ex);
-			}
-		}
-	}
+    static void decryptResponseElements(Response response, RelyingPartyRegistration registration) {
+        Decrypter decrypter = decrypter(registration);
+        for (EncryptedAssertion encryptedAssertion : response.getEncryptedAssertions()) {
+            try {
+                Assertion assertion = decrypter.decrypt(encryptedAssertion);
+                response.getAssertions().add(assertion);
+            }
+            catch (Exception ex) {
+                throw new Saml2Exception(ex.getMessage(), ex);
+            }
+        }
+    }
 
-	static void decryptAssertionElements(Assertion assertion, RelyingPartyRegistration registration) {
-		Decrypter decrypter = decrypter(registration);
-		for (AttributeStatement statement : assertion.getAttributeStatements()) {
-			for (EncryptedAttribute encryptedAttribute : statement.getEncryptedAttributes()) {
-				try {
-					Attribute attribute = decrypter.decrypt(encryptedAttribute);
-					statement.getAttributes().add(attribute);
-				}
-				catch (Exception ex) {
-					throw new Saml2Exception(ex.getMessage(), ex);
-				}
-			}
-		}
-		if (assertion.getSubject() == null) {
-			return;
-		}
-		if (assertion.getSubject().getEncryptedID() == null) {
-			return;
-		}
-		try {
-			assertion.getSubject().setNameID((NameID) decrypter.decrypt(assertion.getSubject().getEncryptedID()));
-		}
-		catch (Exception ex) {
-			throw new Saml2Exception(ex.getMessage(), ex);
-		}
-	}
+    static void decryptAssertionElements(Assertion assertion, RelyingPartyRegistration registration) {
+        Decrypter decrypter = decrypter(registration);
+        for (AttributeStatement statement : assertion.getAttributeStatements()) {
+            for (EncryptedAttribute encryptedAttribute : statement.getEncryptedAttributes()) {
+                try {
+                    Attribute attribute = decrypter.decrypt(encryptedAttribute);
+                    statement.getAttributes().add(attribute);
+                }
+                catch (Exception ex) {
+                    throw new Saml2Exception(ex.getMessage(), ex);
+                }
+            }
+        }
+        if (assertion.getSubject() == null) {
+            return;
+        }
+        if (assertion.getSubject().getEncryptedID() == null) {
+            return;
+        }
+        try {
+            assertion.getSubject().setNameID((NameID) decrypter.decrypt(assertion.getSubject().getEncryptedID()));
+        }
+        catch (Exception ex) {
+            throw new Saml2Exception(ex.getMessage(), ex);
+        }
+    }
 
-	private static Decrypter decrypter(RelyingPartyRegistration registration) {
-		Collection<Credential> credentials = new ArrayList<>();
-		for (Saml2X509Credential key : registration.getDecryptionX509Credentials()) {
-			Credential cred = CredentialSupport.getSimpleCredential(key.getCertificate(), key.getPrivateKey());
-			credentials.add(cred);
-		}
-		KeyInfoCredentialResolver resolver = new CollectionKeyInfoCredentialResolver(credentials);
-		Decrypter decrypter = new Decrypter(null, resolver, encryptedKeyResolver);
-		decrypter.setRootInNewDocument(true);
-		return decrypter;
-	}
+    private static Decrypter decrypter(RelyingPartyRegistration registration) {
+        Collection<Credential> credentials = new ArrayList<>();
+        for (Saml2X509Credential key : registration.getDecryptionX509Credentials()) {
+            Credential cred = CredentialSupport.getSimpleCredential(key.getCertificate(), key.getPrivateKey());
+            credentials.add(cred);
+        }
+        KeyInfoCredentialResolver resolver = new CollectionKeyInfoCredentialResolver(credentials);
+        Decrypter decrypter = new Decrypter(null, resolver, encryptedKeyResolver);
+        decrypter.setRootInNewDocument(true);
+        return decrypter;
+    }
 
-	private OpenSamlDecryptionUtils() {
-	}
+    private OpenSamlDecryptionUtils() {
+    }
 
 }

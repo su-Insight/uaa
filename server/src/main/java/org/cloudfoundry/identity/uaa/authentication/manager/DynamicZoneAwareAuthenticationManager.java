@@ -54,10 +54,10 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
     private ApplicationEventPublisher eventPublisher;
 
     public DynamicZoneAwareAuthenticationManager(final @Qualifier("identityProviderProvisioning") IdentityProviderProvisioning provisioning,
-                                                 AuthenticationManager internalUaaAuthenticationManager,
-                                                 ScimGroupExternalMembershipManager scimGroupExternalMembershipManager,
-                                                 ScimGroupProvisioning scimGroupProvisioning,
-                                                 LdapLoginAuthenticationManager ldapLoginAuthenticationManager) {
+            AuthenticationManager internalUaaAuthenticationManager,
+            ScimGroupExternalMembershipManager scimGroupExternalMembershipManager,
+            ScimGroupProvisioning scimGroupProvisioning,
+            LdapLoginAuthenticationManager ldapLoginAuthenticationManager) {
         this.provisioning = provisioning;
         this.internalUaaAuthenticationManager = internalUaaAuthenticationManager;
         this.scimGroupExternalMembershipManager = scimGroupExternalMembershipManager;
@@ -101,9 +101,9 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
         if (uaaProvider.isActive() && (origin == null || origin.equals("uaa"))) {
             AuthenticationManagerConfiguration uaaConfig = new AuthenticationManagerConfiguration(internalUaaAuthenticationManager, null);
             uaaConfig.setStopIf(
-                AccountNotVerifiedException.class,
-                AuthenticationPolicyRejectionException.class,
-                PasswordChangeRequiredException.class
+                    AccountNotVerifiedException.class,
+                    AuthenticationPolicyRejectionException.class,
+                    PasswordChangeRequiredException.class
             );
             delegates.add(uaaConfig);
         }
@@ -117,8 +117,8 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
             }
             DynamicLdapAuthenticationManager ldapAuthenticationManager = getLdapAuthenticationManager(zone, ldapProvider);
             AuthenticationManagerConfiguration ldapConfig =
-                new AuthenticationManagerConfiguration(ldapAuthenticationManager,
-                                                       delegates.size()>0 ? ChainedAuthenticationManager.IF_PREVIOUS_FALSE : null);
+                    new AuthenticationManagerConfiguration(ldapAuthenticationManager,
+                            delegates.size() > 0 ? ChainedAuthenticationManager.IF_PREVIOUS_FALSE : null);
             delegates.add(ldapConfig);
         }
 
@@ -134,7 +134,7 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
     protected IdentityProvider getProvider(String origin, IdentityZone zone) {
         try {
             IdentityProvider result = provisioning.retrieveByOrigin(origin, zone.getId());
-            if (result!=null) {
+            if (result != null) {
                 return result;
             }
         } catch (EmptyResultDataAccessException ignored) {
@@ -147,17 +147,17 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
 
     public DynamicLdapAuthenticationManager getLdapAuthenticationManager(IdentityZone zone, IdentityProvider provider) {
         DynamicLdapAuthenticationManager ldapMgr = ldapAuthManagers.get(zone);
-        if (ldapMgr!=null) {
+        if (ldapMgr != null) {
             return ldapMgr;
         }
-        LdapIdentityProviderDefinition definition = ObjectUtils.castInstance(provider.getConfig(),LdapIdentityProviderDefinition.class);
-        if (definition==null || !definition.isConfigured()) {
-            throw new IllegalArgumentException("LDAP provider not configured ID:"+provider.getId());
+        LdapIdentityProviderDefinition definition = ObjectUtils.castInstance(provider.getConfig(), LdapIdentityProviderDefinition.class);
+        if (definition == null || !definition.isConfigured()) {
+            throw new IllegalArgumentException("LDAP provider not configured ID:" + provider.getId());
         }
         ldapMgr = new DynamicLdapAuthenticationManager(definition,
-            scimGroupExternalMembershipManager,
-            scimGroupProvisioning,
-            ldapLoginAuthenticationManager);
+                scimGroupExternalMembershipManager,
+                scimGroupProvisioning,
+                ldapLoginAuthenticationManager);
         ldapMgr.setApplicationEventPublisher(eventPublisher);
         ldapAuthManagers.putIfAbsent(zone, ldapMgr);
         return ldapAuthManagers.get(zone);

@@ -68,7 +68,7 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     SamlUaaAuthenticationUserManager samlUaaAuthenticationUserManager(final UaaUserDatabase userDatabase,
-                                                                      ApplicationEventPublisher applicationEventPublisher) {
+            ApplicationEventPublisher applicationEventPublisher) {
 
         SamlUaaAuthenticationUserManager samlUaaAuthenticationUserManager = new SamlUaaAuthenticationUserManager(userDatabase);
         samlUaaAuthenticationUserManager.setApplicationEventPublisher(applicationEventPublisher);
@@ -79,11 +79,11 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     AuthenticationProvider samlAuthenticationProvider(IdentityZoneManager identityZoneManager,
-                                                      final JdbcIdentityProviderProvisioning identityProviderProvisioning,
-                                                      ScimGroupExternalMembershipManager externalMembershipManager,
-                                                      SamlUaaAuthenticationUserManager samlUaaAuthenticationUserManager,
-                                                      ApplicationEventPublisher applicationEventPublisher,
-                                                      SamlConfigProps samlConfigProps) {
+            final JdbcIdentityProviderProvisioning identityProviderProvisioning,
+            ScimGroupExternalMembershipManager externalMembershipManager,
+            SamlUaaAuthenticationUserManager samlUaaAuthenticationUserManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            SamlConfigProps samlConfigProps) {
 
         SamlUaaAuthenticationAttributesConverter attributesConverter = new SamlUaaAuthenticationAttributesConverter();
         SamlUaaAuthenticationAuthoritiesConverter authoritiesConverter = new SamlUaaAuthenticationAuthoritiesConverter(externalMembershipManager);
@@ -110,12 +110,12 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     Filter saml2WebSsoAuthenticationFilter(AuthenticationProvider samlAuthenticationProvider,
-                                           UaaRelyingPartyRegistrationResolver relyingPartyRegistrationResolver,
-                                           SecurityContextRepository securityContextRepository,
-                                           SamlLoginAuthenticationFailureHandler samlLoginAuthenticationFailureHandler,
-                                           UaaSavedRequestAwareAuthenticationSuccessHandler samlLoginAuthenticationSuccessHandler) {
+            UaaRelyingPartyRegistrationResolver relyingPartyRegistrationResolver,
+            SecurityContextRepository securityContextRepository,
+            SamlLoginAuthenticationFailureHandler samlLoginAuthenticationFailureHandler,
+            UaaSavedRequestAwareAuthenticationSuccessHandler samlLoginAuthenticationSuccessHandler) {
 
-        Saml2AuthenticationTokenConverter saml2AuthenticationTokenConverter = new Saml2AuthenticationTokenConverter((RelyingPartyRegistrationResolver)relyingPartyRegistrationResolver);
+        Saml2AuthenticationTokenConverter saml2AuthenticationTokenConverter = new Saml2AuthenticationTokenConverter((RelyingPartyRegistrationResolver) relyingPartyRegistrationResolver);
         Saml2WebSsoAuthenticationFilter saml2WebSsoAuthenticationFilter = new Saml2WebSsoAuthenticationFilter(saml2AuthenticationTokenConverter, BACKWARD_COMPATIBLE_ASSERTION_CONSUMER_FILTER_PROCESSES_URI);
 
         ProviderManager authenticationManager = new ProviderManager(samlAuthenticationProvider);
@@ -165,9 +165,9 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     UaaDelegatingLogoutSuccessHandler uaaDelegatingLogoutSuccessHandler(ZoneAwareWhitelistLogoutSuccessHandler zoneAwareWhitelistLogoutHandler,
-                                                                        Saml2RelyingPartyInitiatedLogoutSuccessHandler saml2RelyingPartyInitiatedLogoutSuccessHandler,
-                                                                        ExternalOAuthLogoutSuccessHandler externalOAuthLogoutHandler,
-                                                                        RelyingPartyRegistrationResolver relyingPartyRegistrationResolver) {
+            Saml2RelyingPartyInitiatedLogoutSuccessHandler saml2RelyingPartyInitiatedLogoutSuccessHandler,
+            ExternalOAuthLogoutSuccessHandler externalOAuthLogoutHandler,
+            RelyingPartyRegistrationResolver relyingPartyRegistrationResolver) {
 
         return new UaaDelegatingLogoutSuccessHandler(zoneAwareWhitelistLogoutHandler,
                 saml2RelyingPartyInitiatedLogoutSuccessHandler,
@@ -183,8 +183,8 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     LogoutFilter logoutFilter(UaaDelegatingLogoutSuccessHandler delegatingLogoutSuccessHandler,
-                              UaaAuthenticationFailureHandler authenticationFailureHandler,
-                              CookieBasedCsrfTokenRepository loginCookieCsrfRepository) {
+            UaaAuthenticationFailureHandler authenticationFailureHandler,
+            CookieBasedCsrfTokenRepository loginCookieCsrfRepository) {
 
         SecurityContextLogoutHandler securityContextLogoutHandlerWithHandler = new SecurityContextLogoutHandler();
         CsrfLogoutHandler csrfLogoutHandler = new CsrfLogoutHandler(loginCookieCsrfRepository);
@@ -204,7 +204,7 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     Saml2LogoutResponseFilter saml2LogoutResponseFilter(RelyingPartyRegistrationResolver relyingPartyRegistrationResolver,
-                                                        UaaDelegatingLogoutSuccessHandler successHandler) {
+            UaaDelegatingLogoutSuccessHandler successHandler) {
 
         // This validator ignores missing signatures in the SAML2 Logout Response
         Saml2LogoutResponseValidator openSamlLogoutResponseValidator = new SamlLogoutResponseValidator();
@@ -221,8 +221,8 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     Saml2LogoutRequestFilter saml2LogoutRequestFilter(UaaRelyingPartyRegistrationResolver relyingPartyRegistrationResolver,
-                                                      UaaAuthenticationFailureHandler authenticationFailureHandler,
-                                                      CookieBasedCsrfTokenRepository loginCookieCsrfRepository) {
+            UaaAuthenticationFailureHandler authenticationFailureHandler,
+            CookieBasedCsrfTokenRepository loginCookieCsrfRepository) {
 
         // This validator ignores missing signatures in the SAML2 Logout Response
         Saml2LogoutRequestValidator logoutRequestValidator = new SamlLogoutRequestValidator();
@@ -246,10 +246,10 @@ public class SamlAuthenticationFilterConfig {
     @Autowired
     @Bean
     Saml2BearerGrantAuthenticationConverter samlBearerGrantAuthenticationProvider(IdentityZoneManager identityZoneManager,
-                                                                                  final JdbcIdentityProviderProvisioning identityProviderProvisioning,
-                                                                                  SamlUaaAuthenticationUserManager samlUaaAuthenticationUserManager,
-                                                                                  ApplicationEventPublisher applicationEventPublisher,
-                                                                                  UaaRelyingPartyRegistrationResolver relyingPartyRegistrationResolver) {
+            final JdbcIdentityProviderProvisioning identityProviderProvisioning,
+            SamlUaaAuthenticationUserManager samlUaaAuthenticationUserManager,
+            ApplicationEventPublisher applicationEventPublisher,
+            UaaRelyingPartyRegistrationResolver relyingPartyRegistrationResolver) {
 
         return new Saml2BearerGrantAuthenticationConverter(relyingPartyRegistrationResolver, identityZoneManager,
                 identityProviderProvisioning, samlUaaAuthenticationUserManager, applicationEventPublisher);

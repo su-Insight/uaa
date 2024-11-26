@@ -155,7 +155,7 @@ class InvitationsControllerTest {
                 .andExpect(model().attribute("code", "code"))
                 .andExpect(view().name("invitations/accept_invite"));
 
-        UaaPrincipal principal = ((UaaPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        UaaPrincipal principal = (UaaPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isInstanceOf(AnonymousAuthenticationToken.class);
         assertThat(principal.getId()).isEqualTo("user-id-001");
         assertThat(principal.getName()).isEqualTo("user@example.com");
@@ -301,10 +301,10 @@ class InvitationsControllerTest {
         when(expiringCodeStore.generateCode(anyString(), any(), eq(null), eq(zoneId))).thenReturn(new ExpiringCode("code", new Timestamp(System.currentTimeMillis()), JsonUtils.writeValueAsString(codeData), null));
 
         mockMvc.perform(post("/invitations/accept_enterprise.do")
-                        .param("enterprise_username", "test-ldap-user")
-                        .param("enterprise_password", "password")
-                        .param("enterprise_email", "email")
-                        .param("code", "the_secret_code"))
+                .param("enterprise_username", "test-ldap-user")
+                .param("enterprise_password", "password")
+                .param("enterprise_email", "email")
+                .param("code", "the_secret_code"))
                 .andExpect(redirectedUrl("/login?success=invite_accepted&form_redirect_uri=blah.test.com"))
                 .andReturn();
 
@@ -334,10 +334,10 @@ class InvitationsControllerTest {
         when(ldapActual.authenticate(any())).thenThrow(new BadCredentialsException("bad creds"));
 
         mockMvc.perform(post("/invitations/accept_enterprise.do")
-                        .param("enterprise_username", "test-ldap-user")
-                        .param("enterprise_password", "password")
-                        .param("enterprise_email", "email")
-                        .param("code", "the_secret_code"))
+                .param("enterprise_username", "test-ldap-user")
+                .param("enterprise_password", "password")
+                .param("enterprise_email", "email")
+                .param("code", "the_secret_code"))
                 .andExpect(model().attribute("ldap", true))
                 .andExpect(model().attribute("email", "email"))
                 .andExpect(model().attribute("error_message", "bad_credentials"))
@@ -367,10 +367,10 @@ class InvitationsControllerTest {
         when(expiringCodeStore.generateCode(anyString(), any(), eq(null), eq(zoneId))).thenReturn(new ExpiringCode("code", new Timestamp(System.currentTimeMillis()), JsonUtils.writeValueAsString(codeData), null));
 
         mockMvc.perform(post("/invitations/accept_enterprise.do")
-                        .param("enterprise_username", "test-ldap-user")
-                        .param("enterprise_password", "password")
-                        .param("enterprise_email", "email")
-                        .param("code", "the_secret_code"))
+                .param("enterprise_username", "test-ldap-user")
+                .param("enterprise_password", "password")
+                .param("enterprise_email", "email")
+                .param("code", "the_secret_code"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(view().name("invitations/accept_invite"))
                 .andExpect(content().string(containsString("Email: " + "user@example.com")))
@@ -678,7 +678,7 @@ class InvitationsControllerTest {
                 .thenReturn(expiringCode, null);
 
         mockMvc.perform(get("/invitations/accept")
-                        .param("code", "thecode"))
+                .param("code", "thecode"))
                 .andExpect(content().string(containsString("Jaskanwal")));
 
         // cleanup changes to default zone
@@ -701,7 +701,7 @@ class InvitationsControllerTest {
                 .thenReturn(expiringCode);
 
         mockMvc.perform(get("/invitations/accept")
-                        .param("code", "thecode"))
+                .param("code", "thecode"))
                 .andExpect(content().string(not(containsString("I agree"))));
     }
 
@@ -761,7 +761,7 @@ class InvitationsControllerTest {
                 .thenReturn(new AcceptedInvitation(codeData.get("redirect_uri"), null));
 
         MvcResult mvcResult = mockMvc.perform(startAcceptInviteFlow("password", "password")
-                        .param("does_user_consent", "true"))
+                .param("does_user_consent", "true"))
                 .andReturn();
         assertThat(mvcResult.getResponse().getHeader("Location")).contains(codeData.get("redirect_uri"));
 
@@ -816,13 +816,13 @@ class InvitationsControllerTest {
 
         @Bean
         InvitationsController invitationsController(final InvitationsService invitationsService,
-                                                    final ExpiringCodeStore codeStore,
-                                                    final PasswordValidator passwordPolicyValidator,
-                                                    final IdentityProviderProvisioning providerProvisioning,
-                                                    final UaaUserDatabase userDatabase,
-                                                    final ScimUserProvisioning provisioning,
-                                                    final DynamicZoneAwareAuthenticationManager zoneAwareAuthenticationManager,
-                                                    final ExternalOAuthProviderConfigurator externalOAuthProviderConfigurator) {
+                final ExpiringCodeStore codeStore,
+                final PasswordValidator passwordPolicyValidator,
+                final IdentityProviderProvisioning providerProvisioning,
+                final UaaUserDatabase userDatabase,
+                final ScimUserProvisioning provisioning,
+                final DynamicZoneAwareAuthenticationManager zoneAwareAuthenticationManager,
+                final ExternalOAuthProviderConfigurator externalOAuthProviderConfigurator) {
             return new InvitationsController(
                     invitationsService,
                     codeStore,

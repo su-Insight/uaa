@@ -100,7 +100,7 @@ public class SamlIdentityProviderConfigurator {
                     continue;
                 }
                 RelyingPartyRegistration existingProvider = getExtendedMetadataDelegate(existing);
-                if (entityIDToBeAdded.equals(existingProvider.getAssertingPartyDetails().getEntityId()) && !(existing.getUniqueAlias().equals(clone.getUniqueAlias()))) {
+                if (entityIDToBeAdded.equals(existingProvider.getAssertingPartyDetails().getEntityId()) && !existing.getUniqueAlias().equals(clone.getUniqueAlias())) {
                     entityIDexists = true;
                     break;
                 }
@@ -126,7 +126,7 @@ public class SamlIdentityProviderConfigurator {
             case DATA -> configureXMLMetadata(def);
             case URL -> configureURLMetadata(def);
             default ->
-                    throw new IllegalStateException("Invalid metadata type for alias[" + def.getIdpEntityAlias() + "]:" + def.getMetaDataLocation());
+                throw new IllegalStateException("Invalid metadata type for alias[" + def.getIdpEntityAlias() + "]:" + def.getMetaDataLocation());
         };
     }
 

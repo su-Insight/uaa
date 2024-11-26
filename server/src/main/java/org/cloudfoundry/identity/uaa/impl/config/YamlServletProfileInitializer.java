@@ -194,7 +194,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
             String location = environment.getProperty("logging.config");
             if (location != null && location.trim().length() > 0) {
                 PropertySource<?> environmentPropertySource = environment.getPropertySources().get(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME);
-                if ((location.startsWith("-D") && environmentPropertySource != null && location.equals(environmentPropertySource.getProperty("LOGGING_CONFIG")))) {
+                if (location.startsWith("-D") && environmentPropertySource != null && location.equals(environmentPropertySource.getProperty("LOGGING_CONFIG"))) {
                     System.out.println("Ignoring Log Config Location: " + location + ". Location is suspect to be a Tomcat startup script environment variable");
                 } else {
                     System.out.println("Setting Log Config Location: " + location + " based on logging.config setting.");

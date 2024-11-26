@@ -104,10 +104,10 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
         // when the standard Spring library class disagrees (i.e. when it acts more strictly).
         registeredRedirectUris.stream()
                 .filter(registeredRedirectUri ->
-                                registeredRedirectUri.contains(LEGACY_PORT_WILDCAR) ||
+                        registeredRedirectUri.contains(LEGACY_PORT_WILDCAR) ||
                                 (requestedRedirect != null &&
-                                this.redirectMatches(requestedRedirect, registeredRedirectUri) &&
-                                !specCompliantRedirectMatcher.redirectMatches(requestedRedirect, registeredRedirectUri))
+                                        this.redirectMatches(requestedRedirect, registeredRedirectUri) &&
+                                        !specCompliantRedirectMatcher.redirectMatches(requestedRedirect, registeredRedirectUri))
                 )
                 .forEach(registeredRedirectUri ->
                         logger.warn(String.format(MSG_TEMPLATE, clientId,
@@ -242,12 +242,12 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
         }
 
         boolean match(URI requestedRedirect) {
-            if(hasWildcardPort) {
-                 if(requestedRedirect.getPort() > 0) {
-                     return matcher.match(redirectUri, requestedRedirect.toString().replace(String.valueOf(requestedRedirect.getPort()), WILDCARD_PORT));
-                 } else {
-                     return matcher.match(redirectUri.replace(WILDCARD_PORT_PATTERN, StringUtils.EMPTY), requestedRedirect.toString());
-                 }
+            if (hasWildcardPort) {
+                if (requestedRedirect.getPort() > 0) {
+                    return matcher.match(redirectUri, requestedRedirect.toString().replace(String.valueOf(requestedRedirect.getPort()), WILDCARD_PORT));
+                } else {
+                    return matcher.match(redirectUri.replace(WILDCARD_PORT_PATTERN, StringUtils.EMPTY), requestedRedirect.toString());
+                }
             }
             return matcher.match(redirectUri, requestedRedirect.toString());
         }

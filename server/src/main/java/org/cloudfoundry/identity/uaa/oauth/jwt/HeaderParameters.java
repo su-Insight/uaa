@@ -53,8 +53,8 @@ public class HeaderParameters {
     }
 
     HeaderParameters(String alg,
-                     String kid,
-                     String jku) {
+            String kid,
+            String jku) {
         if (alg == null) {
             throw new IllegalArgumentException("alg is required");
         }

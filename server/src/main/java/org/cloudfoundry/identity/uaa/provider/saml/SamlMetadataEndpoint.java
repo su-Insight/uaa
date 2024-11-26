@@ -30,8 +30,8 @@ public class SamlMetadataEndpoint implements ZoneAware {
     private final RelyingPartyRegistrationResolver relyingPartyRegistrationResolver;
 
     public SamlMetadataEndpoint(RelyingPartyRegistrationResolver registrationResolver,
-                                IdentityZoneManager identityZoneManager, SignatureAlgorithm signatureAlgorithms,
-                                @Qualifier("signSamlMetaData") boolean signMetaData) {
+            IdentityZoneManager identityZoneManager, SignatureAlgorithm signatureAlgorithms,
+            @Qualifier("signSamlMetaData") boolean signMetaData) {
         Assert.notNull(registrationResolver, "registrationResolver cannot be null");
         relyingPartyRegistrationResolver = registrationResolver;
         OpenSamlMetadataResolver metadataResolver = new OpenSamlMetadataResolver();

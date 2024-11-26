@@ -82,7 +82,7 @@ public class PasswordChangeEndpointIntegrationTests {
     @Before
     public void createRestTemplate() {
         client = serverRunning.getRestTemplate();
-        ((RestTemplate)serverRunning.getRestTemplate()).setErrorHandler(new OAuth2ErrorHandler(context.getResource()) {
+        ((RestTemplate) serverRunning.getRestTemplate()).setErrorHandler(new OAuth2ErrorHandler(context.getResource()) {
             // Pass errors through in response entity for status code analysis
             @Override
             public boolean hasError(ClientHttpResponse response) {
@@ -116,9 +116,9 @@ public class PasswordChangeEndpointIntegrationTests {
 
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<Void> result = client
-                        .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
-                                        HttpMethod.PUT, new HttpEntity<>(change, headers),
-                                        Void.class, joe.getId());
+                .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
+                        HttpMethod.PUT, new HttpEntity<>(change, headers),
+                        Void.class, joe.getId());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -130,9 +130,9 @@ public class PasswordChangeEndpointIntegrationTests {
 
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<Void> result = client
-            .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
-                HttpMethod.PUT, new HttpEntity<>(change, headers),
-                Void.class, joe.getId());
+                .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
+                        HttpMethod.PUT, new HttpEntity<>(change, headers),
+                        Void.class, joe.getId());
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, result.getStatusCode());
     }
 
@@ -152,9 +152,9 @@ public class PasswordChangeEndpointIntegrationTests {
 
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<Void> result = client
-                        .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
-                                        HttpMethod.PUT, new HttpEntity<>(change, headers),
-                                        Void.class, joe.getId());
+                .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
+                        HttpMethod.PUT, new HttpEntity<>(change, headers),
+                        Void.class, joe.getId());
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -173,9 +173,9 @@ public class PasswordChangeEndpointIntegrationTests {
 
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<Void> result = client
-                        .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
-                                        HttpMethod.PUT, new HttpEntity<>(change, headers),
-                                        Void.class, joe.getId());
+                .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
+                        HttpMethod.PUT, new HttpEntity<>(change, headers),
+                        Void.class, joe.getId());
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
     }
 
@@ -187,7 +187,7 @@ public class PasswordChangeEndpointIntegrationTests {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization",
-                        testAccounts.getAuthorizationHeader("app", "appclientsecret"));
+                testAccounts.getAuthorizationHeader("app", "appclientsecret"));
 
         MultiValueMap<String, String> data = new LinkedMultiValueMap<String, String>();
         data.put("grant_type", Collections.singletonList("password"));
@@ -195,7 +195,7 @@ public class PasswordChangeEndpointIntegrationTests {
         data.put("password", Collections.singletonList("pas5Word"));
 
         ResponseEntity<Map> result = serverRunning.postForMap(
-                        serverRunning.buildUri("/oauth/token").build().toString(), data, headers);
+                serverRunning.buildUri("/oauth/token").build().toString(), data, headers);
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         // Lock out the account
@@ -223,9 +223,9 @@ public class PasswordChangeEndpointIntegrationTests {
         // Change the password
         HttpHeaders passwordChangeHeaders = new HttpHeaders();
         ResponseEntity<Void> passwordChangeResult = client.exchange(serverRunning.getUrl(userEndpoint)
-                        + "/{id}/password",
-                        HttpMethod.PUT, new HttpEntity<>(change, passwordChangeHeaders),
-                        Void.class, joe.getId());
+                + "/{id}/password",
+                HttpMethod.PUT, new HttpEntity<>(change, passwordChangeHeaders),
+                Void.class, joe.getId());
         assertEquals(HttpStatus.OK, passwordChangeResult.getStatusCode());
 
         MultiValueMap<String, String> newData = new LinkedMultiValueMap<String, String>();
@@ -234,7 +234,7 @@ public class PasswordChangeEndpointIntegrationTests {
         newData.put("password", Collections.singletonList("Newpasswo3d"));
 
         ResponseEntity<Map> updatedResult = serverRunning.postForMap(serverRunning.buildUri("/oauth/token").build()
-                        .toString(), newData, headers);
+                .toString(), newData, headers);
         assertEquals(HttpStatus.OK, updatedResult.getStatusCode());
 
     }

@@ -34,7 +34,7 @@ public class SecretFailureEvent extends AbstractClientAdminEvent {
 
     @Override
     public AuditEventType getAuditEventType() {
-        return (getClient() == null) ? AuditEventType.SecretChangeFailure : AuditEventType.SecretChangeFailure;
+        return getClient() == null ? AuditEventType.SecretChangeFailure : AuditEventType.SecretChangeFailure;
     }
 
 }

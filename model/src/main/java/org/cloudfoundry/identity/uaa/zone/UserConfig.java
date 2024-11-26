@@ -50,7 +50,7 @@ public class UserConfig {
     }
 
     public boolean allGroupsAllowed() {
-        return (allowedGroups == null);
+        return allowedGroups == null;
     }
 
     // return defaultGroups plus allowedGroups

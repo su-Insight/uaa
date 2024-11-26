@@ -42,11 +42,11 @@ public class LdapAuthority implements GrantedAuthority {
     private Map<String, String[]> attributes;
 
     public LdapAuthority(String role, String dn) {
-        this(role,dn,null);
+        this(role, dn, null);
     }
 
-    public LdapAuthority(String role, String dn, Map<String,String[]> attributes) {
-        if (role==null) throw new NullPointerException("role can not be null");
+    public LdapAuthority(String role, String dn, Map<String, String[]> attributes) {
+        if (role == null) throw new NullPointerException("role can not be null");
         this.role = role;
         this.dn = dn;
         this.attributes = attributes;
@@ -54,10 +54,10 @@ public class LdapAuthority implements GrantedAuthority {
 
     public String[] getAttributeValues(String name) {
         String[] result = null;
-        if (attributes!=null) {
+        if (attributes != null) {
             result = attributes.get(name);
         }
-        if (result==null) {
+        if (result == null) {
             result = new String[0];
         }
         return result;
@@ -65,7 +65,7 @@ public class LdapAuthority implements GrantedAuthority {
 
     public String getFirstAttributeValue(String name) {
         String[] result = getAttributeValues(name);
-        if (result.length>0) {
+        if (result.length > 0) {
             return result[0];
         } else {
             return null;

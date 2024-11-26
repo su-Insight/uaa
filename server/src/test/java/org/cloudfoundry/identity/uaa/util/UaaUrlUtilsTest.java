@@ -558,7 +558,7 @@ class UaaUrlUtilsTest {
 
     @Test
     void validateValidSubdomains() {
-         validSubdomains.forEach(testString -> assertTrue(UaaUrlUtils.isValidSubdomain(testString)));
+        validSubdomains.forEach(testString -> assertTrue(UaaUrlUtils.isValidSubdomain(testString)));
     }
 
     @Test

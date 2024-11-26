@@ -163,8 +163,8 @@ public class RemoteTokenServices implements ResourceServerTokenServices {
         Map<String, String> requestParameters = new HashMap<>();
         if (isStoreClaims()) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if (entry.getValue()!=null && entry.getValue() instanceof String) {
-                    requestParameters.put(entry.getKey(), (String)entry.getValue());
+                if (entry.getValue() != null && entry.getValue() instanceof String) {
+                    requestParameters.put(entry.getKey(), (String) entry.getValue());
                 }
             }
         }
@@ -194,8 +194,7 @@ public class RemoteTokenServices implements ResourceServerTokenServices {
             @SuppressWarnings("unchecked")
             Collection<String> values = (Collection<String>) map.get("user_authorities");
             userAuthorities.addAll(getAuthorities(values));
-        }
-        else {
+        } else {
             // User authorities had better not be empty or we might mistake user
             // for unauthenticated
             userAuthorities.addAll(getAuthorities(scope));
@@ -229,7 +228,7 @@ public class RemoteTokenServices implements ResourceServerTokenServices {
         }
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = restTemplate.exchange(path, HttpMethod.POST,
-            new HttpEntity<MultiValueMap<String, String>>(formData, headers), Map.class);
+                new HttpEntity<MultiValueMap<String, String>>(formData, headers), Map.class);
         @SuppressWarnings("rawtypes")
         Map map = response != null && response.getBody() != null ? response.getBody() : Collections.emptyMap();
         @SuppressWarnings("unchecked")

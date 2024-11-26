@@ -6,8 +6,12 @@ import java.util.List;
 
 public interface SamlKeyManager {
     KeyWithCert getCredential(String keyName);
+
     KeyWithCert getDefaultCredential();
+
     String getDefaultCredentialName();
+
     List<KeyWithCert> getAvailableCredentials();
+
     List<String> getAvailableCredentialIds();
 }

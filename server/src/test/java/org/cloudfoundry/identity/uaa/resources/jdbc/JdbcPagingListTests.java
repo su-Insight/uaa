@@ -129,10 +129,10 @@ class JdbcPagingListTests {
     @Test
     void testWrongStatement() {
         assertThrows(BadSqlGrammarException.class,
-            () -> new JdbcPagingList<>(jdbcTemplate, limitSqlAdapter, "Insert ('6', 'sab') from foo", new ColumnMapRowMapper(), 3));
+                () -> new JdbcPagingList<>(jdbcTemplate, limitSqlAdapter, "Insert ('6', 'sab') from foo", new ColumnMapRowMapper(), 3));
 
         assertThrows(BadSqlGrammarException.class,
-            () -> new JdbcPagingList<>(jdbcTemplate, limitSqlAdapter, "SELECT * ", new ColumnMapRowMapper(), 3));
+                () -> new JdbcPagingList<>(jdbcTemplate, limitSqlAdapter, "SELECT * ", new ColumnMapRowMapper(), 3));
     }
 
     @Test

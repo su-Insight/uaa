@@ -31,8 +31,7 @@ public class CompositeAuthenticationManager implements AuthenticationManager {
 
         if (oauth2Authentication != null) {
             return oauth2Authentication.getUserAuthentication();
-        }
-        else {
+        } else {
             return authentication;
         }
     }

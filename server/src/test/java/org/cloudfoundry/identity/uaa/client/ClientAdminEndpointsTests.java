@@ -428,10 +428,10 @@ class ClientAdminEndpointsTests {
     void testCreateClientDetailsWithInvalidClientId() {
         input.setClientId("foo/bar");
         assertThrows(InvalidClientDetailsException.class,
-            () -> endpoints.createClientDetails(createClientDetailsCreation(input)));
+                () -> endpoints.createClientDetails(createClientDetailsCreation(input)));
         input.setClientId("foo\\bar");
         assertThrows(InvalidClientDetailsException.class,
-            () -> endpoints.createClientDetails(createClientDetailsCreation(input)));
+                () -> endpoints.createClientDetails(createClientDetailsCreation(input)));
     }
 
     @Test
@@ -542,7 +542,7 @@ class ClientAdminEndpointsTests {
     private void validateAttributeResults(SearchResults<Map<String, Object>> result, List<String> attributes) {
         assertEquals(5, result.getResources().size());
         for (String s : attributes) {
-            result.getResources().forEach((map) ->
+            result.getResources().forEach(map ->
                     assertTrue("Expecting attribute " + s + " to be present", map.containsKey(s))
             );
         }
@@ -1056,7 +1056,7 @@ class ClientAdminEndpointsTests {
         detail.setClientSecret("");
         detail.setScope(Collections.emptyList());
         Exception e = assertThrows(InvalidClientDetailsException.class,
-            () -> endpoints.createClientDetails(createClientDetailsCreation(detail)));
+                () -> endpoints.createClientDetails(createClientDetailsCreation(detail)));
         assertEquals("Client secret is required for client_credentials grant type", e.getMessage());
     }
 
@@ -1091,7 +1091,7 @@ class ClientAdminEndpointsTests {
         ClientDetailsCreation createRequest = createClientDetailsCreation(input);
         createRequest.setJsonWebKeySet("invalid");
         assertThrows(InvalidClientDetailsException.class,
-            () -> endpoints.createClientDetails(createRequest));
+                () -> endpoints.createClientDetails(createRequest));
     }
 
     @Test
@@ -1153,7 +1153,7 @@ class ClientAdminEndpointsTests {
     @Test
     void testCreateClientWithJsonKeyWebSet() {
         // Example JWK, a key is bound to a kid, means assumption is, a key is the same if kid is the same
-        String jsonJwk  = "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"kid\":\"key-1\",\"alg\":\"RS256\",\"n\":\"u_A1S-WoVAnHlNQ_1HJmOPBVxIdy1uSNsp5JUF5N4KtOjir9EgG9HhCFRwz48ykEukrgaK4ofyy_wRXSUJKW7Q\"}";
+        String jsonJwk = "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"kid\":\"key-1\",\"alg\":\"RS256\",\"n\":\"u_A1S-WoVAnHlNQ_1HJmOPBVxIdy1uSNsp5JUF5N4KtOjir9EgG9HhCFRwz48ykEukrgaK4ofyy_wRXSUJKW7Q\"}";
         String jsonJwk2 = "{\"kty\":\"RSA\",\"e\":\"\",\"kid\":\"key-1\",\"alg\":\"RS256\",\"n\":\"\"}";
         String jsonJwk3 = "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"kid\":\"key-2\",\"alg\":\"RS256\",\"n\":\"u_A1S-WoVAnHlNQ_1HJmOPBVxIdy1uSNsp5JUF5N4KtOjir9EgG9HhCFRwz48ykEukrgaK4ofyy_wRXSUJKW7Q\"}";
         String jsonJwkSet = "{\"keys\":[{\"kty\":\"RSA\",\"e\":\"AQAB\",\"kid\":\"key-1\",\"alg\":\"RS256\",\"n\":\"u_A1S-WoVAnHlNQ_1HJmOPBVxIdy1uSNsp5JUF5N4KtOjir9EgG9HhCFRwz48ykEukrgaK4ofyy_wRXSUJKW7Q\"}]}";

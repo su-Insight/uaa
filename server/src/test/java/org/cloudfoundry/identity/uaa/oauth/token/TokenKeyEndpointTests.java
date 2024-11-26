@@ -56,23 +56,23 @@ class TokenKeyEndpointTests {
     private TokenKeyEndpoint tokenKeyEndpoint = new TokenKeyEndpoint(new KeyInfoService("https://localhost.uaa"));
     private Authentication validUaaResource;
     private final String SIGNING_KEY_2 = "-----BEGIN RSA PRIVATE KEY-----\n" +
-      "MIIBOQIBAAJBAKIuxhxq0SyeITbTw3SeyHz91eB6xEwRn9PPgl+klu4DRUmVs0h+\n" +
-      "UlVjXSTLiJ3r1bJXVded4JzVvNSh5Nw+7zsCAwEAAQJAYeVH8klL39nHhLfIiHF7\n" +
-      "5W63FhwktyIATrM4KBFKhXn8i29l76qVqX88LAYpeULric8fGgNoSaYVsHWIOgDu\n" +
-      "cQIhAPCJ7hu7OgqvyIGWRp2G2qjKfQVqSntG9HNSt9MhaXKjAiEArJt+PoF0AQFR\n" +
-      "R9O/XULmxR0OUYhkYZTr5eCo7kNscokCIDSv0aLrYKxEkqOn2fHZPv3n1HiiLoxQ\n" +
-      "H20/OhqZ3/IHAiBSn3/31am8zW+l7UM+Fkc29aij+KDsYQfmmvriSp3/2QIgFtiE\n" +
-      "Jkd0KaxkobLdyDrW13QnEaG5TXO0Y85kfu3nP5o=\n" +
-      "-----END RSA PRIVATE KEY-----";
+            "MIIBOQIBAAJBAKIuxhxq0SyeITbTw3SeyHz91eB6xEwRn9PPgl+klu4DRUmVs0h+\n" +
+            "UlVjXSTLiJ3r1bJXVded4JzVvNSh5Nw+7zsCAwEAAQJAYeVH8klL39nHhLfIiHF7\n" +
+            "5W63FhwktyIATrM4KBFKhXn8i29l76qVqX88LAYpeULric8fGgNoSaYVsHWIOgDu\n" +
+            "cQIhAPCJ7hu7OgqvyIGWRp2G2qjKfQVqSntG9HNSt9MhaXKjAiEArJt+PoF0AQFR\n" +
+            "R9O/XULmxR0OUYhkYZTr5eCo7kNscokCIDSv0aLrYKxEkqOn2fHZPv3n1HiiLoxQ\n" +
+            "H20/OhqZ3/IHAiBSn3/31am8zW+l7UM+Fkc29aij+KDsYQfmmvriSp3/2QIgFtiE\n" +
+            "Jkd0KaxkobLdyDrW13QnEaG5TXO0Y85kfu3nP5o=\n" +
+            "-----END RSA PRIVATE KEY-----";
     private final String SIGNING_KEY_3 = "-----BEGIN RSA PRIVATE KEY-----\n" +
-      "MIIBOgIBAAJBAOnndOyLh8axLMyjX+gCglBCeU5Cumjxz9asho5UvO8zf03PWciZ\n" +
-      "DGWce+B+n23E1IXbRKHWckCY0UH7fEgbrKkCAwEAAQJAGR9aCJoH8EhRVn1prKKw\n" +
-      "Wmx5WPWDzgfC2fzXyuvBCzPZNMQqOxWT9ajr+VysuyFZbz+HGJDqpf9Jl+fcIIUJ\n" +
-      "LQIhAPTn319kLU0QzoNBSB53tPhdNbzggBpW/Xv6B52XqGwPAiEA9IAAFu7GVymQ\n" +
-      "/neMHM7/umMFGFFbdq8E2pohLyjcg8cCIQCZWfv/0k2ffQ+jFqSfF1wFTPBSRc1R\n" +
-      "MPlmwSg1oPpANwIgHngBCtqQnvYQGpX9QO3O0oRaczBYTI789Nz2O7FE4asCIGEy\n" +
-      "SkbkWTex/hl+l0wdNErz/yBxP8esbPukOUqks/if\n" +
-      "-----END RSA PRIVATE KEY-----";
+            "MIIBOgIBAAJBAOnndOyLh8axLMyjX+gCglBCeU5Cumjxz9asho5UvO8zf03PWciZ\n" +
+            "DGWce+B+n23E1IXbRKHWckCY0UH7fEgbrKkCAwEAAQJAGR9aCJoH8EhRVn1prKKw\n" +
+            "Wmx5WPWDzgfC2fzXyuvBCzPZNMQqOxWT9ajr+VysuyFZbz+HGJDqpf9Jl+fcIIUJ\n" +
+            "LQIhAPTn319kLU0QzoNBSB53tPhdNbzggBpW/Xv6B52XqGwPAiEA9IAAFu7GVymQ\n" +
+            "/neMHM7/umMFGFFbdq8E2pohLyjcg8cCIQCZWfv/0k2ffQ+jFqSfF1wFTPBSRc1R\n" +
+            "MPlmwSg1oPpANwIgHngBCtqQnvYQGpX9QO3O0oRaczBYTI789Nz2O7FE4asCIGEy\n" +
+            "SkbkWTex/hl+l0wdNErz/yBxP8esbPukOUqks/if\n" +
+            "-----END RSA PRIVATE KEY-----";
 
     @BeforeEach
     void setUp() {
@@ -181,10 +181,10 @@ class TokenKeyEndpointTests {
 
         //ensure that none of the keys are padded
         keys.forEach(
-          key ->
-            assertFalse("Invalid padding for key:" + key.getKid(),
-              key.getExponent().endsWith("=") ||
-                key.getModulus().endsWith("="))
+                key ->
+                        assertFalse("Invalid padding for key:" + key.getKid(),
+                                key.getExponent().endsWith("=") ||
+                                        key.getModulus().endsWith("="))
         );
     }
 
@@ -248,12 +248,13 @@ class TokenKeyEndpointTests {
     private IdentityZone createAndSetTestZoneWithKeys(Map<String, String> keys) {
         return createAndSetTestZoneWithKeys(keys, null);
     }
-    private IdentityZone createAndSetTestZoneWithKeys(Map<String, String> keys, String cert ) {
+
+    private IdentityZone createAndSetTestZoneWithKeys(Map<String, String> keys, String cert) {
         IdentityZone zone = MultitenancyFixture.identityZone("test-zone", "test");
         IdentityZoneConfiguration config = new IdentityZoneConfiguration();
         TokenPolicy tokenPolicy = new TokenPolicy();
         Map<String, TokenPolicy.KeyInformation> keyInformationMap = Optional.ofNullable(keys).filter(Objects::nonNull).orElse(new HashMap<>())
-            .entrySet().stream().filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                .entrySet().stream().filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, e -> {
             TokenPolicy.KeyInformation keyInfo = new TokenPolicy.KeyInformation();
             keyInfo.setSigningKey(e.getValue());
             keyInfo.setSigningCert(cert);

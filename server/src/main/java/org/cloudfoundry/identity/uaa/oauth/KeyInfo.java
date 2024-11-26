@@ -52,6 +52,7 @@ public class KeyInfo {
     public KeyInfo(String keyId, String signingKey, String keyUrl) {
         this(keyId, signingKey, keyUrl, null, null);
     }
+
     public KeyInfo(String keyId, String signingKey, String keyUrl, String sigAlg, String signingCert) {
         this.keyId = keyId;
         this.keyUrl = validateAndConstructTokenKeyUrl(keyUrl);
@@ -163,7 +164,7 @@ public class KeyInfo {
         }
     }
 
-    public String algorithm()  {
+    public String algorithm() {
         return algorithm;
     }
 
@@ -186,7 +187,8 @@ public class KeyInfo {
                 x509Certificate.checkValidity();
                 return Optional.of(x509Certificate);
             }
-        } catch (RuntimeException | CertificateExpiredException | CertificateNotYetValidException e) { } // ignore
+        } catch (RuntimeException | CertificateExpiredException | CertificateNotYetValidException e) {
+        } // ignore
         return Optional.empty();
     }
 }

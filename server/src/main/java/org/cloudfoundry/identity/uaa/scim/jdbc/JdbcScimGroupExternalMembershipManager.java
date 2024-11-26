@@ -100,9 +100,9 @@ public class JdbcScimGroupExternalMembershipManager
 
     @Override
     public ScimGroupExternalMember mapExternalGroup(final String groupId,
-                                                    final String externalGroup,
-                                                    final String origin,
-                                                    final String zoneId)
+            final String externalGroup,
+            final String origin,
+            final String zoneId)
             throws ScimResourceNotFoundException, MemberAlreadyExistsException {
 
         ScimGroup group = scimGroupProvisioning.retrieve(groupId, zoneId);
@@ -140,9 +140,9 @@ public class JdbcScimGroupExternalMembershipManager
 
     @Override
     public ScimGroupExternalMember unmapExternalGroup(final String groupId,
-                                                      final String externalGroup,
-                                                      final String origin,
-                                                      final String zoneId)
+            final String externalGroup,
+            final String origin,
+            final String zoneId)
             throws ScimResourceNotFoundException {
 
         ScimGroup group = scimGroupProvisioning.retrieve(groupId, zoneId);
@@ -173,8 +173,8 @@ public class JdbcScimGroupExternalMembershipManager
 
     @Override
     public List<ScimGroupExternalMember> getExternalGroupMapsByGroupId(final String groupId,
-                                                                       final String origin,
-                                                                       final String zoneId)
+            final String origin,
+            final String zoneId)
             throws ScimResourceNotFoundException {
         scimGroupProvisioning.retrieve(groupId, zoneId);
         return jdbcTemplate.query(getExternalGroupMappingsSql, ps -> {
@@ -219,8 +219,8 @@ public class JdbcScimGroupExternalMembershipManager
 
     @Override
     public List<ScimGroupExternalMember> getExternalGroupMapsByExternalGroup(final String externalGroup,
-                                                                             final String origin,
-                                                                             final String zoneId)
+            final String origin,
+            final String zoneId)
             throws ScimResourceNotFoundException {
 
         return jdbcTemplate.query(getGroupsByExternalGroupMappingSql, ps -> {
@@ -232,9 +232,9 @@ public class JdbcScimGroupExternalMembershipManager
     }
 
     private ScimGroupExternalMember getExternalGroupMap(final String groupId,
-                                                        final String externalGroup,
-                                                        final String origin,
-                                                        final String zoneId)
+            final String externalGroup,
+            final String origin,
+            final String zoneId)
             throws ScimResourceNotFoundException {
         try {
             return jdbcTemplate.queryForObject(getGroupsWithExternalGroupMappingsSql,

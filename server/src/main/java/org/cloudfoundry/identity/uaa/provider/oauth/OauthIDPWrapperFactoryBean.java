@@ -80,7 +80,7 @@ public class OauthIDPWrapperFactoryBean {
     }
 
     private AbstractExternalOAuthIdentityProviderDefinition getExternalOIDCIdentityProviderDefinition(String alias,
-                                                                                                      Map<String, Object> idpDefinitionMap, IdentityProvider provider) throws MalformedURLException {
+            Map<String, Object> idpDefinitionMap, IdentityProvider provider) throws MalformedURLException {
         AbstractExternalOAuthIdentityProviderDefinition rawDef;
         OIDCIdentityProviderDefinition oidcIdentityProviderDefinition = new OIDCIdentityProviderDefinition();
         setCommonProperties(idpDefinitionMap, oidcIdentityProviderDefinition);

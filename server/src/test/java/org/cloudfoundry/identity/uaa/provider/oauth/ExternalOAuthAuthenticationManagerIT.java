@@ -1309,7 +1309,7 @@ class ExternalOAuthAuthenticationManagerIT {
                 .andExpect(content().string(containsString("grant_type=authorization_code")))
                 .andExpect(content().string(containsString("code=the_code")))
                 .andExpect(content().string(containsString("redirect_uri=http%3A%2F%2Flocalhost%2Fcallback%2Fthe_origin")))
-                .andExpect(content().string(containsString(("response_type=id_token"))))
+                .andExpect(content().string(containsString("response_type=id_token")))
                 .andRespond(withStatus(OK).contentType(APPLICATION_JSON).body(response));
     }
 

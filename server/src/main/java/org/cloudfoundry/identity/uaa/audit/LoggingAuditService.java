@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Dave Syer
  */
 @ManagedResource
-(
-    objectName="cloudfoundry.identity:name=UaaAudit",
-    description = "UAA Audit Metrics"
+        (
+        objectName = "cloudfoundry.identity:name=UaaAudit",
+        description = "UAA Audit Metrics"
 )
 @Component("loggingAuditService")
 public class LoggingAuditService implements UaaAuditService {
@@ -160,8 +160,7 @@ public class LoggingAuditService implements UaaAuditService {
             output.append(sanitized);
             output.append("\n\n************************************************************\n");
             logger.trace(output.toString());
-        }
-        else {
+        } else {
             logger.info(sanitized);
         }
     }

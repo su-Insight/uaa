@@ -219,7 +219,7 @@ public class DefaultLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator
         }
 
         Set<String> userRoles = getLdapTemplate().searchForSingleAttributeValues(getGroupSearchBase(), groupSearchFilter,
-            new String[]{userDn, username}, groupRoleAttribute);
+                new String[]{userDn, username}, groupRoleAttribute);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Roles from search: " + userRoles);

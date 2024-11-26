@@ -111,7 +111,7 @@ public class SocialClientUserDetailsSource implements InitializingBean, PreAuthe
         }
         if (userName == null) {
             userName = map.get("id"); // no user-friendly identifier for linked
-                                      // in and google
+            // in and google
         }
         List<UaaAuthority> authorities = UaaAuthority.USER_AUTHORITIES;
         SocialClientUserDetails user = new SocialClientUserDetails(userName, authorities);

@@ -405,7 +405,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .param("sortOrder", "ascending")
                         .param("startIndex", "1")
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resources[0].previousLogonTime").exists())
                 .andExpect(jsonPath("$.resources[0].lastLogonTime").exists())
                 .andDo(
@@ -439,7 +439,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .param("sortOrder", "ascending")
                         .param("startIndex", "1")
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(
                         document("{ClassName}/{methodName}",
@@ -468,7 +468,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .content(JsonUtils.writeValueAsString(user))
         )
-                .andExpect(status().isCreated())
+        .andExpect(status().isCreated())
                 .andDo(
                         document("{ClassName}/{methodName}",
                                 preprocessRequest(prettyPrint()),
@@ -571,7 +571,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .header("If-Match", user.getVersion())
                         .content(JsonUtils.writeValueAsString(user))
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andDo(
                         document("{ClassName}/{methodName}",
                                 preprocessRequest(prettyPrint()),
@@ -610,7 +610,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .header("If-Match", user.getVersion())
                         .content(JsonUtils.writeValueAsString(user))
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andDo(
                         document("{ClassName}/{methodName}",
                                 preprocessRequest(prettyPrint()),
@@ -645,7 +645,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .header("If-Match", user.getVersion())
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andDo(
                         document("{ClassName}/{methodName}",
                                 preprocessRequest(prettyPrint()),
@@ -685,7 +685,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .header("If-Match", user.getVersion())
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andExpect(jsonPath("$.previousLogonTime").exists())
                 .andExpect(jsonPath("$.lastLogonTime").exists())
                 .andDo(
@@ -721,7 +721,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .content(JsonUtils.writeValueAsString(request))
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andDo(
                         document("{ClassName}/{methodName}",
                                 preprocessRequest(prettyPrint()),

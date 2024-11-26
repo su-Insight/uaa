@@ -37,9 +37,9 @@ public class TestZonifyGroupSchema_V2_4_1 {
 
         RandomValueStringGenerator generator = new RandomValueStringGenerator(16);
 
-        Map<IdentityZone,List<ScimGroup>> zones = new HashMap<>();
+        Map<IdentityZone, List<ScimGroup>> zones = new HashMap<>();
 
-        for (int i=0; i<ENTITY_COUNT; i++) {
+        for (int i = 0; i < ENTITY_COUNT; i++) {
             String subdomain = generator.generate();
             IdentityZone zone = MultitenancyFixture.identityZone(subdomain, subdomain);
             webApplicationContext.getBean(IdentityZoneEndpoints.class).createIdentityZone(zone, new AbstractBindingResult(null) {
@@ -55,7 +55,7 @@ public class TestZonifyGroupSchema_V2_4_1 {
             });
             List<ScimGroup> groups = new LinkedList<>();
             IdentityZoneHolder.set(zone);
-            for (int j=0; j<ENTITY_COUNT; j++) {
+            for (int j = 0; j < ENTITY_COUNT; j++) {
                 ScimGroup group = new ScimGroup(null, generator.generate(), null);
                 group = webApplicationContext.getBean(ScimGroupEndpoints.class).createGroup(group, new MockHttpServletResponse());
                 groups.add(group);
@@ -67,7 +67,7 @@ public class TestZonifyGroupSchema_V2_4_1 {
         Map<IdentityZone, List<ScimUser>> zoneUsers = new HashMap<>();
         for (Map.Entry<IdentityZone, List<ScimGroup>> zone : zones.entrySet()) {
             List<ScimUser> users = new LinkedList<>();
-            for (int i=0; i<ENTITY_COUNT; i++) {
+            for (int i = 0; i < ENTITY_COUNT; i++) {
                 String id = generator.generate();
                 String email = id + "@test.org";
                 ScimUser user = new ScimUser(null, id, id, id);
@@ -80,8 +80,8 @@ public class TestZonifyGroupSchema_V2_4_1 {
                     ScimGroupMember member = new ScimGroupMember(user.getId());
                     ScimGroup group = webApplicationContext.getBean(ScimGroupEndpoints.class).getGroup(zone.getValue().get(i).getId(), new MockHttpServletResponse());
                     group.setMembers(Collections.singletonList(member));
-                    webApplicationContext.getBean(ScimGroupEndpoints.class).updateGroup(group, group.getId(),String.valueOf(group.getVersion()), new MockHttpServletResponse());
-                }finally {
+                    webApplicationContext.getBean(ScimGroupEndpoints.class).updateGroup(group, group.getId(), String.valueOf(group.getVersion()), new MockHttpServletResponse());
+                } finally {
                     IdentityZoneHolder.clear();
                 }
 

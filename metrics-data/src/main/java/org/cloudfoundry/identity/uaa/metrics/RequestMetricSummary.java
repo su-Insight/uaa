@@ -36,13 +36,13 @@ public class RequestMetricSummary {
 
     @JsonCreator
     public RequestMetricSummary(@JsonProperty("count") long count,
-                                @JsonProperty("averageTime") double averageTime,
-                                @JsonProperty("intolerableCount") long intolerableCount,
-                                @JsonProperty("averageIntolerableTime") double averageIntolerableTime,
-                                @JsonProperty("databaseQueryCount") long databaseQueryCount,
-                                @JsonProperty("averageDatabaseQueryTime") double averageDatabaseQueryTime,
-                                @JsonProperty("databaseIntolerableQueryCount") long databaseIntolerableQueryCount,
-                                @JsonProperty("averageDatabaseIntolerableQueryTime") double averageDatabaseIntolerableQueryTime) {
+            @JsonProperty("averageTime") double averageTime,
+            @JsonProperty("intolerableCount") long intolerableCount,
+            @JsonProperty("averageIntolerableTime") double averageIntolerableTime,
+            @JsonProperty("databaseQueryCount") long databaseQueryCount,
+            @JsonProperty("averageDatabaseQueryTime") double averageDatabaseQueryTime,
+            @JsonProperty("databaseIntolerableQueryCount") long databaseIntolerableQueryCount,
+            @JsonProperty("averageDatabaseIntolerableQueryTime") double averageDatabaseIntolerableQueryTime) {
         this.count = count;
         this.averageTime = averageTime;
         this.intolerableCount = intolerableCount;

@@ -29,6 +29,7 @@ public class DisableUserManagementSecurityFilter extends OncePerRequestFilter {
     private final IdentityZoneManager identityZoneManager;
 
     private static String regex1 = "";
+
     static {
         // scim user endpoints
         // ui controllers

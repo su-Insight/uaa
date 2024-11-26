@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractClientAdminEvent extends AbstractUaaEvent {
 
-    private ClientDetails nonExistent = new UaaClientDetails("non-existent","","","","");
+    private ClientDetails nonExistent = new UaaClientDetails("non-existent", "", "", "", "");
 
     private ClientDetails client;
 
@@ -56,17 +56,17 @@ public abstract class AbstractClientAdminEvent extends AbstractUaaEvent {
         Map<String, Object> auditData = new HashMap();
         auditData.put("scopes", clientDetails.getScope());
         List<String> authorities =
-            clientDetails
-            .getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
+                clientDetails
+                        .getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList());
         auditData.put("authorities", authorities);
         return createAuditRecord(
-            clientDetails.getClientId(),
-            getAuditEventType(),
-            getOrigin(getPrincipal()),
-            JsonUtils.writeValueAsString(auditData)
+                clientDetails.getClientId(),
+                getAuditEventType(),
+                getOrigin(getPrincipal()),
+                JsonUtils.writeValueAsString(auditData)
         );
     }
 

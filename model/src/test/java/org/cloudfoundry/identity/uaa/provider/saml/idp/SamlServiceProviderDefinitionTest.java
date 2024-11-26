@@ -145,12 +145,12 @@ class SamlServiceProviderDefinitionTest {
                 .build();
 
         assertThat(def1)
-                .returns( METADATA_URL_LOCATION, SamlServiceProviderDefinition::getMetaDataLocation)
-                .returns( VALUE, SamlServiceProviderDefinition::getNameID)
-                .returns( 3, SamlServiceProviderDefinition::getSingleSignOnServiceIndex)
-                .returns( true, SamlServiceProviderDefinition::isMetadataTrustCheck)
-                .returns( true, SamlServiceProviderDefinition::isSkipSslValidation)
-                .returns( true, SamlServiceProviderDefinition::isEnableIdpInitiatedSso);
+                .returns(METADATA_URL_LOCATION, SamlServiceProviderDefinition::getMetaDataLocation)
+                .returns(VALUE, SamlServiceProviderDefinition::getNameID)
+                .returns(3, SamlServiceProviderDefinition::getSingleSignOnServiceIndex)
+                .returns(true, SamlServiceProviderDefinition::isMetadataTrustCheck)
+                .returns(true, SamlServiceProviderDefinition::isSkipSslValidation)
+                .returns(true, SamlServiceProviderDefinition::isEnableIdpInitiatedSso);
 
     }
 

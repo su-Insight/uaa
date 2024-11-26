@@ -85,20 +85,20 @@ public class TestUtils {
     private static void seedUaaZoneSimilarToHowTheRealFlywayMigrationDoesIt(JdbcTemplate jdbcTemplate) {
         IdentityZone uaa = IdentityZone.getUaa();
         Timestamp t = new Timestamp(uaa.getCreated().getTime());
-        jdbcTemplate.update("insert into identity_zone VALUES (?,?,?,?,?,?,?,?,?)", uaa.getId(),t,t,uaa.getVersion(),uaa.getSubdomain(),uaa.getName(),uaa.getDescription(),null,true);
-        Map<String,String> originMap = new HashMap<>();
+        jdbcTemplate.update("insert into identity_zone VALUES (?,?,?,?,?,?,?,?,?)", uaa.getId(), t, t, uaa.getVersion(), uaa.getSubdomain(), uaa.getName(), uaa.getDescription(), null, true);
+        Map<String, String> originMap = new HashMap<>();
         Set<String> origins = new LinkedHashSet<>();
-        origins.addAll(Arrays.asList(new String[] {OriginKeys.UAA, OriginKeys.LOGIN_SERVER, OriginKeys.LDAP, OriginKeys.KEYSTONE}));
+        origins.addAll(Arrays.asList(new String[]{OriginKeys.UAA, OriginKeys.LOGIN_SERVER, OriginKeys.LDAP, OriginKeys.KEYSTONE}));
         origins.addAll(jdbcTemplate.queryForList("SELECT DISTINCT origin from users", String.class));
         for (String origin : origins) {
             String identityProviderId = UUID.randomUUID().toString();
             originMap.put(origin, identityProviderId);
-            jdbcTemplate.update("insert into identity_provider VALUES (?,?,?,0,?,?,?,?,null,?,null,null,null)",identityProviderId, t, t, uaa.getId(),origin,origin,origin,true);
+            jdbcTemplate.update("insert into identity_provider VALUES (?,?,?,0,?,?,?,?,null,?,null,null,null)", identityProviderId, t, t, uaa.getId(), origin, origin, origin, true);
         }
-        jdbcTemplate.update("update oauth_client_details set identity_zone_id = ?",uaa.getId());
+        jdbcTemplate.update("update oauth_client_details set identity_zone_id = ?", uaa.getId());
         List<String> clientIds = jdbcTemplate.queryForList("SELECT client_id from oauth_client_details", String.class);
         for (String clientId : clientIds) {
-            jdbcTemplate.update("insert into client_idp values (?,?) ",clientId,originMap.get(OriginKeys.UAA));
+            jdbcTemplate.update("insert into client_idp values (?,?) ", clientId, originMap.get(OriginKeys.UAA));
         }
     }
 

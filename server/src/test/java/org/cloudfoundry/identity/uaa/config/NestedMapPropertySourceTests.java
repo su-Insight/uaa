@@ -54,7 +54,7 @@ public class NestedMapPropertySourceTests {
         Yaml yaml = new Yaml();
         @SuppressWarnings("unchecked")
         Map<String, Object> map = yaml.loadAs("foo: bar\nspam:\n  foo:\n    baz: bucket",
-                        Map.class);
+                Map.class);
         NestedMapPropertySource properties = new NestedMapPropertySource("map", map);
         assertEquals("{baz=bucket}", properties.getProperty("spam.foo").toString());
     }
@@ -127,7 +127,7 @@ public class NestedMapPropertySourceTests {
         Yaml yaml = new Yaml();
         @SuppressWarnings("unchecked")
         Map<String, Object> map = yaml.loadAs(
-                        "foo:\n- bar:\n    spam: crap\n- baz\n- one: two\n  three: four", Map.class);
+                "foo:\n- bar:\n    spam: crap\n- baz\n- one: two\n  three: four", Map.class);
         NestedMapPropertySource properties = new NestedMapPropertySource("map", map);
         // System.err.println(Map);
         assertEquals("crap", properties.getProperty("foo[0].bar.spam"));

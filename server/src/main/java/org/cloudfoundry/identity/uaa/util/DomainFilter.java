@@ -42,30 +42,30 @@ public class DomainFilter {
             return EMPTY_LIST;
         }
 
-        if (activeProviders!=null && activeProviders.size()>0) {
+        if (activeProviders != null && activeProviders.size() > 0) {
             //filter client providers
             List<String> clientFilter = getProvidersForClient(client);
-            if (clientFilter!=null) {
+            if (clientFilter != null) {
                 activeProviders =
-                    activeProviders.stream().filter(
-                        p -> clientFilter.contains(p.getOriginKey())
-                    ).collect(Collectors.toList());
+                        activeProviders.stream().filter(
+                                p -> clientFilter.contains(p.getOriginKey())
+                        ).collect(Collectors.toList());
             }
             //filter for email domain
-            if (email!=null && email.contains("@")) {
+            if (email != null && email.contains("@")) {
                 final String domain = email.substring(email.indexOf('@') + 1);
                 List<IdentityProvider> explicitlyMatched =
-                    activeProviders.stream().filter(
-                        p -> doesEmailDomainMatchProvider(p, domain, true)
-                    ).collect(Collectors.toList());
-                if (explicitlyMatched.size()>0 || !useUaaFallback) {
+                        activeProviders.stream().filter(
+                                p -> doesEmailDomainMatchProvider(p, domain, true)
+                        ).collect(Collectors.toList());
+                if (explicitlyMatched.size() > 0 || !useUaaFallback) {
                     return explicitlyMatched;
                 }
 
                 activeProviders =
-                    activeProviders.stream().filter(
-                        p -> doesEmailDomainMatchProvider(p, domain, false)
-                    ).collect(Collectors.toList());
+                        activeProviders.stream().filter(
+                                p -> doesEmailDomainMatchProvider(p, domain, false)
+                        ).collect(Collectors.toList());
             }
         }
         return activeProviders != null ? activeProviders : EMPTY_LIST;
@@ -80,7 +80,7 @@ public class DomainFilter {
     }
 
     protected static List<String> getProvidersForClient(ClientDetails client) {
-        if (client==null) {
+        if (client == null) {
             return null;
         } else {
             return (List<String>) client.getAdditionalInformation().get(ClientConstants.ALLOWED_PROVIDERS);
@@ -88,7 +88,7 @@ public class DomainFilter {
     }
 
     protected static List<String> getEmailDomain(IdentityProvider provider) {
-        if (provider.getConfig()!=null) {
+        if (provider.getConfig() != null) {
             return provider.getConfig().getEmailDomain();
         }
         return null;
@@ -105,7 +105,7 @@ public class DomainFilter {
             }
         }
 
-        if (wildcardList==null) {
+        if (wildcardList == null) {
             return false;
         } else {
             Set<Pattern> patterns = UaaStringUtils.constructWildcards(wildcardList);

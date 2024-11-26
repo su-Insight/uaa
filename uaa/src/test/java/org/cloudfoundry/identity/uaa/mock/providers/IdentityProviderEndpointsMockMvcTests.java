@@ -162,18 +162,18 @@ class IdentityProviderEndpointsMockMvcTests {
         identityProviderFields.remove("config");
 
         MvcResult create = mockMvc.perform(post("/identity-providers/")
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(APPLICATION_JSON)
-                        .content(JsonUtils.writeValueAsString(identityProviderFields)))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(APPLICATION_JSON)
+                .content(JsonUtils.writeValueAsString(identityProviderFields)))
                 .andExpect(status().isCreated())
                 .andReturn();
 
         identityProvider = JsonUtils.readValue(create.getResponse().getContentAsString(), IdentityProvider.class);
 
         mockMvc.perform(put("/identity-providers/" + identityProvider.getId())
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(APPLICATION_JSON)
-                        .content(JsonUtils.writeValueAsString(identityProviderFields)))
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(APPLICATION_JSON)
+                .content(JsonUtils.writeValueAsString(identityProviderFields)))
                 .andExpect(status().isOk());
     }
 
@@ -300,7 +300,7 @@ class IdentityProviderEndpointsMockMvcTests {
         providerDefinition.setGroupRoleAttribute("description");
 
         try (InMemoryLdapServer ldapServer =
-                     InMemoryLdapServer.startLdap(33389)) {
+                InMemoryLdapServer.startLdap(33389)) {
             providerDefinition.setBaseUrl(ldapServer.getLdapBaseUrl());
             newIdp.setConfig(providerDefinition);
 

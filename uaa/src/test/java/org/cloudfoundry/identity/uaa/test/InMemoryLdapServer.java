@@ -55,7 +55,7 @@ public class InMemoryLdapServer implements Closeable {
     public static InMemoryLdapServer startLdapWithTls(int port, int tlsPort, File keyStore) {
         InMemoryLdapServer server = new InMemoryLdapServer(port);
         if (keyStore != null) {
-          server.configureStartTLS(tlsPort, keyStore, new File(TRUST_STORE_URL.getFile()));
+            server.configureStartTLS(tlsPort, keyStore, new File(TRUST_STORE_URL.getFile()));
         }
         server.start();
         server.applyChangesFromLDIF(LDAP_INIT_LIDF_URL);

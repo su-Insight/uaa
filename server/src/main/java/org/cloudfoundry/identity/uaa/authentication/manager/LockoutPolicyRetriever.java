@@ -22,8 +22,8 @@ import org.cloudfoundry.identity.uaa.provider.LockoutPolicy;
  */
 public interface LockoutPolicyRetriever {
     LockoutPolicy getLockoutPolicy();
-    
+
     LockoutPolicy getDefaultLockoutPolicy();
-    
+
     void setDefaultLockoutPolicy(LockoutPolicy defaultLockoutPolicy);
 }

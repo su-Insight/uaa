@@ -142,20 +142,20 @@ public class LdapIdentityProviderDefinition extends ExternalIdentityProviderDefi
     private String tlsConfiguration = LDAP_TLS_NONE;
 
     public static LdapIdentityProviderDefinition searchAndBindMapGroupToScopes(
-        String baseUrl,
-        String bindUserDn,
-        String bindPassword,
-        String userSearchBase,
-        String userSearchFilter,
-        String groupSearchBase,
-        String groupSearchFilter,
-        String mailAttributeName,
-        String mailSubstitute,
-        Boolean mailSubstituteOverridesLdap,
-        Boolean autoAddGroups,
-        Boolean groupSearchSubTree,
-        int groupMaxSearchDepth,
-        Boolean skipSSLVerification) {
+            String baseUrl,
+            String bindUserDn,
+            String bindPassword,
+            String userSearchBase,
+            String userSearchFilter,
+            String groupSearchBase,
+            String groupSearchFilter,
+            String mailAttributeName,
+            String mailSubstitute,
+            Boolean mailSubstituteOverridesLdap,
+            Boolean autoAddGroups,
+            Boolean groupSearchSubTree,
+            int groupMaxSearchDepth,
+            Boolean skipSSLVerification) {
 
         LdapIdentityProviderDefinition definition = new LdapIdentityProviderDefinition();
         definition.baseUrl = baseUrl;

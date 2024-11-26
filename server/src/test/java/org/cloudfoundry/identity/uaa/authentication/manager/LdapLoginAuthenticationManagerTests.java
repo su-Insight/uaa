@@ -118,26 +118,26 @@ class LdapLoginAuthenticationManagerTests {
 
         provider = mock(IdentityProvider.class);
 
-        when(provisioning.retrieveByOrigin(anyString(),anyString())).thenReturn(provider);
+        when(provisioning.retrieveByOrigin(anyString(), anyString())).thenReturn(provider);
         Map attributeMappings = new HashMap<>();
         definition = LdapIdentityProviderDefinition.searchAndBindMapGroupToScopes(
-            "baseUrl",
-            "bindUserDn",
-            "bindPassword",
-            "userSearchBase",
-            "userSearchFilter",
-            "grouSearchBase",
-            "groupSearchFilter",
-            "mailAttributeName",
-            "mailSubstitute",
-            false,
-            false,
-            false,
-            1,
-            false
+                "baseUrl",
+                "bindUserDn",
+                "bindPassword",
+                "userSearchBase",
+                "userSearchFilter",
+                "grouSearchBase",
+                "groupSearchFilter",
+                "mailAttributeName",
+                "mailSubstitute",
+                false,
+                false,
+                false,
+                1,
+                false
         );
-        definition.addAttributeMapping(USER_ATTRIBUTE_PREFIX+MANAGERS, UAA_MANAGER);
-        definition.addAttributeMapping(USER_ATTRIBUTE_PREFIX+COST_CENTERS, COST_CENTER);
+        definition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + MANAGERS, UAA_MANAGER);
+        definition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + COST_CENTERS, COST_CENTER);
         when(provider.getConfig()).thenReturn(definition);
     }
 
@@ -226,61 +226,61 @@ class LdapLoginAuthenticationManagerTests {
     void test_group_white_list_with_wildcard() {
         UaaUser user = getUaaUser();
         ExtendedLdapUserImpl authDetails =
-            getAuthDetails(
-                user.getEmail(),
-                user.getGivenName(),
-                user.getFamilyName(),
-                user.getPhoneNumber(),
-                new AttributeInfo(UAA_MANAGER, new String[] {KARI_THE_ANT_EATER, JOHN_THE_SLOTH}),
-                new AttributeInfo(COST_CENTER, new String[] {DENVER_CO})
-            );
+                getAuthDetails(
+                        user.getEmail(),
+                        user.getGivenName(),
+                        user.getFamilyName(),
+                        user.getPhoneNumber(),
+                        new AttributeInfo(UAA_MANAGER, new String[]{KARI_THE_ANT_EATER, JOHN_THE_SLOTH}),
+                        new AttributeInfo(COST_CENTER, new String[]{DENVER_CO})
+                );
         Map<String, String[]> role1 = new HashMap<>();
-        role1.put("cn", new String[] {"ldap.role.1.a", "ldap.role.1.b", "ldap.role.1"});
+        role1.put("cn", new String[]{"ldap.role.1.a", "ldap.role.1.b", "ldap.role.1"});
         Map<String, String[]> role2 = new HashMap<>();
-        role2.put("cn", new String[] {"ldap.role.2.a", "ldap.role.2.b", "ldap.role.2"});
+        role2.put("cn", new String[]{"ldap.role.2.a", "ldap.role.2.b", "ldap.role.2"});
         authDetails.setAuthorities(
-            Arrays.asList(
-                new LdapAuthority("role1", "cn=role1,ou=test,ou=com", role1),
-                new LdapAuthority("role2", "cn=role2,ou=test,ou=com", role2)
+                Arrays.asList(
+                        new LdapAuthority("role1", "cn=role1,ou=test,ou=com", role1),
+                        new LdapAuthority("role2", "cn=role2,ou=test,ou=com", role2)
 
-            )
+                )
         );
 
 
         definition.setExternalGroupsWhitelist(EMPTY_LIST);
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder()
+                containsInAnyOrder()
         );
 
         definition.setExternalGroupsWhitelist(null);
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder()
+                containsInAnyOrder()
         );
 
         definition.setExternalGroupsWhitelist(Collections.singletonList("ldap.role.1.a"));
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder("ldap.role.1.a")
+                containsInAnyOrder("ldap.role.1.a")
         );
 
         definition.setExternalGroupsWhitelist(Arrays.asList("ldap.role.1.a", "ldap.role.2.*"));
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder("ldap.role.1.a", "ldap.role.2.a", "ldap.role.2.b")
+                containsInAnyOrder("ldap.role.1.a", "ldap.role.2.a", "ldap.role.2.b")
         );
 
 
         definition.setExternalGroupsWhitelist(Collections.singletonList("ldap.role.*.*"));
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder("ldap.role.1.a", "ldap.role.1.b", "ldap.role.2.a", "ldap.role.2.b")
+                containsInAnyOrder("ldap.role.1.a", "ldap.role.1.b", "ldap.role.2.a", "ldap.role.2.b")
         );
 
         definition.setExternalGroupsWhitelist(Arrays.asList("ldap.role.*.*", "ldap.role.*"));
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder("ldap.role.1.a", "ldap.role.1.b", "ldap.role.1", "ldap.role.2.a", "ldap.role.2.b", "ldap.role.2")
+                containsInAnyOrder("ldap.role.1.a", "ldap.role.1.b", "ldap.role.1", "ldap.role.2.a", "ldap.role.2.b", "ldap.role.2")
         );
 
         definition.setExternalGroupsWhitelist(Collections.singletonList("ldap*"));
         assertThat(am.getExternalUserAuthorities(authDetails),
-                   containsInAnyOrder("ldap.role.1.a", "ldap.role.1.b", "ldap.role.1", "ldap.role.2.a", "ldap.role.2.b", "ldap.role.2")
+                containsInAnyOrder("ldap.role.1.a", "ldap.role.1.b", "ldap.role.1", "ldap.role.2.a", "ldap.role.2.b", "ldap.role.2")
         );
     }
 
@@ -288,25 +288,25 @@ class LdapLoginAuthenticationManagerTests {
 
         UaaUser user = getUaaUser();
         ExtendedLdapUserImpl authDetails =
-            getAuthDetails(
-                user.getEmail(),
-                user.getGivenName(),
-                user.getFamilyName(),
-                user.getPhoneNumber(),
-                new AttributeInfo(UAA_MANAGER, new String[] {KARI_THE_ANT_EATER, JOHN_THE_SLOTH}),
-                new AttributeInfo(COST_CENTER, new String[] {DENVER_CO})
-            );
+                getAuthDetails(
+                        user.getEmail(),
+                        user.getGivenName(),
+                        user.getFamilyName(),
+                        user.getPhoneNumber(),
+                        new AttributeInfo(UAA_MANAGER, new String[]{KARI_THE_ANT_EATER, JOHN_THE_SLOTH}),
+                        new AttributeInfo(COST_CENTER, new String[]{DENVER_CO})
+                );
 
         Map<String, String[]> role1 = new HashMap<>();
-        role1.put("cn", new String[] {"ldap.role.1.a", "ldap.role.1.b", "ldap.role.1"});
+        role1.put("cn", new String[]{"ldap.role.1.a", "ldap.role.1.b", "ldap.role.1"});
         Map<String, String[]> role2 = new HashMap<>();
-        role2.put("cn", new String[] {"ldap.role.2.a", "ldap.role.2.b", "ldap.role.2"});
+        role2.put("cn", new String[]{"ldap.role.2.a", "ldap.role.2.b", "ldap.role.2"});
         authDetails.setAuthorities(
-            Arrays.asList(
-                new LdapAuthority("role1", "cn=role1,ou=test,ou=com", role1),
-                new LdapAuthority("role2", "cn=role2,ou=test,ou=com", role2)
+                Arrays.asList(
+                        new LdapAuthority("role1", "cn=role1,ou=test,ou=com", role1),
+                        new LdapAuthority("role2", "cn=role2,ou=test,ou=com", role2)
 
-            )
+                )
         );
         definition.setExternalGroupsWhitelist(Collections.singletonList("*"));
         when(auth.getPrincipal()).thenReturn(authDetails);
@@ -318,13 +318,13 @@ class LdapLoginAuthenticationManagerTests {
         am.setUserDatabase(db);
 
 
-            //set the config flag
+        //set the config flag
         definition.setStoreCustomAttributes(storeUserInfo);
 
-        UaaAuthentication authentication = (UaaAuthentication)am.authenticate(auth);
+        UaaAuthentication authentication = (UaaAuthentication) am.authenticate(auth);
         UserInfo info = new UserInfo()
-            .setUserAttributes(authentication.getUserAttributes())
-            .setRoles(Arrays.asList("ldap.role.1.a", "ldap.role.1.b", "ldap.role.1", "ldap.role.2.a", "ldap.role.2.b", "ldap.role.2"));
+                .setUserAttributes(authentication.getUserAttributes())
+                .setRoles(Arrays.asList("ldap.role.1.a", "ldap.role.1.b", "ldap.role.1", "ldap.role.2.a", "ldap.role.2.b", "ldap.role.2"));
         if (storeUserInfo) {
             verify(db, times(1)).storeUserInfo(anyString(), eq(info));
         } else {
@@ -367,22 +367,22 @@ class LdapLoginAuthenticationManagerTests {
 
     UaaUser getUaaUser() {
         return new UaaUser(new UaaUserPrototype()
-                               .withId("id")
-                               .withUsername(USERNAME)
-                               .withPassword("password")
-                               .withEmail(TEST_EMAIL)
-                               .withAuthorities(UaaAuthority.USER_AUTHORITIES)
-                               .withGivenName("givenname")
-                               .withFamilyName("familyname")
-                               .withPhoneNumber("8675309")
-                               .withCreated(new Date())
-                               .withModified(new Date())
-                               .withOrigin(OriginKeys.ORIGIN)
-                               .withExternalId(DN)
-                               .withVerified(false)
-                               .withZoneId(IdentityZoneHolder.get().getId())
-                               .withSalt(null)
-                               .withPasswordLastModified(null));
+                .withId("id")
+                .withUsername(USERNAME)
+                .withPassword("password")
+                .withEmail(TEST_EMAIL)
+                .withAuthorities(UaaAuthority.USER_AUTHORITIES)
+                .withGivenName("givenname")
+                .withFamilyName("familyname")
+                .withPhoneNumber("8675309")
+                .withCreated(new Date())
+                .withModified(new Date())
+                .withOrigin(OriginKeys.ORIGIN)
+                .withExternalId(DN)
+                .withVerified(false)
+                .withZoneId(IdentityZoneHolder.get().getId())
+                .withSalt(null)
+                .withPasswordLastModified(null));
     }
 
 

@@ -155,10 +155,10 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
 
     @RequestMapping(value = "/oauth/authorize")
     public ModelAndView authorize(Map<String, Object> model,
-                                  @RequestParam Map<String, String> parameters,
-                                  SessionStatus sessionStatus,
-                                  Principal principal,
-                                  HttpServletRequest request) {
+            @RequestParam Map<String, String> parameters,
+            SessionStatus sessionStatus,
+            Principal principal,
+            HttpServletRequest request) {
 
         ClientDetails client;
         String clientId;
@@ -189,7 +189,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
         if (authorizationRequest.getClientId() == null) {
             throw new InvalidClientException("A client id must be provided");
         }
-        
+
         validateAuthorizationRequestPkceParameters(authorizationRequest.getRequestParameters());
 
         String resolvedRedirect = "";
@@ -275,7 +275,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
         }
 
     }
-    
+
     /**
      * PKCE parameters check: 
      *      code_challenge: (Optional) Must be provided for PKCE and must not be empty.
@@ -285,9 +285,9 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
      */
     protected void validateAuthorizationRequestPkceParameters(Map<String, String> authorizationRequestParameters) {
         if (pkceValidationService != null) {
-    	    String codeChallenge = authorizationRequestParameters.get(PkceValidationService.CODE_CHALLENGE);
+            String codeChallenge = authorizationRequestParameters.get(PkceValidationService.CODE_CHALLENGE);
             if (codeChallenge != null) {
-                if(!PkceValidationService.isCodeChallengeParameterValid(codeChallenge)) {
+                if (!PkceValidationService.isCodeChallengeParameterValid(codeChallenge)) {
                     throw new InvalidRequestException("Code challenge length must between 43 and 128 and use only [A-Z],[a-z],[0-9],_,.,-,~ characters.");
                 }
                 String codeChallengeMethod = authorizationRequestParameters.get(PkceValidationService.CODE_CHALLENGE_METHOD);
@@ -296,10 +296,10 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
                 }
                 if (!pkceValidationService.isCodeChallengeMethodSupported(codeChallengeMethod)) {
                     throw new InvalidRequestException("Unsupported code challenge method. Supported: " +
-                        pkceValidationService.getSupportedCodeChallengeMethods().toString());
+                            pkceValidationService.getSupportedCodeChallengeMethods().toString());
                 }
             }
-        }   
+        }
     }
 
     // This method handles /oauth/authorize calls when user is not logged in and the prompt=none param is used
@@ -355,7 +355,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
     private ModelAndView switchIdp(Map<String, Object> model, ClientDetails client, String clientId, HttpServletRequest request) {
         Map<String, Object> additionalInfo = client.getAdditionalInformation();
         String clientDisplayName = (String) additionalInfo.get(ClientConstants.CLIENT_NAME);
-        model.put("client_display_name", (clientDisplayName != null) ? clientDisplayName : clientId);
+        model.put("client_display_name", clientDisplayName != null ? clientDisplayName : clientId);
 
         String queryString = UaaHttpRequestUtils.paramsToQueryString(request.getParameterMap());
         String redirectUri = request.getRequestURL() + "?" + queryString;
@@ -399,7 +399,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
 
     @RequestMapping(value = "/oauth/authorize", method = RequestMethod.POST, params = OAuth2Utils.USER_OAUTH_APPROVAL)
     public View approveOrDeny(@RequestParam Map<String, String> approvalParameters, Map<String, ?> model,
-                              SessionStatus sessionStatus, Principal principal) {
+            SessionStatus sessionStatus, Principal principal) {
 
         if (!(principal instanceof Authentication)) {
             sessionStatus.setComplete();
@@ -525,7 +525,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
 
     // We need explicit approval from the user.
     private ModelAndView getUserApprovalPageResponse(Map<String, Object> model,
-                                                     AuthorizationRequest authorizationRequest, Authentication principal) {
+            AuthorizationRequest authorizationRequest, Authentication principal) {
         logger.debug("Loading user approval page: " + userApprovalPage);
         model.putAll(userApprovalHandler.getUserApprovalRequest(authorizationRequest, principal));
         return new ModelAndView(userApprovalPage, model);
@@ -563,8 +563,8 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
     }
 
     private OAuth2AccessToken getAccessTokenForImplicitGrantOrHybrid(TokenRequest tokenRequest,
-                                                                     OAuth2Request storedOAuth2Request,
-                                                                     String grantType
+            OAuth2Request storedOAuth2Request,
+            String grantType
     ) throws OAuth2Exception {
         // These 1 method calls have to be atomic, otherwise the ImplicitGrantService can have a race condition where
         // one thread removes the token request before another has a chance to redeem it.
@@ -602,8 +602,8 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
     }
 
     public String buildRedirectURI(AuthorizationRequest authorizationRequest,
-                                   OAuth2AccessToken accessToken,
-                                   Authentication authUser) {
+            OAuth2AccessToken accessToken,
+            Authentication authUser) {
 
         String requestedRedirect = authorizationRequest.getRedirectUri();
         if (accessToken == null) {
@@ -718,7 +718,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
     }
 
     private String getUnsuccessfulRedirect(AuthorizationRequest authorizationRequest, OAuth2Exception failure,
-                                           boolean fragment) {
+            boolean fragment) {
 
         if (authorizationRequest == null || authorizationRequest.getRedirectUri() == null) {
             // we have no redirect for the user. very sad.

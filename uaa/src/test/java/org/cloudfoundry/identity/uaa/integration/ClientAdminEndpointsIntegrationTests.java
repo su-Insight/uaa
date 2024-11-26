@@ -733,7 +733,7 @@ public class ClientAdminEndpointsIntegrationTests {
     }
 
     @Test
-        // CFID-372
+    // CFID-372
     void testCreateExistingClientFails() {
         UaaClientDetails client = createClient("client_credentials");
 

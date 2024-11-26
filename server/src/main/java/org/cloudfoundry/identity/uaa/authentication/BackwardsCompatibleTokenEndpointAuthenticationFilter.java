@@ -95,22 +95,22 @@ public class BackwardsCompatibleTokenEndpointAuthenticationFilter implements Fil
     private final AntPathRequestMatcher requestMatcher;
 
     public BackwardsCompatibleTokenEndpointAuthenticationFilter(AuthenticationManager authenticationManager,
-                                                                OAuth2RequestFactory oAuth2RequestFactory) {
+            OAuth2RequestFactory oAuth2RequestFactory) {
         this(DEFAULT_FILTER_PROCESSES_URI, authenticationManager, oAuth2RequestFactory, null, null);
     }
 
     public BackwardsCompatibleTokenEndpointAuthenticationFilter(AuthenticationManager authenticationManager,
-                                                                OAuth2RequestFactory oAuth2RequestFactory,
-                                                                Saml2BearerGrantAuthenticationConverter saml2BearerGrantAuthenticationConverter,
-                                                                ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager) {
+            OAuth2RequestFactory oAuth2RequestFactory,
+            Saml2BearerGrantAuthenticationConverter saml2BearerGrantAuthenticationConverter,
+            ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager) {
         this(DEFAULT_FILTER_PROCESSES_URI, authenticationManager, oAuth2RequestFactory, saml2BearerGrantAuthenticationConverter, externalOAuthAuthenticationManager);
     }
 
     public BackwardsCompatibleTokenEndpointAuthenticationFilter(String requestMatcherUrl,
-                                                                AuthenticationManager authenticationManager,
-                                                                OAuth2RequestFactory oAuth2RequestFactory,
-                                                                Saml2BearerGrantAuthenticationConverter saml2BearerGrantAuthenticationConverter,
-                                                                ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager) {
+            AuthenticationManager authenticationManager,
+            OAuth2RequestFactory oAuth2RequestFactory,
+            Saml2BearerGrantAuthenticationConverter saml2BearerGrantAuthenticationConverter,
+            ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager) {
         super();
         Assert.isTrue(requestMatcherUrl.contains("{registrationId}"),
                 "filterProcessesUrl must contain a {registrationId} match variable");
@@ -222,8 +222,8 @@ public class BackwardsCompatibleTokenEndpointAuthenticationFilter implements Fil
 
             if (authResult != null && authResult.isAuthenticated() && authResult instanceof UaaAuthentication uaaAuthentication
                     && SessionUtils.isPasswordChangeRequired(request.getSession())) {
-                    throw new PasswordChangeRequiredException(uaaAuthentication, "password change required");
-                }
+                throw new PasswordChangeRequiredException(uaaAuthentication, "password change required");
+            }
 
 
             return authResult;
@@ -237,7 +237,7 @@ public class BackwardsCompatibleTokenEndpointAuthenticationFilter implements Fil
                 try {
                     authResult = saml2BearerGrantAuthenticationConverter.convert(request);
                 } catch (AuthenticationException e) {
-                    String errorMessage = (e instanceof Saml2AuthenticationException saml2AuthenticationException) ?
+                    String errorMessage = e instanceof Saml2AuthenticationException saml2AuthenticationException ?
                             saml2AuthenticationException.getSaml2Error().getDescription() : e.getMessage();
                     log.debug(errorMessage, e);
                     throw new InsufficientAuthenticationException(errorMessage);

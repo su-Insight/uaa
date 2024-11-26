@@ -142,10 +142,10 @@ public abstract class AbstractLdapMockMvcTest {
 
     @BeforeEach
     void setUp(@Autowired WebApplicationContext webApplicationContext,
-               @Autowired MockMvc mockMvc,
-               @Autowired ConfigurableApplicationContext configurableApplicationContext,
-               @Autowired JdbcScimUserProvisioning jdbcScimUserProvisioning,
-               @Autowired LoggingAuditService loggingAuditService) throws Exception {
+            @Autowired MockMvc mockMvc,
+            @Autowired ConfigurableApplicationContext configurableApplicationContext,
+            @Autowired JdbcScimUserProvisioning jdbcScimUserProvisioning,
+            @Autowired LoggingAuditService loggingAuditService) throws Exception {
         this.webApplicationContext = webApplicationContext;
         this.mockMvc = mockMvc;
         this.jdbcScimUserProvisioning = jdbcScimUserProvisioning;
@@ -182,7 +182,7 @@ public abstract class AbstractLdapMockMvcTest {
             loggingAuditService.setLogger(testLogger);
         } catch (Exception e) {
             Assumptions.assumeTrue(e == null,
-                () -> "Aborting: could not setup because of exception: " + e.getMessage());
+                    () -> "Aborting: could not setup because of exception: " + e.getMessage());
         }
     }
 
@@ -267,7 +267,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .session(session)
                         .header(HOST, host)
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andExpect(content().string(containsString("form_redirect_uri")))
                 .andExpect(content().string(containsString(URLEncoder.encode(redirectUri, StandardCharsets.UTF_8))));
 
@@ -281,7 +281,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .header(HOST, host)
                         .param("form_redirect_uri", redirectUri)
         )
-                .andExpect(authenticated())
+        .andExpect(authenticated())
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(redirectUri));
 
@@ -569,7 +569,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .header(HOST, host)
                         .header(AUTHORIZATION, "Bearer " + zone.getAdminToken())
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -587,7 +587,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .header(HOST, host)
                         .header(AUTHORIZATION, "Bearer " + zone.getAdminToken())
         )
-                .andExpect(status().isOk());
+        .andExpect(status().isOk());
 
         testSuccessfulLogin();
 
@@ -678,7 +678,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .param("username", username)
                         .param("password", password)
         )
-                .andExpect(status().isFound())
+        .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/"))
                 .andExpect(authenticated())
                 .andReturn().getRequest().getSession(false);
@@ -690,7 +690,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .header(HOST, host)
                         .accept(APPLICATION_JSON)
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         String passcode = JsonUtils.readValue(content, String.class);
 
@@ -705,7 +705,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .contentType(APPLICATION_FORM_URLENCODED)
                         .header(HOST, host)
         )
-                .andDo(print())
+        .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
@@ -733,7 +733,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .header("Authorization", "Bearer " + accessToken)
                         .accept(APPLICATION_JSON)
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Map<String, Object> userInfo = JsonUtils.readValue(userInfoContent, new TypeReference<Map<String, Object>>() {
         });
@@ -752,7 +752,7 @@ public abstract class AbstractLdapMockMvcTest {
                         .contentType(APPLICATION_FORM_URLENCODED)
                         .header(HOST, host)
         )
-                .andDo(print())
+        .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 

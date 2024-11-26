@@ -163,7 +163,7 @@ public class IdentityZoneConfigurationTests {
     @Test
     public void testDeserialize_Without_SamlConfig() {
         String s = JsonUtils.writeValueAsString(definition);
-        s = s.replace(",\"samlConfig\":{\"requestSigned\":false,\"wantAssertionSigned\":true}","");
+        s = s.replace(",\"samlConfig\":{\"requestSigned\":false,\"wantAssertionSigned\":true}", "");
         definition = JsonUtils.readValue(s, IdentityZoneConfiguration.class);
         assertThat(definition.getSamlConfig().isRequestSigned()).isTrue();
         assertThat(definition.getSamlConfig().isWantAssertionSigned()).isTrue();
@@ -185,14 +185,14 @@ public class IdentityZoneConfigurationTests {
     public void testDeserialize_With_SamlConfig() {
         assertThat(definition.getSamlConfig().isDisableInResponseToCheck()).isFalse();
         String s = JsonUtils.writeValueAsString(definition);
-        s = s.replace("\"wantAssertionSigned\":true","\"wantAssertionSigned\":false");
-        s = s.replace("\"disableInResponseToCheck\":false","\"disableInResponseToCheck\":true");
+        s = s.replace("\"wantAssertionSigned\":true", "\"wantAssertionSigned\":false");
+        s = s.replace("\"disableInResponseToCheck\":false", "\"disableInResponseToCheck\":true");
         definition = JsonUtils.readValue(s, IdentityZoneConfiguration.class);
         assertThat(definition.getSamlConfig().isRequestSigned()).isTrue();
         assertThat(definition.getSamlConfig().isWantAssertionSigned()).isFalse();
         assertThat(definition.getSamlConfig().isDisableInResponseToCheck()).isTrue();
-        s = s.replace("\"disableInResponseToCheck\":true,","");
-        s = s.replace(",\"disableInResponseToCheck\":true","");
+        s = s.replace("\"disableInResponseToCheck\":true,", "");
+        s = s.replace(",\"disableInResponseToCheck\":true", "");
         definition = JsonUtils.readValue(s, IdentityZoneConfiguration.class);
         assertThat(definition.getSamlConfig().isDisableInResponseToCheck()).isFalse();
     }
@@ -211,9 +211,9 @@ public class IdentityZoneConfigurationTests {
     @Test
     public void testDeserialize_DefaultCorsConfiguration() {
         String s = JsonUtils.writeValueAsString(definition);
-        s = s.replace("\"allowedHeaders\":"+String.format("[\"%s\",\"%s\",\"%s\"]", ACCEPT, AUTHORIZATION, CONTENT_TYPE), "\"allowedHeaders\":[\"" + ACCEPT +"\"]" );
-        s = s.replace("\"allowedMethods\":"+String.format("[\"%s\"]", GET.toString()), "\"allowedMethods\":" +String.format("[\"%s\",\"%s\"]",GET.toString(), POST.toString()));
-        s = s.replace("\"allowedOrigins\":[\".*\"]", "\"allowedOrigins\":[\"^localhost$\",\"^.*\\\\.localhost$\"]" );
+        s = s.replace("\"allowedHeaders\":" + String.format("[\"%s\",\"%s\",\"%s\"]", ACCEPT, AUTHORIZATION, CONTENT_TYPE), "\"allowedHeaders\":[\"" + ACCEPT + "\"]");
+        s = s.replace("\"allowedMethods\":" + String.format("[\"%s\"]", GET.toString()), "\"allowedMethods\":" + String.format("[\"%s\",\"%s\"]", GET.toString(), POST.toString()));
+        s = s.replace("\"allowedOrigins\":[\".*\"]", "\"allowedOrigins\":[\"^localhost$\",\"^.*\\\\.localhost$\"]");
         s = s.replace("\"allowedUris\":[\".*\"]", "\"allowedUris\":[\"^/uaa/userinfo$\",\"^/uaa/logout\\\\.do$\"]");
         definition = JsonUtils.readValue(s, IdentityZoneConfiguration.class);
 

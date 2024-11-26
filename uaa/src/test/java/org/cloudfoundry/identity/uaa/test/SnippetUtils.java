@@ -19,7 +19,8 @@ public final class SnippetUtils {
     public static final String REQUIRED = "Required";
     public static final String OPTIONAL = "Optional";
 
-    private SnippetUtils() {}
+    private SnippetUtils() {
+    }
 
     public static ConstrainableHeader headerWithName(String name) {
         return new ConstrainableHeader(name);
@@ -39,16 +40,16 @@ public final class SnippetUtils {
         }
 
         public ConstrainableParameter required() {
-            return (ConstrainableParameter)attributes(constraints.value(REQUIRED));
+            return (ConstrainableParameter) attributes(constraints.value(REQUIRED));
         }
 
         public ConstrainableParameter optional(String defaultValue) {
-            Attributes.Attribute[] attrs = new Attributes.Attribute[] {key("constraints").value(hasText(defaultValue) ? "Optional (defaults to `" + defaultValue + "`)" : OPTIONAL)};
-            return (ConstrainableParameter)attributes(attrs);
+            Attributes.Attribute[] attrs = new Attributes.Attribute[]{key("constraints").value(hasText(defaultValue) ? "Optional (defaults to `" + defaultValue + "`)" : OPTIONAL)};
+            return (ConstrainableParameter) attributes(attrs);
         }
 
         public ConstrainableParameter type(JsonFieldType fieldType) {
-            return (ConstrainableParameter)attributes(type.value(fieldType));
+            return (ConstrainableParameter) attributes(type.value(fieldType));
         }
     }
 
@@ -58,17 +59,17 @@ public final class SnippetUtils {
         }
 
         public ConstrainableHeader required() {
-            return (ConstrainableHeader)attributes(constraints.value(REQUIRED));
+            return (ConstrainableHeader) attributes(constraints.value(REQUIRED));
         }
 
         public ConstrainableHeader optional(String defaultValue) {
             super.optional();
-            Attributes.Attribute[] attrs = new Attributes.Attribute[] {key("constraints").value(hasText(defaultValue) ? "Optional (defaults to `" + defaultValue + "`)" : OPTIONAL)};
-            return (ConstrainableHeader)attributes(attrs);
+            Attributes.Attribute[] attrs = new Attributes.Attribute[]{key("constraints").value(hasText(defaultValue) ? "Optional (defaults to `" + defaultValue + "`)" : OPTIONAL)};
+            return (ConstrainableHeader) attributes(attrs);
         }
 
         public ConstrainableHeader type(JsonFieldType fieldType) {
-            return (ConstrainableHeader)attributes(type.value(fieldType));
+            return (ConstrainableHeader) attributes(type.value(fieldType));
         }
     }
 
@@ -78,25 +79,25 @@ public final class SnippetUtils {
         }
 
         public ConstrainableField required() {
-            return  (ConstrainableField)attributes(constraints.value(REQUIRED));
+            return  (ConstrainableField) attributes(constraints.value(REQUIRED));
         }
 
         public ConstrainableField optional(Object defaultValue) {
             super.optional();
             String defaultValueText;
-            if(defaultValue == null) {
+            if (defaultValue == null) {
                 defaultValueText = "";
             } else {
                 defaultValueText = JsonUtils.writeValueAsString(defaultValue);
             }
 
-            Attributes.Attribute[] attrs = new Attributes.Attribute[] {key("constraints").value(hasText(defaultValueText) ? "Optional (defaults to `" + defaultValueText + "`)" : OPTIONAL)};
-            return (ConstrainableField)attributes(attrs).optional();
+            Attributes.Attribute[] attrs = new Attributes.Attribute[]{key("constraints").value(hasText(defaultValueText) ? "Optional (defaults to `" + defaultValueText + "`)" : OPTIONAL)};
+            return (ConstrainableField) attributes(attrs).optional();
         }
 
         public ConstrainableField constrained(String constraint) {
-            Attributes.Attribute[] attrs = new Attributes.Attribute[] { key("constraints").value(constraint)};
-            return (ConstrainableField)attributes(attrs).optional();
+            Attributes.Attribute[] attrs = new Attributes.Attribute[]{key("constraints").value(constraint)};
+            return (ConstrainableField) attributes(attrs).optional();
         }
     }
 
@@ -105,13 +106,17 @@ public final class SnippetUtils {
             super(path + "." + subFieldDescriptor.getPath());
             type(subFieldDescriptor.getType());
             description(subFieldDescriptor.getDescription());
-            if(subFieldDescriptor.isIgnored()) { ignored(); }
+            if (subFieldDescriptor.isIgnored()) {
+                ignored();
+            }
             attributes(
                     subFieldDescriptor.getAttributes().entrySet().stream()
                             .map(e -> key(e.getKey()).value(e.getValue()))
                             .toArray(Attributes.Attribute[]::new)
             );
-            if(subFieldDescriptor.isOptional()) { optional(); }
+            if (subFieldDescriptor.isOptional()) {
+                optional();
+            }
         }
     }
 

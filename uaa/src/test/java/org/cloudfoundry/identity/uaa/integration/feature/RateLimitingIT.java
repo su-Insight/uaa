@@ -39,7 +39,8 @@ import java.util.stream.IntStream;
 @ContextConfiguration(classes = DefaultIntegrationTestConfig.class)
 public class RateLimitingIT {
 
-    @Autowired @Rule
+    @Autowired
+    @Rule
     public IntegrationTestRule integrationTestRule;
 
     @Rule
@@ -62,7 +63,7 @@ public class RateLimitingIT {
     public void logout_and_clear_cookies() {
         try {
             webDriver.get(baseUrl + "/logout.do");
-        }catch (org.openqa.selenium.TimeoutException x) {
+        } catch (org.openqa.selenium.TimeoutException x) {
             //try again - this should not be happening - 20 second timeouts
             webDriver.get(baseUrl + "/logout.do");
         }
@@ -81,7 +82,7 @@ public class RateLimitingIT {
         //Limit on /info is set to 20
         List<ResponseEntity> responses = new ArrayList<>(REQUEST_COUNT);
         //Many Requests should hit the RL
-        IntStream.range(0,REQUEST_COUNT).forEach(x -> responses.add(restTemplate.getForEntity(baseUrl + "/info", String.class)));
+        IntStream.range(0, REQUEST_COUNT).forEach(x -> responses.add(restTemplate.getForEntity(baseUrl + "/info", String.class)));
         //Check numbers
         long limits = responses.stream().filter(s -> HttpStatus.TOO_MANY_REQUESTS.equals(s.getStatusCode())).count();
         long oKs = responses.stream().filter(s -> HttpStatus.OK.equals(s.getStatusCode())).count();
@@ -91,8 +92,8 @@ public class RateLimitingIT {
             rateLimited = true;
         }
         assertTrue(
-            "Rate limit counters are not as expected. Request: " + REQUEST_COUNT + ", Limit: " + INFO_LIMIT + ", blocked: " + limits
-                + ", allowed: " + oKs, rateLimited);
+                "Rate limit counters are not as expected. Request: " + REQUEST_COUNT + ", Limit: " + INFO_LIMIT + ", blocked: " + limits
+                        + ", allowed: " + oKs, rateLimited);
         //After 1s, New Limit should be available
         TimeUnit.SECONDS.sleep(1);
         response = restTemplate.getForEntity(baseUrl + "/info", String.class);
@@ -104,12 +105,12 @@ public class RateLimitingIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Authorization", ((UaaTestAccounts) testAccounts).getAuthorizationHeader(testAccounts.getAdminClientId(),
-            testAccounts.getAdminClientSecret()));
+                testAccounts.getAdminClientSecret()));
 
         ResponseEntity<String> responseEntity = restOperations.exchange(baseUrl + "/RateLimitingStatus",
-            HttpMethod.GET,
-            new HttpEntity<>(new LinkedMultiValueMap<>(), headers),
-            String.class);
+                HttpMethod.GET,
+                new HttpEntity<>(new LinkedMultiValueMap<>(), headers),
+                String.class);
 
         assertNotNull(responseEntity);
         assertThat(responseEntity.getBody(), containsString("\"status\" : \"ACTIVE\""));

@@ -63,27 +63,27 @@ public class UaaAuthentication extends AbstractAuthenticationToken
      *                    principal represented by this authentication object.
      */
     public UaaAuthentication(UaaPrincipal principal,
-                             Collection<? extends GrantedAuthority> authorities,
-                             UaaAuthenticationDetails details) {
+            Collection<? extends GrantedAuthority> authorities,
+            UaaAuthenticationDetails details) {
         this(principal, null, authorities, details, true, System.currentTimeMillis());
     }
 
     public UaaAuthentication(UaaPrincipal principal,
-                             Object credentials,
-                             Collection<? extends GrantedAuthority> authorities,
-                             UaaAuthenticationDetails details,
-                             boolean authenticated,
-                             long authenticatedTime) {
+            Object credentials,
+            Collection<? extends GrantedAuthority> authorities,
+            UaaAuthenticationDetails details,
+            boolean authenticated,
+            long authenticatedTime) {
         this(principal, credentials, authorities, details, authenticated, authenticatedTime, -1);
     }
 
     public UaaAuthentication(UaaPrincipal principal,
-                             Object credentials,
-                             Collection<? extends GrantedAuthority> authorities,
-                             UaaAuthenticationDetails details,
-                             boolean authenticated,
-                             long authenticatedTime,
-                             long expiresAt) {
+            Object credentials,
+            Collection<? extends GrantedAuthority> authorities,
+            UaaAuthenticationDetails details,
+            boolean authenticated,
+            long authenticatedTime,
+            long expiresAt) {
         super(authorities);
 
         if (principal == null || authorities == null) {
@@ -98,14 +98,14 @@ public class UaaAuthentication extends AbstractAuthenticationToken
     }
 
     public UaaAuthentication(UaaPrincipal uaaPrincipal,
-                             Object credentials,
-                             List<? extends GrantedAuthority> uaaAuthorityList,
-                             Set<String> externalGroups,
-                             Map<String, List<String>> userAttributes,
-                             UaaAuthenticationDetails details,
-                             boolean authenticated,
-                             long authenticatedTime,
-                             long expiresAt) {
+            Object credentials,
+            List<? extends GrantedAuthority> uaaAuthorityList,
+            Set<String> externalGroups,
+            Map<String, List<String>> userAttributes,
+            UaaAuthenticationDetails details,
+            boolean authenticated,
+            long authenticatedTime,
+            long expiresAt) {
         this(uaaPrincipal, credentials, uaaAuthorityList, details, authenticated, authenticatedTime, expiresAt);
         this.externalGroups = externalGroups;
         this.userAttributes = new HashMap<>(userAttributes);

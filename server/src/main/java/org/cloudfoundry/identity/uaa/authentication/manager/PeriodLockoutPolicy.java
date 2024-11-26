@@ -50,7 +50,7 @@ public class PeriodLockoutPolicy implements AccountLoginPolicy {
             return true;
         }
         logger.warn("User " + user.getUsername() + " and id " + user.getId() + " has "
-          + loginResult.getFailureCount() + " failed user logins within the last checking period.");
+                + loginResult.getFailureCount() + " failed user logins within the last checking period.");
         return false;
     }
 }

@@ -52,23 +52,24 @@ public class SamlServiceProviderDefinition {
 
     public SamlServiceProviderDefinition clone() {
         return new SamlServiceProviderDefinition(metaDataLocation,
-                                                 nameID,
-                                                 singleSignOnServiceIndex,
-                                                 metadataTrustCheck,
-                                                 skipSslValidation,
-                                                 attributeMappings,
-                                                 enableIdpInitiatedSso);
+                nameID,
+                singleSignOnServiceIndex,
+                metadataTrustCheck,
+                skipSslValidation,
+                attributeMappings,
+                enableIdpInitiatedSso);
     }
 
-    public SamlServiceProviderDefinition() {}
+    public SamlServiceProviderDefinition() {
+    }
 
     private SamlServiceProviderDefinition(String metaDataLocation,
-                                         String nameID,
-                                         int singleSignOnServiceIndex,
-                                         boolean metadataTrustCheck,
-                                         boolean skipSslValidation,
-                                         Map<String, Object> attributeMappings,
-                                         boolean enableIdpInitiatedSso) {
+            String nameID,
+            int singleSignOnServiceIndex,
+            boolean metadataTrustCheck,
+            boolean skipSslValidation,
+            Map<String, Object> attributeMappings,
+            boolean enableIdpInitiatedSso) {
         this.metaDataLocation = metaDataLocation;
         this.nameID = nameID;
         this.singleSignOnServiceIndex = singleSignOnServiceIndex;
@@ -82,8 +83,8 @@ public class SamlServiceProviderDefinition {
     public MetadataLocation getType() {
         String trimmedLocation = metaDataLocation.trim();
         if (trimmedLocation.startsWith("<?xml") ||
-            trimmedLocation.startsWith("<md:EntityDescriptor") ||
-            trimmedLocation.startsWith("<EntityDescriptor")) {
+                trimmedLocation.startsWith("<md:EntityDescriptor") ||
+                trimmedLocation.startsWith("<EntityDescriptor")) {
             try {
                 validateXml(trimmedLocation);
                 return MetadataLocation.DATA;
@@ -104,8 +105,8 @@ public class SamlServiceProviderDefinition {
     }
 
     protected void validateXml(String xml) throws IllegalArgumentException {
-        if (xml==null || xml.toUpperCase().contains("<!DOCTYPE")) {
-            throw new IllegalArgumentException("Invalid metadata XML contents:"+xml);
+        if (xml == null || xml.toUpperCase().contains("<!DOCTYPE")) {
+            throw new IllegalArgumentException("Invalid metadata XML contents:" + xml);
         }
         try {
             DocumentBuilder builder = ObjectUtils.getDocumentBuilder();
@@ -113,9 +114,9 @@ public class SamlServiceProviderDefinition {
         } catch (ParserConfigurationException e) {
             throw new IllegalArgumentException("Unable to create document parser.", e);
         } catch (SAXException e) {
-            throw new IllegalArgumentException("Sax Parsing exception of XML:"+xml, e);
+            throw new IllegalArgumentException("Sax Parsing exception of XML:" + xml, e);
         } catch (IOException e) {
-            throw new IllegalArgumentException("IOException of XML:"+xml, e);
+            throw new IllegalArgumentException("IOException of XML:" + xml, e);
         }
     }
 
@@ -213,13 +214,13 @@ public class SamlServiceProviderDefinition {
     @Override
     public String toString() {
         return "SamlServiceProviderDefinition{" +
-            "metaDataLocation='" + metaDataLocation + '\'' +
-            ", nameID='" + nameID + '\'' +
-            ", singleSignOnServiceIndex=" + singleSignOnServiceIndex +
-            ", metadataTrustCheck=" + metadataTrustCheck +
-            ", skipSslValidation=" + skipSslValidation +
-            ", attributeMappings=" + attributeMappings +
-            '}';
+                "metaDataLocation='" + metaDataLocation + '\'' +
+                ", nameID='" + nameID + '\'' +
+                ", singleSignOnServiceIndex=" + singleSignOnServiceIndex +
+                ", metadataTrustCheck=" + metadataTrustCheck +
+                ", skipSslValidation=" + skipSslValidation +
+                ", attributeMappings=" + attributeMappings +
+                '}';
     }
 
     public static class Builder {
@@ -231,7 +232,8 @@ public class SamlServiceProviderDefinition {
         private boolean enableIdpInitiatedSso = false;
         private boolean skipSslValidation = true;
 
-        private Builder(){}
+        private Builder() {
+        }
 
         public static Builder get() {
             return new Builder();

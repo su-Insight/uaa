@@ -36,14 +36,14 @@ public class ServiceProviderModifiedEvent extends AbstractUaaEvent {
 
     @Override
     public AuditEvent getAuditEvent() {
-        SamlServiceProvider provider = (SamlServiceProvider)source;
+        SamlServiceProvider provider = (SamlServiceProvider) source;
         return createAuditRecord(getSource().toString(),
-                                 eventType,
-                                 getOrigin(getAuthentication()),
-                                 String.format(dataFormat,
-                                               provider.getId(),
-                                               provider.getName(),
-                                               provider.getEntityId()));
+                eventType,
+                getOrigin(getAuthentication()),
+                String.format(dataFormat,
+                        provider.getId(),
+                        provider.getName(),
+                        provider.getEntityId()));
     }
 
     public static ServiceProviderModifiedEvent serviceProviderCreated(SamlServiceProvider serviceProvider) {

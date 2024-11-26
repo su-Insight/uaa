@@ -52,13 +52,13 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     private static final String FIELDS = "user_id,client_id,scope,expiresAt,status,lastModifiedAt,identity_zone_id";
 
     private static final String ADD_AUTHZ_SQL =
-        String.format("insert into %s ( %s ) values (?,?,?,?,?,?,?)",
-                      TABLE_NAME,
-                      FIELDS);
+            String.format("insert into %s ( %s ) values (?,?,?,?,?,?,?)",
+                    TABLE_NAME,
+                    FIELDS);
 
     private static final String REFRESH_AUTHZ_SQL =
-        String.format("update %s set lastModifiedAt=?, expiresAt=?, status=? where user_id=? and client_Id=? and scope=? and identity_zone_id=?",
-                      TABLE_NAME);
+            String.format("update %s set lastModifiedAt=?, expiresAt=?, status=? where user_id=? and client_Id=? and scope=? and identity_zone_id=?",
+                    TABLE_NAME);
 
     private static final String GET_AUTHZ_SQL = String.format("select %s from %s", FIELDS, TABLE_NAME);
 
@@ -182,9 +182,9 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
         logger.debug("Purging expired approvals from database");
         try {
             int deleted = jdbcTemplate.update(DELETE_AUTHZ_SQL + " where expiresAt <= ?",
-                                              ps -> { //PreparedStatementSetter
-                                                  ps.setTimestamp(1, new Timestamp(new Date().getTime()));
-                                              });
+                    ps -> { //PreparedStatementSetter
+                        ps.setTimestamp(1, new Timestamp(new Date().getTime()));
+                    });
             logger.debug(deleted + " expired approvals deleted");
         } catch (DataAccessException ex) {
             logger.error("Error purging expired approvals", ex);
@@ -197,13 +197,13 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     public List<Approval> getApprovalsForUser(String userId, final String zoneId) {
         String sql = GET_AUTHZ_SQL + " WHERE user_id = ? AND identity_zone_id = ?";
         return jdbcTemplate.query(
-            sql,
+                sql,
                 ps -> {
                     int pos = 1;
                     ps.setString(pos++, userId);
                     ps.setString(pos++, zoneId);
                 },
-            rowMapper
+                rowMapper
         );
     }
 
@@ -211,13 +211,13 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     public List<Approval> getApprovalsForClient(String clientId, final String zoneId) {
         String sql = GET_AUTHZ_SQL + " WHERE client_id = ? AND identity_zone_id = ?";
         return jdbcTemplate.query(
-            sql,
+                sql,
                 ps -> {
                     int pos = 1;
                     ps.setString(pos++, clientId);
                     ps.setString(pos++, zoneId);
                 },
-            rowMapper
+                rowMapper
         );
     }
 
@@ -225,14 +225,14 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     public List<Approval> getApprovals(String userId, String clientId, final String zoneId) {
         String sql = GET_AUTHZ_SQL + " WHERE user_id = ? AND client_id = ? AND identity_zone_id = ?";
         return jdbcTemplate.query(
-            sql,
+                sql,
                 ps -> {
                     int pos = 1;
                     ps.setString(pos++, userId);
                     ps.setString(pos++, clientId);
                     ps.setString(pos++, zoneId);
                 },
-            rowMapper
+                rowMapper
         );
     }
 
@@ -292,12 +292,12 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
             Date lastUpdatedAt = rs.getTimestamp(6);
 
             return new Approval()
-                .setUserId(userId)
-                .setClientId(clientId)
-                .setScope(scope)
-                .setExpiresAt(expiresAt)
-                .setStatus(ApprovalStatus.valueOf(status))
-                .setLastUpdatedAt(lastUpdatedAt);
+                    .setUserId(userId)
+                    .setClientId(clientId)
+                    .setScope(scope)
+                    .setExpiresAt(expiresAt)
+                    .setStatus(ApprovalStatus.valueOf(status))
+                    .setLastUpdatedAt(lastUpdatedAt);
         }
     }
 }

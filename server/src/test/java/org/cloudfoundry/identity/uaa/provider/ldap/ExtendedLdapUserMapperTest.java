@@ -22,7 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class ExtendedLdapUserMapperTest  {
+public class ExtendedLdapUserMapperTest {
 
     private Attributes attrs;
     private DirContextAdapter adapter;
@@ -52,7 +52,7 @@ public class ExtendedLdapUserMapperTest  {
         result = mapper.configureMailAttribute("marissa", records);
         assertEquals(SUBSTITUTE_MAIL_ATTR_NAME, result);
 
-        records.put("mail", new String[] {"marissa@test.org"});
+        records.put("mail", new String[]{"marissa@test.org"});
         result = mapper.configureMailAttribute("marissa", records);
         assertEquals("mail", result);
     }
@@ -90,7 +90,7 @@ public class ExtendedLdapUserMapperTest  {
     private ExtendedLdapUserImpl getExtendedLdapUser() {
         UserDetails userDetails = mapper.mapUserFromContext(adapter, "marissa", authorities);
         assertThat(userDetails instanceof ExtendedLdapUserImpl, is(true));
-        return (ExtendedLdapUserImpl)userDetails;
+        return (ExtendedLdapUserImpl) userDetails;
     }
 
     @Test

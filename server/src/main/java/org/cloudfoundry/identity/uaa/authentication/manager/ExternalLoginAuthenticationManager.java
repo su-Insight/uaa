@@ -167,17 +167,17 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
             authentication.setExternalGroups(new HashSet<>(getExternalUserAuthorities(userDetails)));
         }
 
-        if (authentication.getAuthenticationMethods()==null) {
+        if (authentication.getAuthenticationMethods() == null) {
             authentication.setAuthenticationMethods(new HashSet<>());
         }
         authentication.getAuthenticationMethods().add("ext");
         if ((hasUserAttributes(authentication) || hasExternalGroups(authentication)) && getProviderProvisioning() != null) {
             IdentityProvider<ExternalIdentityProviderDefinition> provider = getProviderProvisioning().retrieveByOrigin(getOrigin(), IdentityZoneHolder.get().getId());
-            if (provider.getConfig()!=null && provider.getConfig().isStoreCustomAttributes()) {
-                logger.debug("Storing custom attributes for user_id:"+authentication.getPrincipal().getId());
+            if (provider.getConfig() != null && provider.getConfig().isStoreCustomAttributes()) {
+                logger.debug("Storing custom attributes for user_id:" + authentication.getPrincipal().getId());
                 UserInfo userInfo = new UserInfo()
-                    .setUserAttributes(authentication.getUserAttributes())
-                    .setRoles(new LinkedList(ofNullable(authentication.getExternalGroups()).orElse(EMPTY_SET)));
+                        .setUserAttributes(authentication.getUserAttributes())
+                        .setRoles(new LinkedList(ofNullable(authentication.getExternalGroups()).orElse(EMPTY_SET)));
                 getUserDatabase().storeUserInfo(authentication.getPrincipal().getId(), userInfo);
             }
         }
@@ -191,7 +191,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
         return authentication.getUserAttributes() != null && !authentication.getUserAttributes().isEmpty();
     }
 
-    protected ExternalAuthenticationDetails getExternalAuthenticationDetails(Authentication authentication) throws AuthenticationException{
+    protected ExternalAuthenticationDetails getExternalAuthenticationDetails(Authentication authentication) throws AuthenticationException {
         return null;
     }
 
@@ -224,8 +224,8 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
         } else if (request instanceof UsernamePasswordAuthenticationToken) {
             String username = request.getPrincipal().toString();
             Object credentials = request.getCredentials();
-            userDetails = new User(username, (credentials != null) ? credentials.toString() : "",
-                                   true, true, true, true, UaaAuthority.USER_AUTHORITIES);
+            userDetails = new User(username, credentials != null ? credentials.toString() : "",
+                    true, true, true, true, UaaAuthority.USER_AUTHORITIES);
         } else if (request.getPrincipal() == null) {
             logger.debug(this.getClass().getName() + "[" + name + "] cannot process null principal");
             return null;
@@ -257,23 +257,23 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
             familyName = names.getFamilyName();
         }
 
-        String phoneNumber = (userDetails instanceof DialableByPhone) ? ((DialableByPhone) userDetails).getPhoneNumber() : null;
-        String externalId = (userDetails instanceof ExternallyIdentifiable) ? ((ExternallyIdentifiable) userDetails).getExternalId() : name;
-        boolean verified = (userDetails instanceof VerifiableUser) ? ((VerifiableUser) userDetails).isVerified() : false;
+        String phoneNumber = userDetails instanceof DialableByPhone ? ((DialableByPhone) userDetails).getPhoneNumber() : null;
+        String externalId = userDetails instanceof ExternallyIdentifiable ? ((ExternallyIdentifiable) userDetails).getExternalId() : name;
+        boolean verified = userDetails instanceof VerifiableUser ? ((VerifiableUser) userDetails).isVerified() : false;
         UaaUserPrototype userPrototype = new UaaUserPrototype()
-            .withVerified(verified)
-            .withUsername(name)
-            .withPassword("")
-            .withEmail(email)
-            .withAuthorities(UaaAuthority.USER_AUTHORITIES)
-            .withGivenName(givenName)
-            .withFamilyName(familyName)
-            .withCreated(new Date())
-            .withModified(new Date())
-            .withOrigin(getOrigin())
-            .withExternalId(externalId)
-            .withZoneId(IdentityZoneHolder.get().getId())
-            .withPhoneNumber(phoneNumber);
+                .withVerified(verified)
+                .withUsername(name)
+                .withPassword("")
+                .withEmail(email)
+                .withAuthorities(UaaAuthority.USER_AUTHORITIES)
+                .withGivenName(givenName)
+                .withFamilyName(familyName)
+                .withCreated(new Date())
+                .withModified(new Date())
+                .withOrigin(getOrigin())
+                .withExternalId(externalId)
+                .withZoneId(IdentityZoneHolder.get().getId())
+                .withPhoneNumber(phoneNumber);
 
         return new UaaUser(userPrototype);
     }
@@ -298,7 +298,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
 
     protected boolean haveUserAttributesChanged(UaaUser existingUser, UaaUser user) {
         if (!StringUtils.equals(existingUser.getGivenName(), user.getGivenName()) || !StringUtils.equals(existingUser.getFamilyName(), user.getFamilyName()) ||
-            !StringUtils.equals(existingUser.getPhoneNumber(), user.getPhoneNumber()) || !StringUtils.equals(existingUser.getEmail(), user.getEmail()) || !StringUtils.equals(existingUser.getExternalId(), user.getExternalId())) {
+                !StringUtils.equals(existingUser.getPhoneNumber(), user.getPhoneNumber()) || !StringUtils.equals(existingUser.getEmail(), user.getEmail()) || !StringUtils.equals(existingUser.getExternalId(), user.getExternalId())) {
             return true;
         }
         return false;
@@ -306,7 +306,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
 
     protected List<? extends GrantedAuthority> mapAuthorities(String origin, Collection<? extends GrantedAuthority> authorities) {
         List<GrantedAuthority> result = new LinkedList<>();
-        for (GrantedAuthority authority : authorities ) {
+        for (GrantedAuthority authority : authorities) {
             String externalGroup = authority.getAuthority();
             for (ScimGroupExternalMember internalGroup : externalMembershipManager.getExternalGroupMapsByExternalGroup(externalGroup, origin, IdentityZoneHolder.get().getId())) {
                 result.add(new SimpleGrantedAuthority(internalGroup.getDisplayName()));

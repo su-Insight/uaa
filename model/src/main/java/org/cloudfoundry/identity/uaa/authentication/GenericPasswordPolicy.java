@@ -14,7 +14,7 @@
  */
 package org.cloudfoundry.identity.uaa.authentication;
 
-public abstract class GenericPasswordPolicy <T extends GenericPasswordPolicy<T>> {
+public abstract class GenericPasswordPolicy<T extends GenericPasswordPolicy<T>> {
 
     private int minLength;
     private int maxLength;
@@ -28,11 +28,11 @@ public abstract class GenericPasswordPolicy <T extends GenericPasswordPolicy<T>>
     }
 
     public GenericPasswordPolicy(int minLength,
-                          int maxLength,
-                          int requireUpperCaseCharacter,
-                          int requireLowerCaseCharacter,
-                          int requireDigit,
-                          int requireSpecialCharacter) {
+            int maxLength,
+            int requireUpperCaseCharacter,
+            int requireLowerCaseCharacter,
+            int requireDigit,
+            int requireSpecialCharacter) {
         this.minLength = minLength;
         this.maxLength = maxLength;
         this.requireUpperCaseCharacter = requireUpperCaseCharacter;
@@ -64,27 +64,27 @@ public abstract class GenericPasswordPolicy <T extends GenericPasswordPolicy<T>>
 
     public T setMaxLength(int maxLength) {
         this.maxLength = maxLength;
-        return (T)this;
+        return (T) this;
     }
 
     public T setMinLength(int minLength) {
         this.minLength = minLength;
-        return (T)this;
+        return (T) this;
     }
 
     public T setRequireDigit(int requireDigit) {
         this.requireDigit = requireDigit;
-        return (T)this;
+        return (T) this;
     }
 
     public T setRequireLowerCaseCharacter(int requireLowerCaseCharacter) {
         this.requireLowerCaseCharacter = requireLowerCaseCharacter;
-        return (T)this;
+        return (T) this;
     }
 
     public T setRequireUpperCaseCharacter(int requireUpperCaseCharacter) {
         this.requireUpperCaseCharacter = requireUpperCaseCharacter;
-        return (T)this;
+        return (T) this;
     }
 
     public int getRequireSpecialCharacter() {
@@ -93,7 +93,7 @@ public abstract class GenericPasswordPolicy <T extends GenericPasswordPolicy<T>>
 
     public T setRequireSpecialCharacter(int requireSpecialCharacter) {
         this.requireSpecialCharacter = requireSpecialCharacter;
-        return (T)this;
+        return (T) this;
     }
 
     public boolean allPresentAndPositive() {

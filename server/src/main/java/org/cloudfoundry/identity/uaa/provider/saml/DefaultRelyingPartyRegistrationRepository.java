@@ -17,9 +17,9 @@ import java.util.List;
 public class DefaultRelyingPartyRegistrationRepository extends BaseUaaRelyingPartyRegistrationRepository {
 
     public DefaultRelyingPartyRegistrationRepository(String uaaWideSamlEntityID,
-                                                     String uaaWideSamlEntityIDAlias,
-                                                     List<SignatureAlgorithm> signatureAlgorithms,
-                                                     String uaaWideSamlNameId) {
+            String uaaWideSamlEntityIDAlias,
+            List<SignatureAlgorithm> signatureAlgorithms,
+            String uaaWideSamlNameId) {
         super(uaaWideSamlEntityID, uaaWideSamlEntityIDAlias, signatureAlgorithms, uaaWideSamlNameId);
     }
 

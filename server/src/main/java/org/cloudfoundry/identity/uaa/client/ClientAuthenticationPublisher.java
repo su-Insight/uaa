@@ -40,7 +40,7 @@ public class ClientAuthenticationPublisher implements ApplicationEventPublisherA
     }
 
     public void publish(ApplicationEvent event) {
-        if (publisher!=null) {
+        if (publisher != null) {
             publisher.publishEvent(event);
         }
     }

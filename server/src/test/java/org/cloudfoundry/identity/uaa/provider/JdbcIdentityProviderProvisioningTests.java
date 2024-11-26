@@ -445,14 +445,14 @@ class JdbcIdentityProviderProvisioningTests {
 
     private static Stream<Arguments> retrieveActiveByTypes() {
         return Stream.of(
-                new String[] { },
-                new String[] { OAUTH20, OIDC10 },
-                new String[] { OAUTH20, OIDC10, SAML },
-                new String[] { SAML },
-                new String[] { OIDC10 },
-                new String[] { LDAP, UAA, OAUTH20, OIDC10 },
-                new String[] { LDAP, UAA, OAUTH20, LDAP, LDAP, OIDC10 }, // contains duplicates
-                (Object) new String[] { LDAP, UAA, OAUTH20, OIDC10, OIDC10, UAA } // contains duplicates
+                new String[]{},
+                new String[]{OAUTH20, OIDC10},
+                new String[]{OAUTH20, OIDC10, SAML},
+                new String[]{SAML},
+                new String[]{OIDC10},
+                new String[]{LDAP, UAA, OAUTH20, OIDC10},
+                new String[]{LDAP, UAA, OAUTH20, LDAP, LDAP, OIDC10}, // contains duplicates
+                (Object) new String[]{LDAP, UAA, OAUTH20, OIDC10, OIDC10, UAA} // contains duplicates
         ).map(Arguments::of);
     }
 

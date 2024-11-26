@@ -31,11 +31,11 @@ public class OAuth2FilterConfig {
     @Autowired
     @Bean
     BackwardsCompatibleTokenEndpointAuthenticationFilter tokenEndpointAuthenticationFilter(PasswordGrantAuthenticationManager passwordGrantAuthenticationManager,
-                                                                                           UaaAuthorizationRequestManager authorizationRequestManager,
-                                                                                           Saml2BearerGrantAuthenticationConverter samlBearerGrantAuthenticationProvider,
-                                                                                           ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager,
-                                                                                           AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource,
-                                                                                           AuthenticationEntryPoint basicAuthenticationEntryPoint) {
+            UaaAuthorizationRequestManager authorizationRequestManager,
+            Saml2BearerGrantAuthenticationConverter samlBearerGrantAuthenticationProvider,
+            ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager,
+            AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource,
+            AuthenticationEntryPoint basicAuthenticationEntryPoint) {
 
         BackwardsCompatibleTokenEndpointAuthenticationFilter authenticationFilter =
                 new BackwardsCompatibleTokenEndpointAuthenticationFilter("/oauth/token/alias/{registrationId}",
@@ -50,11 +50,11 @@ public class OAuth2FilterConfig {
     @Autowired
     @Bean
     public PkceEnhancedAuthorizationCodeTokenGranter pkceEnhancedAuthorizationCodeTokenGranter(@Qualifier("oauth2TokenGranter") CompositeTokenGranter compositeTokenGranter,
-                                                                                               @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
-                                                                                               @Qualifier("authorizationCodeServices") AuthorizationCodeServices authorizationCodeServices,
-                                                                                               @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
-                                                                                               @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory,
-                                                                                               @Qualifier("pkceValidationServices") PkceValidationService pkceValidationServices) {
+            @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
+            @Qualifier("authorizationCodeServices") AuthorizationCodeServices authorizationCodeServices,
+            @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
+            @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory,
+            @Qualifier("pkceValidationServices") PkceValidationService pkceValidationServices) {
         PkceEnhancedAuthorizationCodeTokenGranter tokenGranter = new PkceEnhancedAuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetailsService, requestFactory);
         tokenGranter.setPkceValidationService(pkceValidationServices);
         compositeTokenGranter.addTokenGranter(tokenGranter);
@@ -65,10 +65,10 @@ public class OAuth2FilterConfig {
     @Autowired
     @Bean
     public UserTokenGranter userTokenGranter(@Qualifier("oauth2TokenGranter") CompositeTokenGranter compositeTokenGranter,
-                                             @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
-                                             @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
-                                             @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory,
-                                             @Qualifier("revocableTokenProvisioning") RevocableTokenProvisioning tokenStore) {
+            @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
+            @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
+            @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory,
+            @Qualifier("revocableTokenProvisioning") RevocableTokenProvisioning tokenStore) {
         UserTokenGranter tokenGranter = new UserTokenGranter(tokenServices, clientDetailsService, requestFactory, tokenStore);
         compositeTokenGranter.addTokenGranter(tokenGranter);
 
@@ -78,9 +78,9 @@ public class OAuth2FilterConfig {
     @Autowired
     @Bean
     public JwtTokenGranter jwtTokenGranter(@Qualifier("oauth2TokenGranter") CompositeTokenGranter compositeTokenGranter,
-                                            @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
-                                            @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
-                                            @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory) {
+            @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
+            @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
+            @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory) {
         JwtTokenGranter tokenGranter = new JwtTokenGranter(tokenServices, clientDetailsService, requestFactory);
         compositeTokenGranter.addTokenGranter(tokenGranter);
 
@@ -90,10 +90,10 @@ public class OAuth2FilterConfig {
     @Autowired
     @Bean
     public Saml2TokenGranter samlTokenGranter(@Qualifier("oauth2TokenGranter") CompositeTokenGranter compositeTokenGranter,
-                                              @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
-                                              @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
-                                              @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory,
-                                              SecurityContextAccessor securityContextAccessor) {
+            @Qualifier("tokenServices") AuthorizationServerTokenServices tokenServices,
+            @Qualifier("jdbcClientDetailsService") MultitenantClientServices clientDetailsService,
+            @Qualifier("authorizationRequestManager") OAuth2RequestFactory requestFactory,
+            SecurityContextAccessor securityContextAccessor) {
         Saml2TokenGranter tokenGranter = new Saml2TokenGranter(tokenServices, clientDetailsService, requestFactory, securityContextAccessor);
         compositeTokenGranter.addTokenGranter(tokenGranter);
 

@@ -77,7 +77,7 @@ public class CachingPasswordEncoder implements PasswordEncoder {
     private boolean internalMatches(String cacheKey, CharSequence rawPassword, String encodedPassword) {
         Set<String> cacheValue = cache.getIfPresent(cacheKey);
         boolean result = false;
-        List<String> searchList = (cacheValue != null ? new ArrayList<>(cacheValue) : Collections.emptyList());
+        List<String> searchList = cacheValue != null ? new ArrayList<>(cacheValue) : Collections.emptyList();
         for (String encoded : searchList) {
             if (hashesEquals(encoded, encodedPassword)) {
                 return true;

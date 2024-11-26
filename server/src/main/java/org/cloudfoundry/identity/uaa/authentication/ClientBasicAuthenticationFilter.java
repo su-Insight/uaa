@@ -1,4 +1,3 @@
-
 package org.cloudfoundry.identity.uaa.authentication;
 
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -51,8 +50,8 @@ public class ClientBasicAuthenticationFilter extends OncePerRequestFilter {
      * Typically an instance of {@link BasicAuthenticationEntryPoint}.
      */
     public ClientBasicAuthenticationFilter(AuthenticationManager authenticationManager,
-                                           AuthenticationEntryPoint authenticationEntryPoint,
-                                           boolean enableUriEncodingCompatibilityMode) {
+            AuthenticationEntryPoint authenticationEntryPoint,
+            boolean enableUriEncodingCompatibilityMode) {
         Assert.notNull(authenticationManager, "authenticationManager cannot be null");
         Assert.notNull(authenticationEntryPoint,
                 "authenticationEntryPoint cannot be null");
@@ -70,13 +69,13 @@ public class ClientBasicAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     public void afterPropertiesSet() {
-        Assert.notNull(this.authenticationManager,"An AuthenticationManager is required");
-        Assert.notNull(this.authenticationEntryPoint,"An AuthenticationEntryPoint is required");
+        Assert.notNull(this.authenticationManager, "An AuthenticationManager is required");
+        Assert.notNull(this.authenticationEntryPoint, "An AuthenticationEntryPoint is required");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response, FilterChain chain)
+            HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         final boolean debug = this.logger.isDebugEnabled();
 
@@ -168,7 +167,7 @@ public class ClientBasicAuthenticationFilter extends OncePerRequestFilter {
         if (delim == -1) {
             throw new BadCredentialsException("Invalid basic authentication token");
         }
-        return new String[] { token.substring(0, delim), token.substring(delim + 1) };
+        return new String[]{token.substring(0, delim), token.substring(delim + 1)};
     }
 
     private String getCredentialsCharset(HttpServletRequest httpRequest) {

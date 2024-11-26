@@ -111,9 +111,9 @@ public class HttpHeadersFilterRequestWrapperTest {
         for (String header : BAD_HEADERS) {
             assertFalse(String.format("Header %s should return empty enumeration.", header), request.getHeaders(header).hasMoreElements());
             assertSame(
-                String.format("Header %s should return singleton enumeration .", header),
-                EmptyEnumerationOfString.EMPTY_ENUMERATION,
-                request.getHeaders(header)
+                    String.format("Header %s should return singleton enumeration .", header),
+                    EmptyEnumerationOfString.EMPTY_ENUMERATION,
+                    request.getHeaders(header)
             );
         }
     }
@@ -124,8 +124,8 @@ public class HttpHeadersFilterRequestWrapperTest {
         for (String header : BAD_HEADERS) {
             assertTrue(String.format("Header %s should return empty enumeration.", header), request.getHeaders(header).hasMoreElements());
             assertNotNull(
-                String.format("Header %s should return a value.", header),
-                request.getHeaders(header).nextElement()
+                    String.format("Header %s should return a value.", header),
+                    request.getHeaders(header).nextElement()
             );
         }
     }

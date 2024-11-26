@@ -26,7 +26,7 @@ public class AbstractIdentityProviderDefinition {
     public static final String PROVIDER_DESCRIPTION = "providerDescription";
 
     private List<String> emailDomain;
-    private Map<String,Object> additionalConfiguration;
+    private Map<String, Object> additionalConfiguration;
     private String providerDescription;
 
     public List<String> getEmailDomain() {

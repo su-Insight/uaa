@@ -26,10 +26,10 @@ public class TokenValidationService {
     private KeyInfoService keyInfoService;
 
     public TokenValidationService(RevocableTokenProvisioning revocableTokenProvisioning,
-                                  TokenEndpointBuilder tokenEndpointBuilder,
-                                  UaaUserDatabase userDatabase,
-                                  MultitenantClientServices multitenantClientServices,
-                                  KeyInfoService keyInfoService) {
+            TokenEndpointBuilder tokenEndpointBuilder,
+            UaaUserDatabase userDatabase,
+            MultitenantClientServices multitenantClientServices,
+            KeyInfoService keyInfoService) {
         this.revocableTokenProvisioning = revocableTokenProvisioning;
         this.tokenEndpointBuilder = tokenEndpointBuilder;
         this.userDatabase = userDatabase;

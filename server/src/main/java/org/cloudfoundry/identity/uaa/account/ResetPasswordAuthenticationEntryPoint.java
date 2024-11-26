@@ -44,7 +44,7 @@ public class ResetPasswordAuthenticationEntryPoint implements AuthenticationEntr
 
             @Override
             public String getParameter(String name) {
-                if(name.equals("code")) {
+                if (name.equals("code")) {
                     return (String) getAttribute(name);
                 }
                 return super.getParameter(name);
@@ -55,7 +55,7 @@ public class ResetPasswordAuthenticationEntryPoint implements AuthenticationEntr
                 Map<String, String[]> map = super.getParameterMap();
                 if (map.containsKey("code")) {
                     Map<String, String[]> newMap = new HashMap<>(map);
-                    newMap.put("code",new String[] {(String)getAttribute("code")});
+                    newMap.put("code", new String[]{(String) getAttribute("code")});
                     map = newMap;
                 }
                 return map;
@@ -75,7 +75,7 @@ public class ResetPasswordAuthenticationEntryPoint implements AuthenticationEntr
             return;
         } else {
             if (cause instanceof InvalidPasswordException) {
-                InvalidPasswordException exception = (InvalidPasswordException)cause;
+                InvalidPasswordException exception = (InvalidPasswordException) cause;
                 request.setAttribute("message", exception.getMessagesAsOneString());
                 request.getRequestDispatcher("/reset_password").forward(wrapper, response);
             } else {

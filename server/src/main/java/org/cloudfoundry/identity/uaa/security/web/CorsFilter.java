@@ -92,7 +92,7 @@ public class CorsFilter extends OncePerRequestFilter {
     private final boolean enforceSystemZoneSettings;
 
     public CorsFilter(final IdentityZoneManager identityZoneManager,
-                      @Value("${cors.enforceSystemZonePolicyInAllZones:false}") final boolean enforceSystemZoneSettings) {
+            @Value("${cors.enforceSystemZonePolicyInAllZones:false}") final boolean enforceSystemZoneSettings) {
         if (logger.isInfoEnabled()) {
             logger.info("`cors.enforceSystemZonePolicyInAllZones` is set to `{}`. Per-zone CORS policy settings are to be {}.",
                     enforceSystemZoneSettings, enforceSystemZoneSettings ? "ignored" : "honored");
@@ -102,8 +102,8 @@ public class CorsFilter extends OncePerRequestFilter {
         xhrConfiguration.setAllowedMethods(Arrays.asList(GET.toString(), OPTIONS.toString()));
         defaultConfiguration.setAllowedMethods(Arrays.asList(GET.toString(), OPTIONS.toString(), POST.toString(), PUT.toString(), DELETE.toString(), PATCH.toString()));
 
-        xhrConfiguration.setAllowedHeaders(Arrays.asList(ACCEPT, ACCEPT_LANGUAGE, CONTENT_TYPE, CONTENT_LANGUAGE,AUTHORIZATION, X_REQUESTED_WITH));
-        defaultConfiguration.setAllowedHeaders(Arrays.asList(ACCEPT, ACCEPT_LANGUAGE, CONTENT_TYPE, CONTENT_LANGUAGE,AUTHORIZATION));
+        xhrConfiguration.setAllowedHeaders(Arrays.asList(ACCEPT, ACCEPT_LANGUAGE, CONTENT_TYPE, CONTENT_LANGUAGE, AUTHORIZATION, X_REQUESTED_WITH));
+        defaultConfiguration.setAllowedHeaders(Arrays.asList(ACCEPT, ACCEPT_LANGUAGE, CONTENT_TYPE, CONTENT_LANGUAGE, AUTHORIZATION));
 
         xhrConfiguration.setAllowedCredentials(true);
         defaultConfiguration.setAllowedCredentials(false);
@@ -135,7 +135,7 @@ public class CorsFilter extends OncePerRequestFilter {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("CORS Processing request: "+getRequestInfo(request));
+            logger.debug("CORS Processing request: " + getRequestInfo(request));
         }
         if (isXhrRequest(request)) {
             handleRequest(request, response, filterChain, resolveXhrCorsConfiguration());
@@ -143,14 +143,14 @@ public class CorsFilter extends OncePerRequestFilter {
             handleRequest(request, response, filterChain, resolveDefaultCorsConfiguration());
         }
         if (logger.isDebugEnabled()) {
-            logger.debug("CORS processing completed for: "+getRequestInfo(request)+" Status:"+response.getStatus());
+            logger.debug("CORS processing completed for: " + getRequestInfo(request) + " Status:" + response.getStatus());
         }
     }
 
     protected boolean handleRequest(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain,
-                                    CorsConfiguration configuration) throws IOException, ServletException {
+            HttpServletResponse response,
+            FilterChain filterChain,
+            CorsConfiguration configuration) throws IOException, ServletException {
 
         boolean isPreflightRequest = OPTIONS.matches(request.getMethod());
 
@@ -169,7 +169,7 @@ public class CorsFilter extends OncePerRequestFilter {
         URI originURI;
         try {
             originURI = new URI(origin);
-        } catch(URISyntaxException e) {
+        } catch (URISyntaxException e) {
             logger.debug(String.format("Request with invalid origin was rejected: %s", origin));
             response.sendError(FORBIDDEN.value(), "Invalid origin");
             return true;
@@ -239,7 +239,7 @@ public class CorsFilter extends OncePerRequestFilter {
     protected String buildCommaDelimitedString(List<String> list) {
         StringBuilder builder = new StringBuilder();
         for (String s : list) {
-            if (builder.length()>0) {
+            if (builder.length() > 0) {
                 builder.append(", ");
             }
             builder.append(s);
@@ -249,15 +249,15 @@ public class CorsFilter extends OncePerRequestFilter {
 
     protected List<String> splitCommaDelimitedString(String s) {
         String[] list = s.replace(" ", "").split(",");
-        if (list==null || list.length==0) {
+        if (list == null || list.length == 0) {
             return Collections.EMPTY_LIST;
         }
         return Arrays.asList(list);
     }
 
     protected void buildCorsPreFlightResponse(final HttpServletRequest request,
-                                              final HttpServletResponse response,
-                                              final CorsConfiguration configuration) throws IOException {
+            final HttpServletResponse response,
+            final CorsConfiguration configuration) throws IOException {
         String accessControlRequestMethod = request.getHeader(ACCESS_CONTROL_REQUEST_METHOD);
 
         //preflight requires the Access-Control-Request-Method header
@@ -277,7 +277,7 @@ public class CorsFilter extends OncePerRequestFilter {
         //we require Access-Control-Request-Headers header
         String accessControlRequestHeaders = request.getHeader(ACCESS_CONTROL_REQUEST_HEADERS);
         if (null == accessControlRequestHeaders) {
-            response.sendError(BAD_REQUEST.value(),"Missing "+ACCESS_CONTROL_REQUEST_HEADERS+" header.");
+            response.sendError(BAD_REQUEST.value(), "Missing " + ACCESS_CONTROL_REQUEST_HEADERS + " header.");
             return;
         }
         if (!headersAllowed(accessControlRequestHeaders, configuration)) {
@@ -332,7 +332,7 @@ public class CorsFilter extends OncePerRequestFilter {
                 return true;
             }
         }
-        logger.debug(String.format("The '%s' origin is not allowed to make CORS requests.",origin));
+        logger.debug(String.format("The '%s' origin is not allowed to make CORS requests.", origin));
         return false;
     }
 
@@ -377,7 +377,7 @@ public class CorsFilter extends OncePerRequestFilter {
                     configuration.getAllowedUriPatterns().add(Pattern.compile(allowedUri));
                     logger.debug(String.format("URI '%s' is allowed for a %s CORS requests.", allowedUri, type));
                 } catch (PatternSyntaxException patternSyntaxException) {
-                    logger.error("Invalid regular expression pattern in cors."+type+".allowed.uris: " + allowedUri, patternSyntaxException);
+                    logger.error("Invalid regular expression pattern in cors." + type + ".allowed.uris: " + allowedUri, patternSyntaxException);
                 }
             }
         }
@@ -387,7 +387,7 @@ public class CorsFilter extends OncePerRequestFilter {
                     configuration.getAllowedOriginPatterns().add(Pattern.compile(allowedOrigin));
                     logger.debug(String.format("Origin '%s' is allowed for a %s CORS requests.", allowedOrigin, type));
                 } catch (PatternSyntaxException patternSyntaxException) {
-                    logger.error("Invalid regular expression pattern in cors."+type+".allowed.origins: " + allowedOrigin, patternSyntaxException);
+                    logger.error("Invalid regular expression pattern in cors." + type + ".allowed.origins: " + allowedOrigin, patternSyntaxException);
                 }
             }
         }
@@ -396,12 +396,12 @@ public class CorsFilter extends OncePerRequestFilter {
     //----------------REQUEST INFO ----------------------------------------------//
     public String getRequestInfo(HttpServletRequest request) {
         return String.format("URI: %s; Scheme: %s; Host: %s; Port: %s; Origin: %s; Method: %s",
-                             request.getRequestURI(),
-                             request.getScheme(),
-                             request.getServerName(),
-                             request.getServerPort(),
-                             request.getHeader("Origin"),
-                             request.getMethod());
+                request.getRequestURI(),
+                request.getScheme(),
+                request.getServerName(),
+                request.getServerPort(),
+                request.getHeader("Origin"),
+                request.getMethod());
     }
 
     //----------------CORS XHR ONLY ---------------------------------------------//

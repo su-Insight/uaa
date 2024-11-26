@@ -56,7 +56,7 @@ public class PasswordResetEndpoint {
             final ExpiringCodeStore codeStore,
             final IdentityZoneManager identityZoneManager) {
         this.resetPasswordService = resetPasswordService;
-        this.messageConverters = new HttpMessageConverter[] {
+        this.messageConverters = new HttpMessageConverter[]{
                 new ExceptionReportHttpMessageConverter(),
                 new MappingJackson2HttpMessageConverter()
         };
@@ -66,8 +66,8 @@ public class PasswordResetEndpoint {
 
     @RequestMapping(value = "/password_resets", method = RequestMethod.POST)
     public ResponseEntity<PasswordResetResponse> resetPassword(@RequestBody String email,
-                                                               @RequestParam(required = false, value = "client_id") String clientId,
-                                                               @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
+            @RequestParam(required = false, value = "client_id") String clientId,
+            @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
         if (clientId == null) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication instanceof OAuth2Authentication) {
@@ -139,14 +139,14 @@ public class PasswordResetEndpoint {
     @ExceptionHandler(InvalidPasswordException.class)
     public View handleException(InvalidPasswordException t) throws ScimException {
         return new ConvertingExceptionView(new ResponseEntity<>(new ExceptionReport(
-                t, false), UNPROCESSABLE_ENTITY),
+                        t, false), UNPROCESSABLE_ENTITY),
                 messageConverters);
     }
 
     @ExceptionHandler(InvalidCodeException.class)
     public View handleCodeException(InvalidCodeException t) throws ScimException {
         return new ConvertingExceptionView(new ResponseEntity<>(new ExceptionReport(
-                t, false), UNPROCESSABLE_ENTITY),
+                        t, false), UNPROCESSABLE_ENTITY),
                 messageConverters);
     }
 }

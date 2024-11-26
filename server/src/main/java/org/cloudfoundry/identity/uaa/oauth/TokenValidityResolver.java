@@ -14,8 +14,8 @@ public class TokenValidityResolver {
     private ClientTokenValidity clientTokenValidity;
 
     public TokenValidityResolver(ClientTokenValidity clientTokenValidity,
-                                 int globalTokenValiditySeconds,
-                                 TimeService timeService) {
+            int globalTokenValiditySeconds,
+            TimeService timeService) {
         this.clientTokenValidity = clientTokenValidity;
         this.globalTokenValiditySeconds = globalTokenValiditySeconds;
         this.timeService = timeService;
@@ -23,9 +23,9 @@ public class TokenValidityResolver {
 
     public Date resolve(String clientId) {
         Integer tokenValiditySeconds = ofNullable(
-            clientTokenValidity.getValiditySeconds(clientId)
+                clientTokenValidity.getValiditySeconds(clientId)
         ).orElse(
-            clientTokenValidity.getZoneValiditySeconds()
+                clientTokenValidity.getZoneValiditySeconds()
         );
 
         if (tokenValiditySeconds == DEFAULT_TO_GLOBAL_POLICY) {

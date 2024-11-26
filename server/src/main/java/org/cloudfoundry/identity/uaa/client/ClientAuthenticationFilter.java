@@ -85,7 +85,7 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
         super.afterPropertiesSet();
         try {
             oauth2Available = ClassUtils.isPresent(AccessTokenRequiredException.class.getName(),
-                            ClassUtils.getDefaultClassLoader());
+                    ClassUtils.getDefaultClassLoader());
         } catch (NoClassDefFoundError e) {
             // ignore
         }
@@ -97,7 +97,7 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                    AuthenticationException failed) throws IOException, ServletException {
+            AuthenticationException failed) throws IOException, ServletException {
         // Need to force a redirect via the OAuth client filter, so rethrow here
         // if OAuth related
         if (oauth2Available && failed instanceof SocialRedirectException) {
@@ -138,7 +138,7 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
                 if (preAuth.getPrincipal() instanceof Authentication) {
                     Authentication principal = (Authentication) preAuth.getPrincipal();
                     preAuth = new PreAuthenticatedAuthenticationToken(principal, preAuth.getCredentials(),
-                                    principal.getAuthorities());
+                            principal.getAuthorities());
                     authenticated = principal.isAuthenticated();
                 }
                 preAuth.setAuthenticated(authenticated);

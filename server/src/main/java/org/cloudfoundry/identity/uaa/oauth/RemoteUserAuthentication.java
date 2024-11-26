@@ -33,7 +33,7 @@ public class RemoteUserAuthentication extends AbstractAuthenticationToken implem
     private String email;
 
     public RemoteUserAuthentication(String id, String username, String email,
-                    Collection<? extends GrantedAuthority> authorities) {
+            Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.id = id;
         this.username = username;

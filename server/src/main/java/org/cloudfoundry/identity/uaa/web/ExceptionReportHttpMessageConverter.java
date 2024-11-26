@@ -41,8 +41,8 @@ import java.util.Set;
 public class ExceptionReportHttpMessageConverter extends AbstractHttpMessageConverter<ExceptionReport> {
 
     private static final HttpMessageConverter<?>[] DEFAULT_MESSAGE_CONVERTERS = new RestTemplate()
-                    .getMessageConverters().toArray(
-                                    new HttpMessageConverter<?>[0]);
+            .getMessageConverters().toArray(
+            new HttpMessageConverter<?>[0]);
 
     private HttpMessageConverter<?>[] messageConverters = DEFAULT_MESSAGE_CONVERTERS;
 
@@ -72,11 +72,11 @@ public class ExceptionReportHttpMessageConverter extends AbstractHttpMessageConv
 
     @Override
     protected ExceptionReport readInternal(Class<? extends ExceptionReport> clazz, HttpInputMessage inputMessage)
-                    throws IOException, HttpMessageNotReadableException {
+            throws IOException, HttpMessageNotReadableException {
         for (HttpMessageConverter<?> converter : messageConverters) {
             for (MediaType mediaType : converter.getSupportedMediaTypes()) {
                 if (converter.canRead(Map.class, mediaType)) {
-                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @SuppressWarnings({"rawtypes", "unchecked"})
                     HttpMessageConverter<Map> messageConverter = (HttpMessageConverter<Map>) converter;
                     @SuppressWarnings("unchecked")
                     Map<String, String> map = messageConverter.read(Map.class, inputMessage);
@@ -93,7 +93,7 @@ public class ExceptionReportHttpMessageConverter extends AbstractHttpMessageConv
 
     @Override
     protected void writeInternal(ExceptionReport report, HttpOutputMessage outputMessage) throws IOException,
-                    HttpMessageNotWritableException {
+            HttpMessageNotWritableException {
         Exception e = report.getException();
         Map<String, Object> map = new HashMap<>();
         map.put("error", UaaStringUtils.getErrorName(e));
@@ -110,7 +110,7 @@ public class ExceptionReportHttpMessageConverter extends AbstractHttpMessageConv
         for (HttpMessageConverter<?> converter : messageConverters) {
             for (MediaType mediaType : converter.getSupportedMediaTypes()) {
                 if (converter.canWrite(Map.class, mediaType)) {
-                    @SuppressWarnings({ "rawtypes", "unchecked" })
+                    @SuppressWarnings({"rawtypes", "unchecked"})
                     HttpMessageConverter<Map> messageConverter = (HttpMessageConverter<Map>) converter;
                     messageConverter.write(map, mediaType, outputMessage);
                     return;

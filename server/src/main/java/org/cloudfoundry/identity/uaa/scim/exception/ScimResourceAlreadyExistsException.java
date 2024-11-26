@@ -32,7 +32,7 @@ public class ScimResourceAlreadyExistsException extends ScimException {
         super(message, HttpStatus.CONFLICT);
     }
 
-    public ScimResourceAlreadyExistsException(String message, Map<String,Object> extraInformation) {
+    public ScimResourceAlreadyExistsException(String message, Map<String, Object> extraInformation) {
         super(message, HttpStatus.CONFLICT, extraInformation);
     }
 

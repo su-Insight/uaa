@@ -55,7 +55,7 @@ public class ScimExternalGroupBootstrap implements InitializingBean {
     private boolean addNonExistingGroups = false;
 
     public ScimExternalGroupBootstrap(ScimGroupProvisioning scimGroupProvisioning,
-                    ScimGroupExternalMembershipManager externalMembershipManager) {
+            ScimGroupExternalMembershipManager externalMembershipManager) {
         this.scimGroupProvisioning = scimGroupProvisioning;
         this.externalMembershipManager = externalMembershipManager;
     }
@@ -66,7 +66,7 @@ public class ScimExternalGroupBootstrap implements InitializingBean {
 
 
     protected ScimGroup addGroup(String groupName) {
-        ScimGroup group = new ScimGroup(null,groupName,IdentityZoneHolder.get().getId());
+        ScimGroup group = new ScimGroup(null, groupName, IdentityZoneHolder.get().getId());
         try {
             return getScimGroupProvisioning().create(group, IdentityZoneHolder.get().getId());
         } catch (ScimResourceAlreadyExistsException x) {
@@ -74,7 +74,7 @@ public class ScimExternalGroupBootstrap implements InitializingBean {
             if (groups != null && groups.size() > 0) {
                 return groups.get(0);
             } else {
-                throw new RuntimeException("Unable to create or return group with name:"+groupName);
+                throw new RuntimeException("Unable to create or return group with name:" + groupName);
             }
         }
     }

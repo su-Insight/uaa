@@ -15,7 +15,8 @@ import java.util.regex.PatternSyntaxException;
 @Component
 public class GeneralIdentityZoneConfigurationValidator implements IdentityZoneConfigurationValidator {
 
-    public GeneralIdentityZoneConfigurationValidator() {}
+    public GeneralIdentityZoneConfigurationValidator() {
+    }
 
     @Override
     public IdentityZoneConfiguration validate(IdentityZone zone, IdentityZoneValidator.Mode mode) throws InvalidIdentityZoneConfigurationException {
@@ -26,7 +27,7 @@ public class GeneralIdentityZoneConfigurationValidator implements IdentityZoneCo
                 SamlConfig samlConfig;
                 if ((samlConfig = config.getSamlConfig()) != null && samlConfig.getKeys().size() > 0) {
                     String activeKeyId = samlConfig.getActiveKeyId();
-                    if ((activeKeyId == null || samlConfig.getKeys().get(activeKeyId) == null)) {
+                    if (activeKeyId == null || samlConfig.getKeys().get(activeKeyId) == null) {
 
                         throw new InvalidIdentityZoneConfigurationException(String.format("Invalid SAML active key ID: '%s'. Couldn't find any matching keys.", activeKeyId));
                     }

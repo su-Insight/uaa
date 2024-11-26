@@ -114,7 +114,7 @@ public final class Saml2BearerGrantAuthenticationConverter implements Authentica
         parserPool = registry.getParserPool();
     }
 
-    private final Converter<OpenSaml4AuthenticationProvider.AssertionToken, Saml2ResponseValidatorResult> assertionSignatureValidator =  OpenSaml4AuthenticationProvider.createDefaultAssertionSignatureValidator();
+    private final Converter<OpenSaml4AuthenticationProvider.AssertionToken, Saml2ResponseValidatorResult> assertionSignatureValidator = OpenSaml4AuthenticationProvider.createDefaultAssertionSignatureValidator();
 
     private final Consumer<OpenSaml4AuthenticationProvider.AssertionToken> assertionElementsDecrypter = OpenSaml4AuthenticationProvider.createDefaultAssertionElementsDecrypter();
 
@@ -132,10 +132,10 @@ public final class Saml2BearerGrantAuthenticationConverter implements Authentica
      * Creates an {@link Saml2BearerGrantAuthenticationConverter}
      */
     public Saml2BearerGrantAuthenticationConverter(RelyingPartyRegistrationResolver relyingPartyRegistrationResolver,
-                                                   IdentityZoneManager identityZoneManager,
-                                                   IdentityProviderProvisioning identityProviderProvisioning,
-                                                   SamlUaaAuthenticationUserManager userManager,
-                                                   ApplicationEventPublisher eventPublisher) {
+            IdentityZoneManager identityZoneManager,
+            IdentityProviderProvisioning identityProviderProvisioning,
+            SamlUaaAuthenticationUserManager userManager,
+            ApplicationEventPublisher eventPublisher) {
 
         Assert.notNull(relyingPartyRegistrationResolver, "relyingPartyRegistrationResolver cannot be null");
         this.relyingPartyRegistrationResolver = relyingPartyRegistrationResolver;

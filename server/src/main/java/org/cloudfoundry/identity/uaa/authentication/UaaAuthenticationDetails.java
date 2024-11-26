@@ -64,7 +64,7 @@ public class UaaAuthenticationDetails implements Serializable {
     private final boolean isAuthorizationSet;
 
     @JsonIgnore
-    private Map<String,String[]> parameterMap;
+    private Map<String, String[]> parameterMap;
 
     protected UaaAuthenticationDetails() {
         this.origin = UNKNOWN_STRING;
@@ -77,6 +77,7 @@ public class UaaAuthenticationDetails implements Serializable {
     public UaaAuthenticationDetails(HttpServletRequest request) {
         this(request, null);
     }
+
     public UaaAuthenticationDetails(HttpServletRequest request, String clientId) {
         WebAuthenticationDetails webAuthenticationDetails = new WebAuthenticationDetails(request);
         this.origin = webAuthenticationDetails.getRemoteAddress();
@@ -86,7 +87,7 @@ public class UaaAuthenticationDetails implements Serializable {
 
         if (clientId == null) {
             this.clientId = request.getParameter("client_id");
-            if(!hasText(this.clientId)) {
+            if (!hasText(this.clientId)) {
                 this.clientId = (String) request.getAttribute("clientId");
             }
         } else {
@@ -100,9 +101,9 @@ public class UaaAuthenticationDetails implements Serializable {
     }
 
     public UaaAuthenticationDetails(@JsonProperty("addNew") boolean addNew,
-                                    @JsonProperty("clientId") String clientId,
-                                    @JsonProperty("origin") String origin,
-                                    @JsonProperty("sessionId") String sessionId) {
+            @JsonProperty("clientId") String clientId,
+            @JsonProperty("origin") String origin,
+            @JsonProperty("sessionId") String sessionId) {
         this.addNew = addNew;
         this.clientId = clientId;
         this.origin = origin;
@@ -188,9 +189,9 @@ public class UaaAuthenticationDetails implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((clientId == null) ? 0 : clientId.hashCode());
-        result = prime * result + ((origin == null) ? 0 : origin.hashCode());
-        result = prime * result + ((sessionId == null) ? 0 : sessionId.hashCode());
+        result = prime * result + (clientId == null ? 0 : clientId.hashCode());
+        result = prime * result + (origin == null ? 0 : origin.hashCode());
+        result = prime * result + (sessionId == null ? 0 : sessionId.hashCode());
         return result;
     }
 
@@ -206,20 +207,17 @@ public class UaaAuthenticationDetails implements Serializable {
         if (clientId == null) {
             if (other.clientId != null)
                 return false;
-        }
-        else if (!clientId.equals(other.clientId))
+        } else if (!clientId.equals(other.clientId))
             return false;
         if (origin == null) {
             if (other.origin != null)
                 return false;
-        }
-        else if (!origin.equals(other.origin))
+        } else if (!origin.equals(other.origin))
             return false;
         if (sessionId == null) {
             if (other.sessionId != null)
                 return false;
-        }
-        else if (!sessionId.equals(other.sessionId))
+        } else if (!sessionId.equals(other.sessionId))
             return false;
         return true;
     }

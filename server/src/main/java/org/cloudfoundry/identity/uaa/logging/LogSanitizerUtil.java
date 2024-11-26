@@ -13,9 +13,9 @@ public class LogSanitizerUtil {
     public static String sanitize(String original) {
         if (original == null) return null;
 
-        String cleaned = original.replace("\r","|")
-                .replace("\n","|")
-                .replace("\t","|");
+        String cleaned = original.replace("\r", "|")
+                .replace("\n", "|")
+                .replace("\t", "|");
 
         if (!cleaned.equals(original)) {
             cleaned += SANITIZED_FLAG;

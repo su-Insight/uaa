@@ -57,7 +57,7 @@ public class UaaUser {
 
         if (prototype.getFamilyName() == null) {
             String email = prototype.getEmail();
-            String familyName = (email.split("@").length > 1 ? email.split("@")[1] : email);
+            String familyName = email.split("@").length > 1 ? email.split("@")[1] : email;
             prototype.withFamilyName(familyName);
         }
 
@@ -127,10 +127,10 @@ public class UaaUser {
     }
 
     public UaaUser(String id, String username, String password, String email,
-                   List<? extends GrantedAuthority> authorities,
-                   String givenName, String familyName, Date created, Date modified,
-                   String origin, String externalId, boolean verified, String zoneId, String salt,
-                   Date passwordLastModified) {
+            List<? extends GrantedAuthority> authorities,
+            String givenName, String familyName, Date created, Date modified,
+            String origin, String externalId, boolean verified, String zoneId, String salt,
+            Date passwordLastModified) {
         this(new UaaUserPrototype()
                 .withId(id)
                 .withUsername(username)
@@ -315,11 +315,11 @@ public class UaaUser {
     }
 
     public UaaUser modifyAttributes(String email,
-                                    String givenName,
-                                    String familyName,
-                                    String phoneNumber,
-                                    String externalId,
-                                    boolean verified) {
+            String givenName,
+            String familyName,
+            String phoneNumber,
+            String externalId,
+            boolean verified) {
         return new UaaUser(new UaaUserPrototype()
                 .withEmail(email)
                 .withGivenName(givenName)

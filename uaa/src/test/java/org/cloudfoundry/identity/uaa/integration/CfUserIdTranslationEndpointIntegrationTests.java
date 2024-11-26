@@ -82,7 +82,7 @@ public class CfUserIdTranslationEndpointIntegrationTests {
 
         String userEndpoint = "/Users";
         ResponseEntity<ScimUser> newuser = client.postForEntity(serverRunning.getUrl(userEndpoint), user,
-                        ScimUser.class);
+                ScimUser.class);
 
         ScimUser joe = newuser.getBody();
         assertEquals(JOE, joe.getUserName());
@@ -92,21 +92,21 @@ public class CfUserIdTranslationEndpointIntegrationTests {
 
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<Void> result = client
-                        .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
-                                        HttpMethod.PUT, new HttpEntity<PasswordChangeRequest>(change, headers),
-                                        Void.class, joe.getId());
+                .exchange(serverRunning.getUrl(userEndpoint) + "/{id}/password",
+                        HttpMethod.PUT, new HttpEntity<PasswordChangeRequest>(change, headers),
+                        Void.class, joe.getId());
         assertEquals(HttpStatus.OK, result.getStatusCode());
 
         // The implicit grant for cf requires extra parameters in the
         // authorization request
         context.setParameters(Collections.singletonMap("credentials",
-                        testAccounts.getJsonCredentials(joe.getUserName(), "Passwo3d")));
+                testAccounts.getJsonCredentials(joe.getUserName(), "Passwo3d")));
 
     }
 
     @Before
     public void setErrorHandlerOnRestTemplate() {
-        ((RestTemplate)serverRunning.getRestTemplate()).setErrorHandler(new OAuth2ErrorHandler(context.getResource()) {
+        ((RestTemplate) serverRunning.getRestTemplate()).setErrorHandler(new OAuth2ErrorHandler(context.getResource()) {
             // Pass errors through in response entity for status code analysis
             @Override
             public boolean hasError(ClientHttpResponse response) {
@@ -123,7 +123,7 @@ public class CfUserIdTranslationEndpointIntegrationTests {
     public void findUsersWithExplicitFilterSucceeds() {
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = serverRunning.getForObject(idsEndpoint + "?filter=userName eq \"" + JOE + "\"",
-                        Map.class);
+                Map.class);
         @SuppressWarnings("unchecked")
         Map<String, Object> results = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -134,7 +134,7 @@ public class CfUserIdTranslationEndpointIntegrationTests {
     public void findUsersExplicitEmailFails() {
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = serverRunning.getForObject(idsEndpoint + "?filter=emails.value sw \"joe\"",
-                        Map.class);
+                Map.class);
         @SuppressWarnings("unchecked")
         Map<String, Object> results = response.getBody();
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -155,7 +155,7 @@ public class CfUserIdTranslationEndpointIntegrationTests {
     public void findUsersExplicitGroupFails() {
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = serverRunning.getForObject(idsEndpoint + "?filter=groups.display co \"foo\"",
-                        Map.class);
+                Map.class);
         @SuppressWarnings("unchecked")
         Map<String, Object> results = response.getBody();
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

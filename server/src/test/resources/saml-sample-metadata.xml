@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-                     entityID="https://idp-saml.ua3.int/simplesaml/saml2/idp/metadata.php">
+          entityID="https://idp-saml.ua3.int/simplesaml/saml2/idp/metadata.php">
     <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
         <md:KeyDescriptor use="signing">
             <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -46,10 +46,10 @@
             </ds:KeyInfo>
         </md:KeyDescriptor>
         <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                                Location="https://idp-saml.ua3.int/simplesaml/saml2/idp/SingleLogoutService.php"/>
+                              Location="https://idp-saml.ua3.int/simplesaml/saml2/idp/SingleLogoutService.php"/>
         <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
         <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                                Location="https://idp-saml.ua3.int/simplesaml/saml2/idp/SSOService.php"/>
+                              Location="https://idp-saml.ua3.int/simplesaml/saml2/idp/SSOService.php"/>
     </md:IDPSSODescriptor>
     <md:ContactPerson contactType="technical">
         <md:SurName>Administrator</md:SurName>

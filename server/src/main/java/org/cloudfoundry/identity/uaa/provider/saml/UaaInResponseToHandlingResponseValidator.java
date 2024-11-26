@@ -45,7 +45,7 @@ public final class UaaInResponseToHandlingResponseValidator implements Converter
     private final Converter<OpenSaml4AuthenticationProvider.ResponseToken, Saml2ResponseValidatorResult> delegate;
 
     public UaaInResponseToHandlingResponseValidator(Converter<OpenSaml4AuthenticationProvider.ResponseToken, Saml2ResponseValidatorResult> delegate,
-                                                    boolean uaaWideDisableInResponseToCheck) {
+            boolean uaaWideDisableInResponseToCheck) {
         this.delegate = delegate;
         this.uaaWideDisableInResponseToCheck = uaaWideDisableInResponseToCheck;
     }

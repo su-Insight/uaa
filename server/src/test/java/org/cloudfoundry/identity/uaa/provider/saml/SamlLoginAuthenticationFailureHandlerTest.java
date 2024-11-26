@@ -27,7 +27,7 @@ public class SamlLoginAuthenticationFailureHandlerTest {
 
         DefaultSavedRequest savedRequest = mock(DefaultSavedRequest.class);
         Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("redirect_uri", new String[] { "https://example.com" });
+        parameterMap.put("redirect_uri", new String[]{"https://example.com"});
         when(savedRequest.getParameterMap()).thenReturn(parameterMap);
 
         MockHttpSession session = new MockHttpSession();
@@ -51,7 +51,7 @@ public class SamlLoginAuthenticationFailureHandlerTest {
 
         DefaultSavedRequest savedRequest = mock(DefaultSavedRequest.class);
         Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("redirect_uri", new String[] { "https://example.com?go=bears" });
+        parameterMap.put("redirect_uri", new String[]{"https://example.com?go=bears"});
         when(savedRequest.getParameterMap()).thenReturn(parameterMap);
 
         MockHttpSession session = new MockHttpSession();
@@ -75,7 +75,7 @@ public class SamlLoginAuthenticationFailureHandlerTest {
 
         DefaultSavedRequest savedRequest = mock(DefaultSavedRequest.class);
         Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("redirect_uri", new String[] { "https://example.com?go=bears" });
+        parameterMap.put("redirect_uri", new String[]{"https://example.com?go=bears"});
         when(savedRequest.getParameterMap()).thenReturn(parameterMap);
 
         MockHttpSession session = new MockHttpSession();
@@ -120,7 +120,7 @@ public class SamlLoginAuthenticationFailureHandlerTest {
 
         DefaultSavedRequest savedRequest = mock(DefaultSavedRequest.class);
         Map<String, String[]> parameterMap = new HashMap<>();
-        parameterMap.put("redirect_uri", new String[] { "https://example.com" });
+        parameterMap.put("redirect_uri", new String[]{"https://example.com"});
         when(savedRequest.getParameterMap()).thenReturn(parameterMap);
 
         MockHttpSession session = new MockHttpSession();

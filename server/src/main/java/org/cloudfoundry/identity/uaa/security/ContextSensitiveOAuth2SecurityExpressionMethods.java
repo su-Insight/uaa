@@ -41,11 +41,11 @@ public class ContextSensitiveOAuth2SecurityExpressionMethods extends OAuth2Secur
     }
 
     private String[] replaceContext(String[] roles) {
-        if (roles==null || roles.length==0) {
+        if (roles == null || roles.length == 0) {
             return roles;
         }
         String[] adjusted = new String[roles.length];
-        for (int i=0; i<roles.length; i++) {
+        for (int i = 0; i < roles.length; i++) {
             adjusted[i] = replaceContext(roles[i]);
         }
         return adjusted;
@@ -99,9 +99,9 @@ public class ContextSensitiveOAuth2SecurityExpressionMethods extends OAuth2Secur
         if (authentication.getPrincipal() instanceof UaaPrincipal) {
             return ((UaaPrincipal) authentication.getPrincipal()).getZoneId();
         } else if (authentication instanceof UaaOauth2Authentication) {
-            return ((UaaOauth2Authentication)authentication).getZoneId();
+            return ((UaaOauth2Authentication) authentication).getZoneId();
         } else if (authentication.getDetails() instanceof OAuth2AuthenticationDetails) {
-            String tokenValue = ((OAuth2AuthenticationDetails)authentication.getDetails()).getTokenValue();
+            String tokenValue = ((OAuth2AuthenticationDetails) authentication.getDetails()).getTokenValue();
             return getZoneIdFromToken(tokenValue);
         } else {
             return null;
@@ -118,10 +118,11 @@ public class ContextSensitiveOAuth2SecurityExpressionMethods extends OAuth2Secur
         }
         Map<String, Object> claims;
         try {
-            claims = JsonUtils.readValue(tokenJwt.getClaims(), new TypeReference<Map<String, Object>>() {});
+            claims = JsonUtils.readValue(tokenJwt.getClaims(), new TypeReference<Map<String, Object>>() {
+            });
         } catch (JsonUtils.JsonUtilException e) {
             throw new IllegalStateException("Cannot read token claims", e);
         }
-        return (String)claims.get(ClaimConstants.ZONE_ID);
+        return (String) claims.get(ClaimConstants.ZONE_ID);
     }
 }

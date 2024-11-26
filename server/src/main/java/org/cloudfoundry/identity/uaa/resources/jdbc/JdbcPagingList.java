@@ -61,17 +61,17 @@ public class JdbcPagingList<E> extends AbstractList<E> {
     private final LimitSqlAdapter limitSqlAdapter;
 
     public JdbcPagingList(JdbcTemplate jdbTemplate, LimitSqlAdapter limitSqlAdapter, String sql, RowMapper<E> mapper,
-                    int pageSize) {
-        this(jdbTemplate, limitSqlAdapter, sql, Collections.<String, Object> emptyMap(), mapper, pageSize);
+            int pageSize) {
+        this(jdbTemplate, limitSqlAdapter, sql, Collections.<String, Object>emptyMap(), mapper, pageSize);
     }
 
     public JdbcPagingList(JdbcTemplate jdbcTemplate, LimitSqlAdapter limitSqlAdapter, String sql, Map<String, ?> args,
-                    RowMapper<E> mapper, int pageSize) {
+            RowMapper<E> mapper, int pageSize) {
         this(new NamedParameterJdbcTemplate(jdbcTemplate), limitSqlAdapter, sql, args, mapper, pageSize);
     }
 
     public JdbcPagingList(NamedParameterJdbcTemplate jdbcTemplate, LimitSqlAdapter limitSqlAdapter, String sql,
-                    Map<String, ?> args, RowMapper<E> mapper, int pageSize) {
+            Map<String, ?> args, RowMapper<E> mapper, int pageSize) {
         this.parameterJdbcTemplate = jdbcTemplate;
         this.sql = sql;
         this.args = args;

@@ -36,7 +36,7 @@ public class UserAuthenticationFailureEvent extends AbstractUaaAuthenticationEve
     @Override
     public AuditEvent getAuditEvent() {
         return createAuditRecord(user.getId(), AuditEventType.UserAuthenticationFailure,
-                        getOrigin(getAuthenticationDetails()), user.getUsername());
+                getOrigin(getAuthenticationDetails()), user.getUsername());
     }
 
     public UaaUser getUser() {

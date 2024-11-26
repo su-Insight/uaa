@@ -72,7 +72,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
         when(a.getPrincipal()).thenReturn(new Object());
         try {
             successHandler.setSavedAccountOptionCookie(new MockHttpServletRequest(), new MockHttpServletResponse(), a);
-        }catch (IllegalArgumentException x) {
+        } catch (IllegalArgumentException x) {
             assertEquals("Unrecognized authentication principle.", x.getMessage());
         }
 
@@ -82,7 +82,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
     @Test
     public void whenSuccessfullyAuthenticated_accountGetsSavedViaCookie() throws IOException, ServletException, CurrentUserCookieFactory.CurrentUserCookieEncodingException {
         IdentityZoneHolder.get().getConfig().setAccountChooserEnabled(true);
-        Date yesterday = new Date(System.currentTimeMillis()-(1000*60*60*24));
+        Date yesterday = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
         UaaUser user = new UaaUser(
                 "user-id",
                 "username",
@@ -122,7 +122,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
 
         assertEquals(URLEncoder.encode(JsonUtils.writeValueAsString(expectedCookieValue)), cookieValue);
         assertTrue(accountOptionCookie.isHttpOnly());
-        assertEquals(365*24*60*60, accountOptionCookie.getMaxAge());
+        assertEquals(365 * 24 * 60 * 60, accountOptionCookie.getMaxAge());
         assertEquals("/login", accountOptionCookie.getPath());
         Assert.assertEquals(secure, accountOptionCookie.getSecure());
 
@@ -147,7 +147,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
     @Test
     public void empty_Account_Cookie() throws IOException, ServletException {
         IdentityZoneHolder.get().getConfig().setAccountChooserEnabled(false);
-        Date yesterday = new Date(System.currentTimeMillis()-(1000*60*60*24));
+        Date yesterday = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24));
         UaaUser user = new UaaUser(
                 "user-id",
                 "username",

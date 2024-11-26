@@ -143,13 +143,15 @@ public class JsonUtils {
 
     public static String serializeExcludingProperties(Object object, String... propertiesToExclude) {
         String serialized = JsonUtils.writeValueAsString(object);
-        Map<String, Object> properties = JsonUtils.readValue(serialized, new TypeReference<>() {});
+        Map<String, Object> properties = JsonUtils.readValue(serialized, new TypeReference<>() {
+        });
         for (String property : propertiesToExclude) {
             if (property.contains(".")) {
                 String[] split = property.split("\\.", 2);
                 if (properties != null && properties.containsKey(split[0])) {
                     Object inner = properties.get(split[0]);
-                    properties.put(split[0], JsonUtils.readValue(serializeExcludingProperties(inner, split[1]), new TypeReference<Map<String, Object>>() {}));
+                    properties.put(split[0], JsonUtils.readValue(serializeExcludingProperties(inner, split[1]), new TypeReference<Map<String, Object>>() {
+                    }));
                 }
             } else {
                 if (properties != null) {

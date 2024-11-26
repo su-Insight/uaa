@@ -78,7 +78,7 @@ public class UaaMetricsEmitter {
                 properties.entrySet()
                         .stream()
                         .filter(e -> e.getValue() != null && e.getValue() instanceof Integer)
-                        .forEach(e -> statsDClient.gauge(prefix+e.getKey(), ((Integer) e.getValue()).longValue()));
+                        .forEach(e -> statsDClient.gauge(prefix + e.getKey(), ((Integer) e.getValue()).longValue()));
             }
         }
     }
@@ -106,9 +106,9 @@ public class UaaMetricsEmitter {
     }
 
     private void emitUrlGroupRequestMetrics(UaaMetrics metrics) {
-        Map<String,String> perUrlMetrics = metrics.getSummary();
+        Map<String, String> perUrlMetrics = metrics.getSummary();
         String prefix = "requests.%s.";
-        for(String key : perUrlMetrics.keySet()) {
+        for (String key : perUrlMetrics.keySet()) {
             String prefixName = key.startsWith("/") ? key.substring(1) : key;
             MetricsQueue metric = JsonUtils.readValue(perUrlMetrics.get(key), MetricsQueue.class);
             RequestMetricSummary metricTotals = metric.getTotals();
@@ -131,19 +131,19 @@ public class UaaMetricsEmitter {
         String prefix = "requests.global.";
         RequestMetricSummary totals = globals.getTotals();
         statsDClient.gauge(prefix + "completed.time", (long) totals.getAverageTime());
-        statsDClient.count(prefix + "completed.count", getMetricDelta(prefix + "completed.count",totals.getCount()));
-        statsDClient.count(prefix + "unhealthy.count",getMetricDelta(prefix + "unhealthy.count",totals.getIntolerableCount()));
+        statsDClient.count(prefix + "completed.count", getMetricDelta(prefix + "completed.count", totals.getCount()));
+        statsDClient.count(prefix + "unhealthy.count", getMetricDelta(prefix + "unhealthy.count", totals.getIntolerableCount()));
         statsDClient.gauge(prefix + "unhealthy.time", (long) totals.getAverageIntolerableTime());
         //status codes
         for (StatusCodeGroup family : StatusCodeGroup.values()) {
             RequestMetricSummary summary = ofNullable(globals.getDetailed().get(family)).orElse(MISSING_METRICS);
             String aspect = prefix + "status_" + family.getName() + ".count";
-            statsDClient.count(aspect, getMetricDelta(aspect,summary.getCount()));
+            statsDClient.count(aspect, getMetricDelta(aspect, summary.getCount()));
         }
         //database metrics
         prefix = "database.global.";
         statsDClient.gauge(prefix + "completed.time", (long) totals.getAverageDatabaseQueryTime());
-        statsDClient.count(prefix + "completed.count", getMetricDelta(prefix + "completed.count",totals.getDatabaseQueryCount()));
+        statsDClient.count(prefix + "completed.count", getMetricDelta(prefix + "completed.count", totals.getDatabaseQueryCount()));
         statsDClient.count(prefix + "unhealthy.count", getMetricDelta(prefix + "unhealthy.count", totals.getDatabaseIntolerableQueryCount()));
         statsDClient.gauge(prefix + "unhealthy.time", (long) totals.getAverageDatabaseIntolerableQueryTime());
     }
@@ -153,7 +153,7 @@ public class UaaMetricsEmitter {
         OperatingSystemMXBean mbean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         String prefix = "vitals.vm.";
         statsDClient.gauge(prefix + "cpu.count", mbean.getAvailableProcessors());
-        statsDClient.gauge(prefix + "cpu.load", (long)(mbean.getSystemLoadAverage()*100));
+        statsDClient.gauge(prefix + "cpu.load", (long) (mbean.getSystemLoadAverage() * 100));
         statsDClient.gauge(prefix + "memory.total", mbean.getTotalPhysicalMemorySize());
         statsDClient.gauge(prefix + "memory.committed", mbean.getCommittedVirtualMemorySize());
         statsDClient.gauge(prefix + "memory.free", mbean.getFreePhysicalMemorySize());
@@ -197,7 +197,7 @@ public class UaaMetricsEmitter {
             boolean original = method.isAccessible();
             method.setAccessible(true);
             try {
-                return (Number)ReflectionUtils.invokeMethod(method, mbean);
+                return (Number) ReflectionUtils.invokeMethod(method, mbean);
             } catch (Exception e) {
                 logger.debug("Unable to invoke metric", e);
             } finally {
@@ -220,10 +220,10 @@ public class UaaMetricsEmitter {
             emitter.addNotificationListener((notification, handback) -> {
                 String key = notification.getType();
                 String prefix = key.startsWith("/") ? key.substring(1) : key;
-                statsDClient.time(String.format("requests.%s.latency", prefix),  (Long) notification.getSource());
+                statsDClient.time(String.format("requests.%s.latency", prefix), (Long) notification.getSource());
             }, null, null);
             notificationsEnabled = true;
-        } catch(Exception instanceNotFound) {
+        } catch (Exception instanceNotFound) {
             try {
                 throwIfOtherThanNotFound(instanceNotFound);
             } catch (Exception e) {

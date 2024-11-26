@@ -21,24 +21,24 @@ import java.util.List;
 public interface ScimGroupExternalMembershipManager {
 
     ScimGroupExternalMember mapExternalGroup(String groupId, String externalGroup, String origin, final String zoneId)
-        throws ScimResourceNotFoundException, MemberAlreadyExistsException;
+            throws ScimResourceNotFoundException, MemberAlreadyExistsException;
 
     ScimGroupExternalMember unmapExternalGroup(String groupId, String externalGroup, String origin, final String zoneId)
-        throws ScimResourceNotFoundException;
+            throws ScimResourceNotFoundException;
 
     List<ScimGroupExternalMember> getExternalGroupMapsByGroupId(String groupId, String origin, final String zoneId)
-        throws ScimResourceNotFoundException;
+            throws ScimResourceNotFoundException;
 
     List<ScimGroupExternalMember> getExternalGroupMapsByExternalGroup(String externalGroup, String origin, final String zoneId)
-        throws ScimResourceNotFoundException;
+            throws ScimResourceNotFoundException;
 
     List<ScimGroupExternalMember> getExternalGroupMapsByGroupName(String groupName, String origin, final String zoneId)
-        throws ScimResourceNotFoundException;
+            throws ScimResourceNotFoundException;
 
     List<ScimGroupExternalMember> getExternalGroupMappings(String zoneId)
-        throws ScimResourceNotFoundException;
+            throws ScimResourceNotFoundException;
 
 
     void unmapAll(String groupId, final String zoneId)
-        throws ScimResourceNotFoundException;
+            throws ScimResourceNotFoundException;
 }

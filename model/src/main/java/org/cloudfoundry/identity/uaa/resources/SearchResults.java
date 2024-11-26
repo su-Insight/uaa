@@ -29,9 +29,11 @@ public class SearchResults<T> {
     private int totalResults;
     private Collection<String> schemas;
 
-    public SearchResults() {}
+    public SearchResults() {
+    }
+
     public SearchResults(Collection<String> schemas, Collection<T> resources, int startIndex, int itemsPerPage,
-                    int totalResults) {
+            int totalResults) {
         this.schemas = new ArrayList<String>(schemas);
         this.resources = new ArrayList<T>(resources);
         this.startIndex = startIndex;

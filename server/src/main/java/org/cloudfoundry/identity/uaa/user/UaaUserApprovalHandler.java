@@ -140,7 +140,7 @@ public class UaaUserApprovalHandler implements UserApprovalHandler {
 
     @Override
     public Map<String, Object> getUserApprovalRequest(AuthorizationRequest authorizationRequest,
-                                                      Authentication userAuthentication) {
+            Authentication userAuthentication) {
         // In case of a redirect we might want the request parameters to be included
         return new HashMap<>(authorizationRequest.getRequestParameters());
     }

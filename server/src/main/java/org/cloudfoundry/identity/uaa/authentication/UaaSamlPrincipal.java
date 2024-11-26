@@ -62,5 +62,7 @@ public class UaaSamlPrincipal extends UaaPrincipal implements Saml2Authenticated
     }
 
     @Override
-    public List<String> getSessionIndexes() { return sessionIndexes; }
+    public List<String> getSessionIndexes() {
+        return sessionIndexes;
+    }
 }

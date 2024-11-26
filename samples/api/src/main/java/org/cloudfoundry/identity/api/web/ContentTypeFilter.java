@@ -59,7 +59,7 @@ public class ContentTypeFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-                    ServletException {
+            ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         for (String path : mediaTypes.keySet()) {

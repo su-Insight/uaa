@@ -60,7 +60,7 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
     private static final String GROUP_TABLE = "groups";
 
     private static final String GET_GROUPS_BY_EXTERNAL_MEMBER_SQL = String.format("select g.id, g.displayName, g.description, g.created, g.lastModified, g.version, g.identity_zone_id" +
-                    " from %s m, %s g where m.group_id = g.id and g.identity_zone_id = ? and m.member_id = ? and m.origin = ?",
+            " from %s m, %s g where m.group_id = g.id and g.identity_zone_id = ? and m.member_id = ? and m.origin = ?",
             MEMBERSHIP_TABLE, GROUP_TABLE);
 
     @Value("${database.maxParameters:-1}")
@@ -96,7 +96,7 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
                 MEMBERSHIP_TABLE
         );
         getGroupsByExternalMemberSql = String.format("select g.id, g.displayName, g.description, g.created, g.lastModified, g.version, g.identity_zone_id" +
-                        " from %s m, %s g where m.group_id = g.id and g.identity_zone_id = ? and m.member_id = ? and m.origin = ?",
+                " from %s m, %s g where m.group_id = g.id and g.identity_zone_id = ? and m.member_id = ? and m.origin = ?",
                 MEMBERSHIP_TABLE,
                 quotedGroupsIdentifier);
     }
@@ -118,7 +118,7 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
             return emptySet();
         }
         IdentityZone currentZone = IdentityZoneHolder.get();
-        List<String> zoneDefaultGroups = (zoneId.equals(currentZone.getId())) ?
+        List<String> zoneDefaultGroups = zoneId.equals(currentZone.getId()) ?
                 currentZone.getConfig().getUserConfig().getDefaultGroups() :
                 zoneProvisioning.retrieve(zoneId).getConfig().getUserConfig().getDefaultGroups();
         return zoneDefaultGroups
@@ -160,8 +160,8 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
             throw new MemberAlreadyExistsException(member.getMemberId() + " is already part of the group: " + groupId);
         }
         logger.debug("Associating group:{} with member:{}",
-            UaaStringUtils.getCleanedUserControlString(groupId),
-            UaaStringUtils.getCleanedUserControlString(member.toString()));
+                UaaStringUtils.getCleanedUserControlString(groupId),
+                UaaStringUtils.getCleanedUserControlString(member.toString()));
         jdbcTemplate.update(ADD_MEMBER_SQL, ps -> {
             ps.setString(1, groupId);
             ps.setString(2, member.getMemberId());
@@ -222,12 +222,12 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
         List<ScimGroup> groups = new ArrayList<>();
         List<String> memberList = new ArrayList<>(memberId);
         try {
-        	while (!memberList.isEmpty()) {
-        	    int size = maxSqlParameters > 1 ? Math.min(maxSqlParameters - 1, memberList.size()) : memberList.size();
+            while (!memberList.isEmpty()) {
+                int size = maxSqlParameters > 1 ? Math.min(maxSqlParameters - 1, memberList.size()) : memberList.size();
                 StringBuilder builder = new StringBuilder(dynamicGetGroupsByMemberSqlBase);
                 builder.append(memberList.subList(0, size).stream().map(s -> "?").collect(Collectors.joining(", ")));
                 builder.append(");");
-                Object[] parameterList = ArrayUtils.addAll(new Object[] { zoneId }, memberList.subList(0, size).toArray());
+                Object[] parameterList = ArrayUtils.addAll(new Object[]{zoneId}, memberList.subList(0, size).toArray());
                 groups.addAll(jdbcTemplate.query(builder.toString(), new ScimGroupRowMapper(), parameterList));
                 memberList = memberList.subList(size, memberList.size());
             }
@@ -293,8 +293,8 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
             throws ScimResourceNotFoundException {
         List<ScimGroupMember> currentMembers = getMembers(groupId, false, zoneId);
         logger.debug("current-members: {}, in request: {}",
-            UaaStringUtils.getCleanedUserControlString(currentMembers.toString()),
-            UaaStringUtils.getCleanedUserControlString(members.toString()));
+                UaaStringUtils.getCleanedUserControlString(currentMembers.toString()),
+                UaaStringUtils.getCleanedUserControlString(members.toString()));
 
         List<ScimGroupMember> currentMembersToRemove = new ArrayList<>(currentMembers);
         currentMembersToRemove.removeAll(members);

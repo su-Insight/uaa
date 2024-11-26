@@ -65,7 +65,7 @@ public class RemoteTokenServicesTests {
             @SuppressWarnings("unchecked")
             @Override
             public <T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
-                            Class<T> responseType, Object... uriVariables) throws RestClientException {
+                    Class<T> responseType, Object... uriVariables) throws RestClientException {
                 return new ResponseEntity<T>((T) body, headers, status);
             }
         });
@@ -114,7 +114,7 @@ public class RemoteTokenServicesTests {
     public void testNoBodyReceived() {
         RestTemplate restTemplate = mock(RestTemplate.class);
         ResponseEntity responseEntity = mock(ResponseEntity.class);
-        when(restTemplate.exchange(anyString(), (HttpMethod)any(), (HttpEntity<MultiValueMap<String, String>>)any(), (Class)any())).thenReturn(responseEntity);
+        when(restTemplate.exchange(anyString(), (HttpMethod) any(), (HttpEntity<MultiValueMap<String, String>>) any(), (Class) any())).thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(null);
         services.setRestTemplate(restTemplate);
         assertThrows(IllegalStateException.class, () -> services.loadAuthentication("FOO"));
@@ -129,6 +129,6 @@ public class RemoteTokenServicesTests {
 
         assertNotNull(result);
         assertEquals(JsonUtils.writeValueAsString(additionalAuthorizationAttributesMap), result.getOAuth2Request()
-                        .getRequestParameters().get(ClaimConstants.ADDITIONAL_AZ_ATTR));
+                .getRequestParameters().get(ClaimConstants.ADDITIONAL_AZ_ATTR));
     }
 }

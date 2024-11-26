@@ -36,7 +36,7 @@ public class ScimException extends RuntimeException {
         this.status = status;
     }
 
-    public ScimException(String message, HttpStatus status, Map<String,Object> extraInformation) {
+    public ScimException(String message, HttpStatus status, Map<String, Object> extraInformation) {
         super(message);
         this.status = status;
         this.extraInfo = extraInformation;

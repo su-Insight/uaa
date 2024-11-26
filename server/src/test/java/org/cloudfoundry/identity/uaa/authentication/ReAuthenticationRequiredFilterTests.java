@@ -45,7 +45,7 @@ public class ReAuthenticationRequiredFilterTests {
     }
 
     @After
-    public void clear () {
+    public void clear() {
         SecurityContextHolder.clearContext();
     }
 

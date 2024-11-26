@@ -41,13 +41,13 @@ public class LdapGroupMappingAuthorizationManager implements ExternalGroupMappin
         Set<GrantedAuthority> result = new HashSet<>();
         for (GrantedAuthority a : authorities) {
             if (a instanceof LdapAuthority) {
-                LdapAuthority la = (LdapAuthority)a;
+                LdapAuthority la = (LdapAuthority) a;
                 List<ScimGroupExternalMember> members = extMbrMgr.getExternalGroupMapsByExternalGroup(la.getDn(), OriginKeys.LDAP, IdentityZoneHolder.get().getId());
                 for (ScimGroupExternalMember member : members) {
                     SimpleGrantedAuthority mapped = new SimpleGrantedAuthority(member.getDisplayName());
                     result.add(mapped);
                     if (logger.isDebugEnabled()) {
-                        logger.debug("Ldap Group Mapped[dn="+la.getDn()+" scope:"+mapped.getAuthority());
+                        logger.debug("Ldap Group Mapped[dn=" + la.getDn() + " scope:" + mapped.getAuthority());
                     }
                 }
             } else {

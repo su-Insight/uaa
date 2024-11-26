@@ -30,7 +30,7 @@ import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenExcepti
 /**
  *
  */
-public class ScopeAuthenticationManager implements AuthenticationManager{
+public class ScopeAuthenticationManager implements AuthenticationManager {
 
     private boolean throwOnNotAuthenticated = true;
     private List<String> requiredScopes;
@@ -63,7 +63,7 @@ public class ScopeAuthenticationManager implements AuthenticationManager{
                     matches++;
                 }
             }
-            if (matches==requiredMatches) {
+            if (matches == requiredMatches) {
                 authentication.setAuthenticated(true);
                 return authentication;
             } else if (isThrowOnNotAuthenticated()) {

@@ -244,7 +244,7 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
     }
 
     private static Saml2ResponseValidatorResult validateInResponseTo(AbstractSaml2AuthenticationRequest storedRequest,
-                                                                     String inResponseTo) {
+            String inResponseTo) {
         if (!StringUtils.hasText(inResponseTo)) {
             return Saml2ResponseValidatorResult.success();
         }
@@ -518,7 +518,7 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
         }
         if (xmlObject instanceof XSBoolean xsBoolean) {
             XSBooleanValue xsBooleanValue = xsBoolean.getValue();
-            return (xsBooleanValue != null) ? xsBooleanValue.getValue() : null;
+            return xsBooleanValue != null ? xsBooleanValue.getValue() : null;
         }
         if (xmlObject instanceof XSDateTime xsDateTime) {
             return xsDateTime.getValue();
@@ -527,13 +527,13 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
     }
 
     public static Saml2AuthenticationException createAuthenticationException(String code, String message,
-                                                                              Exception cause) {
+            Exception cause) {
         return new Saml2AuthenticationException(new Saml2Error(code, message), cause);
     }
 
     private static Converter<AssertionToken, Saml2ResponseValidatorResult> createAssertionValidator(String errorCode,
-                                                                                                    Converter<AssertionToken, SAML20AssertionValidator> validatorConverter,
-                                                                                                    Converter<AssertionToken, ValidationContext> contextConverter) {
+            Converter<AssertionToken, SAML20AssertionValidator> validatorConverter,
+            Converter<AssertionToken, ValidationContext> contextConverter) {
 
         return assertionToken -> {
             Assertion assertion = assertionToken.assertion;
@@ -558,8 +558,8 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
     }
 
     private static ValidationContext createValidationContext(AssertionToken assertionToken,
-                                                             Consumer<Map<String, Object>> paramsConsumer,
-                                                             boolean saml2Bearer) {
+            Consumer<Map<String, Object>> paramsConsumer,
+            boolean saml2Bearer) {
         Saml2AuthenticationToken token = assertionToken.token;
         RelyingPartyRegistration relyingPartyRegistration = token.getRelyingPartyRegistration();
         String audience = relyingPartyRegistration.getEntityId();
@@ -661,7 +661,7 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
             subjects.add(new BearerSubjectConfirmationValidator() {
                 @Override
                 protected ValidationResult validateAddress(SubjectConfirmation confirmation, Assertion assertion,
-                                                           ValidationContext context, boolean required) {
+                        ValidationContext context, boolean required) {
                     // applications should validate their own addresses - gh-7514
                     return ValidationResult.VALID;
                 }
@@ -745,6 +745,8 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
             this.assertion = assertion;
         }
 
-        public Assertion getAssertion() { return this.assertion; }
+        public Assertion getAssertion() {
+            return this.assertion;
+        }
     }
 }

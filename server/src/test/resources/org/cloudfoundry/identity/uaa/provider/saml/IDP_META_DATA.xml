@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-                     entityID="%s" ID="pfx06ad4153-c17c-d286-194c-dec30bb92796">
+          entityID="%s" ID="pfx06ad4153-c17c-d286-194c-dec30bb92796">
     <ds:Signature>
         <ds:SignedInfo>
             <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
@@ -45,10 +45,10 @@
             </ds:KeyInfo>
         </md:KeyDescriptor>
         <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                                Location="http://simplesamlphp.uaa-acceptance.cf-app.com/saml2/idp/SingleLogoutService.php"/>
+                              Location="http://simplesamlphp.uaa-acceptance.cf-app.com/saml2/idp/SingleLogoutService.php"/>
         <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
         <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                                Location="http://simplesamlphp.uaa-acceptance.cf-app.com/saml2/idp/SSOService.php"/>
+                              Location="http://simplesamlphp.uaa-acceptance.cf-app.com/saml2/idp/SSOService.php"/>
     </md:IDPSSODescriptor>
     <md:ContactPerson contactType="technical">
         <md:GivenName>Filip</md:GivenName>

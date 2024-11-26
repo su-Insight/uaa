@@ -135,7 +135,7 @@ public class YamlBindingTests {
 
     private BindingResult bind(Object target, String values) {
         YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
-        factory.setResources(new ByteArrayResource[] { new ByteArrayResource(values.getBytes()) });
+        factory.setResources(new ByteArrayResource[]{new ByteArrayResource(values.getBytes())});
         Map<Object, Object> map = factory.getObject();
         DataBinder binder = new DataBinder(target) {
 
@@ -170,8 +170,7 @@ public class YamlBindingTests {
                                 @SuppressWarnings("unchecked")
                                 Map<String, Object> existing = (Map<String, Object>) bw.getPropertyValue(base);
                                 nested = existing;
-                            }
-                            else {
+                            } else {
                                 bw.setPropertyValue(base, nested);
                             }
                             Map<String, Object> value = nested;
@@ -203,7 +202,7 @@ public class YamlBindingTests {
     }
 
     @Documented
-    @Target({ ElementType.TYPE })
+    @Target({ElementType.TYPE})
     @Retention(RUNTIME)
     @Constraint(validatedBy = OAuthConfigurationValidator.class)
     public @interface ValidOAuthConfiguration {
@@ -261,7 +260,7 @@ public class YamlBindingTests {
         }
 
         public static class OAuthConfigurationValidator implements
-                        ConstraintValidator<ValidOAuthConfiguration, OAuthConfiguration> {
+                ConstraintValidator<ValidOAuthConfiguration, OAuthConfiguration> {
 
             @Override
             public void initialize(ValidOAuthConfiguration constraintAnnotation) {
@@ -273,8 +272,8 @@ public class YamlBindingTests {
                 if (value.client != null && value.client.autoapprove != null) {
                     if (value.clients != null) {
                         context.buildConstraintViolationWithTemplate(
-                                        "Please use oauth.clients to specifiy autoapprove not client.autoapprove")
-                                        .addConstraintViolation();
+                                "Please use oauth.clients to specifiy autoapprove not client.autoapprove")
+                                .addConstraintViolation();
                         valid = false;
                     }
                 }
@@ -286,7 +285,7 @@ public class YamlBindingTests {
     }
 
     @Documented
-    @Target({ ElementType.FIELD })
+    @Target({ElementType.FIELD})
     @Retention(RUNTIME)
     @Constraint(validatedBy = RequiredKeysValidator.class)
     public @interface RequiredKeys {
@@ -316,7 +315,7 @@ public class YamlBindingTests {
             for (String key : requiredKeys) {
                 if (!value.containsKey(key)) {
                     context.buildConstraintViolationWithTemplate("Missing key ''" + key + "''")
-                                    .addConstraintViolation();
+                            .addConstraintViolation();
                     valid = false;
                 }
             }
@@ -327,7 +326,7 @@ public class YamlBindingTests {
 
     public static class TargetWithValidatedMap {
 
-        @RequiredKeys({ "foo", "baz" })
+        @RequiredKeys({"foo", "baz"})
         private Map<String, Object> info;
 
         public Map<String, Object> getInfo() {

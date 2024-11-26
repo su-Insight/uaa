@@ -43,42 +43,42 @@ public class GroupModifiedEvent extends AbstractUaaEvent {
 
     public static GroupModifiedEvent groupCreated(String group, String name, String[] members, String zoneId) {
         return new GroupModifiedEvent(
-            group,
-            name,
-            members,
-            AuditEventType.GroupCreatedEvent,
-            getContextAuthentication(),
-            zoneId);
+                group,
+                name,
+                members,
+                AuditEventType.GroupCreatedEvent,
+                getContextAuthentication(),
+                zoneId);
     }
 
     public static GroupModifiedEvent groupModified(String group, String name, String[] members, String zoneId) {
         return new GroupModifiedEvent(
-            group,
-            name,
-            members,
-            AuditEventType.GroupModifiedEvent,
-            getContextAuthentication(),
-            zoneId);
+                group,
+                name,
+                members,
+                AuditEventType.GroupModifiedEvent,
+                getContextAuthentication(),
+                zoneId);
     }
 
     public static GroupModifiedEvent groupDeleted(String group, String name, String[] members, String zoneId) {
         return new GroupModifiedEvent(
-            group,
-            name,
-            members,
-            AuditEventType.GroupDeletedEvent,
-            getContextAuthentication(),
-            zoneId);
+                group,
+                name,
+                members,
+                AuditEventType.GroupDeletedEvent,
+                getContextAuthentication(),
+                zoneId);
     }
 
     @Override
     public AuditEvent getAuditEvent() {
         String data = JsonUtils.writeValueAsString(new GroupInfo(groupName, members));
         return createAuditRecord(
-            groupId,
-            eventType,
-            getOrigin(getAuthentication()),
-            data);
+                groupId,
+                eventType,
+                getOrigin(getAuthentication()),
+                data);
     }
 
     public String getGroupId() {
@@ -136,9 +136,9 @@ public class GroupModifiedEvent extends AbstractUaaEvent {
         @Override
         public String toString() {
             return "GroupInfo{" +
-                "group='" + group + '\'' +
-                ", members=" + Arrays.toString(members) +
-                '}';
+                    "group='" + group + '\'' +
+                    ", members=" + Arrays.toString(members) +
+                    '}';
         }
     }
 }

@@ -33,7 +33,7 @@ public class ClientMetadataException extends UaaException {
         this.status = status;
     }
 
-    public ClientMetadataException(String message, HttpStatus status, Map<String,Object> extraInformation) {
+    public ClientMetadataException(String message, HttpStatus status, Map<String, Object> extraInformation) {
         super(message);
         this.status = status;
         this.extraInfo = extraInformation;

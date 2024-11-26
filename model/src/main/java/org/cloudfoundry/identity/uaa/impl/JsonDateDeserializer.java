@@ -41,7 +41,7 @@ public class JsonDateDeserializer extends JsonDeserializer<Date> {
         try {
             return new SimpleDateFormat(DATE_FORMATTER).parse(text);
         } catch (ParseException e) {
-            throw new JsonParseException("Could not parse date:"+ text, loc, e);
+            throw new JsonParseException("Could not parse date:" + text, loc, e);
         }
     }
 

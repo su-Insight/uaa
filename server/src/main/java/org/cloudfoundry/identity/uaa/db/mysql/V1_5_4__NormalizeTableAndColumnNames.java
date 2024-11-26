@@ -36,18 +36,18 @@ public class V1_5_4__NormalizeTableAndColumnNames extends BaseJavaMigration {
 
     // the system table `information_schema.columns` has columns like: table_name, column_name, column_type, extra, column_default, table_schema
     private String colQueryForMysql5 = "SELECT CONCAT(\n"
-                    +
-                    "'ALTER TABLE ', table_name, \n"
-                    +
-                    "' CHANGE ', column_name, ' ', \n"
-                    +
-                    "LOWER(column_name), ' ', column_type, ' ', extra,\n"
-                    +
-                    "CASE WHEN IS_NULLABLE = 'YES' THEN  ' NULL' ELSE ' NOT NULL' END, IF(column_default IS NULL, '', CONCAT(' DEFAULT ',column_default)), ';') AS line, table_name, column_name \n"
-                    +
-                    "FROM information_schema.columns\n" +
-                    "WHERE table_schema = 'uaa' \n" +
-                    "ORDER BY line";
+            +
+            "'ALTER TABLE ', table_name, \n"
+            +
+            "' CHANGE ', column_name, ' ', \n"
+            +
+            "LOWER(column_name), ' ', column_type, ' ', extra,\n"
+            +
+            "CASE WHEN IS_NULLABLE = 'YES' THEN  ' NULL' ELSE ' NOT NULL' END, IF(column_default IS NULL, '', CONCAT(' DEFAULT ',column_default)), ';') AS line, table_name, column_name \n"
+            +
+            "FROM information_schema.columns\n" +
+            "WHERE table_schema = 'uaa' \n" +
+            "ORDER BY line";
 
     private String colQueryTemplateForMysql8 = "SELECT CONCAT(\n"
             +

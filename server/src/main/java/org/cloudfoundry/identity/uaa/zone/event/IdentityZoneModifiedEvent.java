@@ -35,14 +35,14 @@ public class IdentityZoneModifiedEvent extends AbstractUaaEvent {
 
     @Override
     public AuditEvent getAuditEvent() {
-        IdentityZone zone = (IdentityZone)source;
+        IdentityZone zone = (IdentityZone) source;
         return createAuditRecord(
-            getSource().toString(),
-            eventType,
-            getOrigin(getAuthentication()),
-            String.format(IdentityZoneModifiedEvent.dataFormat,
-                          zone.getId(),
-                          zone.getSubdomain())
+                getSource().toString(),
+                eventType,
+                getOrigin(getAuthentication()),
+                String.format(IdentityZoneModifiedEvent.dataFormat,
+                        zone.getId(),
+                        zone.getSubdomain())
         );
     }
 

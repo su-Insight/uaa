@@ -120,11 +120,11 @@ class SamlAuthenticationMockMvcTests {
     @Test
     void sendAuthnRequestToIdpRedirectBindingMode() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
-                        get("/uaa/saml2/authenticate/%s".formatted("testsaml-redirect-binding"))
-                                .contextPath("/uaa")
-                                .header(HOST, "localhost:8080")
-                )
-                .andDo(print())
+                get("/uaa/saml2/authenticate/%s".formatted("testsaml-redirect-binding"))
+                        .contextPath("/uaa")
+                        .header(HOST, "localhost:8080")
+        )
+        .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
@@ -157,10 +157,10 @@ class SamlAuthenticationMockMvcTests {
         final String samlRequestMatch = "name=\"SAMLRequest\" value=\"";
 
         MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-post-binding"))
-                        .contextPath("/uaa")
-                        .header(HOST, "localhost:8080")
-                )
-                .andDo(print())
+                .contextPath("/uaa")
+                .header(HOST, "localhost:8080")
+        )
+        .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         content().string(containsString("name=\"SAMLRequest\"")))
@@ -200,10 +200,10 @@ class SamlAuthenticationMockMvcTests {
 
         // trigger saml login in the non-default zone
         MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-redirect-binding"))
-                        .contextPath("/uaa")
-                        .header(HOST, "%s.localhost:8080".formatted(spZone.getSubdomain()))
-                )
-                .andDo(print())
+                .contextPath("/uaa")
+                .header(HOST, "%s.localhost:8080".formatted(spZone.getSubdomain()))
+        )
+        .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
@@ -238,10 +238,10 @@ class SamlAuthenticationMockMvcTests {
 
         // trigger saml login in the non-default zone
         MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-redirect-binding"))
-                        .contextPath("/uaa")
-                        .header(HOST, "%s.localhost:8080".formatted(spZone.getSubdomain()))
-                )
-                .andDo(print())
+                .contextPath("/uaa")
+                .header(HOST, "%s.localhost:8080".formatted(spZone.getSubdomain()))
+        )
+        .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
@@ -271,10 +271,10 @@ class SamlAuthenticationMockMvcTests {
         final String samlRequestMatch = "name=\"SAMLRequest\" value=\"";
 
         MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-post-binding"))
-                        .contextPath("/uaa")
-                        .header(HOST, "%s.localhost:8080".formatted(spZone.getSubdomain()))
-                )
-                .andDo(print())
+                .contextPath("/uaa")
+                .header(HOST, "%s.localhost:8080".formatted(spZone.getSubdomain()))
+        )
+        .andDo(print())
                 .andExpectAll(
                         status().isOk(),
                         content().string(containsString("name=\"SAMLRequest\"")))
@@ -302,11 +302,11 @@ class SamlAuthenticationMockMvcTests {
 
         String encodedSamlResponse = serializedResponse(responseWithAssertions());
         mockMvc.perform(post("/uaa/saml/SSO/alias/%s".formatted("integration-saml-entity-id"))
-                        .contextPath("/uaa")
-                        .header(HOST, "localhost:8080")
-                        .param(SAML_RESPONSE, encodedSamlResponse)
-                )
-                .andDo(print())
+                .contextPath("/uaa")
+                .header(HOST, "localhost:8080")
+                .param(SAML_RESPONSE, encodedSamlResponse)
+        )
+        .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 // expect redirect to the Uaa Home Page: /uaa/
                 .andExpect(redirectedUrl("/uaa/"))
@@ -331,10 +331,10 @@ class SamlAuthenticationMockMvcTests {
 
     private String getSamlMetadata(String subdomain, String url) throws Exception {
         return mockMvc.perform(
-                        get(url)
-                                .header("Host", subdomain + ".localhost")
-                )
-                .andReturn().getResponse().getContentAsString();
+                get(url)
+                        .header("Host", subdomain + ".localhost")
+        )
+        .andReturn().getResponse().getContentAsString();
     }
 
     void createIdp() throws Exception {
@@ -397,10 +397,10 @@ class SamlAuthenticationMockMvcTests {
         @Test
         void unsignedAuthnRequestViaIdpRedirectBindingMode() throws Exception {
             MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-redirect-binding"))
-                            .contextPath("/uaa")
-                            .header(HOST, "localhost:8080")
-                    )
-                    .andDo(print())
+                    .contextPath("/uaa")
+                    .header(HOST, "localhost:8080")
+            )
+            .andDo(print())
                     .andExpect(status().is3xxRedirection())
                     .andReturn();
 
@@ -418,10 +418,10 @@ class SamlAuthenticationMockMvcTests {
             final String samlRequestMatch = "name=\"SAMLRequest\" value=\"";
 
             MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-post-binding"))
-                            .contextPath("/uaa")
-                            .header(HOST, "localhost:8080")
-                    )
-                    .andDo(print())
+                    .contextPath("/uaa")
+                    .header(HOST, "localhost:8080")
+            )
+            .andDo(print())
                     .andExpectAll(
                             status().isOk(),
                             content().string(containsString("name=\"SAMLRequest\"")))
@@ -452,12 +452,12 @@ class SamlAuthenticationMockMvcTests {
         response.setInResponseTo("incorrect");
         String encodedSamlResponse = serializedResponse(response);
         mockMvc.perform(post("/uaa/saml/SSO/alias/%s".formatted("integration-saml-entity-id"))
-                        .contextPath("/uaa")
-                        .header(HOST, "localhost:8080")
-                        .param(SAML_RESPONSE, encodedSamlResponse)
-                        .param(RELAY_STATE, "testsaml-post-binding")
-                )
-                .andDo(print())
+                .contextPath("/uaa")
+                .header(HOST, "localhost:8080")
+                .param(SAML_RESPONSE, encodedSamlResponse)
+                .param(RELAY_STATE, "testsaml-post-binding")
+        )
+        .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 // expect redirect to the Error Page: /uaa/saml_error, not the Uaa Home Page
                 .andExpect(redirectedUrl("/uaa/saml_error"))
@@ -478,11 +478,11 @@ class SamlAuthenticationMockMvcTests {
             response.setInResponseTo("incorrect");
             String encodedSamlResponse = serializedResponse(response);
             mockMvc.perform(post("/uaa/saml/SSO/alias/%s".formatted("integration-saml-entity-id"))
-                            .contextPath("/uaa")
-                            .header(HOST, "localhost:8080")
-                            .param(SAML_RESPONSE, encodedSamlResponse)
-                    )
-                    .andDo(print())
+                    .contextPath("/uaa")
+                    .header(HOST, "localhost:8080")
+                    .param(SAML_RESPONSE, encodedSamlResponse)
+            )
+            .andDo(print())
                     .andExpect(status().is3xxRedirection())
                     // expect redirect to the Uaa Home Page: /uaa/, not error
                     .andExpect(redirectedUrl("/uaa/"))
@@ -500,10 +500,10 @@ class SamlAuthenticationMockMvcTests {
         @Test
         void sendAuthnRequestToIdpRedirectBindingMode() throws Exception {
             MvcResult mvcResult = mockMvc.perform(get("/uaa/saml2/authenticate/%s".formatted("testsaml-redirect-binding"))
-                            .contextPath("/uaa")
-                            .header(HOST, "localhost:8080")
-                    )
-                    .andDo(print())
+                    .contextPath("/uaa")
+                    .header(HOST, "localhost:8080")
+            )
+            .andDo(print())
                     .andExpect(status().is3xxRedirection())
                     .andReturn();
 

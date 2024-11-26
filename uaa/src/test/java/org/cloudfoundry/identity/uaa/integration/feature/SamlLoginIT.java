@@ -583,7 +583,7 @@ public class SamlLoginIT {
     }
 
     protected void createClientAndSpecifyProvider(String clientId, IdentityProvider<SamlIdentityProviderDefinition> provider,
-                                                  String redirectUri) {
+            String redirectUri) {
 
         IntegrationTestUtils.getClientCredentialsTemplate(
                 IntegrationTestUtils.getClientCredentialsResource(baseUrl, new String[0], "identity", "identitysecret")

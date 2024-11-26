@@ -35,9 +35,9 @@ public class UserManagedAuthzApprovalHandler implements UserApprovalHandler {
     private final int approvalExpiryInMillis;
 
     public UserManagedAuthzApprovalHandler(
-        final @Qualifier("approvalStore") ApprovalStore approvalStore,
-        final @Qualifier("clientDetailsService") QueryableResourceManager<ClientDetails> clientDetailsService,
-        final @Qualifier("identityZoneManager") IdentityZoneManager identityZoneManager) {
+            final @Qualifier("approvalStore") ApprovalStore approvalStore,
+            final @Qualifier("clientDetailsService") QueryableResourceManager<ClientDetails> clientDetailsService,
+            final @Qualifier("identityZoneManager") IdentityZoneManager identityZoneManager) {
         this.approvalStore = approvalStore;
         this.clientDetailsService = clientDetailsService;
         this.identityZoneManager = identityZoneManager;

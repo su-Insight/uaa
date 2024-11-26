@@ -49,7 +49,7 @@ class LdapSkipCertificateMockMvcTests {
     @BeforeAll
     static void startLdapsServers() {
         ClassLoader classLoader = LdapSkipCertificateMockMvcTests.class.getClassLoader();
-        
+
         File expiredKeystore = new File(classLoader.getResource("certs/expired-self-signed-ldap-cert.jks").getFile());
         RandomValueStringGenerator generator = new RandomValueStringGenerator();
         LDAP_ROOT_DIRECTORY_EXPIRED = new File(System.getProperty("java.io.tmpdir"), generator.generate());
@@ -104,24 +104,24 @@ class LdapSkipCertificateMockMvcTests {
     @Test
     void testIgnoreServerCertificate() throws Exception {
         mockMvc.perform(post("/login.do").accept(TEXT_HTML_VALUE)
-            .with(cookieCsrf())
-            .with(new SetServerNameRequestPostProcessor(trustedCertZone.getIdentityZone().getSubdomain() + ".localhost"))
-            .param("username", "marissa2")
-            .param("password", LDAP))
-            .andExpect(status().isFound())
-            .andExpect(redirectedUrl("/"))
-            .andExpect(authenticated());
+                .with(cookieCsrf())
+                .with(new SetServerNameRequestPostProcessor(trustedCertZone.getIdentityZone().getSubdomain() + ".localhost"))
+                .param("username", "marissa2")
+                .param("password", LDAP))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(authenticated());
     }
 
     @Test
     void testIgnoreExpiredServerCertificate() throws Exception {
         mockMvc.perform(post("/login.do").accept(TEXT_HTML_VALUE)
-            .with(cookieCsrf())
-            .with(new SetServerNameRequestPostProcessor(trustedButExpiredCertZone.getIdentityZone().getSubdomain() + ".localhost"))
-            .param("username", "marissa2")
-            .param("password", LDAP))
-            .andExpect(status().isFound())
-            .andExpect(redirectedUrl("/"))
-            .andExpect(authenticated());
+                .with(cookieCsrf())
+                .with(new SetServerNameRequestPostProcessor(trustedButExpiredCertZone.getIdentityZone().getSubdomain() + ".localhost"))
+                .param("username", "marissa2")
+                .param("password", LDAP))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(authenticated());
     }
 }

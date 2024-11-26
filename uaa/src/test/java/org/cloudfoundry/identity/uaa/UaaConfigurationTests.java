@@ -27,7 +27,7 @@ import org.junit.Test;
 public class UaaConfigurationTests {
 
     private YamlConfigurationValidator<UaaConfiguration> validator = new YamlConfigurationValidator<UaaConfiguration>(
-                    new UaaConfiguration.UaaConfigConstructor());
+            new UaaConfiguration.UaaConfigConstructor());
 
     private void createValidator(final String yaml) {
         validator.setExceptionIfInvalid(true);
@@ -38,25 +38,25 @@ public class UaaConfigurationTests {
     @Test
     public void validYamlIsOk() throws Exception {
         createValidator(
-            "name: uaa\n" +
-            "issuer.uri: http://foo.com\n" +
-            "oauth:\n" +
-            "  clients:\n" +
-            "    cf:\n" +
-            "      id: cf\n" +
-            "      authorized-grant-types: implicit\n" +
-            "  user:\n" +
-            "    authorities:\n" +
-            "      - openid\n" +
-            "      - scim.me\n" +
-            "  openid:\n" +
-            "    fallbackToAuthcode: false");
+                "name: uaa\n" +
+                        "issuer.uri: http://foo.com\n" +
+                        "oauth:\n" +
+                        "  clients:\n" +
+                        "    cf:\n" +
+                        "      id: cf\n" +
+                        "      authorized-grant-types: implicit\n" +
+                        "  user:\n" +
+                        "    authorities:\n" +
+                        "      - openid\n" +
+                        "      - scim.me\n" +
+                        "  openid:\n" +
+                        "    fallbackToAuthcode: false");
     }
 
     @Test
     public void validClientIsOk() throws Exception {
         createValidator(
-        "oauth:\n" +
+                "oauth:\n" +
                         "  clients:\n" +
                         "    cf:\n" +
                         "      id: cf\n" +

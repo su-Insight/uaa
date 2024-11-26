@@ -136,10 +136,10 @@ public class LinkedMaskingMultiValueMapTests {
 
     @Test
     public void doNotPrintPasswordWhenArrayConstructorIsUsed() {
-        for (LinkedMaskingMultiValueMap<String,Object> map :
+        for (LinkedMaskingMultiValueMap<String, Object> map :
             Arrays.asList(
                 new LinkedMaskingMultiValueMap<>("password", "code"),
-                new LinkedMaskingMultiValueMap<>(new String[] {"password", "code"}))) {
+                new LinkedMaskingMultiValueMap<>(new String[]{"password", "code"}))) {
             map.add("password", "password-value");
             map.add("code", "code-value");
             String s = map.toString();
@@ -167,7 +167,7 @@ public class LinkedMaskingMultiValueMapTests {
         objectMap.add(objectMap, "value1");
         objectMap.add(objectMap, "value2");
         LinkedMaskingMultiValueMap<Object, Object> objectMap2 = new LinkedMaskingMultiValueMap<Object, Object>(
-                        "password");
+                "password");
         objectMap2.add(objectMap2, "value1");
         objectMap2.add(objectMap2, "value2");
         int hash1 = objectMap.hashCode();
@@ -181,7 +181,7 @@ public class LinkedMaskingMultiValueMapTests {
         objectMap.add("key1", objectMap);
 
         LinkedMaskingMultiValueMap<Object, Object> objectMap2 = new LinkedMaskingMultiValueMap<Object, Object>(
-                        "password");
+                "password");
         objectMap2.add("key1", "value1");
         objectMap2.add("key1", objectMap2);
 

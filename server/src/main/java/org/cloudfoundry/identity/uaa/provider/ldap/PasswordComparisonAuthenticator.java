@@ -81,7 +81,7 @@ public class PasswordComparisonAuthenticator extends AbstractLdapAuthenticator {
 
         if (logger.isDebugEnabled()) {
             logger.debug("Performing LDAP compare of password attribute '" + passwordAttributeName + "' for user '" +
-                            user.getDn() + "'");
+                    user.getDn() + "'");
         }
 
         if (isLocalCompare()) {
@@ -101,8 +101,8 @@ public class PasswordComparisonAuthenticator extends AbstractLdapAuthenticator {
         try {
             Attributes attributes = user.getAttributes();
             Attribute attr = attributes.get(getPasswordAttributeName());
-            if (attr.size()==0) {
-                throw new AuthenticationCredentialsNotFoundException("Missing "+getPasswordAttributeName()+" attribute.");
+            if (attr.size() == 0) {
+                throw new AuthenticationCredentialsNotFoundException("Missing " + getPasswordAttributeName() + " attribute.");
             }
             for (int i = 0; (attr != null) && (!match) && (i < attr.size()); i++) {
                 Object valObject = attr.get(i);
@@ -127,15 +127,15 @@ public class PasswordComparisonAuthenticator extends AbstractLdapAuthenticator {
     }
 
     public DirContextOperations searchAuthenticate(DirContextOperations user, byte[] passwordBytes,
-                    SpringSecurityLdapTemplate ldapTemplate) {
+            SpringSecurityLdapTemplate ldapTemplate) {
         if (logger.isDebugEnabled()) {
             logger.debug("Performing LDAP compare of password attribute '" + passwordAttributeName + "' for user '" +
-                            user.getDn() + "'");
+                    user.getDn() + "'");
         }
 
         if (!ldapTemplate.compare(user.getDn().toString(), passwordAttributeName, passwordBytes)) {
             throw new BadCredentialsException(messages.getMessage("PasswordComparisonAuthenticator.badCredentials",
-                            "Bad credentials"));
+                    "Bad credentials"));
         }
 
         return user;

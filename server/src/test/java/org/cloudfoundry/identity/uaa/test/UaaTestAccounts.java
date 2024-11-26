@@ -57,11 +57,11 @@ public class UaaTestAccounts implements TestAccounts {
 
     public static final String DEFAULT_PASSWORD = "koala";
     public static final String DEFAULT_USERNAME = "marissa";
-    
+
     public static final String CODE_CHALLENGE = "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM";
-    
+
     public static final String CODE_CHALLENGE_METHOD_S256 = "S256";
-    
+
     public static final String CODE_VERIFIER = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
 
     private Environment environment = TestProfileEnvironment.getEnvironment();
@@ -98,21 +98,21 @@ public class UaaTestAccounts implements TestAccounts {
     public UaaUser getUserWithRandomID() {
         String id = UUID.randomUUID().toString();
         UaaUser user = new UaaUser(id, getUserName(), getPassword(), getEmail(),
-                        UaaAuthority.USER_AUTHORITIES, "Test", "User", new Date(), new Date(), OriginKeys.UAA, "externalId", true,
-            IdentityZoneHolder.get().getId(), id, new Date());
+                UaaAuthority.USER_AUTHORITIES, "Test", "User", new Date(), new Date(), OriginKeys.UAA, "externalId", true,
+                IdentityZoneHolder.get().getId(), id, new Date());
         return user;
     }
 
     @Override
     public String getAdminClientId() {
         return environment.getProperty("UAA_ADMIN_CLIENT_ID",
-                        environment.getProperty("oauth.clients.admin.id", "admin"));
+                environment.getProperty("oauth.clients.admin.id", "admin"));
     }
 
     @Override
     public String getAdminClientSecret() {
         return environment.getProperty("UAA_ADMIN_CLIENT_SECRET",
-                        environment.getProperty("oauth.clients.admin.secret", "adminsecret"));
+                environment.getProperty("oauth.clients.admin.secret", "adminsecret"));
     }
 
     /**
@@ -139,7 +139,7 @@ public class UaaTestAccounts implements TestAccounts {
      */
     public static String getAuthorizationHeader(String username, String password) {
         String credentials =
-            String.format("%s:%s", URLEncoder.encode(username, StandardCharsets.UTF_8), URLEncoder.encode(password, StandardCharsets.UTF_8));
+                String.format("%s:%s", URLEncoder.encode(username, StandardCharsets.UTF_8), URLEncoder.encode(password, StandardCharsets.UTF_8));
         return String.format("Basic %s", new String(Base64.encode(credentials.getBytes())));
     }
 
@@ -154,18 +154,18 @@ public class UaaTestAccounts implements TestAccounts {
     }
 
     public ClientCredentialsResourceDetails getAdminClientCredentialsResource() {
-        return getClientCredentialsResource(new String[] { "clients.read", "clients.write", "clients.secret", "clients.admin" },
-                        getAdminClientId(), getAdminClientSecret());
+        return getClientCredentialsResource(new String[]{"clients.read", "clients.write", "clients.secret", "clients.admin"},
+                getAdminClientId(), getAdminClientSecret());
     }
 
     public ClientCredentialsResourceDetails getClientCredentialsResource(String prefix, String defaultClientId,
-                    String defaultClientSecret) {
-        return getClientCredentialsResource(prefix, new String[] { "scim.read", "scim.write", "password.write" },
-                        defaultClientId, defaultClientSecret);
+            String defaultClientSecret) {
+        return getClientCredentialsResource(prefix, new String[]{"scim.read", "scim.write", "password.write"},
+                defaultClientId, defaultClientSecret);
     }
 
     public ClientCredentialsResourceDetails getClientCredentialsResource(String prefix, String[] scope,
-                    String defaultClientId, String defaultClientSecret) {
+            String defaultClientId, String defaultClientSecret) {
         if (clientDetails.containsKey(prefix)) {
             return (ClientCredentialsResourceDetails) clientDetails.get(prefix);
         }
@@ -178,11 +178,11 @@ public class UaaTestAccounts implements TestAccounts {
 
     @Override
     public ClientCredentialsResourceDetails getClientCredentialsResource(String clientId, String clientSecret) {
-        return getClientCredentialsResource(new String[] { "cloud_controller.read" }, clientId, clientSecret);
+        return getClientCredentialsResource(new String[]{"cloud_controller.read"}, clientId, clientSecret);
     }
 
     public ClientCredentialsResourceDetails getClientCredentialsResource(String[] scope, String clientId,
-                    String clientSecret) {
+            String clientSecret) {
         ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
         resource.setClientId(clientId);
         resource.setClientSecret(clientSecret);
@@ -196,7 +196,7 @@ public class UaaTestAccounts implements TestAccounts {
     }
 
     public ImplicitResourceDetails getImplicitResource(String clientPrefix, String defaultClientId,
-                    String defaultRedirectUri) {
+            String defaultRedirectUri) {
         ImplicitResourceDetails resource = new ImplicitResourceDetails();
         String clientId = environment.getProperty(clientPrefix + ".id", defaultClientId);
         resource.setClientId(clientId);
@@ -209,13 +209,13 @@ public class UaaTestAccounts implements TestAccounts {
     }
 
     public ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResource(String clientPrefix,
-                    String defaultClientId, String defaultClientSecret, String username, String password) {
-        return getResourceOwnerPasswordResource(new String[] { "cloud_controller.read", "openid", "password.write" },
-                        clientPrefix, defaultClientId, defaultClientSecret, username, password);
+            String defaultClientId, String defaultClientSecret, String username, String password) {
+        return getResourceOwnerPasswordResource(new String[]{"cloud_controller.read", "openid", "password.write"},
+                clientPrefix, defaultClientId, defaultClientSecret, username, password);
     }
 
     public ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResource(String[] scope, String clientPrefix,
-                    String defaultClientId, String defaultClientSecret, String username, String password) {
+            String defaultClientId, String defaultClientSecret, String username, String password) {
         String clientId = environment.getProperty(clientPrefix + ".id", defaultClientId);
         String clientSecret = environment.getProperty(clientPrefix + ".secret", defaultClientSecret);
         return getResourceOwnerPasswordResource(scope, clientId, clientSecret, username, password);
@@ -223,7 +223,7 @@ public class UaaTestAccounts implements TestAccounts {
 
     @Override
     public ResourceOwnerPasswordResourceDetails getResourceOwnerPasswordResource(String[] scope, String clientId,
-                    String clientSecret, String username, String password) {
+            String clientSecret, String username, String password) {
 
         ResourceOwnerPasswordResourceDetails resource = new ResourceOwnerPasswordResourceDetails();
         resource.setClientId(clientId);
@@ -241,17 +241,17 @@ public class UaaTestAccounts implements TestAccounts {
         String clientId = environment.getProperty(prefix + ".id", defaults.getClientId());
         String clientSecret = environment.getProperty(prefix + ".secret", defaults.getClientSecret());
         String resourceIds = environment.getProperty(prefix + ".resource-ids",
-                        StringUtils.collectionToCommaDelimitedString(defaults.getResourceIds()));
+                StringUtils.collectionToCommaDelimitedString(defaults.getResourceIds()));
         String scopes = environment.getProperty(prefix + ".scope",
-                        StringUtils.collectionToCommaDelimitedString(defaults.getScope()));
+                StringUtils.collectionToCommaDelimitedString(defaults.getScope()));
         String grantTypes = environment.getProperty(prefix + ".authorized-grant-types",
-                        StringUtils.collectionToCommaDelimitedString(defaults.getAuthorizedGrantTypes()));
+                StringUtils.collectionToCommaDelimitedString(defaults.getAuthorizedGrantTypes()));
         String authorities = environment.getProperty(prefix + ".authorities",
-                        StringUtils.collectionToCommaDelimitedString(defaults.getAuthorities()));
+                StringUtils.collectionToCommaDelimitedString(defaults.getAuthorities()));
         String redirectUris = environment.getProperty(prefix + ".redirect-uri",
-                        StringUtils.collectionToCommaDelimitedString(defaults.getRegisteredRedirectUri()));
+                StringUtils.collectionToCommaDelimitedString(defaults.getRegisteredRedirectUri()));
         UaaClientDetails result = new UaaClientDetails(clientId, resourceIds, scopes, grantTypes, authorities,
-                        redirectUris);
+                redirectUris);
         result.setClientSecret(clientSecret);
         return result;
     }
@@ -264,7 +264,7 @@ public class UaaTestAccounts implements TestAccounts {
     @Override
     public ResourceOwnerPasswordResourceDetails getDefaultResourceOwnerPasswordResource() {
         return getResourceOwnerPasswordResource("oauth.clients.app", "app", "appclientsecret", getUserName(),
-                        getPassword());
+                getPassword());
     }
 
     @Override
@@ -306,7 +306,7 @@ public class UaaTestAccounts implements TestAccounts {
                 id,
                 username,
                 "password",
-                username+"@test.com",
+                username + "@test.com",
                 zoneId,
                 origin);
         return id;

@@ -262,7 +262,7 @@ class JdbcScimUserProvisioningTests {
                 "select count(*) from users where origin=? and identity_zone_id=?",
                 new Object[]{LOGIN_SERVER, IdentityZone.getUaaZoneId()},
                 Integer.class
-                ), is(1)
+        ), is(1)
         );
         addMembership(jdbcTemplate, created.getId(), created.getOrigin(), IdentityZone.getUaaZoneId());
         assertThat(jdbcTemplate.queryForObject("select count(*) from group_membership where member_id=?", new Object[]{created.getId()}, Integer.class), is(1));
@@ -294,7 +294,7 @@ class JdbcScimUserProvisioningTests {
         user2.setOrigin(originInactive);
         final ScimUser created2 = jdbcScimUserProvisioning.createUser(user2, "j7hyqpassX", currentIdentityZoneId);
 
-        final Function<String, List<String>> retrieveByScimFilter = (scimFilter) -> {
+        final Function<String, List<String>> retrieveByScimFilter = scimFilter -> {
             final List<ScimUser> result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
                     scimFilter,
                     "userName",
@@ -331,7 +331,7 @@ class JdbcScimUserProvisioningTests {
         SimpleSearchQueryConverter joinConverter = new SimpleSearchQueryConverter();
         joinConverter.setAttributeNameMapper(new JoinAttributeNameMapper("u"));
         jdbcScimUserProvisioning = new JdbcScimUserProvisioning(namedJdbcTemplate, notInUse, passwordEncoder, new IdentityZoneManagerImpl(),
-            new JdbcIdentityZoneProvisioning(jdbcTemplate), new SimpleSearchQueryConverter(), joinConverter, new TimeServiceImpl(), true);
+                new JdbcIdentityZoneProvisioning(jdbcTemplate), new SimpleSearchQueryConverter(), joinConverter, new TimeServiceImpl(), true);
         String originActive = randomString();
         addIdentityProvider(jdbcTemplate, currentIdentityZoneId, originActive, true);
 
@@ -351,10 +351,10 @@ class JdbcScimUserProvisioningTests {
         String scimFilter = String.format("id eq '%s' or username eq '%s' or origin eq '%s'", created1.getId(), created2.getUserName(), created2.getOrigin());
         jdbcScimUserProvisioning.setPageSize(0);
         List<ScimUser> result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
-            scimFilter,
-            null,
-            false,
-            currentIdentityZoneId
+                scimFilter,
+                null,
+                false,
+                currentIdentityZoneId
         );
         Assertions.assertThat(result).isNotNull();
         List<String> usernames = result.stream().map(ScimUser::getUserName).collect(toList());
@@ -364,19 +364,19 @@ class JdbcScimUserProvisioningTests {
         jdbcScimUserProvisioning.setPageSize(Integer.MAX_VALUE);
         jdbcScimUserProvisioning.setPageSize(0);
         jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
-            scimFilter,
-            null,
-            false,
-            currentIdentityZoneId
+                scimFilter,
+                null,
+                false,
+                currentIdentityZoneId
         );
         verify(notInUse, never()).createJdbcPagingList(anyString(), any(Map.class), any(RowMapper.class), any(Integer.class));
         // positive check, now with paging
         jdbcScimUserProvisioning.setPageSize(1);
         jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
-            scimFilter,
-            null,
-            false,
-            currentIdentityZoneId
+                scimFilter,
+                null,
+                false,
+                currentIdentityZoneId
         );
         verify(notInUse, times(1)).createJdbcPagingList(anyString(), any(Map.class), any(RowMapper.class), any(Integer.class));
     }
@@ -394,10 +394,10 @@ class JdbcScimUserProvisioningTests {
         // MYSQL default, no LOWER statement in query
         joinConverter.setDbCaseInsensitive(true);
         List<ScimUser>  result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
-            scimFilter,
-            null,
-            false,
-            currentIdentityZoneId
+                scimFilter,
+                null,
+                false,
+                currentIdentityZoneId
         );
         Assertions.assertThat(result).isNotNull();
         verify(mockedJdbcTemplate).query(contains("u.id = "), any(Map.class), any(RowMapper.class));
@@ -405,10 +405,10 @@ class JdbcScimUserProvisioningTests {
         // POSTGRESQL and HSQL default
         joinConverter.setDbCaseInsensitive(false);
         result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
-            scimFilter,
-            null,
-            false,
-            currentIdentityZoneId
+                scimFilter,
+                null,
+                false,
+                currentIdentityZoneId
         );
         Assertions.assertThat(result).isNotNull();
         verify(notInUse, never()).createJdbcPagingList(anyString(), any(Map.class), any(RowMapper.class), any(Integer.class));
@@ -433,7 +433,7 @@ class JdbcScimUserProvisioningTests {
         user2.setOrigin(originInactive);
         final ScimUser created2 = jdbcScimUserProvisioning.createUser(user2, "j7hyqpassX", currentIdentityZoneId);
 
-        final Function<String, List<String>> retrieveByScimFilter = (scimFilter) -> {
+        final Function<String, List<String>> retrieveByScimFilter = scimFilter -> {
             final List<ScimUser> result = jdbcScimUserProvisioning.query(
                     scimFilter,
                     "userName",
@@ -733,7 +733,7 @@ class JdbcScimUserProvisioningTests {
 
     @Test
     void validateExternalIdDuringCreateAndUpdate() {
-        final String origin = "test-"+randomString();
+        final String origin = "test-" + randomString();
         addIdentityProvider(jdbcTemplate, IdentityZone.getUaaZoneId(), origin);
         final String externalId = "testId";
         final ScimUser user = new ScimUser(null, "jo@foo.com", "Jo", "User");
@@ -1440,28 +1440,28 @@ class JdbcScimUserProvisioningTests {
         scimUser.setOrigin(OriginKeys.UAA);
         idzManager.getCurrentIdentityZone().getConfig().getUserConfig().setMaxUsers(10);
         assertThrowsWithMessageThat(
-            InvalidScimResourceException.class,
-            () -> {
-                for (int i = 1; i < 12; i++) {
-                    scimUser.setId("user-id-" + i);
-                    scimUser.setUserName("user" +i+ "@example.com");
-                    scimUser.setPassword(randomString());
-                    jdbcScimUserProvisioning.create(scimUser, currentIdentityZoneId);
-                }
-            },
-            containsString("The maximum allowed numbers of users: 10 is reached already in Identity Zone")
+                InvalidScimResourceException.class,
+                () -> {
+                    for (int i = 1; i < 12; i++) {
+                        scimUser.setId("user-id-" + i);
+                        scimUser.setUserName("user" + i + "@example.com");
+                        scimUser.setPassword(randomString());
+                        jdbcScimUserProvisioning.create(scimUser, currentIdentityZoneId);
+                    }
+                },
+                containsString("The maximum allowed numbers of users: 10 is reached already in Identity Zone")
         );
         idzManager.getCurrentIdentityZone().getConfig().getUserConfig().setMaxUsers(-1);
     }
 
     @Test
     void canCreateUserWithValidOrigin() {
-        String validOrigin = "validOrigin-"+randomString();
+        String validOrigin = "validOrigin-" + randomString();
         addIdentityProvider(jdbcTemplate, currentIdentityZoneId, validOrigin);
-        String userId = "user-"+randomString();
+        String userId = "user-" + randomString();
         ScimUser scimUser = new ScimUser(userId, "user@example.com", "User", "Example");
         ScimUser.Email email = new ScimUser.Email();
-        email.setValue(userId+"@example.com");
+        email.setValue(userId + "@example.com");
         scimUser.setEmails(singletonList(email));
         scimUser.setPassword(randomString());
         scimUser.setOrigin(validOrigin);
@@ -1477,29 +1477,29 @@ class JdbcScimUserProvisioningTests {
 
     @Test
     void cannotCreateUserWithInvalidOrigin() {
-        String invalidOrigin = "invalidOrigin-"+randomString();
-        String userId = "user-"+randomString();
+        String invalidOrigin = "invalidOrigin-" + randomString();
+        String userId = "user-" + randomString();
         ScimUser scimUser = new ScimUser(userId, "user@example.com", "User", "Example");
         ScimUser.Email email = new ScimUser.Email();
-        email.setValue(userId+"@example.com");
+        email.setValue(userId + "@example.com");
         scimUser.setEmails(singletonList(email));
         scimUser.setPassword(randomString());
         scimUser.setOrigin(invalidOrigin);
         idzManager.getCurrentIdentityZone().getConfig().getUserConfig().setCheckOriginEnabled(true);
         assertThrowsWithMessageThat(
-            InvalidScimResourceException.class,
-            () -> jdbcScimUserProvisioning.create(scimUser, currentIdentityZoneId),
-            containsString("Invalid origin")
+                InvalidScimResourceException.class,
+                () -> jdbcScimUserProvisioning.create(scimUser, currentIdentityZoneId),
+                containsString("Invalid origin")
         );
         idzManager.getCurrentIdentityZone().getConfig().getUserConfig().setCheckOriginEnabled(false);
     }
 
     @Test
     void cannotCreateUserWithInvalidIdentityZone() {
-        String userId = "user-"+randomString();
+        String userId = "user-" + randomString();
         ScimUser scimUser = new ScimUser(userId, "user@example.com", "User", "Example");
         ScimUser.Email email = new ScimUser.Email();
-        email.setValue(userId+"@example.com");
+        email.setValue(userId + "@example.com");
         scimUser.setEmails(singletonList(email));
         scimUser.setPassword(randomString());
 
@@ -1509,30 +1509,30 @@ class JdbcScimUserProvisioningTests {
                 .thenThrow(new ZoneDoesNotExistsException("zone does not exist"));
 
         assertThrowsWithMessageThat(
-            InvalidScimResourceException.class,
-            () -> jdbcScimUserProvisioning.create(scimUser, invalidZoneId),
-            containsString("Invalid identity zone id")
+                InvalidScimResourceException.class,
+                () -> jdbcScimUserProvisioning.create(scimUser, invalidZoneId),
+                containsString("Invalid identity zone id")
         );
     }
 
     @Test
     void cannotUpdateUserWithWrongIdentityZone() {
-        String userId = "user-"+randomString();
+        String userId = "user-" + randomString();
         ScimUser scimUser = new ScimUser(userId, "user@example.com", "User", "Example");
         ScimUser.Email email = new ScimUser.Email();
-        email.setValue(userId+"@example.com");
+        email.setValue(userId + "@example.com");
         scimUser.setEmails(singletonList(email));
         scimUser.setPassword(randomString());
-        scimUser.setZoneId("wrongZone-"+randomString());
+        scimUser.setZoneId("wrongZone-" + randomString());
         try {
             jdbcScimUserProvisioning.create(scimUser, currentIdentityZoneId);
         } catch (Exception e) {
             fail("Can't create test user");
         }
         assertThrowsWithMessageThat(
-            ScimResourceNotFoundException.class,
-            () -> jdbcScimUserProvisioning.update(userId, scimUser, currentIdentityZoneId),
-            containsString("does not exist")
+                ScimResourceNotFoundException.class,
+                () -> jdbcScimUserProvisioning.update(userId, scimUser, currentIdentityZoneId),
+                containsString("does not exist")
         );
     }
 
@@ -1616,9 +1616,9 @@ class JdbcScimUserProvisioningTests {
     }
 
     private static void addMembership(final JdbcTemplate jdbcTemplate,
-                                      final String userId,
-                                      final String origin,
-                                      final String zoneId) {
+            final String userId,
+            final String origin,
+            final String zoneId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         jdbcTemplate.update(INSERT_MEMBERSHIP, userId, userId, "USER", "authorities", timestamp, origin, zoneId);
     }

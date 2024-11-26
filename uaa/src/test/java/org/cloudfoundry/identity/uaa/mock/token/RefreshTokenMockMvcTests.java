@@ -190,18 +190,19 @@ class RefreshTokenMockMvcTests extends AbstractTokenMockMvcTests {
                         .param(OAuth2Utils.CLIENT_ID, client.getClientId()))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        String accessToken = (String)JsonUtils.readValue(tokenResponse, new TypeReference<Map<String, Object>>() {}).get("access_token");
+        String accessToken = (String) JsonUtils.readValue(tokenResponse, new TypeReference<Map<String, Object>>() {
+        }).get("access_token");
 
         mockMvc.perform(
-            post("/oauth/token")
-                    .header("Host", getZoneHostUrl(zone))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                    .param(OAuth2Utils.GRANT_TYPE, REFRESH_TOKEN)
-                    .param(REFRESH_TOKEN, accessToken)
-                    .param("client_secret", SECRET)
-                    .param(OAuth2Utils.CLIENT_ID, client.getClientId()))
-            .andExpect(status().isUnauthorized());
+                post("/oauth/token")
+                        .header("Host", getZoneHostUrl(zone))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param(OAuth2Utils.GRANT_TYPE, REFRESH_TOKEN)
+                        .param(REFRESH_TOKEN, accessToken)
+                        .param("client_secret", SECRET)
+                        .param(OAuth2Utils.CLIENT_ID, client.getClientId()))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -219,7 +220,8 @@ class RefreshTokenMockMvcTests extends AbstractTokenMockMvcTests {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
+        });
         String accessToken = (String) bodyMap.get("access_token");
 
         mockMvc.perform(
@@ -246,22 +248,23 @@ class RefreshTokenMockMvcTests extends AbstractTokenMockMvcTests {
                 .param("client_secret", SECRET)
                 .param("username", user.getUserName())
                 .param("password", SECRET))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
 
-        Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
+        });
         String idToken = (String) bodyMap.get("id_token");
 
         mockMvc.perform(
-            post("/oauth/token")
-                .header("Host", getZoneHostUrl(zone))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param(OAuth2Utils.GRANT_TYPE, REFRESH_TOKEN)
-                .param(REFRESH_TOKEN, idToken)
-                .param("client_secret", SECRET)
-                .param(OAuth2Utils.CLIENT_ID, client.getClientId()))
-            .andExpect(status().isUnauthorized());
+                post("/oauth/token")
+                        .header("Host", getZoneHostUrl(zone))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param(OAuth2Utils.GRANT_TYPE, REFRESH_TOKEN)
+                        .param(REFRESH_TOKEN, idToken)
+                        .param("client_secret", SECRET)
+                        .param(OAuth2Utils.CLIENT_ID, client.getClientId()))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -456,8 +459,8 @@ class RefreshTokenMockMvcTests extends AbstractTokenMockMvcTests {
         when(timeService.getCurrentTimeMillis()).thenCallRealMethod().thenReturn(notYetExpiredTimeMillis);
         MockHttpServletResponse refreshResponse = useRefreshToken(firstRefreshToken, client.getClientId(), SECRET, getZoneHostUrl(zone));
         String secondRefreshToken = JsonUtils.readValue(refreshResponse.getContentAsString(), CompositeToken.class)
-                                                .getRefreshToken()
-                                                .getValue();
+                .getRefreshToken()
+                .getValue();
         assertEquals(HttpStatus.SC_OK, refreshResponse.getStatus());
 
         long expiredTimeMillis = firstGrantMillis + refreshTokenValiditySeconds * 1000L + 1L;
@@ -506,16 +509,16 @@ class RefreshTokenMockMvcTests extends AbstractTokenMockMvcTests {
         String refreshToken = getJwtRefreshToken(client.getClientId(), SECRET, user.getUserName(), SECRET, "localhost");
 
         mockMvc.perform(
-            post("/oauth/token")
-                    .header("Host", "localhost")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                    .param(OAuth2Utils.GRANT_TYPE, REFRESH_TOKEN)
-                    .param(REFRESH_TOKEN, refreshToken)
-                    .param("client_secret", SECRET)
-                    .param(OAuth2Utils.CLIENT_ID, clientWithoutRefresh.getClientId()))
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.error_description").value("Unauthorized grant type"));
+                post("/oauth/token")
+                        .header("Host", "localhost")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param(OAuth2Utils.GRANT_TYPE, REFRESH_TOKEN)
+                        .param(REFRESH_TOKEN, refreshToken)
+                        .param("client_secret", SECRET)
+                        .param(OAuth2Utils.CLIENT_ID, clientWithoutRefresh.getClientId()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error_description").value("Unauthorized grant type"));
     }
 
     int countTokens(String clientId, String userId) {
@@ -559,7 +562,7 @@ class RefreshTokenMockMvcTests extends AbstractTokenMockMvcTests {
                         .param(REQUEST_TOKEN_FORMAT, tokenFormat)
                         .param(OAuth2Utils.CLIENT_ID, clientId)
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         return JsonUtils.readValue(response, CompositeToken.class);

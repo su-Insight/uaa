@@ -67,13 +67,14 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
         };
         loggedInCsrfEntryPoint.setUseForward(true);
     }
+
     public CsrfAwareEntryPointAndDeniedHandler(String redirectCsrf, String redirectNotLoggedIn) {
         this("/login", redirectCsrf, redirectNotLoggedIn);
     }
 
     protected boolean isUserLoggedIn() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth!=null && auth.isAuthenticated() && auth.getPrincipal() instanceof UaaPrincipal;
+        return auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof UaaPrincipal;
     }
 
     protected boolean wantJson(HttpServletRequest request) {
@@ -91,11 +92,11 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
     }
 
     protected void internalHandle(HttpServletRequest request,
-                                  HttpServletResponse response,
-                                  Exception exception) throws IOException, ServletException {
-        AuthenticationException authEx = (exception instanceof AuthenticationException) ?
-            (AuthenticationException)exception :
-            new InternalAuthenticationServiceException("Access denied.", exception);
+            HttpServletResponse response,
+            Exception exception) throws IOException, ServletException {
+        AuthenticationException authEx = exception instanceof AuthenticationException ?
+                (AuthenticationException) exception :
+                new InternalAuthenticationServiceException("Access denied.", exception);
 
         if (wantJson(request)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -121,9 +122,9 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
 
     @Override
     public void handle(HttpServletRequest request,
-                       HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException,
-        ServletException {
+            HttpServletResponse response,
+            AccessDeniedException accessDeniedException) throws IOException,
+            ServletException {
         request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
         //if we get any other access denied we end up here
         internalHandle(request, response, accessDeniedException);

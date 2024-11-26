@@ -254,7 +254,7 @@ public class ScimGroupEndpointsIntegrationTests {
             assertTrue(e.getStatusCode().is4xxClientError());
             assertEquals(400, e.getRawStatusCode());
             assertThat(e.getMessage(),
-                containsString("The group with displayName: "+ g1.getDisplayName() +" is not allowed in Identity Zone " + testZoneId));
+                    containsString("The group with displayName: " + g1.getDisplayName() + " is not allowed in Identity Zone " + testZoneId));
         } finally {
             IntegrationTestUtils.deleteZone(serverRunning.getBaseUrl(), testZoneId, adminToken);
         }
@@ -585,7 +585,7 @@ public class ScimGroupEndpointsIntegrationTests {
     }
 
     private OAuth2AccessToken getAccessTokenWithPassword(String clientId, String clientSecret, String username,
-                                                         String password) {
+            String password) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
         formData.add("client_id", clientId);
         formData.add("grant_type", "password");

@@ -66,10 +66,10 @@ public class FormLoginIntegrationTests {
     @Before
     public void createHttpClient() {
         httpclient = HttpClients.custom()
-            .setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build())
-            .setDefaultHeaders(headers)
-            .setDefaultCookieStore(cookieStore)
-            .build();
+                .setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build())
+                .setDefaultHeaders(headers)
+                .setDefaultCookieStore(cookieStore)
+                .build();
     }
 
     @After
@@ -83,7 +83,7 @@ public class FormLoginIntegrationTests {
         String location = serverRunning.getBaseUrl() + "/";
         HttpGet httpget = new HttpGet(location);
         httpget.setConfig(
-            RequestConfig.custom().setRedirectsEnabled(false).build()
+                RequestConfig.custom().setRedirectsEnabled(false).build()
         );
         CloseableHttpResponse response = httpclient.execute(httpget);
         assertEquals(FOUND.value(), response.getStatusLine().getStatusCode());
@@ -114,11 +114,11 @@ public class FormLoginIntegrationTests {
         String csrf = IntegrationTestUtils.extractCookieCsrf(body);
 
         HttpUriRequest loginPost = RequestBuilder.post()
-            .setUri(serverRunning.getBaseUrl() + "/login.do")
-            .addParameter("username",testAccounts.getUserName())
-            .addParameter("password",testAccounts.getPassword())
-            .addParameter(CookieBasedCsrfTokenRepository.DEFAULT_CSRF_COOKIE_NAME, csrf)
-            .build();
+                .setUri(serverRunning.getBaseUrl() + "/login.do")
+                .addParameter("username", testAccounts.getUserName())
+                .addParameter("password", testAccounts.getPassword())
+                .addParameter(CookieBasedCsrfTokenRepository.DEFAULT_CSRF_COOKIE_NAME, csrf)
+                .build();
 
         response = httpclient.execute(loginPost);
         assertEquals(FOUND.value(), response.getStatusLine().getStatusCode());

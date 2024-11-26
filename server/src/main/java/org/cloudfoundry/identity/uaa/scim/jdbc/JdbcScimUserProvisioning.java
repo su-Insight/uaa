@@ -73,7 +73,7 @@ import org.springframework.util.Assert;
 
 @Component("scimUserProvisioning")
 public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
-    implements ScimUserProvisioning, ResourceMonitor<ScimUser>, SystemDeletable {
+        implements ScimUserProvisioning, ResourceMonitor<ScimUser>, SystemDeletable {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -85,7 +85,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     public static final String USER_FIELDS = "id,version,created,lastModified,username,email,givenName,familyName,active,phoneNumber,verified,origin,external_id,identity_zone_id,alias_id,alias_zid,salt,passwd_lastmodified,last_logon_success_time,previous_logon_success_time";
 
     public static final String CREATE_USER_SQL = "insert into users (" + USER_FIELDS
-                    + ",password) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + ",password) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     public static final String UPDATE_USER_SQL = "update users set version=?, lastModified=?, username=?, email=?, givenName=?, familyName=?, active=?, phoneNumber=?, verified=?, origin=?, external_id=?, salt=?, alias_id=?, alias_zid=? where id=? and version=? and identity_zone_id=?";
 
@@ -178,7 +178,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public List<ScimUser> retrieveByUsernameAndZone(String username, String zoneId) {
-        return jdbcTemplate.query(USER_BY_USERNAME_AND_ZONE_QUERY , mapper, username, zoneId);
+        return jdbcTemplate.query(USER_BY_USERNAME_AND_ZONE_QUERY, mapper, username, zoneId);
     }
 
     @Override
@@ -207,7 +207,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
                 .map(field -> joinName + "." + field)
                 .collect(joining(", "));
         String joinStatement = String.format(
-            "%s join identity_provider idp on %s.origin = idp.origin_key and %s.identity_zone_id = idp.identity_zone_id", joinName, joinName, joinName);
+                "%s join identity_provider idp on %s.origin = idp.origin_key and %s.identity_zone_id = idp.identity_zone_id", joinName, joinName, joinName);
         final String sql = String.format(
                 "select %s from users %s where %s",
                 userFieldsWithPrefix,
@@ -224,7 +224,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public List<ScimUser> retrieveByUsernameAndOriginAndZone(String username, String origin, String zoneId) {
-        return jdbcTemplate.query(USER_BY_USERNAME_AND_ORIGIN_AND_ZONE_QUERY , mapper, username, origin, zoneId);
+        return jdbcTemplate.query(USER_BY_USERNAME_AND_ORIGIN_AND_ZONE_QUERY, mapper, username, origin, zoneId);
     }
 
     @Override
@@ -279,7 +279,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
                 ps.setString(10, phoneNumber);
                 ps.setBoolean(11, user.isVerified());
                 ps.setString(12, origin);
-                ps.setString(13, hasText(user.getExternalId())?user.getExternalId():null);
+                ps.setString(13, hasText(user.getExternalId()) ? user.getExternalId() : null);
                 ps.setString(14, identityZoneId);
                 ps.setString(15, hasText(user.getAliasId()) ? user.getAliasId() : null);
                 ps.setString(16, hasText(user.getAliasZid()) ? user.getAliasZid() : null);
@@ -292,7 +292,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             });
         } catch (DuplicateKeyException e) {
             String userOrigin = hasText(user.getOrigin()) ? user.getOrigin() : OriginKeys.UAA;
-            Map<String,Object> userDetails = Collections.singletonMap("origin", userOrigin);
+            Map<String, Object> userDetails = Collections.singletonMap("origin", userOrigin);
             throw new ScimResourceAlreadyExistsException("Username already in use: " + user.getUserName(), userDetails);
         }
         return retrieve(id, zoneId);
@@ -306,7 +306,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public ScimUser createUser(ScimUser user, final String password, String zoneId) throws InvalidPasswordException,
-                    InvalidScimResourceException {
+            InvalidScimResourceException {
         user.setPassword(passwordEncoder.encode(password));
         return create(user, zoneId);
     }
@@ -347,7 +347,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             ps.setString(pos++, extractPhoneNumber(user));
             ps.setBoolean(pos++, user.isVerified());
             ps.setString(pos++, origin);
-            ps.setString(pos++, hasText(user.getExternalId())?user.getExternalId():null);
+            ps.setString(pos++, hasText(user.getExternalId()) ? user.getExternalId() : null);
             ps.setString(pos++, user.getSalt());
             ps.setString(pos++, user.getAliasId());
             ps.setString(pos++, user.getAliasZid());
@@ -360,8 +360,8 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         ScimUser result = retrieve(id, zoneId);
         if (updated == 0) {
             throw new OptimisticLockingFailureException(String.format(
-                            "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", id,
-                            result.getVersion(), user.getVersion()));
+                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", id,
+                    result.getVersion(), user.getVersion()));
         }
         if (updated > 1) {
             throw new IncorrectResultSizeDataAccessException(1);
@@ -371,7 +371,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public void changePassword(final String id, String oldPassword, final String newPassword, String zoneId)
-                    throws ScimResourceNotFoundException {
+            throws ScimResourceNotFoundException {
         if (oldPassword != null && !checkPasswordMatches(id, oldPassword, zoneId)) {
             throw new BadCredentialsException("Old password is incorrect");
         }
@@ -400,12 +400,12 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         String currentPassword;
         try {
             currentPassword =
-                jdbcTemplate.queryForObject(
-                    READ_PASSWORD_SQL,
-                    new Object[] { id, zoneId},
-                    new int[] { VARCHAR, VARCHAR },
-                    String.class
-                );
+                    jdbcTemplate.queryForObject(
+                            READ_PASSWORD_SQL,
+                            new Object[]{id, zoneId},
+                            new int[]{VARCHAR, VARCHAR},
+                            String.class
+                    );
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new ScimResourceNotFoundException("User " + id + " does not exist");
         }
@@ -447,8 +447,8 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         }
         if (updated == 0) {
             throw new OptimisticLockingFailureException(String.format(
-                            "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
-                            user.getVersion(), version));
+                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
+                    user.getVersion(), version));
         }
         if (updated > 1) {
             throw new IncorrectResultSizeDataAccessException(1);
@@ -459,21 +459,20 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public ScimUser verifyUser(String id, int version, String zoneId) throws ScimResourceNotFoundException,
-                    InvalidScimResourceException {
+            InvalidScimResourceException {
         logger.debug("Verifying user: " + id);
         int updated;
         if (version < 0) {
             // Ignore
             updated = jdbcTemplate.update(VERIFY_USER_SQL, true, id, zoneId);
-        }
-        else {
+        } else {
             updated = jdbcTemplate.update(VERIFY_USER_SQL + " and version=?", true, id, zoneId, version);
         }
         ScimUser user = retrieve(id, zoneId);
         if (updated == 0) {
             throw new OptimisticLockingFailureException(String.format(
-                            "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
-                            user.getVersion(), version));
+                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
+                    user.getVersion(), version));
         }
         if (updated > 1) {
             throw new IncorrectResultSizeDataAccessException(1);
@@ -485,8 +484,8 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         int updated = deleteUser(user.getId(), version, zoneId);
         if (updated == 0) {
             throw new OptimisticLockingFailureException(String.format(
-                "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
-                version, version));
+                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
+                    version, version));
         }
         return user;
     }
@@ -497,8 +496,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
         if (version < 0) {
             updated = jdbcTemplate.update(DELETE_USER_SQL, userId, zoneId);
-        }
-        else {
+        } else {
             updated = jdbcTemplate.update(DELETE_USER_SQL + " and version=?", userId, zoneId, version);
         }
         return updated;
@@ -553,7 +551,9 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             meta.setLastModified(lastModified);
             user.setMeta(meta);
             user.setUserName(userName);
-            if (hasText(email)) { user.addEmail(email); }
+            if (hasText(email)) {
+                user.addEmail(email);
+            }
             if (phoneNumber != null) {
                 user.addPhoneNumber(phoneNumber);
             }
@@ -578,7 +578,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public int getTotalCount() {
-        Integer count = jdbcTemplate.queryForObject("select count(*) from users",Integer.class);
+        Integer count = jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
         if (count == null) {
             return 0;
         }
@@ -587,7 +587,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     public int getUsersCountForZone(String zoneId) {
         Integer count = jdbcTemplate.queryForObject(USER_COUNT_BY_ZONE, Integer.class, zoneId);
-        return (count != null) ? count : 0;
+        return count != null ? count : 0;
     }
 
     @Override
@@ -603,9 +603,9 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     private UserConfig getUserConfig(String zoneId) throws InvalidScimResourceException {
         try {
             IdentityZone currentZone = identityZoneManager.getCurrentIdentityZone();
-            return (currentZone.getId().equals(zoneId)) ?
-                currentZone.getConfig().getUserConfig() :
-                jdbcIdentityZoneProvisioning.retrieve(zoneId).getConfig().getUserConfig();
+            return currentZone.getId().equals(zoneId) ?
+                    currentZone.getConfig().getUserConfig() :
+                    jdbcIdentityZoneProvisioning.retrieve(zoneId).getConfig().getUserConfig();
         } catch (ZoneDoesNotExistsException e) {
             throw new InvalidScimResourceException(String.format("Invalid identity zone id: %s", zoneId));
         }
@@ -613,11 +613,11 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     private void validateUserLimit(String zoneId, UserConfig userConfig) {
         // get current limit of allowed users
-        long maxAllowedUsers = (userConfig == null) ? -1 : userConfig.getMaxUsers();
+        long maxAllowedUsers = userConfig == null ? -1 : userConfig.getMaxUsers();
         // check, if there is a limit (>0), that the limit is not reached with one user more (getUsersCountForZone + 1)
         if (maxAllowedUsers > 0 && maxAllowedUsers < (getUsersCountForZone(zoneId) + 1)) {
             throw new InvalidScimResourceException("The maximum allowed numbers of users: " + maxAllowedUsers
-                + " is reached already in Identity Zone " + zoneId);
+                    + " is reached already in Identity Zone " + zoneId);
         }
     }
 

@@ -26,8 +26,8 @@ public class Prompt {
 
     @JsonCreator
     public Prompt(@JsonProperty("name") String name,
-                  @JsonProperty("type") String type,
-                  @JsonProperty("text") String text) {
+            @JsonProperty("type") String type,
+            @JsonProperty("text") String text) {
         this.name = name;
         this.type = type;
         this.text = text;
@@ -47,7 +47,7 @@ public class Prompt {
 
     @JsonIgnore
     public String[] getDetails() {
-        return new String[] { type, text };
+        return new String[]{type, text};
     }
 
     public static Prompt valueOf(String text) {

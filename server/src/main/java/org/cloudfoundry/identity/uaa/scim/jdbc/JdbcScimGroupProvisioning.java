@@ -111,8 +111,8 @@ public class JdbcScimGroupProvisioning extends AbstractQueryable<ScimGroup>
         );
 
         deleteGroupSqlByIdZoneVersion = String.format(
-            "delete from %s where id=? and identity_zone_id=? and version=?",
-            quotedGroupsTableName
+                "delete from %s where id=? and identity_zone_id=? and version=?",
+                quotedGroupsTableName
         );
 
         deleteGroupByZone = String.format(
@@ -258,9 +258,9 @@ public class JdbcScimGroupProvisioning extends AbstractQueryable<ScimGroup>
         Set<String> zoneAllowedGroups = null; // default: all groups allowed
         try {
             IdentityZone currentZone = IdentityZoneHolder.get();
-            zoneAllowedGroups = (currentZone.getId().equals(zoneId)) ?
-                currentZone.getConfig().getUserConfig().resultingAllowedGroups() :
-                jdbcIdentityZoneProvisioning.retrieve(zoneId).getConfig().getUserConfig().resultingAllowedGroups();
+            zoneAllowedGroups = currentZone.getId().equals(zoneId) ?
+                    currentZone.getConfig().getUserConfig().resultingAllowedGroups() :
+                    jdbcIdentityZoneProvisioning.retrieve(zoneId).getConfig().getUserConfig().resultingAllowedGroups();
         } catch (ZoneDoesNotExistsException e) {
             logger.debug("could not retrieve identity zone with id: {}", zoneId);
         }
@@ -377,7 +377,7 @@ public class JdbcScimGroupProvisioning extends AbstractQueryable<ScimGroup>
         Set<String> allowedGroups = getAllowedUserGroups(zoneId);
         if ((allowedGroups != null) && (!allowedGroups.contains(group.getDisplayName()))) {
             throw new InvalidScimResourceException("The group with displayName: " + group.getDisplayName()
-                + " is not allowed in Identity Zone " + zoneId);
+                    + " is not allowed in Identity Zone " + zoneId);
         }
     }
 

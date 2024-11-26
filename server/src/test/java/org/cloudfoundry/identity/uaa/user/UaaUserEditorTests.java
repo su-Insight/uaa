@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 public class UaaUserEditorTests {
     private static UaaTestAccounts testAccounts = UaaTestAccounts.standard(null);
-    
+
     private static String unm = testAccounts.getUserName();
     private static String pwd = testAccounts.getPassword();
     private static String email = "marissa@test.org";
@@ -95,7 +95,7 @@ public class UaaUserEditorTests {
     }
 
     private void validate(UaaUser user, String expectedUnm, String expectedPwd, String expectedEmail,
-                    String expectedFnm, String expectedLnm, String[] expectedAuth) {
+            String expectedFnm, String expectedLnm, String[] expectedAuth) {
         assertEquals(expectedUnm, user.getUsername());
         assertEquals(expectedPwd, user.getPassword());
         assertEquals(expectedEmail, user.getEmail());

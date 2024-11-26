@@ -57,7 +57,7 @@ public class ScimGroupBootstrap implements InitializingBean {
     private final ScimUserProvisioning scimUserProvisioning;
 
     private Map<String, String> defaultUserGroups = Collections.EMPTY_MAP;
-    private Map<String,String> nonDefaultUserGroups = Collections.EMPTY_MAP;
+    private Map<String, String> nonDefaultUserGroups = Collections.EMPTY_MAP;
 
     private Map<String, String> configuredGroups = Collections.EMPTY_MAP;
 
@@ -67,8 +67,8 @@ public class ScimGroupBootstrap implements InitializingBean {
     private PropertySource messageSource;
     private String messagePropertyNameTemplate = "scope.%s";
     private final MapCollector<String, String, String> collector = new MapCollector<>(
-        g -> g,
-        g -> (String) getMessageSource().getProperty(String.format(messagePropertyNameTemplate, g))
+            g -> g,
+            g -> (String) getMessageSource().getProperty(String.format(messagePropertyNameTemplate, g))
     );
 
     public String getMessagePropertyNameTemplate() {
@@ -80,7 +80,7 @@ public class ScimGroupBootstrap implements InitializingBean {
     }
 
     public ScimGroupBootstrap(ScimGroupProvisioning scimGroupProvisioning, ScimUserProvisioning scimUserProvisioning,
-                    ScimGroupMembershipManager membershipManager) {
+            ScimGroupMembershipManager membershipManager) {
         this.scimGroupProvisioning = scimGroupProvisioning;
         this.scimUserProvisioning = scimUserProvisioning;
         this.membershipManager = membershipManager;
@@ -90,11 +90,11 @@ public class ScimGroupBootstrap implements InitializingBean {
     }
 
     public PropertySource getMessageSource() {
-        if(messageSource == null) {
+        if (messageSource == null) {
             String messagesFilename = "messages.properties";
             try {
                 messageSource = new ResourcePropertySource(messagesFilename);
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 messageSource = new PropertySource.StubPropertySource(messagesFilename);
             }
         }
@@ -112,27 +112,35 @@ public class ScimGroupBootstrap implements InitializingBean {
      *
      * @param groups
      */
-    public void setGroups(Map<String,String> groups) {
-        if(groups==null) { groups = Collections.EMPTY_MAP; }
+    public void setGroups(Map<String, String> groups) {
+        if (groups == null) {
+            groups = Collections.EMPTY_MAP;
+        }
         groups.entrySet().forEach(e -> {
-            if(!StringUtils.hasText(e.getValue())) { e.setValue((String) getMessageSource().getProperty(String.format(messagePropertyNameTemplate, e.getKey()))); }
+            if (!StringUtils.hasText(e.getValue())) {
+                e.setValue((String) getMessageSource().getProperty(String.format(messagePropertyNameTemplate, e.getKey())));
+            }
         });
         this.configuredGroups = groups;
         setCombinedGroups();
     }
 
     public void setDefaultUserGroups(Set<String> defaultUserGroups) {
-        if(defaultUserGroups==null) { defaultUserGroups = Collections.EMPTY_SET; }
+        if (defaultUserGroups == null) {
+            defaultUserGroups = Collections.EMPTY_SET;
+        }
         this.defaultUserGroups = defaultUserGroups.stream()
-            .collect(collector);
+                .collect(collector);
 
         setCombinedGroups();
     }
 
     public void setNonDefaultUserGroups(Set<String> nonDefaultUserGroups) {
-        if(nonDefaultUserGroups==null) { nonDefaultUserGroups = Collections.EMPTY_SET; }
+        if (nonDefaultUserGroups == null) {
+            nonDefaultUserGroups = Collections.EMPTY_SET;
+        }
         this.nonDefaultUserGroups = nonDefaultUserGroups.stream()
-            .collect(collector);
+                .collect(collector);
 
         setCombinedGroups();
     }
@@ -143,11 +151,11 @@ public class ScimGroupBootstrap implements InitializingBean {
         this.groups.putAll(this.nonDefaultUserGroups);
 
         this.configuredGroups.entrySet().stream()
-            .filter(e -> StringUtils.hasText(e.getValue()) || !groups.containsKey(e.getKey()))
-            .forEach(e -> groups.put(e.getKey(), e.getValue()));
+                .filter(e -> StringUtils.hasText(e.getValue()) || !groups.containsKey(e.getKey()))
+                .forEach(e -> groups.put(e.getKey(), e.getValue()));
 
         this.groups = this.groups.entrySet().stream()
-            .collect(new MapCollector<>(e -> StringUtils.trimWhitespace(e.getKey()), e -> StringUtils.trimWhitespace(e.getValue())));
+                .collect(new MapCollector<>(e -> StringUtils.trimWhitespace(e.getKey()), e -> StringUtils.trimWhitespace(e.getValue())));
     }
 
     /**
@@ -188,11 +196,11 @@ public class ScimGroupBootstrap implements InitializingBean {
             String description = groups.get(g.getDisplayName());
             if (StringUtils.hasText(description)) {
                 g.setDescription(description);
-                try{
+                try {
                     groupInfos.set(i, scimGroupProvisioning.update(g.getId(), g, IdentityZoneHolder.get().getId()));
-                } catch(IncorrectResultSizeDataAccessException e) {
+                } catch (IncorrectResultSizeDataAccessException e) {
                     ScimGroup updatedGroup = getGroup(g.getDisplayName());
-                    if(updatedGroup != null && updatedGroup.getVersion() > g.getVersion()) {
+                    if (updatedGroup != null && updatedGroup.getVersion() > g.getVersion()) {
                         logger.debug("Group has already been updated by another instance, ignore error.");
                     } else {
                         throw e;
@@ -223,7 +231,7 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     private List<ScimGroupMember> getMembers(Set<String> names) {
         if (names == null || names.isEmpty()) {
-            return Collections.<ScimGroupMember> emptyList();
+            return Collections.<ScimGroupMember>emptyList();
         }
 
         List<ScimGroupMember> members = new ArrayList<>();
@@ -231,10 +239,10 @@ public class ScimGroupBootstrap implements InitializingBean {
             ScimCore member = getScimResourceId(name);
             if (member != null) {
                 members.add(
-                    new ScimGroupMember(
-                        member.getId(),
-                        (member instanceof ScimGroup) ? ScimGroupMember.Type.GROUP : ScimGroupMember.Type.USER
-                    )
+                        new ScimGroupMember(
+                                member.getId(),
+                                member instanceof ScimGroup ? ScimGroupMember.Type.GROUP : ScimGroupMember.Type.USER
+                        )
                 );
             }
         }

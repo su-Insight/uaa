@@ -42,7 +42,7 @@ public class JsonDateDeserializerTest {
             threadArray[i] = new Thread(() -> {
                 try {
                     Date d = JsonDateDeserializer.getDate(testDateString, new JsonLocation(null, 22, 0, 0));
-                    if(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(testDateString).getTime() != d.getTime())
+                    if (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(testDateString).getTime() != d.getTime())
                     {
                         throw new Exception("Unexpected date");
                     }

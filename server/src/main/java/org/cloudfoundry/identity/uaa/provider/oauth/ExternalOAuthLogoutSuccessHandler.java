@@ -32,7 +32,7 @@ public class ExternalOAuthLogoutSuccessHandler extends SimpleUrlLogoutSuccessHan
     private final Set<String> defaultOrigin = Set.of(OriginKeys.UAA, OriginKeys.LDAP);
 
     public ExternalOAuthLogoutSuccessHandler(final IdentityProviderProvisioning providerProvisioning, final OidcMetadataFetcher oidcMetadataFetcher,
-                                             IdentityZoneManager identityZoneManager) {
+            IdentityZoneManager identityZoneManager) {
         this.providerProvisioning = providerProvisioning;
         this.oidcMetadataFetcher = oidcMetadataFetcher;
         this.identityZoneManager = identityZoneManager;
@@ -56,8 +56,8 @@ public class ExternalOAuthLogoutSuccessHandler extends SimpleUrlLogoutSuccessHan
     }
 
     public String constructOAuthProviderLogoutUrl(final HttpServletRequest request, final String logoutUrl,
-                                                  final AbstractExternalOAuthIdentityProviderDefinition<OIDCIdentityProviderDefinition> oauthConfig,
-                                                  final Authentication authentication) {
+            final AbstractExternalOAuthIdentityProviderDefinition<OIDCIdentityProviderDefinition> oauthConfig,
+            final Authentication authentication) {
         final StringBuilder oauthLogoutUriBuilder = new StringBuilder(request.getRequestURL());
         if (StringUtils.hasText(request.getQueryString())) {
             oauthLogoutUriBuilder.append("?");

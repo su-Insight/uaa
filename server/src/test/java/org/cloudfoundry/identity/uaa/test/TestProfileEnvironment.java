@@ -38,8 +38,8 @@ public class TestProfileEnvironment {
 
     private static final Logger logger = LoggerFactory.getLogger(TestProfileEnvironment.class);
 
-    private static final String[] DEFAULT_PROFILE_CONFIG_FILE_LOCATIONS = new String[] { "classpath:uaa.yml",
-                    "file:${CLOUDFOUNDRY_CONFIG_PATH}/uaa.yml", "file:${UAA_CONFIG_FILE}", "${UAA_CONFIG_URL}" };
+    private static final String[] DEFAULT_PROFILE_CONFIG_FILE_LOCATIONS = new String[]{"classpath:uaa.yml",
+            "file:${CLOUDFOUNDRY_CONFIG_PATH}/uaa.yml", "file:${UAA_CONFIG_FILE}", "${UAA_CONFIG_URL}"};
 
     private StandardEnvironment environment = new StandardEnvironment();
 

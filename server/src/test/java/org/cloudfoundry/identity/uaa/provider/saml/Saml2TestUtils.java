@@ -181,7 +181,7 @@ public final class Saml2TestUtils {
 
     private static String serializedRequest(AuthnRequest request, Saml2MessageBinding binding) {
         String xml = serialize(request);
-        return (binding == Saml2MessageBinding.POST) ? Saml2Utils.samlEncode(xml.getBytes(StandardCharsets.UTF_8))
+        return binding == Saml2MessageBinding.POST ? Saml2Utils.samlEncode(xml.getBytes(StandardCharsets.UTF_8))
                 : Saml2Utils.samlEncode(Saml2Utils.samlDeflate(xml));
     }
 
@@ -220,12 +220,12 @@ public final class Saml2TestUtils {
     }
 
     public static Saml2AuthenticationToken token(Response response, RelyingPartyRegistration.Builder registration,
-                                                 AbstractSaml2AuthenticationRequest authenticationRequest) {
+            AbstractSaml2AuthenticationRequest authenticationRequest) {
         return new Saml2AuthenticationToken(registration.build(), serialize(response), authenticationRequest);
     }
 
     public static AbstractSaml2AuthenticationRequest mockedStoredAuthenticationRequest(String requestId,
-                                                                                       Saml2MessageBinding binding, boolean corruptRequestString) {
+            Saml2MessageBinding binding, boolean corruptRequestString) {
         AuthnRequest request = request();
         if (requestId != null) {
             request.setID(requestId);

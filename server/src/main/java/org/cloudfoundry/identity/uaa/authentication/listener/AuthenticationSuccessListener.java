@@ -43,8 +43,8 @@ public class AuthenticationSuccessListener implements ApplicationListener<Abstra
         } else if (event instanceof IdentityProviderAuthenticationSuccessEvent) {
             IdentityProviderAuthenticationSuccessEvent passwordAuthEvent = (IdentityProviderAuthenticationSuccessEvent) event;
             UserAuthenticationSuccessEvent userEvent = new UserAuthenticationSuccessEvent(
-                passwordAuthEvent.getUser(),
-                (Authentication) passwordAuthEvent.getSource(), IdentityZoneHolder.getCurrentZoneId()
+                    passwordAuthEvent.getUser(),
+                    (Authentication) passwordAuthEvent.getSource(), IdentityZoneHolder.getCurrentZoneId()
             );
             publisher.publishEvent(userEvent);
         }

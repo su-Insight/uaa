@@ -37,14 +37,14 @@ public class MockMvcTestClient {
     }
 
     public String getOAuthAccessToken(String username, String password, String grantType, String scope)
-                    throws Exception {
+            throws Exception {
         String basicDigestHeaderValue = "Basic "
-                        + new String(Base64.encodeBase64((username + ":" + password).getBytes()));
+                + new String(Base64.encodeBase64((username + ":" + password).getBytes()));
         MockHttpServletRequestBuilder oauthTokenPost = post("/oauth/token")
-                        .header("Authorization", basicDigestHeaderValue)
-                        .param("grant_type", grantType)
-                        .param("client_id", username)
-                        .param("scope", scope);
+                .header("Authorization", basicDigestHeaderValue)
+                .param("grant_type", grantType)
+                .param("client_id", username)
+                .param("scope", scope);
         MvcResult result = mockMvc.perform(oauthTokenPost).andExpect(status().isOk()).andReturn();
         OAuthToken oauthToken = JsonUtils.readValue(result.getResponse().getContentAsString(), OAuthToken.class);
         return oauthToken.accessToken;

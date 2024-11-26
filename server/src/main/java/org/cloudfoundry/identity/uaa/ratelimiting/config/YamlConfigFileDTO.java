@@ -34,17 +34,17 @@ public class YamlConfigFileDTO {
         private List<String> pathSelectors = new ArrayList<>();
 
         public boolean normalizeAndCheckEmpty() {
-            name = StringUtils.stripToNull( name );
-            global = StringUtils.stripToNull( global );
-            withCallerCredentialsID = StringUtils.stripToNull( withCallerCredentialsID );
-            withCallerRemoteAddressID = StringUtils.stripToNull( withCallerRemoteAddressID );
-            withoutCallerID = StringUtils.stripToNull( withoutCallerID );
-            pathSelectors = (pathSelectors == null) ? List.of() : pathSelectors.stream()
-                    .map( StringUtils::stripToNull ).filter( Objects::nonNull )
-                    .collect( Collectors.toList() );
+            name = StringUtils.stripToNull(name);
+            global = StringUtils.stripToNull(global);
+            withCallerCredentialsID = StringUtils.stripToNull(withCallerCredentialsID);
+            withCallerRemoteAddressID = StringUtils.stripToNull(withCallerRemoteAddressID);
+            withoutCallerID = StringUtils.stripToNull(withoutCallerID);
+            pathSelectors = pathSelectors == null ? List.of() : pathSelectors.stream()
+                    .map(StringUtils::stripToNull).filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             return (name == null) && (global == null)
-                   && (withCallerCredentialsID == null) && (withCallerRemoteAddressID == null) && (withoutCallerID == null)
-                   && pathSelectors.isEmpty();
+                    && (withCallerCredentialsID == null) && (withCallerRemoteAddressID == null) && (withoutCallerID == null)
+                    && pathSelectors.isEmpty();
         }
 
         @Override

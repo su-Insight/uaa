@@ -306,9 +306,9 @@ class JdbcScimGroupProvisioningTests {
     void cannotCreateNotAllowedGroup() {
         IdentityZoneHolder.get().getConfig().getUserConfig().setAllowedGroups(Arrays.asList("allowedGroup"));
         assertThrowsWithMessageThat(
-            InvalidScimResourceException.class,
-            () -> internalCreateGroup("notAllowedGroup"),
-            containsString("is not allowed")
+                InvalidScimResourceException.class,
+                () -> internalCreateGroup("notAllowedGroup"),
+                containsString("is not allowed")
         );
     }
 
@@ -319,9 +319,9 @@ class JdbcScimGroupProvisioningTests {
         g.setDisplayName("notAllowedGroup");
         g.setDescription("description-update");
         try {
-           dao.update(g1Id, g, zoneId);
-           fail();
-        } catch(InvalidScimResourceException e) {
+            dao.update(g1Id, g, zoneId);
+            fail();
+        } catch (InvalidScimResourceException e) {
             assertTrue(e.getMessage().contains("is not allowed"));
         }
     }

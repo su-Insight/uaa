@@ -48,7 +48,7 @@ public final class UaaRelyingPartyRegistrationResolver implements Converter<Http
     private final RequestMatcher registrationRequestMatcher = new AntPathRequestMatcher("/**/{registrationId}");
 
     public UaaRelyingPartyRegistrationResolver(RelyingPartyRegistrationRepository relyingPartyRegistrationRepository,
-                                               String samlEntityID) {
+            String samlEntityID) {
         Assert.notNull(relyingPartyRegistrationRepository, "relyingPartyRegistrationRepository cannot be null");
         this.relyingPartyRegistrationRepository = relyingPartyRegistrationRepository;
         this.samlEntityID = samlEntityID;

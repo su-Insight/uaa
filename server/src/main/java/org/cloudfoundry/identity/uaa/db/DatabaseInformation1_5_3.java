@@ -27,20 +27,20 @@ import org.springframework.jdbc.core.RowMapper;
 public class DatabaseInformation1_5_3 {
 
     public static List<String> tableNames = Collections.unmodifiableList(Arrays.asList(
-                    "users",
-                    "sec_audit",
-                    "oauth_client_details",
-                    "groups",
-                    "group_membership",
-                    "oauth_code",
-                    "authz_approvals",
-                    "external_group_mapping"
+            "users",
+            "sec_audit",
+            "oauth_client_details",
+            "groups",
+            "group_membership",
+            "oauth_code",
+            "authz_approvals",
+            "external_group_mapping"
 
-                    ));
+    ));
 
     public static boolean processColumn(ColumnInfo column) {
         return (!column.columnName.equals(column.columnName.toLowerCase())) &&
-                        tableNames.contains(column.tableName.toLowerCase());
+                tableNames.contains(column.tableName.toLowerCase());
     }
 
     public static class ColumnMapper implements RowMapper<DatabaseInformation1_5_3.ColumnInfo> {

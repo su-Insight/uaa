@@ -56,7 +56,7 @@ public class LimitedModeUaaFilter extends OncePerRequestFilter {
                 logger.debug(format("Operation Not permitted in limited mode for URL:%s and method:%s",
                         request.getRequestURI(),
                         request.getMethod()
-                        )
+                )
                 );
                 Map<String, String> json = getErrorData();
                 if (acceptsJson(request)) {

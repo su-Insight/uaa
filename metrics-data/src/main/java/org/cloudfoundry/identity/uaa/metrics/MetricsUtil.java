@@ -24,28 +24,28 @@ public class MetricsUtil {
     }
 
     public static double addAverages(double oldCount,
-                                     double oldAverage,
-                                     double newCount,
-                                     double newAverage) {
-        if (newCount==0) {
+            double oldAverage,
+            double newCount,
+            double newAverage) {
+        if (newCount == 0) {
             return oldAverage;
         }
         return
-            ((oldCount) / (newCount + oldCount) * oldAverage) +
-                (newCount / (newCount + oldCount) * newAverage);
+                (oldCount / (newCount + oldCount) * oldAverage) +
+                        (newCount / (newCount + oldCount) * newAverage);
     }
 
     public static double addToAverage(double oldCount,
-                                      double oldAverage,
-                                      double newCount,
-                                      double newTotalTime) {
-        if (newCount==0) {
+            double oldAverage,
+            double newCount,
+            double newTotalTime) {
+        if (newCount == 0) {
             return oldAverage;
         }
         double newAverage = newTotalTime / newCount;
         return
-            ((oldCount) / (newCount + oldCount) * oldAverage) +
-                (newCount / (newCount + oldCount) * newAverage);
+                (oldCount / (newCount + oldCount) * oldAverage) +
+                        (newCount / (newCount + oldCount) * newAverage);
     }
 
     public static class MutableLong {

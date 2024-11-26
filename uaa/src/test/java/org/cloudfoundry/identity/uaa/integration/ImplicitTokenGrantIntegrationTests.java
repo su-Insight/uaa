@@ -58,9 +58,9 @@ public class ImplicitTokenGrantIntegrationTests {
 
     private String implicitUrl() {
         URI uri = serverRunning.buildUri("/oauth/authorize").queryParam("response_type", "token")
-                        .queryParam("client_id", "cf")
-                        .queryParam("redirect_uri", "http://localhost:8080/redirect/cf")
-                        .queryParam("scope", "cloud_controller.read").build();
+                .queryParam("client_id", "cf")
+                .queryParam("redirect_uri", "http://localhost:8080/redirect/cf")
+                .queryParam("scope", "cloud_controller.read").build();
         return uri.toString();
     }
 
@@ -71,10 +71,10 @@ public class ImplicitTokenGrantIntegrationTests {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         String credentials = String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
-                        testAccounts.getPassword());
+                testAccounts.getPassword());
 
         ResponseEntity<Void> result = serverRunning.getForResponse(implicitUrl() + "&credentials={credentials}",
-                        headers, credentials);
+                headers, credentials);
 
         assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
 
@@ -87,7 +87,7 @@ public class ImplicitTokenGrantIntegrationTests {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", testAccounts.getUserName(),
-                        testAccounts.getPassword());
+                testAccounts.getPassword());
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
         formData.add("credentials", credentials);
@@ -95,7 +95,7 @@ public class ImplicitTokenGrantIntegrationTests {
 
         assertNotNull(result.getHeaders().getLocation());
         assertTrue(result.getHeaders().getLocation().toString()
-            .matches(REDIRECT_URL_PATTERN));
+                .matches(REDIRECT_URL_PATTERN));
 
     }
 
@@ -106,7 +106,7 @@ public class ImplicitTokenGrantIntegrationTests {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_FORM_URLENCODED));
 
         String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", testAccounts.getUserName(),
-                        testAccounts.getPassword());
+                testAccounts.getPassword());
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
         formData.add("credentials", credentials);
@@ -115,7 +115,7 @@ public class ImplicitTokenGrantIntegrationTests {
         URI location = result.getHeaders().getLocation();
         assertNotNull(location);
         assertTrue("Wrong location: " + location, location.toString()
-            .matches(REDIRECT_URL_PATTERN));
+                .matches(REDIRECT_URL_PATTERN));
 
     }
 
@@ -130,7 +130,7 @@ public class ImplicitTokenGrantIntegrationTests {
         if (result.getHeaders().containsKey("Set-Cookie")) {
             for (String cookie : result.getHeaders().get("Set-Cookie")) {
                 int nameLength = cookie.indexOf('=');
-                cookies.addCookie(new BasicClientCookie(cookie.substring(0, nameLength), cookie.substring(nameLength+1)));
+                cookies.addCookie(new BasicClientCookie(cookie.substring(0, nameLength), cookie.substring(nameLength + 1)));
             }
         }
 
@@ -138,7 +138,7 @@ public class ImplicitTokenGrantIntegrationTests {
         if (response.getHeaders().containsKey("Set-Cookie")) {
             for (String cookie : response.getHeaders().get("Set-Cookie")) {
                 int nameLength = cookie.indexOf('=');
-                cookies.addCookie(new BasicClientCookie(cookie.substring(0, nameLength), cookie.substring(nameLength+1)));
+                cookies.addCookie(new BasicClientCookie(cookie.substring(0, nameLength), cookie.substring(nameLength + 1)));
             }
         }
         // should be directed to the login screen...
@@ -161,7 +161,7 @@ public class ImplicitTokenGrantIntegrationTests {
 
         assertNotNull(result.getHeaders().getLocation());
         assertTrue(result.getHeaders().getLocation().toString()
-            .matches(REDIRECT_URL_PATTERN));
+                .matches(REDIRECT_URL_PATTERN));
     }
 
     @Test

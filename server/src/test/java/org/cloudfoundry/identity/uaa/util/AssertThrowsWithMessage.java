@@ -51,13 +51,13 @@ public class AssertThrowsWithMessage {
     // Sure wish they weren't private! :)
 
     static String buildPrefix(String message) {
-        return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
+        return StringUtils.isNotBlank(message) ? message + " ==> " : "";
     }
 
     static String getCanonicalName(Class<?> clazz) {
         try {
             String canonicalName = clazz.getCanonicalName();
-            return (canonicalName != null ? canonicalName : clazz.getName());
+            return canonicalName != null ? canonicalName : clazz.getName();
         } catch (Throwable t) {
             return clazz.getName();
         }
@@ -87,15 +87,15 @@ public class AssertThrowsWithMessage {
     private static String formatClassAndValue(Object value, String valueString) {
         String classAndHash = getClassName(value) + toHash(value);
         // if it's a class, there's no need to repeat the class name contained in the valueString.
-        return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");
+        return value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">";
     }
 
     private static String toHash(Object obj) {
-        return (obj == null ? "" : "@" + Integer.toHexString(System.identityHashCode(obj)));
+        return obj == null ? "" : "@" + Integer.toHexString(System.identityHashCode(obj));
     }
 
     private static String getClassName(Object obj) {
-        return (obj == null ? "null"
-                : obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName());
+        return obj == null ? "null"
+                : obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName();
     }
 }

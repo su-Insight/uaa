@@ -92,7 +92,9 @@ public class TestAccountSetup extends TestWatchman {
         return user;
     }
 
-    public UaaTestAccounts getTestAccounts() { return testAccounts; }
+    public UaaTestAccounts getTestAccounts() {
+        return testAccounts;
+    }
 
     private void initializeIfNecessary(FrameworkMethod method, Object target) {
         OAuth2ProtectedResourceDetails resource = testAccounts.getAdminClientCredentialsResource();
@@ -118,35 +120,35 @@ public class TestAccountSetup extends TestWatchman {
 
     private void createCfClient(RestOperations client) {
         UaaClientDetails clientDetails = new UaaClientDetails("cf", "cloud_controller,openid,password",
-                        "openid,cloud_controller.read,cloud_controller_service_permissions.read,password.write,scim.userids", "implicit", "uaa.none",
-                        "https://uaa.cloudfoundry.com/redirect/cf");
+                "openid,cloud_controller.read,cloud_controller_service_permissions.read,password.write,scim.userids", "implicit", "uaa.none",
+                "https://uaa.cloudfoundry.com/redirect/cf");
         createClient(client, testAccounts.getClientDetails("oauth.clients.cf", clientDetails));
     }
 
     private void createScimClient(RestOperations client) {
         UaaClientDetails clientDetails = new UaaClientDetails("scim", "oauth", "uaa.none", "client_credentials",
-                        "scim.read,scim.write,password.write,oauth.approvals","http://some.redirect.url.com");
+                "scim.read,scim.write,password.write,oauth.approvals", "http://some.redirect.url.com");
         clientDetails.setClientSecret("scimsecret");
         createClient(client, testAccounts.getClientDetails("oauth.clients.scim", clientDetails));
     }
 
     private void createAppClient(RestOperations client) {
         UaaClientDetails clientDetails = new UaaClientDetails("app", "none",
-                        "cloud_controller.read,cloud_controller_service_permissions.read,openid,password.write", "password,authorization_code,refresh_token",
-                        "uaa.resource");
+                "cloud_controller.read,cloud_controller_service_permissions.read,openid,password.write", "password,authorization_code,refresh_token",
+                "uaa.resource");
         clientDetails.setClientSecret("appclientsecret");
         createClient(client, testAccounts.getClientDetails("oauth.clients.app", clientDetails));
     }
 
     private void createClient(RestOperations client, ClientDetails clientDetails) {
         ResponseEntity<String> response = client.postForEntity(serverRunning.getClientsUri(), clientDetails,
-                        String.class);
+                String.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     private boolean clientExists(RestOperations client, OAuth2ProtectedResourceDetails resource) {
         ResponseEntity<String> response = client.getForEntity(
-                        serverRunning.getClientsUri() + "/" + resource.getClientId(), String.class);
+                serverRunning.getClientsUri() + "/" + resource.getClientId(), String.class);
         return response != null && response.getStatusCode() == HttpStatus.OK;
     }
 
@@ -156,12 +158,12 @@ public class TestAccountSetup extends TestWatchman {
 
     private boolean scimClientExists(RestOperations client) {
         return clientExists(client,
-                        testAccounts.getClientCredentialsResource("oauth.clients.scim", "scim", "scimsecret"));
+                testAccounts.getClientCredentialsResource("oauth.clients.scim", "scim", "scimsecret"));
     }
 
     private boolean appClientExists(RestOperations client) {
         return clientExists(client,
-                        testAccounts.getClientCredentialsResource("oauth.clients.app", "app", "appclientsecret"));
+                testAccounts.getClientCredentialsResource("oauth.clients.app", "app", "appclientsecret"));
     }
 
     private void initializeUserAccount(RestOperations client) {
@@ -171,20 +173,19 @@ public class TestAccountSetup extends TestWatchman {
             UaaUser user = testAccounts.getUserWithRandomID();
             @SuppressWarnings("rawtypes")
             ResponseEntity<Map> results = client.getForEntity(serverRunning.getUserUri() + "?filter=userName eq \""
-                            + user.getUsername() + "\"", Map.class);
+                    + user.getUsername() + "\"", Map.class);
             assertEquals(HttpStatus.OK, results.getStatusCode());
             @SuppressWarnings("unchecked")
             List<Map<String, ?>> resources = (List<Map<String, ?>>) results.getBody().get("resources");
             Map<String, ?> map;
             if (!resources.isEmpty()) {
                 map = resources.get(0);
-            }
-            else {
+            } else {
                 map = getUserAsMap(user);
                 @SuppressWarnings("rawtypes")
                 ResponseEntity<Map> response = client.postForEntity(serverRunning.getUserUri(), map, Map.class);
                 Assert.state(response.getStatusCode() == HttpStatus.CREATED, "User account not created: status was "
-                                + response.getStatusCode());
+                        + response.getStatusCode());
                 @SuppressWarnings("unchecked")
                 Map<String, ?> value = response.getBody();
                 map = value;
@@ -217,7 +218,7 @@ public class TestAccountSetup extends TestWatchman {
         @SuppressWarnings("unchecked")
         Collection<Map<String, String>> groups = (Collection<Map<String, String>>) map.get("groups");
         return new UaaUser(id, userName, "<N/A>", email, extractAuthorities(groups), givenName, familyName, new Date(),
-                        new Date(), OriginKeys.UAA, "externalId", false, IdentityZoneHolder.get().getId(), null,null);
+                new Date(), OriginKeys.UAA, "externalId", false, IdentityZoneHolder.get().getId(), null, null);
     }
 
     private List<? extends GrantedAuthority> extractAuthorities(Collection<Map<String, String>> groups) {
@@ -262,7 +263,7 @@ public class TestAccountSetup extends TestWatchman {
     }
 
     private OAuth2RestTemplate createRestTemplate(OAuth2ProtectedResourceDetails resource,
-                    AccessTokenRequest accessTokenRequest) {
+            AccessTokenRequest accessTokenRequest) {
         OAuth2ClientContext context = new DefaultOAuth2ClientContext(accessTokenRequest);
         OAuth2RestTemplate client = new OAuth2RestTemplate(resource, context);
         client.setRequestFactory(new SimpleClientHttpRequestFactory() {

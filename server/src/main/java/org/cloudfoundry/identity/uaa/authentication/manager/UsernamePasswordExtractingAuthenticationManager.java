@@ -57,7 +57,7 @@ public class UsernamePasswordExtractingAuthenticationManager implements Authenti
             output = (UsernamePasswordAuthenticationToken) authentication;
         } else {
             output = new UsernamePasswordAuthenticationToken(authentication, authentication.getCredentials(),
-                            authentication.getAuthorities());
+                    authentication.getAuthorities());
             output.setAuthenticated(authentication.isAuthenticated());
             output.setDetails(authentication.getDetails());
         }

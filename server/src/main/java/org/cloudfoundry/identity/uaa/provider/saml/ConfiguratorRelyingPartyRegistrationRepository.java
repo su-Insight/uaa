@@ -17,10 +17,10 @@ public class ConfiguratorRelyingPartyRegistrationRepository extends BaseUaaRelyi
     private final SamlIdentityProviderConfigurator configurator;
 
     public ConfiguratorRelyingPartyRegistrationRepository(String uaaWideSamlEntityID,
-                                                          String uaaWideSamlEntityIDAlias,
-                                                          SamlIdentityProviderConfigurator configurator,
-                                                          List<SignatureAlgorithm> signatureAlgorithms,
-                                                          String uaaWideSamlNameId) {
+            String uaaWideSamlEntityIDAlias,
+            SamlIdentityProviderConfigurator configurator,
+            List<SignatureAlgorithm> signatureAlgorithms,
+            String uaaWideSamlNameId) {
         super(uaaWideSamlEntityID, uaaWideSamlEntityIDAlias, signatureAlgorithms, uaaWideSamlNameId);
         Assert.notNull(configurator, "configurator cannot be null");
         this.configurator = configurator;

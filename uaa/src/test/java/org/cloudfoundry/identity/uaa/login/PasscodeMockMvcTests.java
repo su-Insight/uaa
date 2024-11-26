@@ -120,7 +120,7 @@ class PasscodeMockMvcTests {
                 mockSecurityContext
         );
 
-        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64(("cf:").getBytes()));
+        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64("cf:".getBytes()));
         MockHttpServletRequestBuilder post = post("/oauth/token")
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -178,7 +178,7 @@ class PasscodeMockMvcTests {
                 mockSecurityContext
         );
 
-        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64(("cf:").getBytes()));
+        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64("cf:".getBytes()));
         MockHttpServletRequestBuilder post = post("/oauth/token")
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -267,7 +267,7 @@ class PasscodeMockMvcTests {
                 mockSecurityContext
         );
 
-        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64(("cf:").getBytes()));
+        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64("cf:".getBytes()));
         MockHttpServletRequestBuilder post = post("/oauth/token")
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -282,7 +282,7 @@ class PasscodeMockMvcTests {
 
     @Test
     void loginUsingInvalidPasscode() throws Exception {
-        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64(("cf:").getBytes()));
+        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64("cf:".getBytes()));
         MockHttpServletRequestBuilder post = post("/oauth/token")
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -299,7 +299,7 @@ class PasscodeMockMvcTests {
 
     @Test
     void loginUsingNoPasscode() throws Exception {
-        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64(("cf:").getBytes()));
+        String basicDigestHeaderValue = "Basic " + new String(Base64.encodeBase64("cf:".getBytes()));
         MockHttpServletRequestBuilder post = post("/oauth/token")
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_FORM_URLENCODED)

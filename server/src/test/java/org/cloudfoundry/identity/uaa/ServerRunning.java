@@ -131,7 +131,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper 
     public void setHostName(String hostName) {
         this.hostName = hostName;
     }
-    
+
     public String getHostName() {
         return hostName;
     }
@@ -144,8 +144,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper 
     public void setRootPath(String rootPath) {
         if (rootPath.equals("/")) {
             rootPath = "";
-        }
-        else {
+        } else {
             if (!rootPath.startsWith("/")) {
                 rootPath = "/" + rootPath;
             }
@@ -272,7 +271,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper 
         actualHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         return client.exchange(getUrl(path), HttpMethod.POST, new HttpEntity<>(params,
-                        actualHeaders), Void.class);
+                actualHeaders), Void.class);
     }
 
     public ResponseEntity<Void> postForRedirect(String path, HttpHeaders headers, MultiValueMap<String, String> params) {
@@ -370,8 +369,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper 
                     for (String key : params.keySet()) {
                         if (!first) {
                             builder.append("&");
-                        }
-                        else {
+                        } else {
                             first = false;
                         }
                         for (String value : params.get(key)) {

@@ -101,7 +101,7 @@ public class DefaultIntegrationTestConfig {
 
     @Bean
     public TestClient testClient(RestTemplate restTemplate,
-                                 final @Value("${integration.test.base_url}") String baseUrl) {
+            final @Value("${integration.test.base_url}") String baseUrl) {
         return new TestClient(restTemplate, baseUrl);
     }
 

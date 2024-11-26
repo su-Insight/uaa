@@ -75,7 +75,7 @@ public class DefaultSecurityContextAccessor implements SecurityContextAccessor {
     }
 
     private boolean hasAnyAdminScope(Authentication a, String... adminRoles) {
-        Set<String> authorites = (a == null ? Collections.<String>emptySet() : AuthorityUtils.authorityListToSet(a.getAuthorities()));
+        Set<String> authorites = a == null ? Collections.<String>emptySet() : AuthorityUtils.authorityListToSet(a.getAuthorities());
         for (String s : adminRoles) {
             if (authorites.contains(s)) {
                 return true;
@@ -101,7 +101,7 @@ public class DefaultSecurityContextAccessor implements SecurityContextAccessor {
         Authentication a = SecurityContextHolder.getContext().getAuthentication();
 
         if (a instanceof OAuth2Authentication) {
-            OAuth2Authentication oauth = ((OAuth2Authentication) a);
+            OAuth2Authentication oauth = (OAuth2Authentication) a;
 
             String info = getClientId();
             if (!oauth.isClientOnly()) {

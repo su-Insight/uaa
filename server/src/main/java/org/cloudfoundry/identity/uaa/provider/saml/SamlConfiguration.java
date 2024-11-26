@@ -73,7 +73,7 @@ public class SamlConfiguration {
     @Autowired
     @Bean
     public BootstrapSamlIdentityProviderData bootstrapMetaDataProviders(SamlConfigProps samlConfigProps,
-                                                                        final @Qualifier("metaDataProviders") SamlIdentityProviderConfigurator metaDataProviders) {
+            final @Qualifier("metaDataProviders") SamlIdentityProviderConfigurator metaDataProviders) {
         BootstrapSamlIdentityProviderData idpData = new BootstrapSamlIdentityProviderData(metaDataProviders);
         idpData.setIdentityProviders(samlConfigProps.getProviders());
         if (isNotNull(metaData)) {
@@ -156,8 +156,8 @@ public class SamlConfiguration {
     @Autowired
     @Bean
     public FixedHttpMetaDataProvider fixedHttpMetaDataProvider(@Qualifier("trustingRestTemplate") RestTemplate trustingRestTemplate,
-                                                               @Qualifier("nonTrustingRestTemplate") RestTemplate nonTrustingRestTemplate,
-                                                               UrlContentCache urlContentCache) {
+            @Qualifier("nonTrustingRestTemplate") RestTemplate nonTrustingRestTemplate,
+            UrlContentCache urlContentCache) {
         return new FixedHttpMetaDataProvider(trustingRestTemplate, nonTrustingRestTemplate, urlContentCache);
     }
 }

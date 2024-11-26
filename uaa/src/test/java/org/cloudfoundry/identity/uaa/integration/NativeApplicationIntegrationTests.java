@@ -68,7 +68,7 @@ public class NativeApplicationIntegrationTests {
         formData.add("scope", "cloud_controller.read");
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization",
-                        testAccounts.getAuthorizationHeader(resource.getClientId(), resource.getClientSecret()));
+                testAccounts.getAuthorizationHeader(resource.getClientId(), resource.getClientSecret()));
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         ResponseEntity<String> response = serverRunning.postForString("/oauth/token", formData, headers);
         assertEquals(HttpStatus.OK, response.getStatusCode());

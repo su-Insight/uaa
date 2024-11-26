@@ -207,11 +207,11 @@ cargo {
         jvmArgs = String.format("%s -DCLOUDFOUNDRY_CONFIG_PATH='%s'", jvmArgs, file("scripts/cargo").getAbsolutePath())
         jvmArgs = String.format("%s -Dlogging.config='%s'", jvmArgs, file("scripts/cargo/log4j2.properties").getAbsolutePath())
         jvmArgs = String.format("%s -Dstatsd.enabled=true", jvmArgs)
+
         String activeSpringProfiles = System.getProperty("spring.profiles.active", "").split(',');
         if (activeSpringProfiles.contains("debugs") || Boolean.valueOf(System.getProperty("xdebugs"))) {
             jvmArgs = String.format("%s -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005", jvmArgs)
-        }
-        else if (activeSpringProfiles.contains("debug") || Boolean.valueOf(System.getProperty("xdebug"))) {
+        } else if (activeSpringProfiles.contains("debug") || Boolean.valueOf(System.getProperty("xdebug"))) {
             jvmArgs = String.format("%s -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", jvmArgs)
         }
 
@@ -222,6 +222,7 @@ cargo {
                         .matching { include 'jacocoagent.jar' }.singleFile)
                 into(layout.buildDirectory.dir("jacoco"))
             }
+
             String jacocoBuildPath = layout.buildDirectory.dir("jacoco").get().asFile.path
             jvmArgs = String.format(
                     "%s -javaagent:%s/jacocoagent.jar=destfile=%s/cargo.exec",

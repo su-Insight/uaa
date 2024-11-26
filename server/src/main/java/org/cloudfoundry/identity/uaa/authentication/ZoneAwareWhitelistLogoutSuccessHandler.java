@@ -37,7 +37,7 @@ public class ZoneAwareWhitelistLogoutSuccessHandler implements LogoutSuccessHand
     private final KeyInfoService keyInfoService;
 
     public ZoneAwareWhitelistLogoutSuccessHandler(MultitenantClientServices clientDetailsService, ExternalOAuthLogoutSuccessHandler externalOAuthLogoutHandler,
-                                                  KeyInfoService keyInfoService) {
+            KeyInfoService keyInfoService) {
         this.clientDetailsService = clientDetailsService;
         this.externalOAuthLogoutHandler = externalOAuthLogoutHandler;
         this.keyInfoService = keyInfoService;

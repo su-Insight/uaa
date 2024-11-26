@@ -265,12 +265,12 @@ public class CheckTokenEndpointTests {
                 return tokenMap.get(id);
             });
             doAnswer((Answer<Void>) invocation -> {
-                RevocableToken arg = (RevocableToken)invocation.getArguments()[1];
+                RevocableToken arg = (RevocableToken) invocation.getArguments()[1];
                 tokenMap.put(arg.getTokenId(), arg);
                 return null;
             }).when(tokenProvisioning).upsert(anyString(), any(), anyString());
             doAnswer((Answer<Void>) invocation -> {
-                RevocableToken arg = (RevocableToken)invocation.getArguments()[0];
+                RevocableToken arg = (RevocableToken) invocation.getArguments()[0];
                 tokenMap.put(arg.getTokenId(), arg);
                 return null;
             }).when(tokenProvisioning).createIfNotExists(any(), anyString());
@@ -699,20 +699,20 @@ public class CheckTokenEndpointTests {
             KeyInfoService keyInfoService = new KeyInfoService("http://localhost:8080/uaa");
             ApprovalService approvalService = new ApprovalService(timeService, approvalStore);
             tokenServices = new UaaTokenServices(
-                mock(IdTokenCreator.class),
-                tokenEndpointBuilder,
-                clientDetailsService,
-                tokenProvisioning,
-                tokenValidationService,
-                null,
-                timeService,
-                new TokenValidityResolver(new ClientAccessTokenValidity(clientDetailsService, mockIdentityZoneManager), Integer.MAX_VALUE, timeService),
-                userDatabase,
-                Sets.newHashSet(),
-                zone.getConfig().getTokenPolicy(),
-                keyInfoService,
-                new IdTokenGranter(approvalService),
-                approvalService);
+                    mock(IdTokenCreator.class),
+                    tokenEndpointBuilder,
+                    clientDetailsService,
+                    tokenProvisioning,
+                    tokenValidationService,
+                    null,
+                    timeService,
+                    new TokenValidityResolver(new ClientAccessTokenValidity(clientDetailsService, mockIdentityZoneManager), Integer.MAX_VALUE, timeService),
+                    userDatabase,
+                    Sets.newHashSet(),
+                    zone.getConfig().getTokenPolicy(),
+                    keyInfoService,
+                    new IdTokenGranter(approvalService),
+                    approvalService);
             endpoint.checkToken(accessToken.getValue(), Collections.emptyList(), request);
         } finally {
             IdentityZoneHolder.clear();

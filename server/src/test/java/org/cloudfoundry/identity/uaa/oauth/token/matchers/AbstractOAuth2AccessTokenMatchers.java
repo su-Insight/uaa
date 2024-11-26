@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 public abstract class AbstractOAuth2AccessTokenMatchers<T> extends TypeSafeMatcher<T> {
 
     protected Matcher<?> value;
-    public static ThreadLocal<Map<String,RevocableToken>> revocableTokens = ThreadLocal.withInitial(() -> emptyMap());
+    public static ThreadLocal<Map<String, RevocableToken>> revocableTokens = ThreadLocal.withInitial(() -> emptyMap());
     private KeyInfoService keyInfoService;
 
     public AbstractOAuth2AccessTokenMatchers(Matcher<?> value) {
@@ -45,9 +45,8 @@ public abstract class AbstractOAuth2AccessTokenMatchers<T> extends TypeSafeMatch
     protected Map<String, Object> getClaims(T token) {
         String tokenValue = null;
         if (token instanceof OAuth2AccessToken)
-            tokenValue = ((OAuth2AccessToken)token).getValue();
-        else if (token instanceof OAuth2RefreshToken)
-            tokenValue = ((OAuth2RefreshToken)token).getValue();
+            tokenValue = ((OAuth2AccessToken) token).getValue(); else if (token instanceof OAuth2RefreshToken)
+            tokenValue = ((OAuth2RefreshToken) token).getValue();
         else
             throw new IllegalArgumentException("token must be instanceof OAuth2AccessToken or OAuth2RefreshToken");
 
@@ -55,7 +54,8 @@ public abstract class AbstractOAuth2AccessTokenMatchers<T> extends TypeSafeMatch
         assertNotNull(tokenJwt);
         Map<String, Object> claims;
         try {
-            claims = JsonUtils.readValue(tokenJwt.getClaims(), new TypeReference<Map<String, Object>>() {});
+            claims = JsonUtils.readValue(tokenJwt.getClaims(), new TypeReference<Map<String, Object>>() {
+            });
         } catch (Exception e) {
             throw new IllegalArgumentException("Unable to decode token", e);
         }

@@ -36,11 +36,11 @@ public class CommonLoginPolicy implements LoginPolicy {
     private final boolean enabled;
 
     public CommonLoginPolicy(UaaAuditService auditService,
-                             LockoutPolicyRetriever lockoutPolicyRetriever,
-                             AuditEventType successEventType,
-                             AuditEventType failureEventType,
-                             TimeService timeService,
-                             boolean enabled) {
+            LockoutPolicyRetriever lockoutPolicyRetriever,
+            AuditEventType successEventType,
+            AuditEventType failureEventType,
+            TimeService timeService,
+            boolean enabled) {
         this.auditService = auditService;
         this.lockoutPolicyRetriever = lockoutPolicyRetriever;
         this.successEventType = successEventType;

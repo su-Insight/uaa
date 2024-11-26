@@ -63,10 +63,10 @@ public class SamlUaaResponseAuthenticationConverter
     private final SamlUaaAuthenticationAuthoritiesConverter authoritiesConverter;
 
     public SamlUaaResponseAuthenticationConverter(IdentityZoneManager identityZoneManager,
-                                                  final JdbcIdentityProviderProvisioning identityProviderProvisioning,
-                                                  SamlUaaAuthenticationUserManager userManager,
-                                                  SamlUaaAuthenticationAttributesConverter attributesConverter,
-                                                  SamlUaaAuthenticationAuthoritiesConverter authoritiesConverter) {
+            final JdbcIdentityProviderProvisioning identityProviderProvisioning,
+            SamlUaaAuthenticationUserManager userManager,
+            SamlUaaAuthenticationAttributesConverter attributesConverter,
+            SamlUaaAuthenticationAuthoritiesConverter authoritiesConverter) {
         this.identityZoneManager = identityZoneManager;
         this.identityProviderProvisioning = identityProviderProvisioning;
         this.userManager = userManager;
@@ -145,7 +145,7 @@ public class SamlUaaResponseAuthenticationConverter
     }
 
     private static void setAuthContextClassRef(MultiValueMap<String, String> userAttributes,
-                                               UaaAuthentication authentication, SamlIdentityProviderDefinition samlConfig) {
+            UaaAuthentication authentication, SamlIdentityProviderDefinition samlConfig) {
 
         List<String> acrValues = userAttributes.get(AUTHENTICATION_CONTEXT_CLASS_REFERENCE);
         if (acrValues != null) {

@@ -188,7 +188,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         this.aliasEntitiesEnabled = aliasEntitiesEnabled;
         this.userMaxCount = userMaxCount;
         this.membershipManager = membershipManager;
-        this.messageConverters = new HttpMessageConverter[] {
+        this.messageConverters = new HttpMessageConverter[]{
                 new ExceptionReportHttpMessageConverter()
         };
         this.scimUserService = scimUserService;
@@ -308,10 +308,10 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}", method = RequestMethod.PUT)
     @ResponseBody
     public ScimUser updateUser(@RequestBody ScimUser user, @PathVariable String userId,
-                               @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
-                               HttpServletRequest request,
-                               HttpServletResponse httpServletResponse,
-                               OAuth2Authentication authentication) {
+            @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
+            HttpServletRequest request,
+            HttpServletResponse httpServletResponse,
+            OAuth2Authentication authentication) {
 
         throwWhenUserManagementIsDisallowed(user.getOrigin(), request);
         throwWhenInvalidSelfEdit(user, userId, request, authentication);
@@ -344,10 +344,10 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}", method = RequestMethod.PATCH)
     @ResponseBody
     public ScimUser patchUser(@RequestBody ScimUser patch, @PathVariable String userId,
-                              @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
-                              HttpServletRequest request,
-                              HttpServletResponse response,
-                              OAuth2Authentication authentication) {
+            @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            OAuth2Authentication authentication) {
 
         if (etag.equals("NaN")) {
             throw new ScimException("Missing If-Match for PUT", HttpStatus.BAD_REQUEST);
@@ -373,9 +373,9 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @ResponseBody
     @Transactional
     public ScimUser deleteUser(@PathVariable String userId,
-                               @RequestHeader(value = "If-Match", required = false) String etag,
-                               HttpServletRequest request,
-                               HttpServletResponse httpServletResponse) {
+            @RequestHeader(value = "If-Match", required = false) String etag,
+            HttpServletRequest request,
+            HttpServletResponse httpServletResponse) {
         int version = etag == null ? -1 : getVersion(userId, etag);
         ScimUser user = getUser(userId, httpServletResponse);
         throwWhenUserManagementIsDisallowed(user.getOrigin(), request);
@@ -433,8 +433,8 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}/verify-link", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<VerificationResponse> getUserVerificationLink(@PathVariable String userId,
-                                                                        @RequestParam(value = "client_id", required = false) String clientId,
-                                                                        @RequestParam(value = "redirect_uri") String redirectUri) {
+            @RequestParam(value = "client_id", required = false) String clientId,
+            @RequestParam(value = "redirect_uri") String redirectUri) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof OAuth2Authentication) {
@@ -461,8 +461,8 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}/verify", method = RequestMethod.GET)
     @ResponseBody
     public ScimUser verifyUser(@PathVariable String userId,
-                               @RequestHeader(value = "If-Match", required = false) String etag,
-                               HttpServletResponse httpServletResponse) {
+            @RequestHeader(value = "If-Match", required = false) String etag,
+            HttpServletResponse httpServletResponse) {
         int version = etag == null ? -1 : getVersion(userId, etag);
         ScimUser user = scimUserProvisioning.verifyUser(userId, version, identityZoneManager.getCurrentIdentityZoneId());
         scimUpdates.incrementAndGet();

@@ -173,7 +173,7 @@ public class JsonWebKey {
 
     public Set<KeyOperation> getKeyOps() {
         List<String> result = (List<String>) getKeyProperties().get(JWKParameterNames.KEY_OPS);
-        if (result==null) {
+        if (result == null) {
             result = Collections.emptyList();
         }
         return result.stream().map(KeyOperation::valueOf).collect(Collectors.toSet());

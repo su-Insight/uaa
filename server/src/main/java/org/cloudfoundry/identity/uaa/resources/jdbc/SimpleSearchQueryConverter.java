@@ -274,11 +274,11 @@ public class SimpleSearchQueryConverter implements SearchQueryConverter {
     }
 
     private String comparisonClause(SCIMFilter filter,
-                                    String comparator,
-                                    Map<String, Object> values,
-                                    String valuePrefix,
-                                    String valueSuffix,
-                                    String paramPrefix) {
+            String comparator,
+            Map<String, Object> values,
+            String valuePrefix,
+            String valueSuffix,
+            String paramPrefix) {
         String pName = getParamName(values, paramPrefix);
         String paramName = ":" + pName;
         if (filter.getFilterValue() == null) {
@@ -351,6 +351,6 @@ public class SimpleSearchQueryConverter implements SearchQueryConverter {
     }
 
     public String getJoinName() {
-        return (mapper instanceof JoinAttributeNameMapper joinAttributeNameMapper) ? joinAttributeNameMapper.getName() : UaaStringUtils.EMPTY_STRING;
+        return mapper instanceof JoinAttributeNameMapper joinAttributeNameMapper ? joinAttributeNameMapper.getName() : UaaStringUtils.EMPTY_STRING;
     }
 }

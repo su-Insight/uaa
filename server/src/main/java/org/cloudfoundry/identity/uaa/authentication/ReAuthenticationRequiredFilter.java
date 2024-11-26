@@ -32,7 +32,7 @@ public class ReAuthenticationRequiredFilter extends OncePerRequestFilter {
         }
         if (request.getParameter("max_age") != null && SecurityContextHolder.getContext().getAuthentication() instanceof UaaAuthentication) {
             UaaAuthentication auth = (UaaAuthentication) SecurityContextHolder.getContext().getAuthentication();
-            if ((System.currentTimeMillis() - auth.getAuthenticatedTime()) > (Long.valueOf(request.getParameter("max_age"))*1000)) {
+            if ((System.currentTimeMillis() - auth.getAuthenticatedTime()) > (Long.valueOf(request.getParameter("max_age")) * 1000)) {
                 reAuthenticationRequired = true;
                 requestParams.remove("max_age");
             }

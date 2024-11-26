@@ -90,7 +90,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         } else {
             if (possibleProviders.contains(uaaLoginHint.getOrigin())) {
                 loginHintToUse = uaaLoginHint;
-            } else if (allowedProviders == null || allowedProviders.contains(uaaLoginHint.getOrigin())){
+            } else if (allowedProviders == null || allowedProviders.contains(uaaLoginHint.getOrigin())) {
                 throw new ProviderConfigurationException("The origin provided in the login_hint does not match an active Identity Provider, that supports password grant.");
             } else {
                 throw new ProviderConfigurationException("Client is not authorized for specified user's identity provider.");
@@ -136,7 +136,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
             }
         } else if (allowedProviders.contains(OriginKeys.LDAP)) {
             loginHintToUse = new UaaLoginHint(OriginKeys.LDAP);
-        } else if (allowedProviders.size() == 0){
+        } else if (allowedProviders.size() == 0) {
             throw new BadCredentialsException("The client is not authorized for any identity provider that supports password grant.");
         } else {
             throw new BadCredentialsException("The client is authorized for multiple identity providers that support password grant and could not determine which identity provider to use.");
@@ -158,7 +158,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
             throw new ProviderConfigurationException("External OpenID Connect provider configuration is missing relyingPartySecret, jwtClientAuthentication or authMethod.");
         }
         String calcAuthMethod = ClientAuthentication.getCalculatedMethod(config.getAuthMethod(), clientSecret != null, config.getJwtClientAuthentication() != null);
-        String userName = authentication.getPrincipal() instanceof String ? (String)authentication.getPrincipal() : null;
+        String userName = authentication.getPrincipal() instanceof String ? (String) authentication.getPrincipal() : null;
         if (userName == null || authentication.getCredentials() == null || !(authentication.getCredentials() instanceof String)) {
             throw new BadCredentialsException("Request is missing username or password.");
         }
@@ -181,20 +181,20 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
             final boolean allowDynamicValueLookupInCustomZone = hasText(identityProvider.getAliasZid()) && hasText(identityProvider.getAliasId());
             params = new JwtClientAuthentication(externalOAuthAuthenticationManager.getKeyInfoService())
                     .getClientAuthenticationParameters(params, config, allowDynamicValueLookupInCustomZone);
-        } else if (ClientAuthentication.secretNeeded(calcAuthMethod)){
+        } else if (ClientAuthentication.secretNeeded(calcAuthMethod)) {
             String auth = clientId + ":" + clientSecret;
             headers.add("Authorization", "Basic " + Base64Utils.encodeToString(auth.getBytes()));
         } else {
             params.add(AbstractClientParametersAuthenticationFilter.CLIENT_ID, clientId);
         }
-        if (config.isSetForwardHeader() && authentication.getDetails() != null &&authentication.getDetails() instanceof UaaAuthenticationDetails) {
+        if (config.isSetForwardHeader() && authentication.getDetails() != null && authentication.getDetails() instanceof UaaAuthenticationDetails) {
             UaaAuthenticationDetails details = (UaaAuthenticationDetails) authentication.getDetails();
             if (details.getOrigin() != null) {
                 headers.add("X-Forwarded-For", details.getOrigin());
             }
         }
         params.add("grant_type", GRANT_TYPE_PASSWORD);
-        params.add("response_type","id_token");
+        params.add("response_type", "id_token");
         params.add("username", userName);
         params.add("password", passProvider.get());
         if (ObjectUtils.isNotEmpty(config.getScopes())) {
@@ -211,7 +211,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
             }
         }
         if (authentication.getDetails() instanceof UaaAuthenticationDetails) {
-            UaaAuthenticationDetails details = (UaaAuthenticationDetails)authentication.getDetails();
+            UaaAuthenticationDetails details = (UaaAuthenticationDetails) authentication.getDetails();
             for (String prompt : promptsToInclude) {
                 String[] values = details.getParameterMap().get(prompt);
                 if (values == null || values.length != 1 || !hasText(values[0])) {
@@ -222,11 +222,11 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         }
 
 
-
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         String idToken = null;
         try {
-            ResponseEntity<Map<String,String>> tokenResponse = rt.exchange(tokenUrl.toString(), HttpMethod.POST, request, new ParameterizedTypeReference<Map<String,String>>(){});
+            ResponseEntity<Map<String, String>> tokenResponse = rt.exchange(tokenUrl.toString(), HttpMethod.POST, request, new ParameterizedTypeReference<Map<String, String>>(){
+            });
 
             if (tokenResponse.hasBody()) {
                 Map<String, String> body = tokenResponse.getBody();

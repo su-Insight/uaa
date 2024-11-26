@@ -54,7 +54,7 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
             final UaaRandomStringUtil uaaRandomStringUtil,
             final @Qualifier("identityZoneProvisioning") IdentityZoneProvisioning identityZoneProvisioning,
             final IdentityZoneManager identityZoneManager
-        ) {
+    ) {
         this.providerProvisioning = providerProvisioning;
         this.oidcMetadataFetcher = oidcMetadataFetcher;
         this.uaaRandomStringUtil = uaaRandomStringUtil;
@@ -149,7 +149,7 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
         } else {
             idzConfig = identityZoneProvisioning.retrieve(zoneId).getConfig();
         }
-        return (idzConfig == null || Optional.of(idzConfig.getUserConfig()).map(UserConfig::isAllowOriginLoop).orElse(true)) ? 1 : 0;
+        return idzConfig == null || Optional.of(idzConfig.getUserConfig()).map(UserConfig::isAllowOriginLoop).orElse(true) ? 1 : 0;
     }
 
     @Override
@@ -208,8 +208,8 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
         try {
             issuedProvider = retrieveByExternId(issuer, OIDC10, zoneId);
             if (issuedProvider != null && issuedProvider.isActive()
-                && issuedProvider.getConfig() instanceof AbstractExternalOAuthIdentityProviderDefinition<?> oAuthIdentityProviderDefinition
-                && oAuthIdentityProviderDefinition.getIssuer().equals(issuer)) {
+                    && issuedProvider.getConfig() instanceof AbstractExternalOAuthIdentityProviderDefinition<?> oAuthIdentityProviderDefinition
+                    && oAuthIdentityProviderDefinition.getIssuer().equals(issuer)) {
                 return issuedProvider;
             }
         } catch (EmptyResultDataAccessException e) {
@@ -249,18 +249,18 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
     private List<IdentityProvider> overlayConfigurationsOfOidcIdps(final List<IdentityProvider> providers) {
         final List<IdentityProvider> overlayedProviders = new ArrayList<>();
         providers.forEach(p -> {
-                    if (p.getType().equals(OIDC10)) {
-                        try {
-                            final OIDCIdentityProviderDefinition overlayedDefinition = overlay(
-                                    (OIDCIdentityProviderDefinition) p.getConfig());
-                            p.setConfig(overlayedDefinition);
-                        } catch (final Exception e) {
-                            LOGGER.error("Identity provider excluded from login page due to a problem.", e);
-                            return;
-                        }
-                    }
-                    overlayedProviders.add(p);
-                });
+            if (p.getType().equals(OIDC10)) {
+                try {
+                    final OIDCIdentityProviderDefinition overlayedDefinition = overlay(
+                            (OIDCIdentityProviderDefinition) p.getConfig());
+                    p.setConfig(overlayedDefinition);
+                } catch (final Exception e) {
+                    LOGGER.error("Identity provider excluded from login page due to a problem.", e);
+                    return;
+                }
+            }
+            overlayedProviders.add(p);
+        });
         return overlayedProviders;
     }
 

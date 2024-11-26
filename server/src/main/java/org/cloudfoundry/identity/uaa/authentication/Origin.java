@@ -25,32 +25,32 @@ public class Origin {
     public static String getUserId(Authentication authentication) {
         String id;
         if (authentication.getPrincipal() instanceof UaaPrincipal) {
-            return ((UaaPrincipal)authentication.getPrincipal()).getId();
+            return ((UaaPrincipal) authentication.getPrincipal()).getId();
         } else if (authentication instanceof RemoteUserAuthentication) {
-            RemoteUserAuthentication remoteUserAuthentication = (RemoteUserAuthentication)authentication;
+            RemoteUserAuthentication remoteUserAuthentication = (RemoteUserAuthentication) authentication;
             return remoteUserAuthentication.getId();
         } else if (authentication instanceof UaaAuthentication) {
-            UaaAuthentication uaaAuthentication = (UaaAuthentication)authentication;
+            UaaAuthentication uaaAuthentication = (UaaAuthentication) authentication;
             return uaaAuthentication.getPrincipal().getId();
         } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken)authentication;
+            UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) authentication;
             if (auth.getPrincipal() instanceof UaaPrincipal) {
-                return ((UaaPrincipal)auth.getPrincipal()).getId();
+                return ((UaaPrincipal) auth.getPrincipal()).getId();
             }
-        } else if ((id=getUserIdThroughReflection(authentication,"getId"))!=null) {
+        } else if ((id = getUserIdThroughReflection(authentication, "getId")) != null) {
             return id;
         }
-        throw new IllegalArgumentException("Can not handle authentication["+authentication+"] of class:"+authentication.getClass());
+        throw new IllegalArgumentException("Can not handle authentication[" + authentication + "] of class:" + authentication.getClass());
     }
 
     public static String getUserIdThroughReflection(Authentication authentication, String methodName) {
         try {
             Method m = ReflectionUtils.findMethod(authentication.getClass(), methodName);
-            if (m==null) {
+            if (m == null) {
                 return null;
             }
             Object id = ReflectionUtils.invokeMethod(m, authentication);
-            if (id!=null) {
+            if (id != null) {
                 return id.toString();
             }
         } catch (Exception ignored) {

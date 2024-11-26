@@ -48,7 +48,7 @@ public class IdleTimer {
 
     public synchronized void startRequest() {
         if ((int) ++inflightRequests == 1) {
-            idleTime += (timeService.getCurrentTimeMillis() - lastIdleStart);
+            idleTime += timeService.getCurrentTimeMillis() - lastIdleStart;
         }
     }
 

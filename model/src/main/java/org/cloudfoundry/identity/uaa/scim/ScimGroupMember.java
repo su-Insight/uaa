@@ -96,7 +96,7 @@ public class ScimGroupMember<TEntity extends ScimCore> {
 
     public void setOrigin(String origin) {
         //don't allow null values
-        if (origin==null) {
+        if (origin == null) {
             throw new NullPointerException();
         }
         this.origin = origin;
@@ -121,11 +121,13 @@ public class ScimGroupMember<TEntity extends ScimCore> {
     }
 
 
-
     private static Type getEntityType(ScimCore entity) {
         Type type = null;
-        if(entity instanceof ScimGroup) { type = Type.GROUP; }
-        else if(entity instanceof ScimUser) { type = Type.USER; }
+        if (entity instanceof ScimGroup) {
+            type = Type.GROUP;
+        } else if (entity instanceof ScimUser) {
+            type = Type.USER;
+        }
         return type;
     }
 }

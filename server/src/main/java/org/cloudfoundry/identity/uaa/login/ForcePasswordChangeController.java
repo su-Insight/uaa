@@ -49,12 +49,12 @@ public class ForcePasswordChangeController {
 
     @RequestMapping(value = "/force_password_change", method = POST)
     public String handleForcePasswordChange(Model model,
-                                            @RequestParam("password") String password,
-                                            @RequestParam("password_confirmation") String passwordConfirmation,
-                                            HttpServletRequest request,
-                                            HttpServletResponse response, HttpSession httpSession) {
+            @RequestParam("password") String password,
+            @RequestParam("password_confirmation") String passwordConfirmation,
+            HttpServletRequest request,
+            HttpServletResponse response, HttpSession httpSession) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        UaaAuthentication authentication = ((UaaAuthentication) securityContext.getAuthentication());
+        UaaAuthentication authentication = (UaaAuthentication) securityContext.getAuthentication();
         UaaPrincipal principal = authentication.getPrincipal();
         String email = principal.getEmail();
 

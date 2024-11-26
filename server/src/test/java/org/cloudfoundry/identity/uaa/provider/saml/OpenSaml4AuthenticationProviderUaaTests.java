@@ -156,7 +156,7 @@ class OpenSaml4AuthenticationProviderUaaTests {
     private PasswordEncoder passwordEncoder;
 
     private static ScimUser createSamlUser(String username, String zoneId,
-                                           ScimUserProvisioning userProvisioning) {
+            ScimUserProvisioning userProvisioning) {
         ScimUser user = new ScimUser("", username, "Marissa", "Bloggs");
         user.setPrimaryEmail(TEST_EMAIL);
         user.setOrigin(OriginKeys.SAML);
@@ -348,11 +348,11 @@ class OpenSaml4AuthenticationProviderUaaTests {
         UaaAuthentication authentication = authenticate();
         assertThat(authentication.getAuthorities()).
                 containsExactlyInAnyOrder(
-                        new SimpleGrantedAuthority(UAA_SAML_ADMIN),
-                        new SimpleGrantedAuthority(UAA_SAML_USER),
-                        new SimpleGrantedAuthority(UAA_SAML_TEST),
-                        new SimpleGrantedAuthority(UaaAuthority.UAA_USER.getAuthority())
-                );
+                new SimpleGrantedAuthority(UAA_SAML_ADMIN),
+                new SimpleGrantedAuthority(UAA_SAML_USER),
+                new SimpleGrantedAuthority(UAA_SAML_TEST),
+                new SimpleGrantedAuthority(UaaAuthority.UAA_USER.getAuthority())
+        );
     }
 
     @Test
@@ -530,10 +530,10 @@ class OpenSaml4AuthenticationProviderUaaTests {
     }
 
     private Map<String, String> getUserAttributes(String firstName,
-                                                  String lastName,
-                                                  String emailAddress,
-                                                  String phoneNumber,
-                                                  Boolean emailVerified) {
+            String lastName,
+            String emailAddress,
+            String phoneNumber,
+            Boolean emailVerified) {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("firstName", firstName);
         attributes.put("lastName", lastName);

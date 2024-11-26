@@ -48,7 +48,7 @@ class ExternalOAuthAuthenticationFilterTest {
         @Test
         void itShouldCallTheNextFilter() throws IOException, ServletException {
             externalOAuthAuthenticationFilter = new ExternalOAuthAuthenticationFilter(externalOAuthAuthenticationManager, null);
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInRequest(request, OAUTH_STATE);
                 mockStateParamInSession(request.getSession(), ORIGIN_KEY, OAUTH_STATE);
@@ -66,7 +66,7 @@ class ExternalOAuthAuthenticationFilterTest {
             when(externalOAuthAuthenticationManager.authenticate(any())).thenReturn(mockAuthentication);
 
             externalOAuthAuthenticationFilter = new ExternalOAuthAuthenticationFilter(externalOAuthAuthenticationManager, successHandler);
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInRequest(request, OAUTH_STATE);
                 mockStateParamInSession(request.getSession(), ORIGIN_KEY, OAUTH_STATE);
@@ -90,7 +90,7 @@ class ExternalOAuthAuthenticationFilterTest {
 
         @Test
         void itShouldNotCallTheNextFilter() throws IOException, ServletException {
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInRequest(request, OAUTH_STATE);
                 mockStateParamInSession(request.getSession(), ORIGIN_KEY, OAUTH_STATE);
@@ -112,7 +112,7 @@ class ExternalOAuthAuthenticationFilterTest {
 
         @Test
         void itThrowsIfNoSession() throws IOException, ServletException {
-            HttpServletRequest mockRequest = mockRedirectRequest(false, ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(false, ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInRequest(request, OAUTH_STATE);
             });
@@ -126,7 +126,7 @@ class ExternalOAuthAuthenticationFilterTest {
 
         @Test
         void itThrowsIfNoStateInSession() throws IOException, ServletException {
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInRequest(request, OAUTH_STATE);
             });
@@ -140,7 +140,7 @@ class ExternalOAuthAuthenticationFilterTest {
 
         @Test
         void itThrowsIfNoStateInRequest() throws IOException, ServletException {
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInSession(request.getSession(), ORIGIN_KEY, OAUTH_STATE);
             });
@@ -154,7 +154,7 @@ class ExternalOAuthAuthenticationFilterTest {
 
         @Test
         void itThrowsIfStateIsMismatched() throws IOException, ServletException {
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockAuthenticationInRequest(request);
                 mockStateParamInRequest(request, "surprise");
                 mockStateParamInSession(request.getSession(), ORIGIN_KEY, OAUTH_STATE);
@@ -180,7 +180,7 @@ class ExternalOAuthAuthenticationFilterTest {
         void itRedirects() throws IOException, ServletException {
             RequestDispatcher mockRequestDispatcher = mock(RequestDispatcher.class);
 
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 mockStateParamInRequest(request, OAUTH_STATE);
                 mockStateParamInSession(request.getSession(), ORIGIN_KEY, OAUTH_STATE);
                 when(request.getRequestDispatcher("/login_implicit")).thenReturn(mockRequestDispatcher);
@@ -194,10 +194,10 @@ class ExternalOAuthAuthenticationFilterTest {
 
         @Test
         void itRedirects_EvenWhenTheStateHasNotYetBeenPulledFromTheHashFragmentYet()
-            throws IOException, ServletException {
+                throws IOException, ServletException {
             RequestDispatcher mockRequestDispatcher = mock(RequestDispatcher.class);
 
-            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, (request) -> {
+            HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request -> {
                 when(request.getRequestDispatcher("/login_implicit")).thenReturn(mockRequestDispatcher);
             });
             HttpServletResponse mockResponse = mock(HttpServletResponse.class);

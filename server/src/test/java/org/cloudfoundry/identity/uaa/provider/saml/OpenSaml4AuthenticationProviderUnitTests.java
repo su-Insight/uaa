@@ -583,8 +583,8 @@ class OpenSaml4AuthenticationProviderUnitTests {
         Converter<ResponseToken, Saml2ResponseValidatorResult> validator = mock(Converter.class);
         // @formatter:off
         provider.setResponseValidator(responseToken -> OpenSaml4AuthenticationProvider.createDefaultResponseValidator()
-                .convert(responseToken)
-                .concat(validator.convert(responseToken))
+                        .convert(responseToken)
+                        .concat(validator.convert(responseToken))
         );
         // @formatter:on
         Response response = response();
@@ -653,7 +653,7 @@ class OpenSaml4AuthenticationProviderUnitTests {
 
     private String serializedRequest(AuthnRequest request, Saml2MessageBinding binding) {
         String xml = serialize(request);
-        return (binding == Saml2MessageBinding.POST) ? Saml2Utils.samlEncode(xml.getBytes(StandardCharsets.UTF_8))
+        return binding == Saml2MessageBinding.POST ? Saml2Utils.samlEncode(xml.getBytes(StandardCharsets.UTF_8))
                 : Saml2Utils.samlEncode(Saml2Utils.samlDeflate(xml));
     }
 
@@ -708,12 +708,12 @@ class OpenSaml4AuthenticationProviderUnitTests {
     }
 
     private Saml2AuthenticationToken token(Response response, RelyingPartyRegistration.Builder registration,
-                                           AbstractSaml2AuthenticationRequest authenticationRequest) {
+            AbstractSaml2AuthenticationRequest authenticationRequest) {
         return new Saml2AuthenticationToken(registration.build(), serialize(response), authenticationRequest);
     }
 
     private AbstractSaml2AuthenticationRequest mockedStoredAuthenticationRequest(String requestId,
-                                                                                 Saml2MessageBinding binding, boolean corruptRequestString) {
+            Saml2MessageBinding binding, boolean corruptRequestString) {
         AuthnRequest request = request();
         if (requestId != null) {
             request.setID(requestId);

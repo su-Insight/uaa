@@ -343,7 +343,7 @@ class JdbcScimGroupMembershipManagerTests {
         assertThat(jdbcTemplate.queryForObject("select count(*) from " + groups +
                 " where identity_zone_id=?", new Object[]{otherIdentityZone.getId()}, Integer.class), is(0));
         assertThat(jdbcTemplate.queryForObject("select count(*) from external_group_mapping where group_id in (select id from " +
-                groups  + " where identity_zone_id=?)", new Object[]{otherIdentityZone.getId()}, Integer.class), is(0));
+                groups + " where identity_zone_id=?)", new Object[]{otherIdentityZone.getId()}, Integer.class), is(0));
         assertThat(jdbcTemplate.queryForObject("select count(*) from group_membership where group_id in (select id from " +
                 groups + " where identity_zone_id=? and displayName like ?)", new Object[]{IdentityZone.getUaaZoneId(), "zones." + otherIdentityZone.getId() + ".%"}, Integer.class), is(0));
         assertThat(jdbcTemplate.queryForObject("select count(*) from " +
@@ -642,7 +642,7 @@ class JdbcScimGroupMembershipManagerTests {
     @Test
     void testGroupsWithMemberAndMaxSqlParameter() throws SQLException {
         int oldValue = jdbcScimGroupMembershipManager.getMaxSqlParameters();
-        for (int l: List.of(-1, 10)) {
+        for (int l : List.of(-1, 10)) {
             jdbcScimGroupMembershipManager.setMaxSqlParameters(l);
 
             for (int i = 0; i < 5; i++) {
@@ -669,7 +669,7 @@ class JdbcScimGroupMembershipManagerTests {
 
     private void validateM5(int i, Set<ScimGroup> m5, int prefix) {
         int count = 0;
-        for (ScimGroup g: m5) {
+        for (ScimGroup g : m5) {
             if (g.getId().startsWith("testGroup" + prefix)) count++;
         }
         Assert.assertEquals(i, count);
@@ -701,7 +701,7 @@ class JdbcScimGroupMembershipManagerTests {
             final String id,
             final String name,
             final String zoneId,
-            final JdbcTemplate jdbcTemplate) throws SQLException{
+            final JdbcTemplate jdbcTemplate) throws SQLException {
         TestUtils.assertNoSuchUser(jdbcTemplate, id);
         jdbcTemplate.execute(String.format(ADD_GROUP_SQL_FORMAT,
                 dbUtils.getQuotedIdentifier("groups", jdbcTemplate), id, name, zoneId));

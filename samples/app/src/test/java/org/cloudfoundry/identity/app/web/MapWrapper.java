@@ -44,7 +44,7 @@ public class MapWrapper {
 
     public <T> T get(String expression, Class<T> type) {
         return parser.parseExpression(expression).getValue(context, target,
-                        type);
+                type);
     }
 
     @Override

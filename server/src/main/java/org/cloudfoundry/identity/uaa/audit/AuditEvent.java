@@ -62,7 +62,11 @@ public class AuditEvent {
         return identityZoneId;
     }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getAuthenticationType() { return authenticationType; }
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
 }

@@ -439,7 +439,7 @@ public abstract class JwtTokenSignedByThisUAA {
 
         List<?> scopes = (List<?>) scopeClaim;
 
-        if(scopes.stream().allMatch(String.class::isInstance)) {
+        if (scopes.stream().allMatch(String.class::isInstance)) {
             return scopes.stream().map(o -> (String) o).collect(toList());
         } else {
             throw unparsableClaimException;

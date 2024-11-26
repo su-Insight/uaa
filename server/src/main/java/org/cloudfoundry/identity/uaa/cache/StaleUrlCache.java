@@ -34,7 +34,7 @@ public class StaleUrlCache implements UrlContentCache {
     }
 
     public StaleUrlCache(final Duration cacheExpiration, final TimeService timeService, final int maxEntries,
-                         final Ticker ticker) {
+            final Ticker ticker) {
         this.cache = Caffeine.newBuilder().refreshAfterWrite(cacheExpiration)
                 .maximumSize(maxEntries).ticker(ticker).build(new UrlCacheLoader(timeService));
     }
@@ -46,7 +46,7 @@ public class StaleUrlCache implements UrlContentCache {
 
     @Override
     public byte[] getUrlContent(String uri, final RestTemplate template, final HttpMethod method,
-                                HttpEntity<?> requestEntity) {
+            HttpEntity<?> requestEntity) {
         try {
             return cache.get(new UriRequest(uri, template, method, requestEntity)).data;
         } catch (UncheckedExecutionException e) {
@@ -87,7 +87,7 @@ public class StaleUrlCache implements UrlContentCache {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+            result = prime * result + (uri == null ? 0 : uri.hashCode());
             return result;
         }
 
@@ -119,7 +119,7 @@ public class StaleUrlCache implements UrlContentCache {
         }
     }
 
-  class UrlCacheLoader implements CacheLoader<UriRequest, CacheEntry> {
+    class UrlCacheLoader implements CacheLoader<UriRequest, CacheEntry> {
 
         private final TimeService timeService;
 

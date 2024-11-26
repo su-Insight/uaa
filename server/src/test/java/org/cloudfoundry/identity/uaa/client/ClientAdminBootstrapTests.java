@@ -494,7 +494,7 @@ class ClientAdminBootstrapTests {
             clients.put(clientId, map);
 
             doThrow(new ClientAlreadyExistsException("Planned"))
-                .when(multitenantJdbcClientDetailsService).addClientDetails(any(ClientDetails.class), anyString());
+                    .when(multitenantJdbcClientDetailsService).addClientDetails(any(ClientDetails.class), anyString());
             clientAdminBootstrap.afterPropertiesSet();
             verify(multitenantJdbcClientDetailsService, times(1)).addClientDetails(any(ClientDetails.class), anyString());
             ArgumentCaptor<ClientDetails> captor = ArgumentCaptor.forClass(ClientDetails.class);

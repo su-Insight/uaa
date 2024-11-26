@@ -139,13 +139,13 @@ public class Approval {
         }
         Approval other = (Approval) o;
         return userId.equals(other.userId) && clientId.equals(other.clientId) && scope.equals(other.scope)
-                        && status == other.status;
+                && status == other.status;
     }
 
     @Override
     public String toString() {
         return String.format("[%s, %s, %s, %s, %s, %s]", userId, scope, clientId, expiresAt, status.toString(),
-                        lastUpdatedAt);
+                lastUpdatedAt);
     }
 
     public Approval setStatus(ApprovalStatus status) {

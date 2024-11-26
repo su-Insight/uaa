@@ -30,7 +30,8 @@ public class UserInfo {
     @JsonProperty("user_attributes")
     private LinkedMultiValueMap<String, String> userAttributes;
 
-    public UserInfo(){}
+    public UserInfo() {
+    }
 
 
     @JsonIgnore

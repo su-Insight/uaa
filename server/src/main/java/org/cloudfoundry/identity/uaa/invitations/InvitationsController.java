@@ -239,11 +239,11 @@ public class InvitationsController {
 
     @RequestMapping(value = "/accept.do", method = POST)
     public String acceptInvitation(@RequestParam("password") String password,
-                                   @RequestParam("password_confirmation") String passwordConfirmation,
-                                   @RequestParam("code") String code,
-                                   @RequestParam(value = "does_user_consent", required = false) boolean doesUserConsent,
-                                   Model model,
-                                   HttpServletResponse response) {
+            @RequestParam("password_confirmation") String passwordConfirmation,
+            @RequestParam("code") String code,
+            @RequestParam(value = "does_user_consent", required = false) boolean doesUserConsent,
+            Model model,
+            HttpServletResponse response) {
 
         PasswordConfirmationValidation validation = new PasswordConfirmationValidation(password, passwordConfirmation);
 
@@ -308,10 +308,10 @@ public class InvitationsController {
 
     @RequestMapping(value = "/accept_enterprise.do", method = POST)
     public String acceptLdapInvitation(@RequestParam("enterprise_username") String username,
-                                       @RequestParam("enterprise_password") String password,
-                                       @RequestParam("enterprise_email") String email,
-                                       @RequestParam("code") String code,
-                                       Model model, HttpServletResponse response) {
+            @RequestParam("enterprise_password") String password,
+            @RequestParam("enterprise_email") String email,
+            @RequestParam("code") String code,
+            Model model, HttpServletResponse response) {
 
         ExpiringCode expiringCode = expiringCodeStore.retrieveCode(code, identityZoneManager.getCurrentIdentityZoneId());
         if (expiringCode == null) {

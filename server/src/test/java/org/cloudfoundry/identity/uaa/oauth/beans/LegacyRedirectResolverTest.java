@@ -165,7 +165,7 @@ class LegacyRedirectResolverTest {
 
             resolver.resolveRedirect(requestedRedirectUri, client);
             assertThat(logEvents, hasItem(
-                warning(expectedWarning(client.getClientId(), requestedRedirectUri, configuredRedirectUri)))
+                    warning(expectedWarning(client.getClientId(), requestedRedirectUri, configuredRedirectUri)))
             );
         }
 

@@ -19,8 +19,8 @@ public abstract class BaseUaaRelyingPartyRegistrationRepository implements Relyi
     protected final List<SignatureAlgorithm> signatureAlgorithms;
 
     protected BaseUaaRelyingPartyRegistrationRepository(String uaaWideSamlEntityID, String uaaWideSamlEntityIDAlias,
-                                                        List<SignatureAlgorithm> signatureAlgorithms,
-                                                        String uaaWideSamlNameId) {
+            List<SignatureAlgorithm> signatureAlgorithms,
+            String uaaWideSamlNameId) {
         this.uaaWideSamlEntityID = uaaWideSamlEntityID;
         this.uaaWideSamlEntityIDAlias = uaaWideSamlEntityIDAlias;
         this.signatureAlgorithms = signatureAlgorithms;

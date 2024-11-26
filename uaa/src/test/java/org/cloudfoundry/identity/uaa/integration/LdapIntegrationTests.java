@@ -149,11 +149,11 @@ class LdapIntegrationTests {
         clientDetails.setClientSecret("secret");
 
         String idToken = (String) IntegrationTestUtils.getPasswordToken(zoneUrl,
-                        clientDetails.getClientId(),
-                        clientDetails.getClientSecret(),
-                        "marissa9",
-                        "ldap9",
-                        "openid user_attributes roles")
+                clientDetails.getClientId(),
+                clientDetails.getClientSecret(),
+                "marissa9",
+                "ldap9",
+                "openid user_attributes roles")
                 .get("id_token");
 
         assertThat(idToken).isNotNull();
@@ -174,11 +174,11 @@ class LdapIntegrationTests {
         //no user_attribute scope provided
         idToken =
                 (String) IntegrationTestUtils.getPasswordToken(zoneUrl,
-                                clientDetails.getClientId(),
-                                clientDetails.getClientSecret(),
-                                "marissa9",
-                                "ldap9",
-                                "openid")
+                        clientDetails.getClientId(),
+                        clientDetails.getClientSecret(),
+                        "marissa9",
+                        "ldap9",
+                        "openid")
                         .get("id_token");
 
         assertThat(idToken).isNotNull();
@@ -192,11 +192,11 @@ class LdapIntegrationTests {
         String username = "琳贺";
         idToken =
                 (String) IntegrationTestUtils.getPasswordToken(zoneUrl,
-                                clientDetails.getClientId(),
-                                clientDetails.getClientSecret(),
-                                username,
-                                "koala",
-                                "openid")
+                        clientDetails.getClientId(),
+                        clientDetails.getClientSecret(),
+                        username,
+                        "koala",
+                        "openid")
                         .get("id_token");
 
         assertThat(idToken).isNotNull();

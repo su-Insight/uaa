@@ -191,15 +191,15 @@ public class IdentityProvider<T extends AbstractIdentityProviderDefinition> impl
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((config == null) ? 0 : config.hashCode());
-        result = prime * result + ((created == null) ? 0 : created.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((lastModified == null) ? 0 : lastModified.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((originKey == null) ? 0 : originKey.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        result = prime * result + ((aliasId == null) ? 0 : aliasId.hashCode());
-        result = prime * result + ((aliasZid == null) ? 0 : aliasZid.hashCode());
+        result = prime * result + (config == null ? 0 : config.hashCode());
+        result = prime * result + (created == null ? 0 : created.hashCode());
+        result = prime * result + (id == null ? 0 : id.hashCode());
+        result = prime * result + (lastModified == null ? 0 : lastModified.hashCode());
+        result = prime * result + (name == null ? 0 : name.hashCode());
+        result = prime * result + (originKey == null ? 0 : originKey.hashCode());
+        result = prime * result + (type == null ? 0 : type.hashCode());
+        result = prime * result + (aliasId == null ? 0 : aliasId.hashCode());
+        result = prime * result + (aliasZid == null ? 0 : aliasZid.hashCode());
         result = prime * result + version;
         return result;
     }

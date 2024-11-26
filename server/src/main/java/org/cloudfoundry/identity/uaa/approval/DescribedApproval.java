@@ -24,12 +24,12 @@ public class DescribedApproval extends Approval {
 
     public DescribedApproval(Approval approval) {
         this
-            .setLastUpdatedAt(approval.getLastUpdatedAt())
-            .setUserId(approval.getUserId())
-            .setStatus(approval.getStatus())
-            .setExpiresAt(approval.getExpiresAt())
-            .setScope(approval.getScope())
-            .setClientId(approval.getClientId());
+                .setLastUpdatedAt(approval.getLastUpdatedAt())
+                .setUserId(approval.getUserId())
+                .setStatus(approval.getStatus())
+                .setExpiresAt(approval.getExpiresAt())
+                .setScope(approval.getScope())
+                .setClientId(approval.getClientId());
     }
 
     @JsonIgnore

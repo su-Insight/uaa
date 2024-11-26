@@ -20,7 +20,7 @@ import org.cloudfoundry.identity.uaa.authentication.GenericPasswordPolicy;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientSecretPolicy extends GenericPasswordPolicy<ClientSecretPolicy> {
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -49,12 +49,12 @@ public class ClientSecretPolicy extends GenericPasswordPolicy<ClientSecretPolicy
     }
 
     public ClientSecretPolicy(int minLength,
-                          int maxLength,
-                          int requireUpperCaseCharacter,
-                          int requireLowerCaseCharacter,
-                          int requireDigit,
-                          int requireSpecialCharacter,
-                          int expireSecretInMonths) {
+            int maxLength,
+            int requireUpperCaseCharacter,
+            int requireLowerCaseCharacter,
+            int requireDigit,
+            int requireSpecialCharacter,
+            int expireSecretInMonths) {
         super(minLength,
                 maxLength,
                 requireUpperCaseCharacter,
@@ -72,7 +72,7 @@ public class ClientSecretPolicy extends GenericPasswordPolicy<ClientSecretPolicy
         this.expireSecretInMonths = expireSecretInMonths;
         return this;
     }
-    
+
     @Override
     public boolean allPresentAndPositive() {
         return super.allPresentAndPositive() && expireSecretInMonths >= 0;

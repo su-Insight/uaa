@@ -131,7 +131,7 @@ public class YamlConfigurationValidator<T> implements FactoryBean<T>, Initializi
         if (Arrays.asList(environment.getActiveProfiles()).contains("strict")) {
             this.exceptionIfInvalid = true;
         }
-            
+
     }
 
 }

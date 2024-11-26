@@ -73,10 +73,10 @@ class ForcePasswordChangeControllerTest extends TestClassNullifier {
     @Test
     void handleForcePasswordChange() throws Exception {
         mockMvc.perform(
-                        post("/uaa/force_password_change")
-                                .param("password", "pwd")
-                                .param("password_confirmation", "pwd")
-                                .contextPath("/uaa"))
+                post("/uaa/force_password_change")
+                        .param("password", "pwd")
+                        .param("password_confirmation", "pwd")
+                        .contextPath("/uaa"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/uaa/force_password_change_completed"));
         verify(mockUaaAuthentication, times(1)).setAuthenticatedTime(anyLong());
@@ -85,9 +85,9 @@ class ForcePasswordChangeControllerTest extends TestClassNullifier {
     @Test
     void handleForcePasswordChangeWithRedirect() throws Exception {
         mockMvc.perform(
-                        post("/force_password_change")
-                                .param("password", "pwd")
-                                .param("password_confirmation", "pwd"))
+                post("/force_password_change")
+                        .param("password", "pwd")
+                        .param("password_confirmation", "pwd"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/force_password_change_completed"));
     }
@@ -96,9 +96,9 @@ class ForcePasswordChangeControllerTest extends TestClassNullifier {
     void passwordAndConfirmAreDifferent() throws Exception {
         when(mockResourcePropertySource.getProperty("force_password_change.form_error")).thenReturn("Passwords must match and not be empty.");
         mockMvc.perform(
-                        post("/force_password_change")
-                                .param("password", "pwd")
-                                .param("password_confirmation", "nopwd"))
+                post("/force_password_change")
+                        .param("password", "pwd")
+                        .param("password_confirmation", "nopwd"))
                 .andExpect(status().isUnprocessableEntity());
     }
 }

@@ -16,7 +16,7 @@ public class TestUaaUrlBuilder {
             throw new RuntimeException("TARGET_CF_SYSTEM_DOMAIN environment variable must be set for tests to run. Example value: uaa-acceptance.cf-app.com");
         }
 
-        systemDomain = systemDomain.replaceAll("/$","");
+        systemDomain = systemDomain.replaceAll("/$", "");
         path = path.replaceAll("^/", "");
 
         String url;
@@ -46,7 +46,7 @@ public class TestUaaUrlBuilder {
     }
 
     public String getSystemDomain() {
-        systemDomain = systemDomain.replaceAll("/$","");
+        systemDomain = systemDomain.replaceAll("/$", "");
         return systemDomain;
     }
 }

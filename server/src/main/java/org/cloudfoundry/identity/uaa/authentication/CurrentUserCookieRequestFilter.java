@@ -75,6 +75,6 @@ public class CurrentUserCookieRequestFilter extends OncePerRequestFilter {
         Authentication authentication = getContext().getAuthentication();
         return authentication != null &&
                 authentication instanceof UaaAuthentication &&
-                ((UaaAuthentication)authentication).isAuthenticated();
+                ((UaaAuthentication) authentication).isAuthenticated();
     }
 }

@@ -130,11 +130,11 @@ class SamlKeyRotationMockMvcTests {
 
     private XmlAssert getMetadataAssert() throws Exception {
         String metadata = mockMvc.perform(
-                        get(METADATA_URL)
-                                .header("Host", zone.getSubdomain() + ".localhost")
-                                .accept(APPLICATION_XML)
-                )
-                .andDo(print())
+                get(METADATA_URL)
+                        .header("Host", zone.getSubdomain() + ".localhost")
+                        .accept(APPLICATION_XML)
+        )
+        .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 

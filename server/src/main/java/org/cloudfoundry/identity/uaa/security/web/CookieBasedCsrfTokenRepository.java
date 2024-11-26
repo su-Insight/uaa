@@ -97,7 +97,7 @@ public class CookieBasedCsrfTokenRepository implements CsrfTokenRepository {
     @Override
     public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
         boolean expire = false;
-        if (token==null) {
+        if (token == null) {
             token = generateToken(request);
             expire = true;
         }
@@ -118,7 +118,7 @@ public class CookieBasedCsrfTokenRepository implements CsrfTokenRepository {
     public CsrfToken loadToken(HttpServletRequest request) {
         boolean requiresCsrfProtection = CsrfFilter.DEFAULT_CSRF_MATCHER.matches(request);
 
-        if(requiresCsrfProtection) {
+        if (requiresCsrfProtection) {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : request.getCookies()) {

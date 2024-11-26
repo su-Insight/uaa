@@ -477,8 +477,8 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 .andExpect(status().isUnauthorized())
                 .andReturn().getResponse().getContentAsString();
 
-        Map<String, String> error = (JsonUtils.readValue(response, new TypeReference<Map<String, String>>() {
-        }));
+        Map<String, String> error = JsonUtils.readValue(response, new TypeReference<Map<String, String>>() {
+        });
         String error_description = error.get("error_description");
         assertNotNull(error_description);
         assertEquals("password change required", error_description);
@@ -496,7 +496,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                         .session(getAuthenticatedSession(user))
                         .accept(APPLICATION_JSON)
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         String code = JsonUtils.readValue(content, String.class);
@@ -1410,7 +1410,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                         .param(OAuth2Utils.REDIRECT_URI, redirectUrl)
                         .with(cookieCsrf())
         )
-                .andExpect(status().is3xxRedirection())
+        .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("Location", startsWith(redirectUrl)))
                 .andExpect(header().string("Location", containsString("error=interaction_required")));
     }
@@ -1583,7 +1583,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 mockMvc.perform(
                         get("/login")
                 )
-                        .andDo(print())
+                .andDo(print())
                         .andExpect(content().string(not(containsString(FORM_REDIRECT_PARAMETER))))
                         .andReturn().getRequest().getSession(false));
 
@@ -1592,7 +1592,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 get("/login")
                         .session(new MockHttpSession())
         )
-                .andDo(print())
+        .andDo(print())
                 .andExpect(content().string(not(containsString(FORM_REDIRECT_PARAMETER))));
     }
 
@@ -1666,7 +1666,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 get("/login")
                         .session(session)
         )
-                .andDo(print())
+        .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(FORM_REDIRECT_PARAMETER)))
                 .andExpect(content().string(containsString(encodedRedirectUri)));
@@ -1680,20 +1680,20 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                         .param("username", username)
                         .param("password", "invalid")
         )
-                .andExpect(status().isFound())
+        .andExpect(status().isFound())
                 .andExpect(header().string("Location", containsString("/login")))
                 .andReturn();
 
         session = (MockHttpSession) result.getRequest().getSession(false);
         assertNotNull(session);
-        savedRequest =  SessionUtils.getSavedRequestSession(session);
+        savedRequest = SessionUtils.getSavedRequestSession(session);
         assertNotNull(savedRequest);
 
         mockMvc.perform(
                 get("/login")
                         .session(session)
         )
-                .andDo(print())
+        .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(FORM_REDIRECT_PARAMETER)))
                 .andExpect(content().string(containsString(encodedRedirectUri)));
@@ -1706,7 +1706,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                         .param("username", username)
                         .param("password", SECRET)
         )
-                .andExpect(status().isFound())
+        .andExpect(status().isFound())
                 .andExpect(header().string("Location", authUrl));
     }
 
@@ -1765,7 +1765,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 .param(OAuth2Utils.GRANT_TYPE, "password")
                 .param(OAuth2Utils.CLIENT_ID, "cf")
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         Map<String, Object> tokenResponse = JsonUtils.readValue(tokenString, new TypeReference<Map<String, Object>>() {
@@ -3533,7 +3533,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         String state = generator.generate();
         MockHttpServletRequestBuilder authRequest = get("/oauth/authorize")
-                .header("Authorization", "Basic " + new String(org.apache.commons.codec.binary.Base64.encodeBase64(("identity:identitysecret").getBytes())))
+                .header("Authorization", "Basic " + new String(org.apache.commons.codec.binary.Base64.encodeBase64("identity:identitysecret".getBytes())))
                 .header("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .session(session)
                 .param(OAuth2Utils.GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
@@ -3572,7 +3572,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         String state = generator.generate();
         MockHttpServletRequestBuilder authRequest = get("/oauth/authorize")
-                .header("Authorization", "Basic " + new String(org.apache.commons.codec.binary.Base64.encodeBase64(("identity:identitysecret").getBytes())))
+                .header("Authorization", "Basic " + new String(org.apache.commons.codec.binary.Base64.encodeBase64("identity:identitysecret".getBytes())))
                 .header("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .session(session)
                 .param(OAuth2Utils.GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
@@ -3587,7 +3587,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
         Thread.sleep(2000);
 
         authRequest = get("/oauth/authorize")
-                .header("Authorization", "Basic " + new String(org.apache.commons.codec.binary.Base64.encodeBase64(("identity:identitysecret").getBytes())))
+                .header("Authorization", "Basic " + new String(org.apache.commons.codec.binary.Base64.encodeBase64("identity:identitysecret".getBytes())))
                 .header("Accept", MediaType.APPLICATION_JSON_VALUE)
                 .session(session)
                 .param(OAuth2Utils.GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE)
@@ -3978,10 +3978,10 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
     }
 
     private MvcResult doPasswordGrant(String username,
-                                      String password,
-                                      String clientId,
-                                      String clientSecret,
-                                      ResultMatcher resultMatcher) throws Exception {
+            String password,
+            String clientId,
+            String clientSecret,
+            ResultMatcher resultMatcher) throws Exception {
         return mockMvc.perform(
                 post("/oauth/token")
                         .param("client_id", clientId)
@@ -3996,9 +3996,9 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
     }
 
     private MvcResult doRefreshGrant(String refreshToken,
-                                     String clientId,
-                                     String clientSecret,
-                                     ResultMatcher resultMatcher) throws Exception {
+            String clientId,
+            String clientSecret,
+            ResultMatcher resultMatcher) throws Exception {
         return mockMvc.perform(
                 post("/oauth/token")
                         .param("client_id", clientId)
@@ -4078,7 +4078,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 .with(httpBasic(clientId, BADSECRET))
                 .param("grant_type", "client_credentials")
         )
-                .andExpect(status().isUnauthorized())
+        .andExpect(status().isUnauthorized())
                 .andReturn().getResponse().getContentAsString();
     }
 
@@ -4090,7 +4090,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 .param("client_id", clientId)
                 .param("client_secret", BADSECRET)
         )
-                .andExpect(status().isUnauthorized())
+        .andExpect(status().isUnauthorized())
                 .andReturn().getResponse().getContentAsString();
     }
 
@@ -4100,7 +4100,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 .with(httpBasic(clientId, SECRET))
                 .param("grant_type", "client_credentials")
         )
-                .andExpect(status().isOk())
+        .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
     }
 

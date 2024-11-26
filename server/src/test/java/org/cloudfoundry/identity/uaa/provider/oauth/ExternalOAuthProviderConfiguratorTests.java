@@ -189,10 +189,10 @@ class ExternalOAuthProviderConfiguratorTests {
 
     private static Stream<Arguments> retrieveActiveByTypes_ShouldReturnEmptyListWhenNeitherOidcNorOAuthInTypes() {
         return Stream.of(
-                new String[] { SAML },
-                new String[] { SAML, LDAP },
-                new String[] {  },
-                (Object) new String[] { UAA, LDAP, LDAP } // contains duplicates
+                new String[]{SAML},
+                new String[]{SAML, LDAP},
+                new String[]{},
+                (Object) new String[]{UAA, LDAP, LDAP} // contains duplicates
         ).map(Arguments::of);
     }
 
@@ -258,13 +258,13 @@ class ExternalOAuthProviderConfiguratorTests {
 
     private static Stream<Arguments> retrieveActiveByTypes() {
         return Stream.of(
-                new String[] { OIDC10, OAUTH20 },
-                new String[] { OIDC10 },
-                new String[] { OAUTH20 },
-                new String[] { OIDC10, OIDC10, OAUTH20 }, // contains duplicates
-                new String[] { OIDC10, LDAP, SAML }, // ldap and saml should be ignored
-                new String[] { OIDC10, OIDC10, LDAP, SAML }, // ldap and saml should be ignored
-                (Object) new String[] { OIDC10, OIDC10, OAUTH20, LDAP, SAML } // ldap and saml should be ignored
+                new String[]{OIDC10, OAUTH20},
+                new String[]{OIDC10},
+                new String[]{OAUTH20},
+                new String[]{OIDC10, OIDC10, OAUTH20}, // contains duplicates
+                new String[]{OIDC10, LDAP, SAML}, // ldap and saml should be ignored
+                new String[]{OIDC10, OIDC10, LDAP, SAML}, // ldap and saml should be ignored
+                (Object) new String[]{OIDC10, OIDC10, OAUTH20, LDAP, SAML} // ldap and saml should be ignored
         ).map(Arguments::of);
     }
 
@@ -299,7 +299,7 @@ class ExternalOAuthProviderConfiguratorTests {
             definition.setIssuer(issuer);
             return null;
         }).when(mockOidcMetadataFetcher)
-            .fetchMetadataAndUpdateDefinition(any(OIDCIdentityProviderDefinition.class));
+                .fetchMetadataAndUpdateDefinition(any(OIDCIdentityProviderDefinition.class));
 
         IdentityProvider<OIDCIdentityProviderDefinition> activeExternalOAuthProvider = configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId());
 
@@ -324,7 +324,7 @@ class ExternalOAuthProviderConfiguratorTests {
             definition.setIssuer(issuer);
             return null;
         }).when(mockOidcMetadataFetcher)
-            .fetchMetadataAndUpdateDefinition(any(OIDCIdentityProviderDefinition.class));
+                .fetchMetadataAndUpdateDefinition(any(OIDCIdentityProviderDefinition.class));
 
         IdentityProvider<OIDCIdentityProviderDefinition> activeExternalOAuthProvider = configurator.retrieveByIssuer(issuer, "customer");
 
@@ -344,9 +344,9 @@ class ExternalOAuthProviderConfiguratorTests {
         when(identityZoneManager.getCurrentIdentityZoneId()).thenReturn(IdentityZone.getUaaZoneId());
         when(identityZoneManager.getCurrentIdentityZone()).thenReturn(extraZone);
         assertThrowsWithMessageThat(
-            IncorrectResultSizeDataAccessException.class,
-            () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
-            startsWith(String.format("No provider with unique issuer[%s] found", issuer))
+                IncorrectResultSizeDataAccessException.class,
+                () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
+                startsWith(String.format("No provider with unique issuer[%s] found", issuer))
         );
     }
 
@@ -360,9 +360,9 @@ class ExternalOAuthProviderConfiguratorTests {
         when(identityZoneManager.getCurrentIdentityZoneId()).thenReturn(IdentityZone.getUaaZoneId());
         when(identityZoneManager.getCurrentIdentityZone()).thenReturn(extraZone);
         assertThrowsWithMessageThat(
-            IncorrectResultSizeDataAccessException.class,
-            () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
-            startsWith(String.format("Active provider with unique issuer[%s] not found", issuer))
+                IncorrectResultSizeDataAccessException.class,
+                () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
+                startsWith(String.format("Active provider with unique issuer[%s] not found", issuer))
         );
     }
 
@@ -459,7 +459,7 @@ class ExternalOAuthProviderConfiguratorTests {
         String authzUri = configurator.getIdpAuthenticationUrl(oidc, "alias", mockHttpServletRequest);
 
         Map<String, String> queryParams =
-            UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
+                UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
         assertThat(queryParams, hasKey("code_challenge"));
         assertThat(queryParams, hasKey("code_challenge_method"));
     }
@@ -472,7 +472,7 @@ class ExternalOAuthProviderConfiguratorTests {
         String authzUri = configurator.getIdpAuthenticationUrl(oauth, "alias", mockHttpServletRequest);
 
         Map<String, String> queryParams =
-            UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
+                UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
         assertThat(queryParams, hasKey("code_challenge"));
         assertThat(queryParams, hasKey("code_challenge_method"));
     }
@@ -511,7 +511,7 @@ class ExternalOAuthProviderConfiguratorTests {
         String authzUri = configurator.getIdpAuthenticationUrl(oauth, "alias", mockHttpServletRequest);
 
         Map<String, String> queryParams =
-            UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
+                UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
         assertThat(queryParams, not(hasKey("code_challenge")));
         assertThat(queryParams, not(hasKey("code_challenge_method")));
     }
@@ -593,7 +593,7 @@ class ExternalOAuthProviderConfiguratorTests {
         String authzUri = configurator.getIdpAuthenticationUrl(oidc, OIDC10, mockHttpServletRequest);
 
         Map<String, String> queryParams =
-            UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
+                UriComponentsBuilder.fromUriString(authzUri).build().getQueryParams().toSingleValueMap();
         assertThat(queryParams, hasEntry("token_format", "jwt"));
     }
 

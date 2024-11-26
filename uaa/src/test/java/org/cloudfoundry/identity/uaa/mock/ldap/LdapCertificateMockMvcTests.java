@@ -51,7 +51,7 @@ class LdapCertificateMockMvcTests {
     @BeforeAll
     static void startLdapsServers() {
         ClassLoader classLoader = LdapCertificateMockMvcTests.class.getClassLoader();
-        
+
         File expiredKeystore = new File(classLoader.getResource("certs/expired-self-signed-ldap-cert.jks").getFile());
         File validKeystore = new File(classLoader.getResource("certs/valid-self-signed-ldap-cert.jks").getFile());
         RandomValueStringGenerator generator = new RandomValueStringGenerator();

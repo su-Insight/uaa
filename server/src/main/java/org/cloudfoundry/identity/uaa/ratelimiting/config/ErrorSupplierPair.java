@@ -12,27 +12,27 @@ public class ErrorSupplierPair {
     private final Exception error;
     private final String errorMsg;
 
-    private ErrorSupplierPair( InternalLimiterFactoriesSupplier supplier, Exception error ) {
-        this.supplier = InternalLimiterFactoriesSupplier.deNull( supplier );
+    private ErrorSupplierPair(InternalLimiterFactoriesSupplier supplier, Exception error) {
+        this.supplier = InternalLimiterFactoriesSupplier.deNull(supplier);
         this.error = error;
-        this.errorMsg = StringUtilities.toErrorMsg( error );
+        this.errorMsg = StringUtilities.toErrorMsg(error);
     }
 
     public boolean hasError() {
-        return (error != null);
+        return error != null;
     }
 
-    public static ErrorSupplierPair with( InternalLimiterFactoriesSupplier supplier ) {
+    public static ErrorSupplierPair with(InternalLimiterFactoriesSupplier supplier) {
         return new ErrorSupplierPair( supplier, null );
     }
 
-    public static ErrorSupplierPair with( Exception error ) {
+    public static ErrorSupplierPair with(Exception error) {
         return new ErrorSupplierPair( null, error );
     }
 
-    public RateLimitingFactoriesSupplierWithStatus map( RateLimitingFactoriesSupplierWithStatus existing, String fromSource, long asOf ) {
-        if ( (existing == null) || !existing.hasStatusCurrentSection() || !supplier.isSupplierNOOP() ) {
-            return RateLimitingFactoriesSupplierWithStatus.create( supplier, errorMsg, asOf, fromSource );
+    public RateLimitingFactoriesSupplierWithStatus map(RateLimitingFactoriesSupplierWithStatus existing, String fromSource, long asOf) {
+        if ((existing == null) || !existing.hasStatusCurrentSection() || !supplier.isSupplierNOOP()) {
+            return RateLimitingFactoriesSupplierWithStatus.create(supplier, errorMsg, asOf, fromSource);
         }
         return existing.update();
     }

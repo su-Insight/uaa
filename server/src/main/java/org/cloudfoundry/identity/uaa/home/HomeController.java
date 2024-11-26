@@ -183,8 +183,8 @@ public class HomeController {
     @RequestMapping("/rejected")
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleRequestRejected(Model model,
-                                        @RequestAttribute(RequestDispatcher.ERROR_EXCEPTION) RequestRejectedException ex,
-                                        @RequestAttribute(RequestDispatcher.ERROR_REQUEST_URI) String uri) {
+            @RequestAttribute(RequestDispatcher.ERROR_EXCEPTION) RequestRejectedException ex,
+            @RequestAttribute(RequestDispatcher.ERROR_REQUEST_URI) String uri) {
 
         logger.error("Request with encoded URI [{}] rejected. {}", URLEncoder.encode(uri, StandardCharsets.UTF_8), ex.getMessage());
         model.addAttribute("oauth_error", "The request was rejected because it contained a potentially malicious character.");

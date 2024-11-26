@@ -192,7 +192,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
                 clientDetails.getClientSecret() != null ?
                         passwordEncoder.encode(clientDetails.getClientSecret()) :
                         null;
-        clientDetailFieldsForUpdate[1] = (clientDetails instanceof UaaClientDetails) ? ((UaaClientDetails) clientDetails).getClientJwtConfig() : null;
+        clientDetailFieldsForUpdate[1] = clientDetails instanceof UaaClientDetails ? ((UaaClientDetails) clientDetails).getClientJwtConfig() : null;
         clientDetailFieldsForUpdate[clientDetailFieldsForUpdate.length - 1] = getUserId();
         return clientDetailFieldsForUpdate;
     }
@@ -309,7 +309,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
     @Override
     public void deleteClientJwtConfig(String clientId, String keyConfig, String zoneId) throws NoSuchClientException {
         ClientJwtConfiguration clientJwtConfiguration;
-        if(UaaUrlUtils.isUrl(keyConfig)) {
+        if (UaaUrlUtils.isUrl(keyConfig)) {
             clientJwtConfiguration = ClientJwtConfiguration.parse(keyConfig);
         } else {
             clientJwtConfiguration = new ClientJwtConfiguration(keyConfig, null);
@@ -359,7 +359,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
                     Object autoApprovedFromAddInfo = additionalInformation.remove(ClientConstants.AUTO_APPROVE);
                     details.setAdditionalInformation(additionalInformation);
                     if (autoApprovedFromAddInfo != null) {
-                        if ((autoApprovedFromAddInfo instanceof Boolean && (Boolean) autoApprovedFromAddInfo || "true".equals(autoApprovedFromAddInfo))) {
+                        if (autoApprovedFromAddInfo instanceof Boolean && (Boolean) autoApprovedFromAddInfo || "true".equals(autoApprovedFromAddInfo)) {
                             autoApproveScopes.add("true");
                         } else if (autoApprovedFromAddInfo instanceof Collection<?>) {
                             @SuppressWarnings("unchecked")

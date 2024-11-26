@@ -37,7 +37,7 @@ public class TokenPolicy {
         return keyInformation;
     });
     private static final Collector<? super Map.Entry<String, KeyInformation>, ?, ? extends Map<String, KeyInformation>> inputCollector
-        = Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
+            = Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue);
 
     private int accessTokenValidity;
     private int refreshTokenValidity;
@@ -50,7 +50,7 @@ public class TokenPolicy {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, KeyInformation> getKeysLegacy() {
         Map<String, KeyInformation> keyInformationMap = getKeys();
-        return (keyInformationMap == null || keyInformationMap.isEmpty()) ? null : keyInformationMap.entrySet().stream().collect(outputCollector);
+        return keyInformationMap == null || keyInformationMap.isEmpty() ? null : keyInformationMap.entrySet().stream().collect(outputCollector);
     }
 
     @JsonSetter("keys")
@@ -118,10 +118,10 @@ public class TokenPolicy {
     public void setKeys(Map<String, String> keys) {
         if (keys != null) {
             setKeyInformation(keys.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> {
-                    TokenPolicy.KeyInformation keyInformation = new TokenPolicy.KeyInformation();
-                    keyInformation.setSigningKey(e.getValue());
-                    return keyInformation;
-                })
+                TokenPolicy.KeyInformation keyInformation = new TokenPolicy.KeyInformation();
+                keyInformation.setSigningKey(e.getValue());
+                return keyInformation;
+            })
             ));
         }
     }
@@ -147,7 +147,7 @@ public class TokenPolicy {
     }
 
     public void setRefreshTokenFormat(String refreshTokenFormat) {
-        if(TokenConstants.TokenFormat.fromStringValue(refreshTokenFormat) == null) {
+        if (TokenConstants.TokenFormat.fromStringValue(refreshTokenFormat) == null) {
             List<String> validFormats = TokenConstants.TokenFormat.getStringValues();
             String message = String.format("Invalid refresh token format %s. Acceptable values are: %s", refreshTokenFormat, validFormats.toString());
             throw new IllegalArgumentException(message);
@@ -160,6 +160,7 @@ public class TokenPolicy {
         private String signingKey;
         private String signingCert;
         private String signingAlg;
+
         public String getSigningCert() {
             return this.signingCert;
         }

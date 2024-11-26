@@ -119,7 +119,7 @@ public class TokenValidationServiceTest {
     @Test
     public void validationFails_whenClientNotFound() {
         expectedException.expect(InvalidTokenException.class);
-        expectedException.expectMessage("Invalid client ID "+clientId);
+        expectedException.expectMessage("Invalid client ID " + clientId);
 
         when(mockMultitenantClientServices.loadClientByClientId(clientId, IdentityZoneHolder.get().getId())).thenThrow(NoSuchClientException.class);
         String accessToken = UaaTokenUtils.constructToken(header, content, signer);

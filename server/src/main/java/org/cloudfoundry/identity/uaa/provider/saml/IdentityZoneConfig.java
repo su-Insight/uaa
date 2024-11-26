@@ -35,7 +35,7 @@ public class IdentityZoneConfig {
     @DependsOn({"identityZoneConfigurationBootstrap", "setUpBouncyCastle"})
     @Bean(destroyMethod = "reset")
     public IdentityZoneHolder.Initializer identityZoneHolderInitializer(IdentityZoneProvisioning provisioning,
-                                                                        SamlKeyManagerFactory samlKeyManagerFactory) {
+            SamlKeyManagerFactory samlKeyManagerFactory) {
 
         return new IdentityZoneHolder.Initializer(provisioning, samlKeyManagerFactory);
     }

@@ -29,7 +29,7 @@ import java.util.Objects;
 public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends AbstractExternalOAuthIdentityProviderDefinition> extends ExternalIdentityProviderDefinition {
     public enum OAuthGroupMappingMode {
         EXPLICITLY_MAPPED,
-        AS_SCOPES;
+        AS_SCOPES
     }
     private URL authUrl;
     private URL tokenUrl;
@@ -169,7 +169,7 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
     @JsonIgnore
     public Class getParameterizedClass() {
         ParameterizedType parameterizedType =
-            (ParameterizedType)getClass().getGenericSuperclass();
+                (ParameterizedType) getClass().getGenericSuperclass();
         return (Class) parameterizedType.getActualTypeArguments()[0];
     }
 

@@ -65,23 +65,23 @@ public class InMemoryApprovalStore implements ApprovalStore {
     @Override
     public boolean revokeApprovalsForClientAndUser(String clientId, String userId, final String zoneId) {
         return store.removeIf(
-            approval ->
-                clientId.equals(approval.getClientId()) &&
-                userId.equals(approval.getUserId())
+                approval ->
+                        clientId.equals(approval.getClientId()) &&
+                                userId.equals(approval.getUserId())
         );
     }
 
     @Override
     public List<Approval> getApprovalsForUser(String userId, final String zoneId) {
         return store.stream()
-            .filter(approval -> userId.equals(approval.getUserId()))
-            .collect(Collectors.toList());
+                .filter(approval -> userId.equals(approval.getUserId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Approval> getApprovalsForClient(String clientId, final String zoneId) {
         return store.stream()
-            .filter(approval -> clientId.equals(approval.getClientId()))
-            .collect(Collectors.toList());
+                .filter(approval -> clientId.equals(approval.getClientId()))
+                .collect(Collectors.toList());
     }
 }

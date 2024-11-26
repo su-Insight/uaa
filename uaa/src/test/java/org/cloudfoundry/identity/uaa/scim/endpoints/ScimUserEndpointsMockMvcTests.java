@@ -144,12 +144,12 @@ class ScimUserEndpointsMockMvcTests {
         mockMvc.perform(
                 put("/Users/some-user")
         )
-                .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized());
 
         mockMvc.perform(
                 put("/Users")
         )
-                .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized());
     }
 
     @Test
