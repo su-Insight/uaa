@@ -69,7 +69,7 @@ public class ForcePasswordChangeController {
         } catch (InvalidPasswordException exception) {
             return handleUnprocessableEntity(model, response, email, exception.getMessagesAsOneString());
         }
-        logger.debug(String.format("Successful password change for username:%s in zone:%s ", principal.getName(), IdentityZoneHolder.get().getId()));
+        logger.debug("Successful password change for username:%s in zone:%s ".formatted(principal.getName(), IdentityZoneHolder.get().getId()));
         SessionUtils.setPasswordChangeRequired(httpSession, false);
         authentication.setAuthenticatedTime(System.currentTimeMillis());
         SessionUtils.setSecurityContext(request.getSession(), SecurityContextHolder.getContext());

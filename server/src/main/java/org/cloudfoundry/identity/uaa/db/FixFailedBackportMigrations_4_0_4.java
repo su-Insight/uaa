@@ -73,7 +73,7 @@ public class FixFailedBackportMigrations_4_0_4  extends BaseJavaMigration {
             int count = template.queryForObject(checkExistsSql, Integer.class, script.getKey());
             if (count == 0) {
                 String path = "org/cloudfoundry/identity/uaa/db/" + type + "/" + script.getValue();
-                logger.info(String.format("[4.0.4] Adding script for version %s with path %s", script.getKey(), path));
+                logger.info("[4.0.4] Adding script for version %s with path %s".formatted(script.getKey(), path));
                 populator.addScript(new ClassPathResource(path));
                 run = true;
             }

@@ -96,17 +96,15 @@ public class MBeanMap extends AbstractMap<String, Object> {
     }
 
     private Object getCompositeWrapper(Object value, boolean prettifyKeys) {
-        if (value instanceof CompositeData) {
+        if (value instanceof CompositeData composite) {
             Map<Object, Object> map = new HashMap<>();
-            CompositeData composite = (CompositeData) value;
             for (String key : composite.getCompositeType().keySet()) {
                 safePut(map, key, composite.get(key));
             }
             return map;
         }
-        if (value instanceof TabularDataSupport) {
+        if (value instanceof TabularDataSupport composite) {
             Map<Object, Object> map = new HashMap<>();
-            TabularDataSupport composite = (TabularDataSupport) value;
             for (Entry<Object, Object> entry : composite.entrySet()) {
                 Object wrapper = getCompositeWrapper(entry.getValue());
                 if (isKeyValuePair(wrapper)) {
@@ -118,8 +116,7 @@ public class MBeanMap extends AbstractMap<String, Object> {
             }
             return map;
         }
-        if (value instanceof Collection) {
-            Collection<?> composite = (Collection<?>) value;
+        if (value instanceof Collection<?> composite) {
             List<Object> list = new ArrayList<>();
             for (Object element : composite) {
                 list.add(getCompositeWrapper(element));
@@ -148,8 +145,8 @@ public class MBeanMap extends AbstractMap<String, Object> {
 
     private void safePut(Map<Object, Object> map, Object key, Object value, boolean prettifyKeys) {
         Object property = key;
-        if (key instanceof String && prettifyKeys) {
-            property = StringUtils.camelToUnderscore((String) key);
+        if (key instanceof String string && prettifyKeys) {
+            property = StringUtils.camelToUnderscore(string);
         }
         // Don't prettify system property keys in case user has added upper case properties
         map.put(property, getCompositeWrapper(value, prettifyKeys && !key.equals("SystemProperties")));

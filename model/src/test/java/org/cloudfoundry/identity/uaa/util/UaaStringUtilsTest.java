@@ -424,7 +424,7 @@ class UaaStringUtilsTest {
 
     private static void replaceZoneVariables(IdentityZone zone) {
         String s = "https://{zone.subdomain}.domain.com/z/{zone.id}?id={zone.id}&domain={zone.subdomain}";
-        String expect = String.format("https://%s.domain.com/z/%s?id=%s&domain=%s", zone.getSubdomain(), zone.getId(), zone.getId(), zone.getSubdomain());
+        String expect = "https://%s.domain.com/z/%s?id=%s&domain=%s".formatted(zone.getSubdomain(), zone.getId(), zone.getId(), zone.getSubdomain());
         assertThat(UaaStringUtils.replaceZoneVariables(s, zone)).isEqualTo(expect);
     }
 
@@ -433,8 +433,8 @@ class UaaStringUtilsTest {
             Object value = map.get(key);
             if (value instanceof String) {
                 assertThat(value).isEqualTo("#");
-            } else if (value instanceof Map) {
-                checkPasswords((Map) value);
+            } else if (value instanceof Map map1) {
+                checkPasswords(map1);
             }
         }
     }

@@ -33,41 +33,41 @@ public class UaaUserEditorTests {
     @Test
     public void testShortFormat() {
         UaaUserEditor editor = new UaaUserEditor();
-        editor.setAsText(String.format("%s|%s", unm, pwd));
+        editor.setAsText("%s|%s".formatted(unm, pwd));
         validate((UaaUser) editor.getValue(), unm, pwd, unm, null, null, null);
     }
 
     @Test
     public void testShortFormatWithAuthorities() {
         UaaUserEditor editor = new UaaUserEditor();
-        editor.setAsText(String.format("%s|%s|%s", unm, pwd, auth1));
+        editor.setAsText("%s|%s|%s".formatted(unm, pwd, auth1));
         validate((UaaUser) editor.getValue(), unm, pwd, unm, null, null, auth1.split(","));
 
-        editor.setAsText(String.format("%s|%s|%s", unm, pwd, auth2));
+        editor.setAsText("%s|%s|%s".formatted(unm, pwd, auth2));
         validate((UaaUser) editor.getValue(), unm, pwd, unm, null, null, auth2.split(","));
     }
 
     @Test
     public void testLongFormat() {
         UaaUserEditor editor = new UaaUserEditor();
-        editor.setAsText(String.format("%s|%s|%s|%s|%s", unm, pwd, email, fnm, lnm));
+        editor.setAsText("%s|%s|%s|%s|%s".formatted(unm, pwd, email, fnm, lnm));
         validate((UaaUser) editor.getValue(), unm, pwd, email, fnm, lnm, null);
     }
 
     @Test
     public void testLongFormatWithAuthorities() {
         UaaUserEditor editor = new UaaUserEditor();
-        editor.setAsText(String.format("%s|%s|%s|%s|%s|%s", unm, pwd, email, fnm, lnm, auth1));
+        editor.setAsText("%s|%s|%s|%s|%s|%s".formatted(unm, pwd, email, fnm, lnm, auth1));
         validate((UaaUser) editor.getValue(), unm, pwd, email, fnm, lnm, auth1.split(","));
 
-        editor.setAsText(String.format("%s|%s|%s|%s|%s|%s", unm, pwd, email, fnm, lnm, auth2));
+        editor.setAsText("%s|%s|%s|%s|%s|%s".formatted(unm, pwd, email, fnm, lnm, auth2));
         validate((UaaUser) editor.getValue(), unm, pwd, email, fnm, lnm, auth2.split(","));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidFormat() {
         UaaUserEditor editor = new UaaUserEditor();
-        editor.setAsText(String.format("%s|%s|%s|%s", unm, pwd, fnm, lnm));
+        editor.setAsText("%s|%s|%s|%s".formatted(unm, pwd, fnm, lnm));
     }
 
     @Test

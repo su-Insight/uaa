@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
@@ -53,7 +52,7 @@ public class LimitedModeUaaFilter extends OncePerRequestFilter {
             if (isMethodAllowed(request) || isEndpointAllowed(request)) {
                 filterChain.doFilter(request, response);
             } else {
-                logger.debug(format("Operation Not permitted in limited mode for URL:%s and method:%s",
+                logger.debug("Operation Not permitted in limited mode for URL:%s and method:%s".formatted(
                         request.getRequestURI(),
                         request.getMethod()
                 )

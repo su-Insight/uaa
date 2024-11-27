@@ -66,7 +66,7 @@ public class Prompt {
 
     @Override
     public String toString() {
-        return String.format("\"%s\":[\"%s\",\"%s\"]", name, type, text);
+        return "\"%s\":[\"%s\",\"%s\"]".formatted(name, type, text);
     }
 
     @Override

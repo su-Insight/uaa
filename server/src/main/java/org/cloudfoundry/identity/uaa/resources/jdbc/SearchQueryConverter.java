@@ -57,7 +57,7 @@ public interface SearchQueryConverter {
 
         @Override
         public String toString() {
-            return String.format("sql: %s, params: %s", sql, params);
+            return "sql: %s, params: %s".formatted(sql, params);
         }
     }
 

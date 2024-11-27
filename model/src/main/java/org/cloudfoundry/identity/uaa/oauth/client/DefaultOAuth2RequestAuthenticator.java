@@ -27,7 +27,7 @@ public class DefaultOAuth2RequestAuthenticator implements OAuth2RequestAuthentic
         if (!StringUtils.hasText(tokenType) || tokenType.equalsIgnoreCase(OAuth2AccessToken.BEARER_TYPE)) {
             tokenType = OAuth2AccessToken.BEARER_TYPE;
         }
-        request.getHeaders().set("Authorization", String.format("%s %s", tokenType, accessToken.getValue()));
+        request.getHeaders().set("Authorization", "%s %s".formatted(tokenType, accessToken.getValue()));
     }
 
 }

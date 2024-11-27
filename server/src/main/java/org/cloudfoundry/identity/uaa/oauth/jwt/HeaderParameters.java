@@ -90,7 +90,7 @@ public class HeaderParameters {
 
     public void setTyp(String typ) {
         if (typ != null && !JWT.equalsIgnoreCase(typ)) {
-            throw new IllegalArgumentException(String.format("typ is not \"%s\"", JWT));
+            throw new IllegalArgumentException("typ is not \"%s\"".formatted(JWT));
         }
         this.typ = typ;
     }

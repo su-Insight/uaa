@@ -4,6 +4,7 @@ import org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +22,7 @@ import java.util.Set;
  */
 public class DefaultAccessTokenRequest implements AccessTokenRequest, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -3327891152794747331L;
 
     private final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();

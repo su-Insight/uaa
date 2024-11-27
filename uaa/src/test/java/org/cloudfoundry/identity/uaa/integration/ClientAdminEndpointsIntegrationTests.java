@@ -950,7 +950,7 @@ public class ClientAdminEndpointsIntegrationTests {
         HttpHeaders myHeaders = new HttpHeaders();
         myHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         myHeaders.set("Authorization",
-                "Basic " + new String(ENCODER.encode(String.format("%s:%s", clientId, clientSecret).getBytes())));
+                "Basic " + new String(ENCODER.encode("%s:%s".formatted(clientId, clientSecret).getBytes())));
 
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = serverRunning.postForMap("/oauth/token", formData, myHeaders);
@@ -971,7 +971,7 @@ public class ClientAdminEndpointsIntegrationTests {
         HttpHeaders myHeaders = new HttpHeaders();
         myHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         myHeaders.set("Authorization",
-                "Basic " + new String(ENCODER.encode(String.format("%s:%s", clientId, clientSecret).getBytes())));
+                "Basic " + new String(ENCODER.encode("%s:%s".formatted(clientId, clientSecret).getBytes())));
 
         @SuppressWarnings("rawtypes")
         ResponseEntity<Map> response = serverRunning.postForMap("/oauth/token", formData, myHeaders);

@@ -27,16 +27,15 @@ public class ClientDetailsModification extends UaaClientDetails {
 
     public ClientDetailsModification(ClientDetails prototype) {
         super(prototype);
-        if (prototype instanceof UaaClientDetails) {
-            UaaClientDetails baseClientDetails = (UaaClientDetails) prototype;
+        if (prototype instanceof UaaClientDetails baseClientDetails) {
             this.setAdditionalInformation(baseClientDetails.getAdditionalInformation());
             if (baseClientDetails.getAutoApproveScopes() != null) {
                 this.setAutoApproveScopes(baseClientDetails.getAutoApproveScopes());
             }
         }
-        if (prototype instanceof ClientDetailsModification) {
-            this.action = ((ClientDetailsModification) prototype).getAction();
-            this.setApprovalsDeleted(((ClientDetailsModification) prototype).isApprovalsDeleted());
+        if (prototype instanceof ClientDetailsModification modification) {
+            this.action = modification.getAction();
+            this.setApprovalsDeleted(modification.isApprovalsDeleted());
         }
     }
 

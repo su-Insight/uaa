@@ -221,9 +221,9 @@ public class IdentityZoneEndpoints implements ApplicationEventPublisherAware {
         UserConfig userConfig = zone.getConfig().getUserConfig();
         if (userConfig != null) {
             List<String> defaultGroups = ofNullable(userConfig.getDefaultGroups()).orElse(Collections.emptyList());
-            logger.debug(String.format("About to create default groups count: %s for subdomain: %s", defaultGroups.size(), zone.getSubdomain()));
+            logger.debug("About to create default groups count: %s for subdomain: %s".formatted(defaultGroups.size(), zone.getSubdomain()));
             for (String group : defaultGroups) {
-                logger.debug(String.format("Creating zone default group: %s for subdomain: %s", group, zone.getSubdomain()));
+                logger.debug("Creating zone default group: %s for subdomain: %s".formatted(group, zone.getSubdomain()));
                 groupProvisioning.createOrGet(
                         new ScimGroup(
                                 null,

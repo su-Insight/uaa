@@ -68,8 +68,8 @@ public final class TestProfileEnvironment {
         if (!properties.isEmpty()) {
             for (String name : properties.keySet()) {
                 Object value = properties.get(name);
-                if (value instanceof String) {
-                    properties.put(name, environment.resolvePlaceholders((String) value));
+                if (value instanceof String string) {
+                    properties.put(name, environment.resolvePlaceholders(string));
                 }
             }
             if (properties.containsKey("spring_profiles")) {

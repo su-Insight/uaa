@@ -21,9 +21,10 @@ class BindYamlTest {
         assertEquals("(1,0)", binder.bind("x : 1").toString());
         assertEquals("(0,2)", binder.bind("y : 2").toString());
         assertEquals("(0,0,3)", binder.bind("z : 3").toString());
-        assertEquals("(1,2,3)", binder.bind("x : 1\n"
-                + "y : 2\n"
-                + "z : 3").toString());
+        assertEquals("(1,2,3)", binder.bind("""
+                x : 1
+                y : 2
+                z : 3""").toString());
     }
 
     public static class Point {

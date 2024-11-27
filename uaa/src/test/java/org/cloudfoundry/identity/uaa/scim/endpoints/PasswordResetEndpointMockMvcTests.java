@@ -143,7 +143,7 @@ class PasswordResetEndpointMockMvcTests {
 
         MvcResult result = mockMvc.perform(get)
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(String.format("<input type=\"hidden\" name=\"email\" value=\"%s\"/>", email))))
+                .andExpect(content().string(containsString("<input type=\"hidden\" name=\"email\" value=\"%s\"/>".formatted(email))))
                 .andReturn();
 
         String resultingCodeString = getCodeFromPage(result);
@@ -170,7 +170,7 @@ class PasswordResetEndpointMockMvcTests {
 
         MvcResult result = mockMvc.perform(get)
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(String.format("<input type=\"hidden\" name=\"email\" value=\"%s\"/>", email))))
+                .andExpect(content().string(containsString("<input type=\"hidden\" name=\"email\" value=\"%s\"/>".formatted(email))))
                 .andReturn();
 
         String resultingCodeString = getCodeFromPage(result);

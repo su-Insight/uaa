@@ -237,8 +237,8 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
         String name = userDetails.getUsername();
         String email = null;
 
-        if (userDetails instanceof Mailable) {
-            email = ((Mailable) userDetails).getEmailAddress();
+        if (userDetails instanceof Mailable mailable) {
+            email = mailable.getEmailAddress();
 
             if (name == null) {
                 name = email;
@@ -251,15 +251,14 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
 
         String givenName = null;
         String familyName = null;
-        if (userDetails instanceof Named) {
-            Named names = (Named) userDetails;
+        if (userDetails instanceof Named names) {
             givenName = names.getGivenName();
             familyName = names.getFamilyName();
         }
 
-        String phoneNumber = userDetails instanceof DialableByPhone ? ((DialableByPhone) userDetails).getPhoneNumber() : null;
-        String externalId = userDetails instanceof ExternallyIdentifiable ? ((ExternallyIdentifiable) userDetails).getExternalId() : name;
-        boolean verified = userDetails instanceof VerifiableUser ? ((VerifiableUser) userDetails).isVerified() : false;
+        String phoneNumber = userDetails instanceof DialableByPhone dbp ? dbp.getPhoneNumber() : null;
+        String externalId = userDetails instanceof ExternallyIdentifiable ei ? ei.getExternalId() : name;
+        boolean verified = userDetails instanceof VerifiableUser vu ? vu.isVerified() : false;
         UaaUserPrototype userPrototype = new UaaUserPrototype()
                 .withVerified(verified)
                 .withUsername(name)

@@ -74,8 +74,7 @@ public class InvitationsEndpoint {
             @RequestParam(value = "redirect_uri") String redirectUri) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
+        if (authentication instanceof OAuth2Authentication oAuth2Authentication) {
 
             if (clientId == null) {
                 clientId = oAuth2Authentication.getOAuth2Request().getClientId();
@@ -118,7 +117,7 @@ public class InvitationsEndpoint {
                             URL inviteLink = new URL(invitationLink);
                             invitationsResponse.getNewInvites().add(InvitationsResponse.success(user.getPrimaryEmail(), user.getId(), user.getOrigin(), inviteLink));
                         } catch (MalformedURLException mue) {
-                            invitationsResponse.getFailedInvites().add(InvitationsResponse.failure(email, "invitation.exception.url", String.format("Malformed url: %s", invitationLink)));
+                            invitationsResponse.getFailedInvites().add(InvitationsResponse.failure(email, "invitation.exception.url", "Malformed url: %s".formatted(invitationLink)));
                         }
                     } else if (providers.isEmpty()) {
                         invitationsResponse.getFailedInvites().add(InvitationsResponse.failure(email, "provider.non-existent", "No authentication provider found."));
@@ -151,7 +150,7 @@ public class InvitationsEndpoint {
         } else if (results.size() == 1) {
             return results.get(0);
         } else {
-            throw new ScimResourceConflictException(String.format("Ambiguous users found for email:%s with origin:%s", email, origin));
+            throw new ScimResourceConflictException("Ambiguous users found for email:%s with origin:%s".formatted(email, origin));
         }
     }
 

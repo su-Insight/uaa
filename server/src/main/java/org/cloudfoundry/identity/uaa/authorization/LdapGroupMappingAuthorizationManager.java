@@ -40,8 +40,7 @@ public class LdapGroupMappingAuthorizationManager implements ExternalGroupMappin
     public Set<? extends GrantedAuthority> findScopesFromAuthorities(Set<? extends GrantedAuthority> authorities) {
         Set<GrantedAuthority> result = new HashSet<>();
         for (GrantedAuthority a : authorities) {
-            if (a instanceof LdapAuthority) {
-                LdapAuthority la = (LdapAuthority) a;
+            if (a instanceof LdapAuthority la) {
                 List<ScimGroupExternalMember> members = extMbrMgr.getExternalGroupMapsByExternalGroup(la.getDn(), OriginKeys.LDAP, IdentityZoneHolder.get().getId());
                 for (ScimGroupExternalMember member : members) {
                     SimpleGrantedAuthority mapped = new SimpleGrantedAuthority(member.getDisplayName());

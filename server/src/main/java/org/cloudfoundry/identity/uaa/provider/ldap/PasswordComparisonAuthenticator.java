@@ -107,10 +107,10 @@ public class PasswordComparisonAuthenticator extends AbstractLdapAuthenticator {
             for (int i = 0; (attr != null) && (!match) && (i < attr.size()); i++) {
                 Object valObject = attr.get(i);
                 if (valObject != null && valObject instanceof byte[]) {
-                    if (passwordEncoder instanceof DynamicPasswordComparator) {
+                    if (passwordEncoder instanceof DynamicPasswordComparator comparator) {
                         byte[] received = password.getBytes();
                         byte[] stored = (byte[]) valObject;
-                        match = ((DynamicPasswordComparator) passwordEncoder).comparePasswords(received, stored);
+                        match = comparator.comparePasswords(received, stored);
                     } else {
                         String encodedPassword = passwordEncoder.encode(password);
                         byte[] passwordBytes = Utf8.encode(encodedPassword);

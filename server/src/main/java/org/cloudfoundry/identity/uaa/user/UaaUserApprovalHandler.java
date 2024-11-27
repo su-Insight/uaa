@@ -106,7 +106,7 @@ public class UaaUserApprovalHandler implements UserApprovalHandler {
 
         OAuth2Authentication authentication = new OAuth2Authentication(storedOAuth2Request, userAuthentication);
         if (logger.isDebugEnabled()) {
-            final String logMessage = String.format("Looking up existing token for client_id=%s, scope=%s and username=%s",
+            final String logMessage = "Looking up existing token for client_id=%s, scope=%s and username=%s".formatted(
                     clientId,
                     scopes,
                     userAuthentication.getName());

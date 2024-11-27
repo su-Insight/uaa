@@ -269,11 +269,13 @@ class YamlServletProfileInitializerTest {
             @Override
             public String getEnvironmentVariable(String name) {
                 return name.equals(YML_ENV_VAR_NAME) ?
-                        "uaa.url: http://uaa.test.url/\n" +
-                                "login.url: http://login.test.url/\n" +
-                                "smtp:\n" +
-                                "  host: mail.server.host\n" +
-                                "  port: 3535\n" :
+                        """
+                        uaa.url: http://uaa.test.url/
+                        login.url: http://login.test.url/
+                        smtp:
+                          host: mail.server.host
+                          port: 3535
+                        """ :
                         null;
             }
         };
@@ -444,7 +446,7 @@ class YamlServletProfileInitializerTest {
                     "  pocus: focus" + NEW_LINE +
                     "  foo: bar").getBytes());
 
-            when(context.getResource(String.format("file:%s", fileName)))
+            when(context.getResource("file:%s".formatted(fileName)))
                     .thenReturn(byteArrayResource);
 
             initializer.initialize(context);
@@ -469,7 +471,7 @@ class YamlServletProfileInitializerTest {
 
             String fileName = createSecretsFile("database_credentials.yml");
 
-            when(context.getResource(String.format("file:%s", fileName)))
+            when(context.getResource("file:%s".formatted(fileName)))
                     .thenReturn(databaseCredentialsYml);
 
             initializer.initialize(context);

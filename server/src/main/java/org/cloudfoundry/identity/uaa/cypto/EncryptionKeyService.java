@@ -29,7 +29,7 @@ public class EncryptionKeyService {
                 .collect(Collectors.toList());
         if (!keysWithoutPassphrase.isEmpty()) {
             throw new NoActiveEncryptionKeyProvided(
-                    String.format("UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[%s] is undefined",
+                    "UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[%s] is undefined".formatted(
                             keysWithoutPassphrase.stream().map(s -> "label=" + s.getLabel()).collect(Collectors.joining(", "))
                     )
             );
@@ -38,7 +38,7 @@ public class EncryptionKeyService {
         List<EncryptionKey> invalidLengthKeys = encryptionKeys.stream().filter(encryptionKey -> encryptionKey.getPassphrase().length() < 8).collect(Collectors.toList());
         if (!invalidLengthKeys.isEmpty()) {
             throw new NoActiveEncryptionKeyProvided(
-                    String.format("The required length of the encryption passphrases for [%s] need to be at least 8 characters long.",
+                    "The required length of the encryption passphrases for [%s] need to be at least 8 characters long.".formatted(
                             invalidLengthKeys.stream().map(s -> "label=" + s.getLabel()).collect(Collectors.joining(", "))
                     )
             );
@@ -55,7 +55,7 @@ public class EncryptionKeyService {
         }
         if (!duplicateKeyLabels.isEmpty()) {
             throw new NoActiveEncryptionKeyProvided(
-                    String.format("UAA cannot be started as multiple keys have the same label in uaa.encryption.encryption_keys/[%s]",
+                    "UAA cannot be started as multiple keys have the same label in uaa.encryption.encryption_keys/[%s]".formatted(
                             duplicateKeyLabels.stream().map(s -> "label=" + s).collect(Collectors.joining(", "))
                     )
             );
@@ -68,7 +68,7 @@ public class EncryptionKeyService {
                         .findFirst()
                         .orElseGet(() -> {
                             throw new NoActiveEncryptionKeyProvided(
-                                    String.format("UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[label=%s] is undefined", activeKeyLabel)
+                                    "UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[label=%s] is undefined".formatted(activeKeyLabel)
                             );
                         });
     }

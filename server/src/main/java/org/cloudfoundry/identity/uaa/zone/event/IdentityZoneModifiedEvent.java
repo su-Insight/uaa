@@ -20,8 +20,11 @@ import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.springframework.security.core.Authentication;
 
+import java.io.Serial;
+
 public class IdentityZoneModifiedEvent extends AbstractUaaEvent {
 
+    @Serial
     private static final long serialVersionUID = 562117195472169825L;
 
     private final AuditEventType eventType;
@@ -40,7 +43,7 @@ public class IdentityZoneModifiedEvent extends AbstractUaaEvent {
                 getSource().toString(),
                 eventType,
                 getOrigin(getAuthentication()),
-                String.format(IdentityZoneModifiedEvent.dataFormat,
+                IdentityZoneModifiedEvent.dataFormat.formatted(
                         zone.getId(),
                         zone.getSubdomain())
         );

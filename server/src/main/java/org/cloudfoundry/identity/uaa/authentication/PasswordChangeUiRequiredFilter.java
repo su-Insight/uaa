@@ -64,8 +64,7 @@ public class PasswordChangeUiRequiredFilter extends OncePerRequestFilter {
 
     private boolean isCompleted(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof UaaAuthentication) {
-            UaaAuthentication uaa = (UaaAuthentication) authentication;
+        if (authentication instanceof UaaAuthentication uaa) {
             return uaa.isAuthenticated() && !SessionUtils.isPasswordChangeRequired(request.getSession()) && completedPath.matches(request);
         }
         return false;

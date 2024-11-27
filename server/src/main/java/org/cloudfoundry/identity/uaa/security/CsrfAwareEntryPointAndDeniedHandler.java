@@ -94,14 +94,14 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
     protected void internalHandle(HttpServletRequest request,
             HttpServletResponse response,
             Exception exception) throws IOException, ServletException {
-        AuthenticationException authEx = exception instanceof AuthenticationException ?
-                (AuthenticationException) exception :
+        AuthenticationException authEx = exception instanceof AuthenticationException ae ?
+                ae :
                 new InternalAuthenticationServiceException("Access denied.", exception);
 
         if (wantJson(request)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().append(String.format("{\"error\":\"%s\"}", exception.getMessage()));
+            response.getWriter().append("{\"error\":\"%s\"}".formatted(exception.getMessage()));
         } else {
             LoginUrlAuthenticationEntryPoint entryPoint = getLoginUrlAuthenticationEntryPoint(exception);
             entryPoint.commence(request, response, authEx);

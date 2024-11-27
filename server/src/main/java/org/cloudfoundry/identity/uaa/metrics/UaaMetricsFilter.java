@@ -126,7 +126,7 @@ public class UaaMetricsFilter extends OncePerRequestFilter implements UaaMetrics
                 if (entry.getKey().matches(request)) {
                     UrlGroup group = entry.getValue();
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Successfully matched URI: %s to a group: %s", uri, group.getGroup()));
+                        logger.debug("Successfully matched URI: %s to a group: %s".formatted(uri, group.getGroup()));
                     }
                     return group;
                 }

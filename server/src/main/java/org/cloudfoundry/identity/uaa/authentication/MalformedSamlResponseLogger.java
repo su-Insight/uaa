@@ -55,13 +55,13 @@ public class MalformedSamlResponseLogger {
         }
 
         if (p.getValue() == null) {
-            return String.format("(%s/0)", p.getKey());
+            return "(%s/0)".formatted(p.getKey());
         }
 
         List<String> formattedParams = new ArrayList<>(p.getValue().length);
 
         for (String val : p.getValue()) {
-            formattedParams.add(String.format("(%s/%s)", p.getKey(), val == null ? 0 : val.length()));
+            formattedParams.add("(%s/%s)".formatted(p.getKey(), val == null ? 0 : val.length()));
         }
 
         return String.join(" ", formattedParams);

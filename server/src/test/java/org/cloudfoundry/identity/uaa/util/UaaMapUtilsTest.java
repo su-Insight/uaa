@@ -114,49 +114,53 @@ public class UaaMapUtilsTest {
 
     @Test
     public void print_sorted_yaml() {
-        String expected = "---\n" +
-                "secondA:\n" +
-                "  thirdA:\n" +
-                "    keyA: valueA\n" +
-                "  thirdB:\n" +
-                "    keyB: valueB\n" +
-                "secondB:\n" +
-                "  thirdB:\n" +
-                "    keyB: valueB\n" +
-                "  thirdC:\n" +
-                "    emptyMap: {\n" +
-                "      }\n" +
-                "    emptyString: ''\n" +
-                "    keyC: valueC\n" +
-                "    nullValue: null\n";
+        String expected = """
+                ---
+                secondA:
+                  thirdA:
+                    keyA: valueA
+                  thirdB:
+                    keyB: valueB
+                secondB:
+                  thirdB:
+                    keyB: valueB
+                  thirdC:
+                    emptyMap: {
+                      }
+                    emptyString: ''
+                    keyC: valueC
+                    nullValue: null
+                """;
         assertEquals(expected, prettyPrintYaml(top));
     }
 
     @Test
     public void testHideConfigValues() {
-        String expected = "---\n" +
-                "secondA:\n" +
-                "  thirdA:\n" +
-                "    keyA: <redacted>\n" +
-                "  thirdB:\n" +
-                "    keyB: <redacted>\n" +
-                "secondB:\n" +
-                "  thirdB:\n" +
-                "    keyB: <redacted>\n" +
-                "  thirdC:\n" +
-                "    emptyMap: {\n" +
-                "      }\n" +
-                "    emptyString: ''\n" +
-                "    keyC: <redacted>\n" +
-                "    nullValue: null\n";
+        String expected = """
+                ---
+                secondA:
+                  thirdA:
+                    keyA: <redacted>
+                  thirdB:
+                    keyB: <redacted>
+                secondB:
+                  thirdB:
+                    keyB: <redacted>
+                  thirdC:
+                    emptyMap: {
+                      }
+                    emptyString: ''
+                    keyC: <redacted>
+                    nullValue: null
+                """;
         assertEquals(expected, prettyPrintYaml(redactValues(top)));
     }
 
     private void checkRedacted(Map<String, ?> map) {
         for (String key : map.keySet()) {
             Object value = map.get(key);
-            if (value instanceof Map) {
-                checkRedacted((Map) value);
+            if (value instanceof Map map1) {
+                checkRedacted(map1);
             } else {
                 assertEquals("<redacted>", value);
             }

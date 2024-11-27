@@ -215,11 +215,11 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
         } catch (EmptyResultDataAccessException e) {
             originLoopCheckDone = isOriginLoopAllowed(zoneId, originLoopCheckDone);
             if (originLoopCheckDone == 0) {
-                throw new IncorrectResultSizeDataAccessException(String.format("No provider with unique issuer[%s] found", issuer), 1, 0, e);
+                throw new IncorrectResultSizeDataAccessException("No provider with unique issuer[%s] found".formatted(issuer), 1, 0, e);
             }
         }
         if (isOriginLoopAllowed(zoneId, originLoopCheckDone) == 0 && issuedProvider == null) {
-            throw new IncorrectResultSizeDataAccessException(String.format("Active provider with unique issuer[%s] not found", issuer), 1);
+            throw new IncorrectResultSizeDataAccessException("Active provider with unique issuer[%s] not found".formatted(issuer), 1);
         }
         List<IdentityProvider> providers = retrieveAll(true, zoneId)
                 .stream()
@@ -227,9 +227,9 @@ public class ExternalOAuthProviderConfigurator implements IdentityProviderProvis
                         issuer.equals(((OIDCIdentityProviderDefinition) p.getConfig()).getIssuer()))
                 .toList();
         if (providers.isEmpty()) {
-            throw new IncorrectResultSizeDataAccessException(String.format("Active provider with issuer[%s] not found", issuer), 1);
+            throw new IncorrectResultSizeDataAccessException("Active provider with issuer[%s] not found".formatted(issuer), 1);
         } else if (providers.size() > 1) {
-            throw new IncorrectResultSizeDataAccessException(String.format("Duplicate providers with issuer[%s] not found", issuer), 1);
+            throw new IncorrectResultSizeDataAccessException("Duplicate providers with issuer[%s] not found".formatted(issuer), 1);
         }
         return providers.get(0);
     }

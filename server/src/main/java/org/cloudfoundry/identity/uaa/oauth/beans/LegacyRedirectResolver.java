@@ -52,7 +52,7 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
             ClientRedirectUriPattern clientRedirectUri = new ClientRedirectUriPattern(normalizedClientRedirect);
 
             if (!clientRedirectUri.isValidRedirect()) {
-                logger.error(String.format("Invalid redirect uri: %s", normalizedClientRedirect));
+                logger.error("Invalid redirect uri: %s".formatted(normalizedClientRedirect));
                 return false;
             }
 
@@ -65,7 +65,7 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
             return super.redirectMatches(normalizedRequestedRedirect, normalizedClientRedirect);
         } catch (IllegalArgumentException e) {
             logger.error(
-                    String.format("Could not validate whether requestedRedirect (%s) matches clientRedirectUri (%s)",
+                    "Could not validate whether requestedRedirect (%s) matches clientRedirectUri (%s)".formatted(
                             requestedRedirect,
                             clientRedirect),
                     e);
@@ -110,7 +110,7 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
                                         !specCompliantRedirectMatcher.redirectMatches(requestedRedirect, registeredRedirectUri))
                 )
                 .forEach(registeredRedirectUri ->
-                        logger.warn(String.format(MSG_TEMPLATE, clientId,
+                        logger.warn(MSG_TEMPLATE.formatted(clientId,
                                 redactSensitiveInformation(requestedRedirect), registeredRedirectUri)
                         )
                 );

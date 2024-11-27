@@ -255,7 +255,7 @@ public class ScimGroupEndpointsMockMvcTests {
     private void addAndDeleteMembersToZoneManagementGroups(String displayName, HttpStatus create, HttpStatus delete) throws Exception {
         IdentityZone zone = MockMvcUtils.createZoneUsingWebRequest(mockMvc, identityClientToken);
         ScimGroupMember member = new ScimGroupMember(scimUser.getId());
-        ScimGroup group = new ScimGroup(String.format(displayName, zone.getId()));
+        ScimGroup group = new ScimGroup(displayName.formatted(zone.getId()));
         group.setMembers(Collections.singletonList(member));
 
         createZoneScope(group).andExpect(status().is(create.value()));
@@ -266,7 +266,7 @@ public class ScimGroupEndpointsMockMvcTests {
     }
 
     private ResultActions deleteZoneScope(IdentityZone zone, ScimGroup group) throws Exception {
-        String removeS = String.format("zones.%s.", zone.getId());
+        String removeS = "zones.%s.".formatted(zone.getId());
         String scope = group.getDisplayName().substring(removeS.length());
         MockHttpServletRequestBuilder delete = delete("/Groups/zones/{userId}/{zoneId}/{scope}", scimUser.getId(), zone.getId(), scope)
                 .accept(APPLICATION_JSON)

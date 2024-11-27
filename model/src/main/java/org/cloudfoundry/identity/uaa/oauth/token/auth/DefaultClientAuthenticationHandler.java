@@ -26,8 +26,8 @@ public class DefaultClientAuthenticationHandler implements ClientAuthenticationH
             String clientSecret = Optional.ofNullable(resource.getClientSecret()).orElse("");
             if (AuthenticationScheme.header == scheme) {
                 form.remove("client_secret");
-                headers.add("Authorization", String.format("Basic %s",
-                        new String(Base64.getEncoder().encode(String.format("%s:%s", resource.getClientId(), clientSecret).getBytes(StandardCharsets.UTF_8)),
+                headers.add("Authorization", "Basic %s".formatted(
+                        new String(Base64.getEncoder().encode("%s:%s".formatted(resource.getClientId(), clientSecret).getBytes(StandardCharsets.UTF_8)),
                                 StandardCharsets.UTF_8)));
             } else {
                 form.set("client_id", resource.getClientId());

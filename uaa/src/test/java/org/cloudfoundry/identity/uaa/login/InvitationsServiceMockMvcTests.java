@@ -393,7 +393,7 @@ public class InvitationsServiceMockMvcTests {
 
     private static SamlIdentityProviderDefinition getSamlIdentityProviderDefinition(IdentityZoneCreationResult zone, String entityID) {
         return new SamlIdentityProviderDefinition()
-                .setMetaDataLocation(String.format(MockMvcUtils.IDP_META_DATA, entityID))
+                .setMetaDataLocation(MockMvcUtils.IDP_META_DATA.formatted(entityID))
                 .setIdpEntityAlias(entityID)
                 .setNameID("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress")
                 .setLinkText("Test Saml Provider")

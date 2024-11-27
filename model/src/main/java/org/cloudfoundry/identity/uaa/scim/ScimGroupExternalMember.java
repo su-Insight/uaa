@@ -70,8 +70,7 @@ public class ScimGroupExternalMember extends ScimCore<ScimGroupExternalMember> {
 
     @Override
     public String toString() {
-        return String.format(
-                "(Group id: %s, Name: %s, externalGroup: %s, origin: %s)",
+        return "(Group id: %s, Name: %s, externalGroup: %s, origin: %s)".formatted(
                 getGroupId(),
                 getDisplayName(),
                 getExternalGroup(),

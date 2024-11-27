@@ -206,7 +206,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
                         "A redirectUri must be either supplied or preconfigured in the ClientDetails");
             }
 
-            boolean isAuthenticated = (principal instanceof Authentication) && ((Authentication) principal).isAuthenticated();
+            boolean isAuthenticated = (principal instanceof Authentication a) && a.isAuthenticated();
 
             if (!isAuthenticated) {
                 throw new InsufficientAuthenticationException(
@@ -619,9 +619,9 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
             url.append("&access_token=").append(encode(accessToken.getValue()));
         }
 
-        if (accessToken instanceof CompositeToken &&
+        if (accessToken instanceof CompositeToken token &&
                 authorizationRequest.getResponseTypes().contains(CompositeToken.ID_TOKEN)) {
-            url.append("&").append(CompositeToken.ID_TOKEN).append("=").append(encode(((CompositeToken) accessToken).getIdTokenValue()));
+            url.append("&").append(CompositeToken.ID_TOKEN).append("=").append(encode(token.getIdTokenValue()));
         }
 
         if (authorizationRequest.getResponseTypes().contains("code")) {

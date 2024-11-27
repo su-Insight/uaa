@@ -47,6 +47,7 @@ import static org.springframework.util.StringUtils.hasText;
  */
 public abstract class AbstractUaaEvent extends ApplicationEvent {
 
+    @Serial
     private static final long serialVersionUID = -7639844193401892160L;
     private final transient String zoneId;
 

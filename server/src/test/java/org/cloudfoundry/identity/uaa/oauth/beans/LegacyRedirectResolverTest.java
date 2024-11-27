@@ -58,7 +58,7 @@ class LegacyRedirectResolverTest {
     }
 
     private static String expectedWarning(String clientId, String requested, String configured) {
-        return String.format(LegacyRedirectResolver.MSG_TEMPLATE, clientId, requested, configured);
+        return LegacyRedirectResolver.MSG_TEMPLATE.formatted(clientId, requested, configured);
     }
 
     private static Matcher<LogEvent> warning(String msg) {

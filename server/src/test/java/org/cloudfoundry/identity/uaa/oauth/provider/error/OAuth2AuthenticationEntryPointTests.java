@@ -85,7 +85,7 @@ public class OAuth2AuthenticationEntryPointTests {
 
     @Test
     public void testCommenceWithHtmlAndJsonAccept() throws Exception {
-        request.addHeader("Accept", String.format("%s,%s", MediaType.TEXT_HTML_VALUE, MediaType.APPLICATION_JSON));
+        request.addHeader("Accept", "%s,%s".formatted(MediaType.TEXT_HTML_VALUE, MediaType.APPLICATION_JSON));
         entryPoint.commence(request, response, new BadCredentialsException("Bad"));
         assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
         assertEquals(null, response.getErrorMessage());

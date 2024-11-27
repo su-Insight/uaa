@@ -68,7 +68,7 @@ public class ScimGroupBootstrap implements InitializingBean {
     private String messagePropertyNameTemplate = "scope.%s";
     private final MapCollector<String, String, String> collector = new MapCollector<>(
             g -> g,
-            g -> (String) getMessageSource().getProperty(String.format(messagePropertyNameTemplate, g))
+            g -> (String) getMessageSource().getProperty(messagePropertyNameTemplate.formatted(g))
     );
 
     public String getMessagePropertyNameTemplate() {
@@ -118,7 +118,7 @@ public class ScimGroupBootstrap implements InitializingBean {
         }
         groups.entrySet().forEach(e -> {
             if (!StringUtils.hasText(e.getValue())) {
-                e.setValue((String) getMessageSource().getProperty(String.format(messagePropertyNameTemplate, e.getKey())));
+                e.setValue((String) getMessageSource().getProperty(messagePropertyNameTemplate.formatted(e.getKey())));
             }
         });
         this.configuredGroups = groups;
@@ -261,7 +261,7 @@ public class ScimGroupBootstrap implements InitializingBean {
     }
 
     private ScimUser getUser(String name) {
-        List<ScimUser> user = scimUserProvisioning.query(String.format(USER_BY_NAME_FILTER, name), IdentityZoneHolder.get().getId());
+        List<ScimUser> user = scimUserProvisioning.query(USER_BY_NAME_FILTER.formatted(name), IdentityZoneHolder.get().getId());
         if (user != null && !user.isEmpty()) {
             return user.get(0);
         }

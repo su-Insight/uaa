@@ -184,8 +184,8 @@ class ClientAdminEndpointsTests {
                 new ApplicationEventPublisher() {
                     @Override
                     public void publishEvent(ApplicationEvent event) {
-                        if (event instanceof EntityDeletedEvent) {
-                            ClientDetails client = (ClientDetails) ((EntityDeletedEvent) event).getDeleted();
+                        if (event instanceof EntityDeletedEvent deletedEvent) {
+                            ClientDetails client = (ClientDetails) deletedEvent.getDeleted();
                             clientRegistrationService.removeClientDetails(client.getClientId());
                         }
                     }

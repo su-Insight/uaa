@@ -101,7 +101,7 @@ class PasswordChangeEventPublisherTests {
     @Test
     void shouldConstructEmailBasedOnUsernameIfNoEmailList() {
         ScimUser scimUser = scimUserFrom("userName", null);
-        assertEquals(String.format("userName@%s", DEFAULT_EMAIL_DOMAIN), subject.getEmail(scimUser));
+        assertEquals("userName@%s".formatted(DEFAULT_EMAIL_DOMAIN), subject.getEmail(scimUser));
     }
 
     @Test
@@ -113,7 +113,7 @@ class PasswordChangeEventPublisherTests {
     @Test
     void shouldConstructEmailBasedOnUsernameIfEmailListIsEmpty() {
         ScimUser scimUser = scimUserFrom("userName", Collections.emptyList());
-        assertEquals(String.format("userName@%s", DEFAULT_EMAIL_DOMAIN), subject.getEmail(scimUser));
+        assertEquals("userName@%s".formatted(DEFAULT_EMAIL_DOMAIN), subject.getEmail(scimUser));
     }
 
     @Test

@@ -99,8 +99,8 @@ public class ConvertingExceptionView implements View {
 
     private void handleHttpEntityResponse(ResponseEntity<? extends ExceptionReport> responseEntity,
             HttpInputMessage inputMessage, HttpOutputMessage outputMessage) throws Exception {
-        if (outputMessage instanceof ServerHttpResponse) {
-            ((ServerHttpResponse) outputMessage).setStatusCode(responseEntity.getStatusCode());
+        if (outputMessage instanceof ServerHttpResponse response) {
+            response.setStatusCode(responseEntity.getStatusCode());
         }
         if (responseEntity.getBody() != null) {
             writeWithMessageConverters(responseEntity.getBody(), inputMessage, outputMessage);

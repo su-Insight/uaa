@@ -9,8 +9,8 @@ import java.util.Map;
 public class ScimGroupsTypeResolvingFactoryBean {
 
     public ScimGroupsTypeResolvingFactoryBean(Object o) {
-        if (o instanceof String) {
-            groups = StringUtils.commaDelimitedListToSet((String) o).stream()
+        if (o instanceof String string) {
+            groups = StringUtils.commaDelimitedListToSet(string).stream()
                     .map(g -> g.split("\\|"))
                     .collect(new MapCollector<>(
                             gd -> gd[0],

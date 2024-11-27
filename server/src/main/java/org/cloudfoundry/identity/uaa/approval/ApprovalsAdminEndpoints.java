@@ -199,7 +199,7 @@ public class ApprovalsAdminEndpoints implements InitializingBean {
 
     @ExceptionHandler
     public View handleException(Exception t) {
-        UaaException e = t instanceof UaaException ? (UaaException) t : new UaaException("Unexpected error",
+        UaaException e = t instanceof UaaException ue ? ue : new UaaException("Unexpected error",
                 "Error accessing user's approvals", HttpStatus.INTERNAL_SERVER_ERROR.value());
         Class<?> clazz = t.getClass();
         for (Class<?> key : statuses.keySet()) {

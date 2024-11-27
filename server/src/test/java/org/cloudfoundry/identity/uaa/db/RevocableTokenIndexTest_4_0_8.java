@@ -41,7 +41,7 @@ class RevocableTokenIndexTest_4_0_8 {
             }
         }
 
-        assertTrue(found, String.format("Expected to find index %s.%s", tableName, indexName));
+        assertTrue(found, "Expected to find index %s.%s".formatted(tableName, indexName));
     }
 
 }

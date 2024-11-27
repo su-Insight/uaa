@@ -40,12 +40,12 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
     private static final String USER_FIELDS = "id,username,password,email,givenName,familyName,created,lastModified,authorities,origin,external_id,verified,identity_zone_id,salt,passwd_lastmodified,phoneNumber,legacy_verification_behavior,passwd_change_required,last_logon_success_time,previous_logon_success_time ";
 
     private static final String PRE_DEFAULT_USER_BY_USERNAME_QUERY = "select " + USER_FIELDS + "from users where %s = ? and active=? and origin=? and identity_zone_id=?";
-    static final String DEFAULT_CASE_SENSITIVE_USER_BY_USERNAME_QUERY = String.format(PRE_DEFAULT_USER_BY_USERNAME_QUERY, "lower(username)");
-    static final String DEFAULT_CASE_INSENSITIVE_USER_BY_USERNAME_QUERY = String.format(PRE_DEFAULT_USER_BY_USERNAME_QUERY, "username");
+    static final String DEFAULT_CASE_SENSITIVE_USER_BY_USERNAME_QUERY = PRE_DEFAULT_USER_BY_USERNAME_QUERY.formatted("lower(username)");
+    static final String DEFAULT_CASE_INSENSITIVE_USER_BY_USERNAME_QUERY = PRE_DEFAULT_USER_BY_USERNAME_QUERY.formatted("username");
 
     private static final String PRE_DEFAULT_USER_BY_EMAIL_AND_ORIGIN_QUERY = "select " + USER_FIELDS + "from users where %s=? and active=? and origin=? and identity_zone_id=?";
-    static final String DEFAULT_CASE_SENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY = String.format(PRE_DEFAULT_USER_BY_EMAIL_AND_ORIGIN_QUERY, "lower(email)");
-    static final String DEFAULT_CASE_INSENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY = String.format(PRE_DEFAULT_USER_BY_EMAIL_AND_ORIGIN_QUERY, "email");
+    static final String DEFAULT_CASE_SENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY = PRE_DEFAULT_USER_BY_EMAIL_AND_ORIGIN_QUERY.formatted("lower(email)");
+    static final String DEFAULT_CASE_INSENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY = PRE_DEFAULT_USER_BY_EMAIL_AND_ORIGIN_QUERY.formatted("email");
     private static final String DEFAULT_UPDATE_USER_LAST_LOGON_PLAIN = "update users set previous_logon_success_time = last_logon_success_time, last_logon_success_time = ? where id = ? and identity_zone_id=?";
     private static final String DEFAULT_UPDATE_USER_LAST_LOGON_SKIP_LOCKED = "update users set previous_logon_success_time = last_logon_success_time, last_logon_success_time = ? where id = (select id from users where id = ? and identity_zone_id = ? for update skip locked)";
     public static String DEFAULT_UPDATE_USER_LAST_LOGON = DEFAULT_UPDATE_USER_LAST_LOGON_PLAIN;
@@ -154,7 +154,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
         } else if (results.size() == 1) {
             return results.get(0);
         } else {
-            throw new IncorrectResultSizeDataAccessException(String.format("Multiple users match email=%s origin=%s", email, origin), 1, results.size());
+            throw new IncorrectResultSizeDataAccessException("Multiple users match email=%s origin=%s".formatted(email, origin), 1, results.size());
         }
     }
 
@@ -167,7 +167,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
         } else if (results.size() == 1) {
             return results.get(0);
         } else {
-            throw new IncorrectResultSizeDataAccessException(String.format("Multiple users match email=%s origin=%s", email, origin), 1, results.size());
+            throw new IncorrectResultSizeDataAccessException("Multiple users match email=%s origin=%s".formatted(email, origin), 1, results.size());
         }
     }
 

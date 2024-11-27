@@ -317,7 +317,7 @@ class IdentityProviderBootstrapTest {
         for (Map.Entry<String, AbstractExternalOAuthIdentityProviderDefinition> provider : oauthProviderConfig.entrySet()) {
             try {
                 provisioning.retrieveByOriginIgnoreActiveFlag(provider.getKey(), IdentityZone.getUaaZoneId());
-                fail(String.format("Provider '%s' should not exist.", provider.getKey()));
+                fail("Provider '%s' should not exist.".formatted(provider.getKey()));
             } catch (EmptyResultDataAccessException ignored) {
             }
 

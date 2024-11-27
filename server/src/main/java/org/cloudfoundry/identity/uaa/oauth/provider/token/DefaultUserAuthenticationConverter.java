@@ -89,9 +89,9 @@ public class DefaultUserAuthenticationConverter implements UserAuthenticationCon
         if (authorities instanceof String authorityString) {
             return AuthorityUtils.commaSeparatedStringToAuthorityList(authorityString);
         }
-        if (authorities instanceof Collection) {
+        if (authorities instanceof Collection<?> collection) {
             return AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils
-                    .collectionToCommaDelimitedString((Collection<?>) authorities));
+                    .collectionToCommaDelimitedString(collection));
         }
         throw new IllegalArgumentException("Authorities must be either a String or a Collection");
     }

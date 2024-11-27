@@ -3,6 +3,7 @@ package org.cloudfoundry.identity.uaa.oauth.provider;
 import org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Set;
  */
 public class OAuth2Request extends BaseRequest implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -3842304780559108275L;
 
     /**

@@ -64,8 +64,8 @@ public class CodeStoreEndpoints {
     @ExceptionHandler
     public View handleException(Exception t, HttpServletRequest request) throws CodeStoreException {
         CodeStoreException e = new CodeStoreException("Unexpected error", t, HttpStatus.INTERNAL_SERVER_ERROR);
-        if (t instanceof CodeStoreException) {
-            e = (CodeStoreException) t;
+        if (t instanceof CodeStoreException exception) {
+            e = exception;
         }
         // User can supply trace=true or just trace (unspecified) to get stack
         // traces

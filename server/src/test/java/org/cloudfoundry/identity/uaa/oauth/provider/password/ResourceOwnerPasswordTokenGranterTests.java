@@ -101,8 +101,7 @@ public class ResourceOwnerPasswordTokenGranterTests {
         authenticationManager = new AuthenticationManager() {
             @Override
             public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                if (authentication instanceof UsernamePasswordAuthenticationToken) {
-                    UsernamePasswordAuthenticationToken user = (UsernamePasswordAuthenticationToken) authentication;
+                if (authentication instanceof UsernamePasswordAuthenticationToken user) {
                     user = new UsernamePasswordAuthenticationToken(user.getPrincipal(), "N/A",
                             AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
                     @SuppressWarnings("unchecked")

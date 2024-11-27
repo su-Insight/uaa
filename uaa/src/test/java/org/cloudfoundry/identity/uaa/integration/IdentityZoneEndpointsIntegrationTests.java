@@ -85,7 +85,7 @@ public class IdentityZoneEndpointsIntegrationTests {
         RestTemplate client = IntegrationTestUtils.getClientCredentialsTemplate(
                 IntegrationTestUtils.getClientCredentialsResource(serverRunning.getBaseUrl(), new String[0], "admin", "adminsecret")
         );
-        String groupId = IntegrationTestUtils.findGroupId(client, serverRunning.getBaseUrl(), String.format("zones.%s.admin", zoneId));
+        String groupId = IntegrationTestUtils.findGroupId(client, serverRunning.getBaseUrl(), "zones.%s.admin".formatted(zoneId));
         if (groupId != null) {
             IntegrationTestUtils.deleteGroup(clientCredentialsToken, "", serverRunning.getBaseUrl(), groupId);
         }
@@ -115,7 +115,7 @@ public class IdentityZoneEndpointsIntegrationTests {
         String email = new RandomValueStringGenerator().generate() + "@samltesting.org";
         ScimUser user = IntegrationTestUtils.createUser(adminClient, serverRunning.getBaseUrl(), email, "firstname", "lastname", email, true);
 
-        ScimGroup scimGroup = new ScimGroup(null, String.format("zones.%s.admin", zoneId), null);
+        ScimGroup scimGroup = new ScimGroup(null, "zones.%s.admin".formatted(zoneId), null);
         String clientCredentialsToken = IntegrationTestUtils.getClientCredentialsToken(serverRunning, "admin", "adminsecret");
         ScimGroup group = IntegrationTestUtils.createGroup(clientCredentialsToken, "", serverRunning.getBaseUrl(), scimGroup);
         IntegrationTestUtils.addMemberToGroup(adminClient, serverRunning.getBaseUrl(), user.getId(), group.getId());

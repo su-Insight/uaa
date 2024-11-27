@@ -346,7 +346,7 @@ class ExternalOAuthProviderConfiguratorTests {
         assertThrowsWithMessageThat(
                 IncorrectResultSizeDataAccessException.class,
                 () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
-                startsWith(String.format("No provider with unique issuer[%s] found", issuer))
+                startsWith("No provider with unique issuer[%s] found".formatted(issuer))
         );
     }
 
@@ -362,7 +362,7 @@ class ExternalOAuthProviderConfiguratorTests {
         assertThrowsWithMessageThat(
                 IncorrectResultSizeDataAccessException.class,
                 () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
-                startsWith(String.format("Active provider with unique issuer[%s] not found", issuer))
+                startsWith("Active provider with unique issuer[%s] not found".formatted(issuer))
         );
     }
 
@@ -375,7 +375,7 @@ class ExternalOAuthProviderConfiguratorTests {
         assertThrowsWithMessageThat(
                 IncorrectResultSizeDataAccessException.class,
                 () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
-                equalTo(String.format("Active provider with issuer[%s] not found", issuer))
+                equalTo("Active provider with issuer[%s] not found".formatted(issuer))
         );
     }
 
@@ -395,7 +395,7 @@ class ExternalOAuthProviderConfiguratorTests {
         assertThrowsWithMessageThat(
                 IncorrectResultSizeDataAccessException.class,
                 () -> configurator.retrieveByIssuer(issuer, IdentityZone.getUaaZoneId()),
-                equalTo(String.format("Duplicate providers with issuer[%s] not found", issuer))
+                equalTo("Duplicate providers with issuer[%s] not found".formatted(issuer))
         );
     }
 

@@ -25,8 +25,8 @@ public class CompositeAuthenticationManager implements AuthenticationManager {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Authentication a = SecurityContextHolder.getContext().getAuthentication();
         OAuth2Authentication oauth2Authentication = null;
-        if (a instanceof OAuth2Authentication) {
-            oauth2Authentication = (OAuth2Authentication) a;
+        if (a instanceof OAuth2Authentication auth2Authentication) {
+            oauth2Authentication = auth2Authentication;
         }
 
         if (oauth2Authentication != null) {

@@ -73,14 +73,12 @@ public class UaaMapUtils {
     public static Map<String, Object> getAllProperties(PropertySource<?> aPropSource) {
         Map<String, Object> result = new HashMap<>();
 
-        if (aPropSource instanceof CompositePropertySource) {
-            CompositePropertySource cps = (CompositePropertySource) aPropSource;
+        if (aPropSource instanceof CompositePropertySource cps) {
             cps.getPropertySources().forEach(ps -> addAll(result, getAllProperties(ps)));
             return result;
         }
 
-        if (aPropSource instanceof EnumerablePropertySource<?>) {
-            EnumerablePropertySource<?> ps = (EnumerablePropertySource<?>) aPropSource;
+        if (aPropSource instanceof EnumerablePropertySource<?> ps) {
             Arrays.asList(ps.getPropertyNames()).forEach(key -> result.put(key, ps.getProperty(key)));
             return result;
         }
@@ -121,8 +119,8 @@ public class UaaMapUtils {
         LinkedHashMap<K, V> result = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : sortedEntries) {
             Object value = entry.getValue();
-            if (value instanceof Map) {
-                value = sortByKeys((Map) value);
+            if (value instanceof Map map1) {
+                value = sortByKeys(map1);
             }
             result.put(entry.getKey(), (V) value);
         }

@@ -72,7 +72,7 @@ public class SessionResetFilter extends OncePerRequestFilter {
                         long passwordModTime = lastModified.getTime();
                         //if the password has changed after authentication time
                         if (hasPasswordChangedAfterAuthentication(lastAuthTime, passwordModTime)) {
-                            logger.debug(String.format("Resetting user session for user ID: %s Auth Time: %s Password Change Time: %s", userId, lastAuthTime, passwordModTime));
+                            logger.debug("Resetting user session for user ID: %s Auth Time: %s Password Change Time: %s".formatted(userId, lastAuthTime, passwordModTime));
                             redirect = true;
                         }
                     }

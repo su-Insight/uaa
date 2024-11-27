@@ -194,11 +194,11 @@ public final class OAuth2ContextSetup extends TestWatchman {
         }
         catch (OAuth2AccessDeniedException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
+            if (cause instanceof RuntimeException exception) {
+                throw exception;
             }
-            if (cause instanceof Error) {
-                throw (Error) cause;
+            if (cause instanceof Error error) {
+                throw error;
             }
             throw e;
         }

@@ -6,6 +6,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 public class UaaClient extends User {
 
+    @Serial
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
     private transient Map<String, Object> additionalInformation;
 
@@ -30,9 +32,9 @@ public class UaaClient extends User {
     public UaaClient(UserDetails userDetails, String secret) {
         super(userDetails.getUsername(), secret == null ? "" : secret, userDetails.isEnabled(), userDetails.isAccountNonExpired(),
                 userDetails.isCredentialsNonExpired(), userDetails.isAccountNonLocked(), userDetails.getAuthorities());
-        if (userDetails instanceof UaaClient) {
-            this.additionalInformation = ((UaaClient) userDetails).getAdditionalInformation();
-            this.clientJwtConfig = ((UaaClient) userDetails).clientJwtConfig;
+        if (userDetails instanceof UaaClient client) {
+            this.additionalInformation = client.getAdditionalInformation();
+            this.clientJwtConfig = client.clientJwtConfig;
         } else {
             this.clientJwtConfig = null;
         }
@@ -41,7 +43,7 @@ public class UaaClient extends User {
 
     public boolean isAllowPublic() {
         Object allowPublic = Optional.ofNullable(additionalInformation).map(e -> e.get(ClientConstants.ALLOW_PUBLIC)).orElse(Collections.emptyMap());
-        return (allowPublic instanceof String && Boolean.TRUE.toString().equalsIgnoreCase((String) allowPublic)) || (allowPublic instanceof Boolean && Boolean.TRUE.equals(allowPublic));
+        return (allowPublic instanceof String s && Boolean.TRUE.toString().equalsIgnoreCase(s)) || (allowPublic instanceof Boolean && Boolean.TRUE.equals(allowPublic));
     }
 
     public Map<String, Object> getAdditionalInformation() {

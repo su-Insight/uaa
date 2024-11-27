@@ -52,19 +52,19 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     private static final String FIELDS = "user_id,client_id,scope,expiresAt,status,lastModifiedAt,identity_zone_id";
 
     private static final String ADD_AUTHZ_SQL =
-            String.format("insert into %s ( %s ) values (?,?,?,?,?,?,?)",
+            "insert into %s ( %s ) values (?,?,?,?,?,?,?)".formatted(
                     TABLE_NAME,
                     FIELDS);
 
     private static final String REFRESH_AUTHZ_SQL =
-            String.format("update %s set lastModifiedAt=?, expiresAt=?, status=? where user_id=? and client_Id=? and scope=? and identity_zone_id=?",
+            "update %s set lastModifiedAt=?, expiresAt=?, status=? where user_id=? and client_Id=? and scope=? and identity_zone_id=?".formatted(
                     TABLE_NAME);
 
-    private static final String GET_AUTHZ_SQL = String.format("select %s from %s", FIELDS, TABLE_NAME);
+    private static final String GET_AUTHZ_SQL = "select %s from %s".formatted(FIELDS, TABLE_NAME);
 
-    private static final String DELETE_AUTHZ_SQL = String.format("delete from %s", TABLE_NAME);
+    private static final String DELETE_AUTHZ_SQL = "delete from %s".formatted(TABLE_NAME);
 
-    private static final String EXPIRE_AUTHZ_SQL = String.format("update %s set expiresAt = :expiry", TABLE_NAME);
+    private static final String EXPIRE_AUTHZ_SQL = "update %s set expiresAt = :expiry".formatted(TABLE_NAME);
 
     protected static final String DELETE_ZONE_APPROVALS = "delete from authz_approvals where identity_zone_id = ?";
 
@@ -252,28 +252,28 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     @Override
     public int deleteByIdentityZone(String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_ZONE_APPROVALS, zoneId);
-        getLogger().debug(String.format("Deleted zone approvals '%s' and count:%s", zoneId, approvalCount));
+        getLogger().debug("Deleted zone approvals '%s' and count:%s".formatted(zoneId, approvalCount));
         return approvalCount;
     }
 
     @Override
     public int deleteByOrigin(String origin, String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_OF_USER_APPROVALS_BY_PROVIDER, origin, zoneId);
-        getLogger().debug(String.format("Deleted provider approvals '%s'/%s and count:%s", origin, zoneId, approvalCount));
+        getLogger().debug("Deleted provider approvals '%s'/%s and count:%s".formatted(origin, zoneId, approvalCount));
         return approvalCount;
     }
 
     @Override
     public int deleteByClient(String clientId, String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_CLIENT_APPROVALS, clientId, zoneId);
-        getLogger().debug(String.format("Deleted client '%s' and %s approvals", clientId, approvalCount));
+        getLogger().debug("Deleted client '%s' and %s approvals".formatted(clientId, approvalCount));
         return approvalCount;
     }
 
     @Override
     public int deleteByUser(String userId, String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_USER_APPROVALS, userId, zoneId);
-        getLogger().debug(String.format("Deleted user '%s' and %s approvals", userId, approvalCount));
+        getLogger().debug("Deleted user '%s' and %s approvals".formatted(userId, approvalCount));
         return approvalCount;
     }
 

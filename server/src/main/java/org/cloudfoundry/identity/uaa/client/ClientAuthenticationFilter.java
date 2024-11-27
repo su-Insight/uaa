@@ -100,8 +100,8 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
             AuthenticationException failed) throws IOException, ServletException {
         // Need to force a redirect via the OAuth client filter, so rethrow here
         // if OAuth related
-        if (oauth2Available && failed instanceof SocialRedirectException) {
-            throw ((SocialRedirectException) failed).getUserRedirectException();
+        if (oauth2Available && failed instanceof SocialRedirectException exception) {
+            throw exception.getUserRedirectException();
         }
         // If the exception is not a Spring Security exception this will
         // result in a default error page
@@ -130,9 +130,7 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
             boolean authenticated = authentication.isAuthenticated();
 
             // If not already authenticated (the default) from the parent class
-            if (authentication instanceof PreAuthenticatedAuthenticationToken && !authenticated) {
-
-                PreAuthenticatedAuthenticationToken preAuth = (PreAuthenticatedAuthenticationToken) authentication;
+            if (authentication instanceof PreAuthenticatedAuthenticationToken preAuth && !authenticated) {
                 // Look inside the principal and see if that was marked as
                 // authenticated
                 if (preAuth.getPrincipal() instanceof Authentication) {

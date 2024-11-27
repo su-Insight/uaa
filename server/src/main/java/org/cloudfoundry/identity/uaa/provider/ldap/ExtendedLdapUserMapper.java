@@ -59,8 +59,8 @@ public class ExtendedLdapUserMapper extends LdapUserDetailsMapper {
                     if (objValues[i] != null) {
                         if (objValues[i].getClass().isAssignableFrom(String.class)) {
                             values[i] = (String) objValues[i];
-                        } else if (objValues[i] instanceof byte[]) {
-                            values[i] = new String((byte[]) objValues[i]);
+                        } else if (objValues[i] instanceof byte[] bytes) {
+                            values[i] = new String(bytes);
                         } else {
                             values[i] = objValues[i].toString();
                         }

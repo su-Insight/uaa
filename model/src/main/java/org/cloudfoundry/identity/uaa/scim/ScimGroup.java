@@ -102,7 +102,7 @@ public class ScimGroup extends ScimCore<ScimGroup> {
                     setMembers(new ArrayList<>());
                     break;
                 default:
-                    throw new IllegalArgumentException(String.format("Attribute %s cannot be removed using \"Meta.attributes\"", attribute));
+                    throw new IllegalArgumentException("Attribute %s cannot be removed using \"Meta.attributes\"".formatted(attribute));
             }
         }
 
@@ -132,7 +132,7 @@ public class ScimGroup extends ScimCore<ScimGroup> {
 
     @Override
     public String toString() {
-        return String.format("(Group id: %s, name: %s, description: %s, created: %s, modified: %s, version: %s, members: %s)",
+        return "(Group id: %s, name: %s, description: %s, created: %s, modified: %s, version: %s, members: %s)".formatted(
                 getId(),
                 displayName,
                 description,

@@ -118,7 +118,7 @@ public final class UaaTestAccounts implements TestAccounts {
      * @return true if this Spring profile is enabled on the server
      */
     public boolean isProfileActive(String profile) {
-        logger.debug(String.format("Checking for %s profile in: [%s]", profile, environment));
+        logger.debug("Checking for %s profile in: [%s]".formatted(profile, environment));
         return profile != null && environment.acceptsProfiles(profile);
     }
 
@@ -138,8 +138,8 @@ public final class UaaTestAccounts implements TestAccounts {
      */
     public static String getAuthorizationHeader(String username, String password) {
         String credentials =
-                String.format("%s:%s", URLEncoder.encode(username, StandardCharsets.UTF_8), URLEncoder.encode(password, StandardCharsets.UTF_8));
-        return String.format("Basic %s", new String(Base64.encode(credentials.getBytes())));
+                "%s:%s".formatted(URLEncoder.encode(username, StandardCharsets.UTF_8), URLEncoder.encode(password, StandardCharsets.UTF_8));
+        return "Basic %s".formatted(new String(Base64.encode(credentials.getBytes())));
     }
 
     public String getJsonCredentials(String prefix, String defaultUsername, String defaultPassword) {
@@ -149,7 +149,7 @@ public final class UaaTestAccounts implements TestAccounts {
     }
 
     public String getJsonCredentials(String username, String password) {
-        return String.format("{\"username\":\"%s\",\"password\":\"%s\"}", username, password);
+        return "{\"username\":\"%s\",\"password\":\"%s\"}".formatted(username, password);
     }
 
     public ClientCredentialsResourceDetails getAdminClientCredentialsResource() {

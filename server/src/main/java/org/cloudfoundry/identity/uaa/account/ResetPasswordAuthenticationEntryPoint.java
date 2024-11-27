@@ -67,15 +67,13 @@ public class ResetPasswordAuthenticationEntryPoint implements AuthenticationEntr
             }
         };
 
-        if (cause instanceof PasswordConfirmationException) {
-            PasswordConfirmationException passwordConfirmationException = (PasswordConfirmationException) cause;
+        if (cause instanceof PasswordConfirmationException passwordConfirmationException) {
             request.setAttribute("message_code", passwordConfirmationException.getMessageCode());
 
             request.getRequestDispatcher("/reset_password").forward(wrapper, response);
             return;
         } else {
-            if (cause instanceof InvalidPasswordException) {
-                InvalidPasswordException exception = (InvalidPasswordException) cause;
+            if (cause instanceof InvalidPasswordException exception) {
                 request.setAttribute("message", exception.getMessagesAsOneString());
                 request.getRequestDispatcher("/reset_password").forward(wrapper, response);
             } else {

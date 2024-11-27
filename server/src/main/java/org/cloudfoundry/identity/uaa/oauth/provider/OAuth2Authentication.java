@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 
+import java.io.Serial;
 import java.util.Objects;
 
 /**
@@ -16,6 +17,7 @@ import java.util.Objects;
  */
 public class OAuth2Authentication extends AbstractAuthenticationToken {
 
+    @Serial
     private static final long serialVersionUID = 8200467823628026414L;
 
     private final OAuth2Request storedRequest;

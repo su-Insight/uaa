@@ -40,7 +40,7 @@ public class BackwardsCompatibleDelegatingPasswordEncoder implements PasswordEnc
 
         String prefix = encodedPassword.substring(startIndex + 1, endIndex);
         if (!prefix.equals(OPTIONAL_BCRYPT_PREFIX)) {
-            throw new IllegalArgumentException(String.format("Password encoding {%s} is not supported", prefix));
+            throw new IllegalArgumentException("Password encoding {%s} is not supported".formatted(prefix));
         }
         return encodedPassword.substring(endIndex + 1);
     }

@@ -4,6 +4,7 @@ import org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken;
 import org.cloudfoundry.identity.uaa.oauth.token.AccessTokenRequest;
 import org.cloudfoundry.identity.uaa.oauth.token.DefaultAccessTokenRequest;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultOAuth2ClientContext implements OAuth2ClientContext, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7301862963115789109L;
 
     private transient OAuth2AccessToken accessToken;

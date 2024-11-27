@@ -308,19 +308,19 @@ class JdbcScimUserProvisioningTests {
         };
 
         // case 1: should return only user 1
-        String filter = String.format("id eq '%s' or origin eq '%s'", created1.getId(), created2.getOrigin());
+        String filter = "id eq '%s' or origin eq '%s'".formatted(created1.getId(), created2.getOrigin());
         List<String> usernames = retrieveByScimFilter.apply(filter);
         Assertions.assertThat(usernames)
                 .hasSize(1)
                 .contains(created1.getUserName());
 
         // case 2: should return empty list
-        filter = String.format("origin eq '%s'", created2.getOrigin());
+        filter = "origin eq '%s'".formatted(created2.getOrigin());
         usernames = retrieveByScimFilter.apply(filter);
         Assertions.assertThat(usernames).isEmpty();
 
         // case 3: should return empty list (filtered by origin and ID)
-        filter = String.format("origin eq '%s' and id eq '%s'", created2.getOrigin(), created2.getId());
+        filter = "origin eq '%s' and id eq '%s'".formatted(created2.getOrigin(), created2.getId());
         usernames = retrieveByScimFilter.apply(filter);
         Assertions.assertThat(usernames).isEmpty();
     }
@@ -348,7 +348,7 @@ class JdbcScimUserProvisioningTests {
         user2.setOrigin(originInactive);
         ScimUser created2 = jdbcScimUserProvisioning.createUser(user2, "j8hyqpassX", currentIdentityZoneId);
 
-        String scimFilter = String.format("id eq '%s' or username eq '%s' or origin eq '%s'", created1.getId(), created2.getUserName(), created2.getOrigin());
+        String scimFilter = "id eq '%s' or username eq '%s' or origin eq '%s'".formatted(created1.getId(), created2.getUserName(), created2.getOrigin());
         jdbcScimUserProvisioning.setPageSize(0);
         List<ScimUser> result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
                 scimFilter,
@@ -447,21 +447,21 @@ class JdbcScimUserProvisioningTests {
         };
 
         // case 1: should return both
-        String filter = String.format("id eq '%s' or origin eq '%s'", created1.getId(), created2.getOrigin());
+        String filter = "id eq '%s' or origin eq '%s'".formatted(created1.getId(), created2.getOrigin());
         List<String> usernames = retrieveByScimFilter.apply(filter);
         Assertions.assertThat(usernames)
                 .hasSize(2)
                 .contains(created1.getUserName(), created2.getUserName());
 
         // case 2: should return user 2
-        filter = String.format("origin eq '%s'", created2.getOrigin());
+        filter = "origin eq '%s'".formatted(created2.getOrigin());
         usernames = retrieveByScimFilter.apply(filter);
         Assertions.assertThat(usernames)
                 .hasSize(1)
                 .contains(created2.getUserName());
 
         // case 3: should return user 2 (filtered by origin and ID)
-        filter = String.format("origin eq '%s' and id eq '%s'", created2.getOrigin(), created2.getId());
+        filter = "origin eq '%s' and id eq '%s'".formatted(created2.getOrigin(), created2.getId());
         usernames = retrieveByScimFilter.apply(filter);
         Assertions.assertThat(usernames)
                 .hasSize(1)
@@ -1166,7 +1166,7 @@ class JdbcScimUserProvisioningTests {
     @Test
     void createUserWithNoZoneDefaultsToUAAZone() {
         String id = UUID.randomUUID().toString();
-        jdbcTemplate.execute(String.format(OLD_ADD_USER_SQL_FORMAT, id, "test-username", "password", "test@email.com", "givenName", "familyName", "1234567890"));
+        jdbcTemplate.execute(OLD_ADD_USER_SQL_FORMAT.formatted(id, "test-username", "password", "test@email.com", "givenName", "familyName", "1234567890"));
         ScimUser user = jdbcScimUserProvisioning.retrieve(id, IdentityZone.getUaaZoneId());
         assertEquals(IdentityZone.getUaaZoneId(), user.getZoneId());
         assertNull(user.getSalt());
@@ -1176,7 +1176,7 @@ class JdbcScimUserProvisioningTests {
     void createUserWithNoZoneFailsIfUserAlreadyExistsInUaaZone() {
         addUser(jdbcTemplate, UUID.randomUUID().toString(), "test-username", "password", "test@email.com", "givenName", "familyName", "1234567890", IdentityZone.getUaaZoneId());
         assertThrows(DuplicateKeyException.class,
-                () -> jdbcTemplate.execute(String.format(OLD_ADD_USER_SQL_FORMAT, UUID.randomUUID().toString(), "test-username", "password", "test@email.com", "givenName", "familyName", "1234567890")));
+                () -> jdbcTemplate.execute(OLD_ADD_USER_SQL_FORMAT.formatted(UUID.randomUUID().toString(), "test-username", "password", "test@email.com", "givenName", "familyName", "1234567890")));
     }
 
     @Test
@@ -1569,8 +1569,7 @@ class JdbcScimUserProvisioningTests {
             final String aliasId,
             final String aliasZid
     ) {
-        String addUserSql = String.format(
-                "insert into users (id, username, password, email, givenName, familyName, phoneNumber, identity_zone_id, alias_id, alias_zid) values ('%s','%s','%s','%s','%s','%s','%s','%s', %s, %s)",
+        String addUserSql = "insert into users (id, username, password, email, givenName, familyName, phoneNumber, identity_zone_id, alias_id, alias_zid) values ('%s','%s','%s','%s','%s','%s','%s','%s', %s, %s)".formatted(
                 id,
                 username,
                 password,
@@ -1586,8 +1585,7 @@ class JdbcScimUserProvisioningTests {
     }
 
     private static void addUser(final JdbcTemplate jdbcTemplate, final ScimUser scimUser) {
-        String addUserSql = String.format(
-                "insert into users (id, username, password, email, givenName, familyName, phoneNumber, identity_zone_id, origin) values ('%s','%s','%s','%s','%s','%s','%s','%s', '%s')",
+        String addUserSql = "insert into users (id, username, password, email, givenName, familyName, phoneNumber, identity_zone_id, origin) values ('%s','%s','%s','%s','%s','%s','%s','%s', '%s')".formatted(
                 scimUser.getId(),
                 scimUser.getUserName(),
                 scimUser.getPassword(),

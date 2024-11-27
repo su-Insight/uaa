@@ -109,7 +109,7 @@ public class JdbcPagingList<E> extends AbstractList<E> {
     private String getCountSql(String sql) {
         String result = UaaStringUtils.getValidatedString(sql);
         if (result.toLowerCase().startsWith("select") && result.toLowerCase().contains(" from ")) {
-            result = String.format("select count(*) %s", result.substring(result.toLowerCase().indexOf(" from ")));
+            result = "select count(*) %s".formatted(result.substring(result.toLowerCase().indexOf(" from ")));
         }
         int orderByPos = result.toLowerCase().lastIndexOf("order by");
         if (orderByPos >= 0) {

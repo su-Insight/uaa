@@ -76,8 +76,8 @@ public class ProxyingBeanInfoMatcher<S>
     }
 
     private Matcher<?> getMatcher(Object arg) {
-        if (arg instanceof Matcher) {
-            return (Matcher<?>) arg;
+        if (arg instanceof Matcher<?> matcher) {
+            return matcher;
         }
 
         return Matchers.equalTo(arg);

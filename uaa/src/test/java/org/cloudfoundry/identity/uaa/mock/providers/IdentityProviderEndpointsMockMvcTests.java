@@ -180,7 +180,7 @@ class IdentityProviderEndpointsMockMvcTests {
     @Test
     void test_Create_and_Delete_SamlProvider() throws Exception {
         String origin = "idp-mock-saml-" + new RandomValueStringGenerator().generate();
-        String metadata = String.format(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID, "http://localhost:9999/metadata/" + origin);
+        String metadata = BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID.formatted("http://localhost:9999/metadata/" + origin);
         String accessToken = setUpAccessToken();
         IdentityProvider<SamlIdentityProviderDefinition> provider = new IdentityProvider<>();
         provider.setActive(true);
@@ -440,7 +440,7 @@ class IdentityProviderEndpointsMockMvcTests {
         identityProvider.setType(OriginKeys.SAML);
 
         SamlIdentityProviderDefinition providerDefinition = new SamlIdentityProviderDefinition()
-                .setMetaDataLocation(String.format(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID, "http://www.okta.com/" + identityProvider.getOriginKey()))
+                .setMetaDataLocation(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID.formatted("http://www.okta.com/" + identityProvider.getOriginKey()))
                 .setIdpEntityAlias(identityProvider.getOriginKey())
                 .setNameID("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress")
                 .setLinkText("IDPEndpointsMockTests Saml Provider:" + identityProvider.getOriginKey())
@@ -478,7 +478,7 @@ class IdentityProviderEndpointsMockMvcTests {
         identityProvider.setType(OriginKeys.SAML);
 
         SamlIdentityProviderDefinition providerDefinition = new SamlIdentityProviderDefinition()
-                .setMetaDataLocation(String.format(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID, "http://www.okta.com/" + identityProvider.getOriginKey()))
+                .setMetaDataLocation(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID.formatted("http://www.okta.com/" + identityProvider.getOriginKey()))
                 .setIdpEntityAlias(identityProvider.getOriginKey())
                 .setNameID("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress")
                 .setLinkText("IDPEndpointsMockTests Saml Provider:" + identityProvider.getOriginKey())

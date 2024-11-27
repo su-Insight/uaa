@@ -1926,7 +1926,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         //request for id_token using our old-style direct authentication
         //this returns a redirect with a fragment in the URL/Location header
-        String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", developer.getUserName(), SECRET);
+        String credentials = "{ \"username\":\"%s\", \"password\":\"%s\" }".formatted(developer.getUserName(), SECRET);
         MvcResult result = mockMvc.perform(post("/oauth/authorize")
                 .header("Accept", "application/json")
                 .param(OAuth2Utils.RESPONSE_TYPE, "token id_token")
@@ -2555,7 +2555,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
         String userScopes = "space.1.developer,space.2.developer,org.1.reader,org.2.reader,org.12345.admin,scope.one,scope.two,scope.three";
         ScimUser developer = setUpUser(jdbcScimUserProvisioning, jdbcScimGroupMembershipManager, jdbcScimGroupProvisioning, userId, userScopes, OriginKeys.LOGIN_SERVER, IdentityZoneHolder.get().getId());
         String loginToken = testClient.getClientCredentialsOAuthAccessToken("login", "loginsecret", "");
-        String basicAuthForLoginClient = new String(Base64.encode(String.format("%s:%s", "login", "loginsecret").getBytes()));
+        String basicAuthForLoginClient = new String(Base64.encode("%s:%s".formatted("login", "loginsecret").getBytes()));
 
         //the login server is matched by providing
         //1. Bearer token (will be authenticated for oauth.login scope)
@@ -2933,7 +2933,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
         String userId = "testuser" + generator.generate();
         String userScopes = "space.1.developer,space.2.developer,org.1.reader,org.2.reader,org.12345.admin,scope.one,scope.two,scope.three,uaa.user";
         ScimUser developer = setUpUser(jdbcScimUserProvisioning, jdbcScimGroupMembershipManager, jdbcScimGroupProvisioning, userId, userScopes, OriginKeys.UAA, IdentityZoneHolder.get().getId());
-        String basicAuthForOauthClient = new String(Base64.encode(String.format("%s:%s", oauthClientId, SECRET).getBytes()));
+        String basicAuthForOauthClient = new String(Base64.encode("%s:%s".formatted(oauthClientId, SECRET).getBytes()));
 
         //success - regular password grant but client is authenticated using POST parameters
         mockMvc.perform(post("/oauth/token")

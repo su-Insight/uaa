@@ -273,7 +273,7 @@ public abstract class UaaUrlUtils {
             pathInfo = UaaStringUtils.EMPTY_STRING;
         }
 
-        return String.format("%s%s", servletPath, pathInfo);
+        return "%s%s".formatted(servletPath, pathInfo);
     }
 
     public static boolean uriHasMatchingHost(String uri, String hostname) {

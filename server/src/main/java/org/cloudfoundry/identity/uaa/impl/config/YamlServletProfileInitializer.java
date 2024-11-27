@@ -150,7 +150,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
 
         return Arrays.stream(secretFiles)
                 .map(File::getAbsolutePath)
-                .map(path -> String.format("file:%s", path))
+                .map(path -> "file:%s".formatted(path))
                 .collect(Collectors.toList());
     }
 
@@ -174,7 +174,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
                 .collect(Collectors.toList());
 
         resolvedLocations.stream()
-                .map(location -> String.format("Testing for YAML resources at: %s", location))
+                .map(location -> "Testing for YAML resources at: %s".formatted(location))
                 .forEach(System.out::println);
 
         return resolvedLocations.stream()
@@ -224,8 +224,8 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
     static void applySpringProfiles(ConfigurableEnvironment environment) {
         environment.setDefaultProfiles(new String[0]);
 
-        System.out.println(String.format("System property spring.profiles.active=[%s]", System.getProperty("spring.profiles.active")));
-        System.out.println(String.format("Environment property spring_profiles=[%s]", environment.getProperty("spring_profiles")));
+        System.out.println("System property spring.profiles.active=[%s]".formatted(System.getProperty("spring.profiles.active")));
+        System.out.println("Environment property spring_profiles=[%s]".formatted(environment.getProperty("spring_profiles")));
 
         if (environment.containsProperty("spring_profiles")) {
             setActiveProfiles(environment, StringUtils.tokenizeToStringArray(environment.getProperty("spring_profiles"), ",", true, true));

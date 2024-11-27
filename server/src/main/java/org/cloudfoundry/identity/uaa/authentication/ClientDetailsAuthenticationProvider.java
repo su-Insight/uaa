@@ -128,7 +128,7 @@ public class ClientDetailsAuthenticationProvider extends DaoAuthenticationProvid
     }
 
     private static UaaAuthenticationDetails getUaaAuthenticationDetails(Object object) {
-        return object instanceof UaaAuthenticationDetails ? (UaaAuthenticationDetails) object : new UaaAuthenticationDetails();
+        return object instanceof UaaAuthenticationDetails uad ? uad : new UaaAuthenticationDetails();
     }
 
     private static Map<String, String[]> getRequestParameters(UaaAuthenticationDetails authenticationDetails) {

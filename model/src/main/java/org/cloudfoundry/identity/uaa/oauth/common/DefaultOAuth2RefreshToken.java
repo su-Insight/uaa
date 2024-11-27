@@ -3,6 +3,7 @@ package org.cloudfoundry.identity.uaa.oauth.common;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ import java.util.Objects;
 @SuppressWarnings("serial")
 public class DefaultOAuth2RefreshToken implements Serializable, OAuth2RefreshToken {
 
+    @Serial
     private static final long serialVersionUID = -8268749987500293951L;
 
     private String value;

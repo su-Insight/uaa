@@ -70,8 +70,7 @@ public class PasswordResetEndpoint {
             @RequestParam(required = false, value = "redirect_uri") String redirectUri) {
         if (clientId == null) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication instanceof OAuth2Authentication) {
-                OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
+            if (authentication instanceof OAuth2Authentication oAuth2Authentication) {
                 clientId = oAuth2Authentication.getOAuth2Request().getClientId();
             }
         }

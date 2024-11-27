@@ -2,6 +2,8 @@ package org.cloudfoundry.identity.uaa.oauth.provider.authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +16,7 @@ import java.io.Serializable;
  */
 public class OAuth2AuthenticationDetails implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -2981260975134202737L;
 
     public static final String ACCESS_TOKEN_VALUE = OAuth2AuthenticationDetails.class.getSimpleName() + ".ACCESS_TOKEN_VALUE";

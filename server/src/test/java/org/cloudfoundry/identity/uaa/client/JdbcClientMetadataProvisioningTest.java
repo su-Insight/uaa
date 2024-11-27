@@ -198,7 +198,7 @@ class JdbcClientMetadataProvisioningTest {
             final String clientId,
             final String identityZoneId
     ) {
-        return String.format("insert into oauth_client_details(client_id, identity_zone_id) values ('%s', '%s')",
+        return "insert into oauth_client_details(client_id, identity_zone_id) values ('%s', '%s')".formatted(
                 clientId,
                 identityZoneId);
     }
@@ -208,7 +208,7 @@ class JdbcClientMetadataProvisioningTest {
             final String identityZoneId,
             final String createdBy
     ) {
-        return String.format("insert into oauth_client_details(client_id, identity_zone_id, created_by) values ('%s', '%s', '%s')",
+        return "insert into oauth_client_details(client_id, identity_zone_id, created_by) values ('%s', '%s', '%s')".formatted(
                 clientId,
                 identityZoneId,
                 createdBy);
@@ -220,7 +220,7 @@ class JdbcClientMetadataProvisioningTest {
             final String createdBy,
             final String appLaunchUrl
     ) {
-        return String.format("insert into oauth_client_details(client_id, identity_zone_id, created_by, app_launch_url) values ('%s', '%s', '%s', '%s')",
+        return "insert into oauth_client_details(client_id, identity_zone_id, created_by, app_launch_url) values ('%s', '%s', '%s', '%s')".formatted(
                 clientId,
                 identityZoneId,
                 createdBy,

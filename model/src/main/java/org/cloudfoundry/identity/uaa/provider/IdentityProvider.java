@@ -152,8 +152,8 @@ public class IdentityProvider<T extends AbstractIdentityProviderDefinition> impl
 
     public IdentityProvider<T> setOriginKey(String originKey) {
         this.originKey = originKey;
-        if (config != null && config instanceof SamlIdentityProviderDefinition) {
-            ((SamlIdentityProviderDefinition) config).setIdpEntityAlias(originKey);
+        if (config != null && config instanceof SamlIdentityProviderDefinition definition) {
+            definition.setIdpEntityAlias(originKey);
         }
 
         return this;
@@ -171,8 +171,8 @@ public class IdentityProvider<T extends AbstractIdentityProviderDefinition> impl
 
     public IdentityProvider<T> setIdentityZoneId(String identityZoneId) {
         this.identityZoneId = identityZoneId;
-        if (config != null && config instanceof SamlIdentityProviderDefinition) {
-            ((SamlIdentityProviderDefinition) config).setZoneId(identityZoneId);
+        if (config != null && config instanceof SamlIdentityProviderDefinition definition) {
+            definition.setZoneId(identityZoneId);
         }
         return this;
     }

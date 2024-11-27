@@ -100,7 +100,7 @@ public class LdapLoginIT {
         IntegrationTestUtils.deleteGroup(token, "", baseUrl, groupId);
 
         alertError.ifPresent(msg ->
-                System.err.println(String.format("Failed to log in with error: \"%s\"", msg))
+                System.err.println("Failed to log in with error: \"%s\"".formatted(msg))
         );
     }
 
@@ -141,7 +141,7 @@ public class LdapLoginIT {
         //create a zone admin user
         String email = new RandomValueStringGenerator().generate() + "@ldaptesting.org";
         ScimUser user = IntegrationTestUtils.createUser(adminClient, baseUrl, email, "firstname", "lastname", email, true);
-        String groupName = String.format("zones.%s.admin", subdomain);
+        String groupName = "zones.%s.admin".formatted(subdomain);
         String groupId = IntegrationTestUtils.findGroupId(adminClient, baseUrl, groupName);
         IntegrationTestUtils.addMemberToGroup(adminClient, baseUrl, user.getId(), groupId);
 

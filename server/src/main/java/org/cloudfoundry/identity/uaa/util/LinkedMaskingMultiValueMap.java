@@ -16,6 +16,7 @@ package org.cloudfoundry.identity.uaa.util;
 
 import org.springframework.util.MultiValueMap;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,6 +49,7 @@ import java.util.Set;
  */
 public class LinkedMaskingMultiValueMap<K, V> implements MultiValueMap<K, V>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3801124242820219132L;
 
     private final Map<K, List<V>> targetMap;

@@ -143,7 +143,7 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
 
         @Override
         public String toString() {
-            return String.format("(id: %s, name: %s, type: %s)", value, display, type);
+            return "(id: %s, name: %s, type: %s)".formatted(value, display, type);
         }
     }
 
@@ -873,7 +873,7 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
                     ofNullable(getName()).ifPresent(name -> name.setMiddleName(null));
                     break;
                 default:
-                    throw new IllegalArgumentException(String.format("Attribute %s cannot be removed using \"Meta.attributes\"", attribute));
+                    throw new IllegalArgumentException("Attribute %s cannot be removed using \"Meta.attributes\"".formatted(attribute));
             }
         }
     }

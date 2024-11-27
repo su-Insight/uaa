@@ -146,7 +146,7 @@ public class Approval {
 
     @Override
     public String toString() {
-        return String.format("[%s, %s, %s, %s, %s, %s]", userId, scope, clientId, expiresAt, status.toString(),
+        return "[%s, %s, %s, %s, %s, %s]".formatted(userId, scope, clientId, expiresAt, status.toString(),
                 lastUpdatedAt);
     }
 

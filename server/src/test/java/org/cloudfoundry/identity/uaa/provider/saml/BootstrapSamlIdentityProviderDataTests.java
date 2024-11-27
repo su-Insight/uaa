@@ -155,7 +155,7 @@ public class BootstrapSamlIdentityProviderDataTests {
     void beforeEach() {
         bootstrap = new BootstrapSamlIdentityProviderData(new SamlIdentityProviderConfigurator(mock(JdbcIdentityProviderProvisioning.class), new IdentityZoneManagerImpl(), mock(FixedHttpMetaDataProvider.class)));
         singleAdd = new SamlIdentityProviderDefinition()
-                .setMetaDataLocation(String.format(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID, new RandomValueStringGenerator().generate()))
+                .setMetaDataLocation(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID.formatted(new RandomValueStringGenerator().generate()))
                 .setIdpEntityAlias(SINGLE_ADD_ALIAS)
                 .setNameID("sample-nameID")
                 .setAssertionConsumerIndex(1)
@@ -406,7 +406,7 @@ public class BootstrapSamlIdentityProviderDataTests {
                     break;
                 }
                 default:
-                    fail(String.format("Unknown provider %s", def.getIdpEntityAlias()));
+                    fail("Unknown provider %s".formatted(def.getIdpEntityAlias()));
             }
         }
     }

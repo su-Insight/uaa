@@ -74,7 +74,7 @@ public final class WhitelistLogoutSuccessHandler extends SimpleUrlLogoutSuccessH
                 ClientDetails client = clientDetailsService.loadClientByClientId(clientId, IdentityZoneHolder.get().getId());
                 redirectUris = client.getRegisteredRedirectUri();
             } catch (NoSuchClientException x) {
-                log.debug(String.format("Unable to find client with ID:%s for logout redirect", clientId));
+                log.debug("Unable to find client with ID:%s for logout redirect".formatted(clientId));
             }
         }
         return redirectUris;

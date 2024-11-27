@@ -133,7 +133,7 @@ public final class ServerRunning extends TestWatchman implements RestTemplateHol
     }
 
     private void failTest() {
-        fail(String.format("Not executing tests because basic connectivity test failed for hostName=%s, port=%d", hostName, port));
+        fail("Not executing tests because basic connectivity test failed for hostName=%s, port=%d".formatted(hostName, port));
     }
 
     @Override

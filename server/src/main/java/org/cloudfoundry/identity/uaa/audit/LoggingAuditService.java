@@ -102,7 +102,7 @@ public class LoggingAuditService implements UaaAuditService {
     public void log(AuditEvent auditEvent, String zoneId) {
         updateCounters(auditEvent);
 
-        String logMessage = String.format("%s ('%s'): principal=%s, origin=[%s], identityZoneId=[%s]",
+        String logMessage = "%s ('%s'): principal=%s, origin=[%s], identityZoneId=[%s]".formatted(
                 auditEvent.getType().name(),
                 auditEvent.getData(),
                 auditEvent.getPrincipalId(),
@@ -111,7 +111,7 @@ public class LoggingAuditService implements UaaAuditService {
         );
 
         if (auditEvent.getAuthenticationType() != null) {
-            logMessage = String.format("%s, authenticationType=[%s]", logMessage, auditEvent.getAuthenticationType());
+            logMessage = "%s, authenticationType=[%s]".formatted(logMessage, auditEvent.getAuthenticationType());
         }
 
         log(logMessage);

@@ -42,42 +42,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DefaultTestContext
 class TokenKeyEndpointMockMvcTests {
 
-    private static final String signKey = "-----BEGIN RSA PRIVATE KEY-----\n" +
-            "MIIEpQIBAAKCAQEA5JgjYNjLOeWC1Xf/NFcremS9peiQd3esa64KZ0BJue74bEtp\n" +
-            "N8CLmbeTD9NHvKzCg833cF81gkrkP/pkra7WZF+zNlHBDnO68D/tBkEAzPJYlFLL\n" +
-            "bMgvgL90fLbev4tlEUD59e0QGJQjIrcieOJSoOBSc8SqhVN61pdzT3rTUx+pq+QP\n" +
-            "XpBor+HUOzRPpVfcTkwfxjVUTzJkSDI4pWS59+1NRVPhQBCPpG7j68VM60gJl+Bn\n" +
-            "NzSI3gbvnh+UYrFvKA/fRkerAsz/Zy6LbGDAFYEQjpphGyQmtsqsOndL9zBvfQCp\n" +
-            "5oT4hukBc3yIR6GVXDi0UURVjKtlYMMD4O+fqwIDAQABAoIBAQCi8VtOflomc9XV\n" +
-            "ygpMydIBFWwlpefMcK6jttRNkwK6mX/U2dAvYH1h3fvi7OyWreKdRySYohUnQbD/\n" +
-            "dcFsGFNUCu9Yyd++KHpZJIgUzCMA88J2P6onaW6K7G3hNA0FJhytts42IXw2uOlu\n" +
-            "pnHZDyJs8Fl1kfsmvEG0UxJr1hZqia9QbyylQcsuBGz82EIrGYXSkHJgzlklcMSH\n" +
-            "WSn5JfJ8W8gpD0NwMnsdK3udXy8HNp6iWTvkJhot8qV86VO/V9vttj+/4eNioMSR\n" +
-            "eSVsO/1vGk10glX2bxwHPUy3wrAwgXbtOUSpkG9qDJ7qXHKkR7Pucjbq30AIu7VK\n" +
-            "BsyRBv2RAoGBAPg0exT7ZmQFxOyHA260wEvdPh6mGRP5ZxwYJ9h35kiyuZPoMHRL\n" +
-            "9IPOSMJdHXvxnOhE0Y3/oFlchvBbrnwo1JHo4B61lGSgvxu84JaDNdMETpKS7hS0\n" +
-            "f1T1IQJsuRKZXllTd8pemKkpU4GlbQlpaAWZlNqjn1bs66ecu+o4KkWjAoGBAOvF\n" +
-            "/bu4g2lk5Y6CYEO1xsfZjVVaLEDXKAVWBjyLd084nlA/IJsrb7xVg0KR3jFKTb7k\n" +
-            "ZRNaTOeoJASLcqcgFNHGIxGhdzkj8rlDzrSNGGT1fdm97NQrkCmdtNfCSwR7qU6m\n" +
-            "9fFoYoq+nmvCUJfK8x1QeqTW2+ToApvL4rhxv45ZAoGBALUl4Fq87Mq9Zy7VjwzC\n" +
-            "QMJds5O81/q7AKUBgDs9rsWKI2Uuhgaq1MdJy9KHERi/iyv95g9D7OyrWhScZSla\n" +
-            "x2HCW6guECKtKy18WVGga60ZrJrPP5G+9lu0GCZj4WMQqkp5X6lEBxkW/0pUyNKg\n" +
-            "qnnD0F8OIiHYAlmvS3qzCS8PAoGAdntqxPk2YLJpgbIW+i/REwFKuwezkWoOHJBc\n" +
-            "VfSoIlGLjTwMAK5VWkmGyt9Oz2pNo45XFOCeIRQn9Xi2RzIiBEETwnpn1XkxMtTW\n" +
-            "fXkiNyn+8ns1FnJF4gP0qzBiToBuVq4kjgos6xhbuD9QDNfaUHLvDwNCQcgt92kA\n" +
-            "KDxRTRECgYEA6ClxlKmBV7Y++PnlJjsXFGUC1Pk3HX/YBxXWsJgdyPvyxNEPmYc9\n" +
-            "YCencbzky95AQIC+isTAQOvk59WeNjOPhevCDEqscZMmyPn0C30E7B4474ec9SAr\n" +
-            "Iankyv8txnxsgwWDx3CBaWhFSxzqTNiLDs23aKwzCNiFGqG/H/HlSpw=\n" +
-            "-----END RSA PRIVATE KEY-----\n";
-    private static final String verifyKey = "-----BEGIN PUBLIC KEY-----\n" +
-            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5JgjYNjLOeWC1Xf/NFcr\n" +
-            "emS9peiQd3esa64KZ0BJue74bEtpN8CLmbeTD9NHvKzCg833cF81gkrkP/pkra7W\n" +
-            "ZF+zNlHBDnO68D/tBkEAzPJYlFLLbMgvgL90fLbev4tlEUD59e0QGJQjIrcieOJS\n" +
-            "oOBSc8SqhVN61pdzT3rTUx+pq+QPXpBor+HUOzRPpVfcTkwfxjVUTzJkSDI4pWS5\n" +
-            "9+1NRVPhQBCPpG7j68VM60gJl+BnNzSI3gbvnh+UYrFvKA/fRkerAsz/Zy6LbGDA\n" +
-            "FYEQjpphGyQmtsqsOndL9zBvfQCp5oT4hukBc3yIR6GVXDi0UURVjKtlYMMD4O+f\n" +
-            "qwIDAQAB\n" +
-            "-----END PUBLIC KEY-----";
+    private static final String signKey = """
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpQIBAAKCAQEA5JgjYNjLOeWC1Xf/NFcremS9peiQd3esa64KZ0BJue74bEtp
+            N8CLmbeTD9NHvKzCg833cF81gkrkP/pkra7WZF+zNlHBDnO68D/tBkEAzPJYlFLL
+            bMgvgL90fLbev4tlEUD59e0QGJQjIrcieOJSoOBSc8SqhVN61pdzT3rTUx+pq+QP
+            XpBor+HUOzRPpVfcTkwfxjVUTzJkSDI4pWS59+1NRVPhQBCPpG7j68VM60gJl+Bn
+            NzSI3gbvnh+UYrFvKA/fRkerAsz/Zy6LbGDAFYEQjpphGyQmtsqsOndL9zBvfQCp
+            5oT4hukBc3yIR6GVXDi0UURVjKtlYMMD4O+fqwIDAQABAoIBAQCi8VtOflomc9XV
+            ygpMydIBFWwlpefMcK6jttRNkwK6mX/U2dAvYH1h3fvi7OyWreKdRySYohUnQbD/
+            dcFsGFNUCu9Yyd++KHpZJIgUzCMA88J2P6onaW6K7G3hNA0FJhytts42IXw2uOlu
+            pnHZDyJs8Fl1kfsmvEG0UxJr1hZqia9QbyylQcsuBGz82EIrGYXSkHJgzlklcMSH
+            WSn5JfJ8W8gpD0NwMnsdK3udXy8HNp6iWTvkJhot8qV86VO/V9vttj+/4eNioMSR
+            eSVsO/1vGk10glX2bxwHPUy3wrAwgXbtOUSpkG9qDJ7qXHKkR7Pucjbq30AIu7VK
+            BsyRBv2RAoGBAPg0exT7ZmQFxOyHA260wEvdPh6mGRP5ZxwYJ9h35kiyuZPoMHRL
+            9IPOSMJdHXvxnOhE0Y3/oFlchvBbrnwo1JHo4B61lGSgvxu84JaDNdMETpKS7hS0
+            f1T1IQJsuRKZXllTd8pemKkpU4GlbQlpaAWZlNqjn1bs66ecu+o4KkWjAoGBAOvF
+            /bu4g2lk5Y6CYEO1xsfZjVVaLEDXKAVWBjyLd084nlA/IJsrb7xVg0KR3jFKTb7k
+            ZRNaTOeoJASLcqcgFNHGIxGhdzkj8rlDzrSNGGT1fdm97NQrkCmdtNfCSwR7qU6m
+            9fFoYoq+nmvCUJfK8x1QeqTW2+ToApvL4rhxv45ZAoGBALUl4Fq87Mq9Zy7VjwzC
+            QMJds5O81/q7AKUBgDs9rsWKI2Uuhgaq1MdJy9KHERi/iyv95g9D7OyrWhScZSla
+            x2HCW6guECKtKy18WVGga60ZrJrPP5G+9lu0GCZj4WMQqkp5X6lEBxkW/0pUyNKg
+            qnnD0F8OIiHYAlmvS3qzCS8PAoGAdntqxPk2YLJpgbIW+i/REwFKuwezkWoOHJBc
+            VfSoIlGLjTwMAK5VWkmGyt9Oz2pNo45XFOCeIRQn9Xi2RzIiBEETwnpn1XkxMtTW
+            fXkiNyn+8ns1FnJF4gP0qzBiToBuVq4kjgos6xhbuD9QDNfaUHLvDwNCQcgt92kA
+            KDxRTRECgYEA6ClxlKmBV7Y++PnlJjsXFGUC1Pk3HX/YBxXWsJgdyPvyxNEPmYc9
+            YCencbzky95AQIC+isTAQOvk59WeNjOPhevCDEqscZMmyPn0C30E7B4474ec9SAr
+            Iankyv8txnxsgwWDx3CBaWhFSxzqTNiLDs23aKwzCNiFGqG/H/HlSpw=
+            -----END RSA PRIVATE KEY-----
+            """;
+    private static final String verifyKey = """
+            -----BEGIN PUBLIC KEY-----
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5JgjYNjLOeWC1Xf/NFcr
+            emS9peiQd3esa64KZ0BJue74bEtpN8CLmbeTD9NHvKzCg833cF81gkrkP/pkra7W
+            ZF+zNlHBDnO68D/tBkEAzPJYlFLLbMgvgL90fLbev4tlEUD59e0QGJQjIrcieOJS
+            oOBSc8SqhVN61pdzT3rTUx+pq+QPXpBor+HUOzRPpVfcTkwfxjVUTzJkSDI4pWS5
+            9+1NRVPhQBCPpG7j68VM60gJl+BnNzSI3gbvnh+UYrFvKA/fRkerAsz/Zy6LbGDA
+            FYEQjpphGyQmtsqsOndL9zBvfQCp5oT4hukBc3yIR6GVXDi0UURVjKtlYMMD4O+f
+            qwIDAQAB
+            -----END PUBLIC KEY-----""";
     private UaaClientDetails defaultClient;
     private IdentityZone testZone;
     @Autowired

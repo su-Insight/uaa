@@ -211,8 +211,8 @@ public class IdentityZoneConfigurationTests {
     @Test
     public void testDeserialize_DefaultCorsConfiguration() {
         String s = JsonUtils.writeValueAsString(definition);
-        s = s.replace("\"allowedHeaders\":" + String.format("[\"%s\",\"%s\",\"%s\"]", ACCEPT, AUTHORIZATION, CONTENT_TYPE), "\"allowedHeaders\":[\"" + ACCEPT + "\"]");
-        s = s.replace("\"allowedMethods\":" + String.format("[\"%s\"]", GET.toString()), "\"allowedMethods\":" + String.format("[\"%s\",\"%s\"]", GET.toString(), POST.toString()));
+        s = s.replace("\"allowedHeaders\":" + "[\"%s\",\"%s\",\"%s\"]".formatted(ACCEPT, AUTHORIZATION, CONTENT_TYPE), "\"allowedHeaders\":[\"" + ACCEPT + "\"]");
+        s = s.replace("\"allowedMethods\":" + "[\"%s\"]".formatted(GET.toString()), "\"allowedMethods\":" + "[\"%s\",\"%s\"]".formatted(GET.toString(), POST.toString()));
         s = s.replace("\"allowedOrigins\":[\".*\"]", "\"allowedOrigins\":[\"^localhost$\",\"^.*\\\\.localhost$\"]");
         s = s.replace("\"allowedUris\":[\".*\"]", "\"allowedUris\":[\"^/uaa/userinfo$\",\"^/uaa/logout\\\\.do$\"]");
         definition = JsonUtils.readValue(s, IdentityZoneConfiguration.class);

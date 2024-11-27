@@ -21,8 +21,11 @@ import org.cloudfoundry.identity.uaa.provider.saml.idp.SamlServiceProvider;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.springframework.security.core.Authentication;
 
+import java.io.Serial;
+
 public class ServiceProviderModifiedEvent extends AbstractUaaEvent {
 
+    @Serial
     private static final long serialVersionUID = -204120790766086570L;
 
     private final AuditEventType eventType;
@@ -40,7 +43,7 @@ public class ServiceProviderModifiedEvent extends AbstractUaaEvent {
         return createAuditRecord(getSource().toString(),
                 eventType,
                 getOrigin(getAuthentication()),
-                String.format(dataFormat,
+                dataFormat.formatted(
                         provider.getId(),
                         provider.getName(),
                         provider.getEntityId()));

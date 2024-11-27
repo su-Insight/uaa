@@ -41,7 +41,7 @@ public class JdbcScimGroupExternalMembershipManager
     private static final String JOIN_WHERE_ID = "g.id = gm.group_id and gm.origin = ?";
 
     private static final String ADD_EXTERNAL_GROUP_MAPPING_SQL =
-            String.format("insert into %s ( %s ) values (?,lower(?),?,?,?)",
+            "insert into %s ( %s ) values (?,lower(?),?,?,?)".formatted(
                     EXTERNAL_GROUP_MAPPING_TABLE,
                     EXTERNAL_GROUP_MAPPING_FIELDS
             );
@@ -53,12 +53,12 @@ public class JdbcScimGroupExternalMembershipManager
     private final String getGroupsWithExternalGroupMappingsSql;
 
     private static final String DELETE_EXTERNAL_GROUP_MAPPING_SQL =
-            String.format("delete from %s where group_id=? and lower(external_group)=lower(?) and origin=? and identity_zone_id = ?",
+            "delete from %s where group_id=? and lower(external_group)=lower(?) and origin=? and identity_zone_id = ?".formatted(
                     EXTERNAL_GROUP_MAPPING_TABLE
             );
 
     private static final String DELETE_ALL_MAPPINGS_FOR_GROUP_SQL =
-            String.format("delete from %s where group_id = ? and identity_zone_id = ?",
+            "delete from %s where group_id = ? and identity_zone_id = ?".formatted(
                     EXTERNAL_GROUP_MAPPING_TABLE
             );
 
@@ -71,23 +71,23 @@ public class JdbcScimGroupExternalMembershipManager
 
         this.rowMapper = new ScimGroupExternalMemberRowMapper();
 
-        joinGroupTable = String.format("%s g, %s gm",
+        joinGroupTable = "%s g, %s gm".formatted(
                 dbUtils.getQuotedIdentifier(GROUP_TABLE, jdbcTemplate), EXTERNAL_GROUP_MAPPING_TABLE);
-        getGroupsWithExternalGroupMappingsSql = String.format("select %s from %s where gm.identity_zone_id = ? and g.id=? and %s and lower(external_group) like lower(?)",
+        getGroupsWithExternalGroupMappingsSql = "select %s from %s where gm.identity_zone_id = ? and g.id=? and %s and lower(external_group) like lower(?)".formatted(
                 JOIN_EXTERNAL_GROUP_MAPPING_FIELDS,
                 joinGroupTable,
                 JOIN_WHERE_ID
         );
-        getGroupsByExternalGroupMappingSql = String.format("select %s from %s where gm.identity_zone_id = ? and %s and lower(external_group)=lower(?)",
+        getGroupsByExternalGroupMappingSql = "select %s from %s where gm.identity_zone_id = ? and %s and lower(external_group)=lower(?)".formatted(
                 JOIN_EXTERNAL_GROUP_MAPPING_FIELDS,
                 joinGroupTable,
                 JOIN_WHERE_ID
         );
-        getExternalGroupMappingsInZoneSql = String.format("select %s from %s where gm.identity_zone_id=? and g.id = gm.group_id ",
+        getExternalGroupMappingsInZoneSql = "select %s from %s where gm.identity_zone_id=? and g.id = gm.group_id ".formatted(
                 JOIN_EXTERNAL_GROUP_MAPPING_FIELDS,
                 joinGroupTable
         );
-        getExternalGroupMappingsSql = String.format("select %s from %s where gm.identity_zone_id = ? and gm.group_id=? and %s",
+        getExternalGroupMappingsSql = "select %s from %s where gm.identity_zone_id = ? and gm.group_id=? and %s".formatted(
                 JOIN_EXTERNAL_GROUP_MAPPING_FIELDS,
                 joinGroupTable,
                 JOIN_WHERE_ID

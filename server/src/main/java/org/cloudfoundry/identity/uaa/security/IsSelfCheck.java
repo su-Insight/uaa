@@ -54,8 +54,7 @@ public class IsSelfCheck {
         if (authentication == null) {
             return null;
         }
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication a = (OAuth2Authentication) authentication;
+        if (authentication instanceof OAuth2Authentication a) {
             return a.getOAuth2Request().getClientId();
         }
         return null;
@@ -68,8 +67,7 @@ public class IsSelfCheck {
         if (authentication.getPrincipal() instanceof UaaPrincipal) {
             return ((UaaPrincipal) authentication.getPrincipal()).getId();
         }
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication a = (OAuth2Authentication) authentication;
+        if (authentication instanceof OAuth2Authentication a) {
             if (!a.isClientOnly()) {
                 if (a.getUserAuthentication().getPrincipal() instanceof UaaPrincipal) {
                     return ((UaaPrincipal) a.getUserAuthentication().getPrincipal()).getId();

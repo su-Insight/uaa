@@ -129,7 +129,7 @@ public class IdentityProviderEndpoints implements ApplicationEventPublisherAware
         try {
             configValidator.validate(body);
         } catch (IllegalArgumentException e) {
-            logger.debug(String.format("IdentityProvider[origin=%s; zone=%s] - Configuration validation error.", body.getOriginKey(), body.getIdentityZoneId()), e);
+            logger.debug("IdentityProvider[origin=%s; zone=%s] - Configuration validation error.".formatted(body.getOriginKey(), body.getIdentityZoneId()), e);
             return new ResponseEntity<>(body, UNPROCESSABLE_ENTITY);
         }
         if (SAML.equals(body.getType())) {
@@ -204,7 +204,7 @@ public class IdentityProviderEndpoints implements ApplicationEventPublisherAware
         try {
             configValidator.validate(body);
         } catch (IllegalArgumentException e) {
-            logger.debug(String.format("IdentityProvider[origin=%s; zone=%s] - Configuration validation error for update.", body.getOriginKey(), body.getIdentityZoneId()), e);
+            logger.debug("IdentityProvider[origin=%s; zone=%s] - Configuration validation error for update.".formatted(body.getOriginKey(), body.getIdentityZoneId()), e);
             return new ResponseEntity<>(body, UNPROCESSABLE_ENTITY);
         }
 
@@ -239,11 +239,11 @@ public class IdentityProviderEndpoints implements ApplicationEventPublisherAware
         } catch (final IdpAlreadyExistsException e) {
             return new ResponseEntity<>(body, CONFLICT);
         } catch (final EntityAliasFailedException e) {
-            logger.warn(String.format("Could not create alias for %s", e.getMessage()));
+            logger.warn("Could not create alias for %s".formatted(e.getMessage()));
             final HttpStatus responseCode = Optional.ofNullable(HttpStatus.resolve(e.getHttpStatus())).orElse(INTERNAL_SERVER_ERROR);
             return new ResponseEntity<>(body, responseCode);
         } catch (final Exception e) {
-            logger.warn(String.format("Unable to %s IdentityProvider[origin=%s; zone=%s]",
+            logger.warn("Unable to %s IdentityProvider[origin=%s; zone=%s]".formatted(
                     status == CREATED ? "create" : "update", body.getOriginKey(), body.getIdentityZoneId()), e);
             return new ResponseEntity<>(body, INTERNAL_SERVER_ERROR);
         }

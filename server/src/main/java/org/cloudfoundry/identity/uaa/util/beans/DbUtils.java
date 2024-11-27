@@ -61,9 +61,9 @@ public class DbUtils {
         if (cachedQuoteCharacter.isPresent()) {
             switch (cachedQuoteCharacter.get()) {
                 case DOUBLE_QUOTE:
-                    return String.format("%c%s%c", DOUBLE_QUOTE, identifier, DOUBLE_QUOTE);
+                    return "%c%s%c".formatted(DOUBLE_QUOTE, identifier, DOUBLE_QUOTE);
                 case BACKTICK:
-                    return String.format("%c%s%c", BACKTICK, identifier, BACKTICK);
+                    return "%c%s%c".formatted(BACKTICK, identifier, BACKTICK);
                 case NONE:
                     return identifier;
                 default:

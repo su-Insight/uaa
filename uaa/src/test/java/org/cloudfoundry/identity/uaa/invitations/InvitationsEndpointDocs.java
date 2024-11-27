@@ -79,7 +79,7 @@ class InvitationsEndpointDocs extends EndpointDocs {
                 fieldWithPath("failed_invites").type(ARRAY).description("List of invites having exception in sending the invitation")
         );
 
-        mockMvc.perform(post("/invite_users?" + String.format("%s=%s&%s=%s", CLIENT_ID, clientId, REDIRECT_URI, redirectUri))
+        mockMvc.perform(post("/invite_users?" + "%s=%s&%s=%s".formatted(CLIENT_ID, clientId, REDIRECT_URI, redirectUri))
                 .header("Authorization", "Bearer " + token)
                 .contentType(APPLICATION_JSON)
                 .content(requestBody)

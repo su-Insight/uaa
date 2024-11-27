@@ -206,10 +206,8 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         final String userFieldsWithPrefix = Arrays.stream(USER_FIELDS.split(","))
                 .map(field -> joinName + "." + field)
                 .collect(joining(", "));
-        String joinStatement = String.format(
-                "%s join identity_provider idp on %s.origin = idp.origin_key and %s.identity_zone_id = idp.identity_zone_id", joinName, joinName, joinName);
-        final String sql = String.format(
-                "select %s from users %s where %s",
+        String joinStatement = "%s join identity_provider idp on %s.origin = idp.origin_key and %s.identity_zone_id = idp.identity_zone_id".formatted(joinName, joinName, joinName);
+        final String sql = "select %s from users %s where %s".formatted(
                 userFieldsWithPrefix,
                 joinStatement,
                 whereClause
@@ -359,8 +357,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         });
         ScimUser result = retrieve(id, zoneId);
         if (updated == 0) {
-            throw new OptimisticLockingFailureException(String.format(
-                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", id,
+            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(id,
                     result.getVersion(), user.getVersion()));
         }
         if (updated > 1) {
@@ -446,8 +443,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             updated = jdbcTemplate.update(DEACTIVATE_USER_SQL + " and version=?", false, user.getId(), zoneId, version);
         }
         if (updated == 0) {
-            throw new OptimisticLockingFailureException(String.format(
-                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
+            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(user.getId(),
                     user.getVersion(), version));
         }
         if (updated > 1) {
@@ -470,8 +466,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         }
         ScimUser user = retrieve(id, zoneId);
         if (updated == 0) {
-            throw new OptimisticLockingFailureException(String.format(
-                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
+            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(user.getId(),
                     user.getVersion(), version));
         }
         if (updated > 1) {
@@ -483,8 +478,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     protected ScimUser deleteUser(ScimUser user, int version, String zoneId) {
         int updated = deleteUser(user.getId(), version, zoneId);
         if (updated == 0) {
-            throw new OptimisticLockingFailureException(String.format(
-                    "Attempt to update a user (%s) with wrong version: expected=%d but found=%d", user.getId(),
+            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(user.getId(),
                     version, version));
         }
         return user;
@@ -607,7 +601,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
                     currentZone.getConfig().getUserConfig() :
                     jdbcIdentityZoneProvisioning.retrieve(zoneId).getConfig().getUserConfig();
         } catch (ZoneDoesNotExistsException e) {
-            throw new InvalidScimResourceException(String.format("Invalid identity zone id: %s", zoneId));
+            throw new InvalidScimResourceException("Invalid identity zone id: %s".formatted(zoneId));
         }
     }
 

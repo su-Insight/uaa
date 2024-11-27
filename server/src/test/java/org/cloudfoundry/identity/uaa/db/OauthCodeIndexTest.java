@@ -55,7 +55,7 @@ class OauthCodeIndexTest {
             }
         }
 
-        assertTrue(found, String.format("Expected to find index %s.%s", uncasedTableName, indexName));
+        assertTrue(found, "Expected to find index %s.%s".formatted(uncasedTableName, indexName));
     }
 
 }

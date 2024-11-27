@@ -45,10 +45,10 @@ public abstract class Create_Groups_For_Zones_2_5_2 extends BaseJavaMigration {
         //duplicate all existing groups across zones
         List<String> zones = jdbcTemplate.queryForList("SELECT id FROM identity_zone WHERE id <> 'uaa'", String.class);
 
-        String groupCreateSQL = String.format("INSERT INTO %s (id,displayName,created,lastModified,version,identity_zone_id) VALUES (?,?,?,?,?,?)", quotedGroupsIdentifier);
+        String groupCreateSQL = "INSERT INTO %s (id,displayName,created,lastModified,version,identity_zone_id) VALUES (?,?,?,?,?,?)".formatted(quotedGroupsIdentifier);
         Map<String, Map<String, String>> zoneIdToGroupNameToGroupId = new HashMap<>();
 
-        String selectQuery = String.format("SELECT displayName FROM %s WHERE identity_zone_id = 'uaa'", quotedGroupsIdentifier);
+        String selectQuery = "SELECT displayName FROM %s WHERE identity_zone_id = 'uaa'".formatted(quotedGroupsIdentifier);
         List<String> groups = jdbcTemplate.queryForList(selectQuery, String.class);
         for (String zoneId : zones) {
             Map<String, String> groupNameToGroupId = new HashMap<>();
@@ -74,8 +74,8 @@ public abstract class Create_Groups_For_Zones_2_5_2 extends BaseJavaMigration {
     }
 
     private void convertAllUserMembershipsFromOtherZones(JdbcTemplate jdbcTemplate, String quotedGroupsIdentifier, Map<String, Map<String, String>> zoneIdToGroupNameToGroupId) {
-        String userSQL = String.format("SELECT gm.group_id, gm.member_id, g.displayName, u.identity_zone_id FROM group_membership gm, %s g, "
-                + "users u WHERE gm.member_type='USER' AND gm.member_id = u.id AND gm.group_id = g.id AND u.identity_zone_id <> 'uaa'", quotedGroupsIdentifier);
+        String userSQL = ("SELECT gm.group_id, gm.member_id, g.displayName, u.identity_zone_id FROM group_membership gm, %s g, "
+                + "users u WHERE gm.member_type='USER' AND gm.member_id = u.id AND gm.group_id = g.id AND u.identity_zone_id <> 'uaa'").formatted(quotedGroupsIdentifier);
         List<Map<String, Object>> userMembers = jdbcTemplate.queryForList(userSQL);
         for (Map<String, Object> userRow : userMembers) {
             String zoneId = (String) userRow.get("identity_zone_id");

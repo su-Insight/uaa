@@ -218,7 +218,7 @@ public class RemoteTokenServices implements ResourceServerTokenServices {
     }
 
     private String getAuthorizationHeader(String clientId, String clientSecret) {
-        String creds = String.format("%s:%s", clientId, clientSecret);
+        String creds = "%s:%s".formatted(clientId, clientSecret);
         return "Basic " + new String(Base64.encode(creds.getBytes(StandardCharsets.UTF_8)));
     }
 

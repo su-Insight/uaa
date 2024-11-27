@@ -502,7 +502,7 @@ class JdbcScimGroupMembershipManagerTests {
     void canReadNullFromAuthoritiesColumn() {
         String addNullAuthoritySQL =
                 "insert into group_membership (group_id, member_id, member_type, authorities, origin, identity_zone_id) values ('%s', '%s', '%s', NULL, '%s', '%s')";
-        jdbcTemplate.execute(String.format(addNullAuthoritySQL, "g1", "m1", "USER", "uaa", uaaIdentityZone.getId()));
+        jdbcTemplate.execute(addNullAuthoritySQL.formatted("g1", "m1", "USER", "uaa", uaaIdentityZone.getId()));
 
         ScimGroupMember member = jdbcScimGroupMembershipManager.getMemberById("g1", "m1", uaaIdentityZone.getId());
         assertNotNull(member);
@@ -513,7 +513,7 @@ class JdbcScimGroupMembershipManagerTests {
     void canReadNonNullFromAuthoritiesColumn() {
         String addNullAuthoritySQL =
                 "insert into group_membership (group_id, member_id, member_type, authorities, origin, identity_zone_id) values ('%s', '%s', '%s', '%s', '%s', '%s')";
-        jdbcTemplate.execute(String.format(addNullAuthoritySQL, "g1", "m1", "USER", "ANYTHING", "uaa", uaaIdentityZone.getId()));
+        jdbcTemplate.execute(addNullAuthoritySQL.formatted("g1", "m1", "USER", "ANYTHING", "uaa", uaaIdentityZone.getId()));
 
         ScimGroupMember member = jdbcScimGroupMembershipManager.getMemberById("g1", "m1", uaaIdentityZone.getId());
         assertNotNull(member);
@@ -696,7 +696,7 @@ class JdbcScimGroupMembershipManagerTests {
             final String zoneId) {
         final String gIdWithZone = IdentityZone.getUaaZoneId().equals(zoneId) ? gId : zoneId + "-" + gId;
         final String mIdWithZone = IdentityZone.getUaaZoneId().equals(zoneId) ? mId : zoneId + "-" + mId;
-        jdbcTemplate.execute(String.format(ADD_MEMBER_SQL_FORMAT, gIdWithZone, mIdWithZone, mType, origin, zoneId));
+        jdbcTemplate.execute(ADD_MEMBER_SQL_FORMAT.formatted(gIdWithZone, mIdWithZone, mType, origin, zoneId));
     }
 
     private void addGroup(
@@ -705,7 +705,7 @@ class JdbcScimGroupMembershipManagerTests {
             final String zoneId,
             final JdbcTemplate jdbcTemplate) throws SQLException {
         TestUtils.assertNoSuchUser(jdbcTemplate, id);
-        jdbcTemplate.execute(String.format(ADD_GROUP_SQL_FORMAT,
+        jdbcTemplate.execute(ADD_GROUP_SQL_FORMAT.formatted(
                 dbUtils.getQuotedIdentifier("groups", jdbcTemplate), id, name, zoneId));
     }
 
@@ -715,7 +715,7 @@ class JdbcScimGroupMembershipManagerTests {
             final String zoneId,
             final JdbcTemplate jdbcTemplate) {
         TestUtils.assertNoSuchUser(jdbcTemplate, id);
-        jdbcTemplate.execute(String.format(ADD_USER_SQL_FORMAT, id, id, password, id, id, id, id, "", zoneId));
+        jdbcTemplate.execute(ADD_USER_SQL_FORMAT.formatted(id, id, password, id, id, id, id, "", zoneId));
     }
 
     private void validateCount(

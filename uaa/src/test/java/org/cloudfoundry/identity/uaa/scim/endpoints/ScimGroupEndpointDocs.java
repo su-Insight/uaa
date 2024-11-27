@@ -223,7 +223,7 @@ class ScimGroupEndpointDocs extends EndpointDocs {
 
         MockHttpServletRequestBuilder getList = get("/Groups")
                 .header("Authorization", "Bearer " + scimReadToken)
-                .param("filter", String.format("id eq \"%s\" or displayName eq \"%s\"", scimGroup.getId(), scimGroup.getDisplayName()))
+                .param("filter", "id eq \"%s\" or displayName eq \"%s\"".formatted(scimGroup.getId(), scimGroup.getDisplayName()))
                 .param("sortBy", "lastModified")
                 .param("count", "50")
                 .param("sortOrder", "descending")

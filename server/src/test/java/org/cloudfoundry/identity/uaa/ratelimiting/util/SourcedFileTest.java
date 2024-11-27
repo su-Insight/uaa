@@ -13,16 +13,17 @@ class SourcedFileTest {
     public static final String EFFECTIVELY_EMPTY_FILE_CONTENTS = "\n  \n";
 
     public static final String ODD_FILE_CONTENTS =
-            "The\n" +
-                    "  quick\n" +
-                    "    brown\n" +
-                    "      fox\n" +
-                    "    jumped\n" +
-                    "  over\n" +
-                    "the\n" +
-                    "  lazy\n" +
-                    "    moon!\n" +
-                    "";
+            """
+            The
+              quick
+                brown
+                  fox
+                jumped
+              over
+            the
+              lazy
+                moon!
+            """;
 
     @Test
     void loadFile() {

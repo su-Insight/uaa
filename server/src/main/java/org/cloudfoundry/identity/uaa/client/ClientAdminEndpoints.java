@@ -86,8 +86,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.lang.String.format;
-
 /**
  * Controller for listing and manipulating OAuth2 clients.
  */
@@ -131,7 +129,7 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
 
         if (clientMaxCount <= 0) {
             throw new IllegalArgumentException(
-                    format("Invalid \"clientMaxCount\" value (got %d). Should be positive number.", clientMaxCount)
+                    "Invalid \"clientMaxCount\" value (got %d). Should be positive number.".formatted(clientMaxCount)
             );
         }
 
@@ -311,7 +309,7 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
     public ClientDetails updateClientDetails(@RequestBody UaaClientDetails client,
             @PathVariable("client") String clientId) {
         Assert.state(clientId.equals(client.getClientId()),
-                format("The client id (%s) does not match the URL (%s)", client.getClientId(), clientId));
+                "The client id (%s) does not match the URL (%s)".formatted(client.getClientId(), clientId));
         ClientDetails details = client;
         try {
             ClientDetails existing = getClientDetails(clientId);
@@ -683,14 +681,12 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
 
     private ClientDetails syncWithExisting(ClientDetails existing, ClientDetails input) {
         UaaClientDetails details = new UaaClientDetails(input);
-        if (input instanceof UaaClientDetails) {
-            UaaClientDetails baseInput = (UaaClientDetails) input;
+        if (input instanceof UaaClientDetails baseInput) {
             if (baseInput.getAutoApproveScopes() != null) {
                 details.setAutoApproveScopes(baseInput.getAutoApproveScopes());
             } else {
                 details.setAutoApproveScopes(new HashSet<>());
-                if (existing instanceof UaaClientDetails) {
-                    UaaClientDetails existingDetails = (UaaClientDetails) existing;
+                if (existing instanceof UaaClientDetails existingDetails) {
                     if (existingDetails.getAutoApproveScopes() != null) {
                         for (String scope : existingDetails.getAutoApproveScopes()) {
                             details.getAutoApproveScopes().add(scope);

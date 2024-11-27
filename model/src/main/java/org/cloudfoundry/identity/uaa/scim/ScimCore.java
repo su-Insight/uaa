@@ -89,11 +89,9 @@ public abstract class ScimCore<T extends ScimCore> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ScimCore) {
-            ScimCore other = (ScimCore) o;
+        if (o instanceof ScimCore other) {
             return id.equals(other.id);
-        } else if (o instanceof String) {
-            String otherId = (String) o;
+        } else if (o instanceof String otherId) {
             return id.equals(otherId);
         }
         return false;

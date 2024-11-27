@@ -64,7 +64,7 @@ public class DefaultWebResponseExceptionTranslator implements WebResponseExcepti
         headers.set("Cache-Control", "no-store");
         headers.set("Pragma", "no-cache");
         if (status == HttpStatus.UNAUTHORIZED.value() || (e instanceof InsufficientScopeException)) {
-            headers.set("WWW-Authenticate", String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, e.getSummary()));
+            headers.set("WWW-Authenticate", "%s %s".formatted(OAuth2AccessToken.BEARER_TYPE, e.getSummary()));
         }
 
         return new ResponseEntity<>(e, headers, HttpStatus.valueOf(status));

@@ -852,8 +852,8 @@ class OpenSaml4AuthenticationProviderUaaTests {
         @Override
         public void publishEvent(ApplicationEvent event) {
             events.add(event);
-            if (event instanceof AuthEvent) {
-                bootstrap.onApplicationEvent((AuthEvent) event);
+            if (event instanceof AuthEvent authEvent) {
+                bootstrap.onApplicationEvent(authEvent);
             }
         }
 

@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.String.format;
 import static org.cloudfoundry.identity.uaa.test.SnippetUtils.fieldWithPath;
 import static org.cloudfoundry.identity.uaa.test.SnippetUtils.parameterWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -78,7 +77,7 @@ class UserIdConversionEndpointDocs extends EndpointDocs {
     void lookUpIds() throws Exception {
         MockHttpServletRequestBuilder get = get("/ids/Users")
                 .header("Authorization", "Bearer " + userLookupToken)
-                .param("filter", format("userName eq \"%s\" or id eq \"%s\"", bob.getUserName(), dwayne.getId()))
+                .param("filter", "userName eq \"%s\" or id eq \"%s\"".formatted(bob.getUserName(), dwayne.getId()))
                 .param("sortOrder", "descending")
                 .param("startIndex", "1")
                 .param("count", "10")

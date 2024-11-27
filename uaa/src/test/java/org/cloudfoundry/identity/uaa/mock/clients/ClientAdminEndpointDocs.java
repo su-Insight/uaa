@@ -129,7 +129,7 @@ class ClientAdminEndpointDocs extends AdminClientCreator {
 
         ResultActions resultActions = mockMvc.perform(get("/oauth/clients")
                 .header("Authorization", "Bearer " + clientAdminToken)
-                .param("filter", String.format("client_id eq \"%s\"", createdClientDetails.getClientId()))
+                .param("filter", "client_id eq \"%s\"".formatted(createdClientDetails.getClientId()))
                 .param("sortBy", "client_id")
                 .param("sortOrder", "descending")
                 .param("startIndex", "1")

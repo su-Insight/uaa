@@ -19,7 +19,7 @@ class PurgeableSessionMap extends ConcurrentHashMap<String, Session> {
     public void purge() {
         List<Session> expired = expired();
         expired.forEach(s -> remove(s.getId()));
-        logger.debug(String.format("Purged %s sessions", expired.size()));
+        logger.debug("Purged %s sessions".formatted(expired.size()));
     }
 
     public List<Session> expired() {

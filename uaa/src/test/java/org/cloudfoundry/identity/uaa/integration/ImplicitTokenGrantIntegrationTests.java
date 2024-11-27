@@ -70,7 +70,7 @@ public class ImplicitTokenGrantIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        String credentials = String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
+        String credentials = "{\"username\":\"%s\",\"password\":\"%s\"}".formatted(testAccounts.getUserName(),
                 testAccounts.getPassword());
 
         ResponseEntity<Void> result = serverRunning.getForResponse(implicitUrl() + "&credentials={credentials}",
@@ -86,7 +86,7 @@ public class ImplicitTokenGrantIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", testAccounts.getUserName(),
+        String credentials = "{ \"username\":\"%s\", \"password\":\"%s\" }".formatted(testAccounts.getUserName(),
                 testAccounts.getPassword());
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
@@ -105,7 +105,7 @@ public class ImplicitTokenGrantIntegrationTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_FORM_URLENCODED));
 
-        String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", testAccounts.getUserName(),
+        String credentials = "{ \"username\":\"%s\", \"password\":\"%s\" }".formatted(testAccounts.getUserName(),
                 testAccounts.getPassword());
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();

@@ -204,7 +204,7 @@ public class CheckTokenEndpointIntegrationTests {
     public void testInvalidScope() {
         OAuth2AccessToken accessToken = getAdminToken();
 
-        String requestBody = String.format("token=%s&scopes=%s", accessToken.getValue(), "uaa.resource%");
+        String requestBody = "token=%s&scopes=%s".formatted(accessToken.getValue(), "uaa.resource%");
 
         HttpHeaders headers = new HttpHeaders();
         ClientCredentialsResourceDetails resource = testAccounts.getClientCredentialsResource("app", null, "app", "appclientsecret");

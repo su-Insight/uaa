@@ -42,7 +42,7 @@ public class AssertThrowsWithMessage {
             }
         }
 
-        String message = String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
+        String message = "Expected %s to be thrown, but nothing was thrown.".formatted(getCanonicalName(expectedType));
         throw new AssertionFailedError(message);
     }
 
@@ -68,8 +68,8 @@ public class AssertThrowsWithMessage {
     }
 
     private static String toString(Object obj) {
-        if (obj instanceof Class) {
-            return getCanonicalName((Class<?>) obj);
+        if (obj instanceof Class<?> class1) {
+            return getCanonicalName(class1);
         }
         return StringUtils.nullSafeToString(obj);
     }
@@ -78,10 +78,10 @@ public class AssertThrowsWithMessage {
         String expectedString = toString(expected);
         String actualString = toString(actual);
         if (expectedString.equals(actualString)) {
-            return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
+            return "expected: %s but was: %s".formatted(formatClassAndValue(expected, expectedString),
                     formatClassAndValue(actual, actualString));
         }
-        return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
+        return "expected: <%s> but was: <%s>".formatted(expectedString, actualString);
     }
 
     private static String formatClassAndValue(Object value, String valueString) {
@@ -96,6 +96,6 @@ public class AssertThrowsWithMessage {
 
     private static String getClassName(Object obj) {
         return obj == null ? "null"
-                : obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName();
+                : obj instanceof Class<?> c ? getCanonicalName(c) : obj.getClass().getName();
     }
 }

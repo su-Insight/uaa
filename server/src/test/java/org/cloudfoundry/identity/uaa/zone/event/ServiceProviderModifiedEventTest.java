@@ -53,7 +53,7 @@ public class ServiceProviderModifiedEventTest {
 
     public void evaludateAuditEventData(ServiceProviderModifiedEvent event) {
         assertEquals(
-                String.format(ServiceProviderModifiedEvent.dataFormat,
+                ServiceProviderModifiedEvent.dataFormat.formatted(
                         provider.getId(),
                         provider.getName(),
                         provider.getEntityId()),

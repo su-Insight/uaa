@@ -23,13 +23,13 @@ public class OpenIdSessionStateCalculator {
         secureRandom.nextBytes(array);
         String salt = Hex.encodeHexString(array).toLowerCase();
 
-        String text = String.format("%s %s %s %s", clientId, origin, currentUserId, salt);
+        String text = "%s %s %s %s".formatted(clientId, origin, currentUserId, salt);
         byte[] hash = DigestUtils.sha256(text.getBytes(StandardCharsets.UTF_8));
         logger.debug("Calculated OIDC session state for clientId={}, origin={}, sessionId=REDACTED, salt={}",
                 UaaStringUtils.getCleanedUserControlString(clientId),
                 UaaStringUtils.getCleanedUserControlString(origin),
                 UaaStringUtils.getCleanedUserControlString(salt));
-        return String.format("%s.%s", Hex.encodeHexString(hash).toLowerCase(), salt);
+        return "%s.%s".formatted(Hex.encodeHexString(hash).toLowerCase(), salt);
     }
 
     public void setSecureRandom(SecureRandom secureRandom) {

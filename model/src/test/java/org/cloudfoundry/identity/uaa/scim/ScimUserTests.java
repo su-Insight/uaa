@@ -171,13 +171,15 @@ public class ScimUserTests {
 
     @Test
     public void emailsAreMappedCorrectly() {
-        String json = "{ \"userName\":\"bjensen\"," +
-                "\"emails\": [\n" +
-                "{\"value\": \"bj@jensen.org\",\"type\": \"other\"}," +
-                "{\"value\": \"bjensen@example.com\", \"type\": \"work\",\"primary\": true}," +
-                "{\"value\": \"babs@jensen.org\",\"type\": \"home\"}" +
-                "],\n" +
-                "\"schemas\":[\"urn:scim:schemas:core:1.0\"]}";
+        String json = """
+                { "userName":"bjensen",\
+                "emails": [
+                {"value": "bj@jensen.org","type": "other"},\
+                {"value": "bjensen@example.com", "type": "work","primary": true},\
+                {"value": "babs@jensen.org","type": "home"}\
+                ],
+                "schemas":["urn:scim:schemas:core:1.0"]}\
+                """;
         ScimUser user = JsonUtils.readValue(json, ScimUser.class);
         assertEquals(3, user.getEmails().size());
         assertEquals("bjensen@example.com", user.getEmails().get(1).getValue());
@@ -188,12 +190,14 @@ public class ScimUserTests {
 
     @Test
     public void groupsAreMappedCorrectly() {
-        String json = "{ \"userName\":\"bjensen\"," +
-                "\"groups\": [\n" +
-                "{\"value\": \"12345\",\"display\": \"uaa.admin\"}," +
-                "{\"value\": \"123456\",\"display\": \"dash.admin\"}" +
-                "],\n" +
-                "\"schemas\":[\"urn:scim:schemas:core:1.0\"]}";
+        String json = """
+                { "userName":"bjensen",\
+                "groups": [
+                {"value": "12345","display": "uaa.admin"},\
+                {"value": "123456","display": "dash.admin"}\
+                ],
+                "schemas":["urn:scim:schemas:core:1.0"]}\
+                """;
         ScimUser user = JsonUtils.readValue(json, ScimUser.class);
         assertEquals(2, user.getGroups().size());
     }

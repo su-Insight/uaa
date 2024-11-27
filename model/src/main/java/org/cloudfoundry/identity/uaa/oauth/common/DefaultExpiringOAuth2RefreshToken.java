@@ -1,5 +1,6 @@
 package org.cloudfoundry.identity.uaa.oauth.common;
 
+import java.io.Serial;
 import java.util.Date;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Date;
  */
 public class DefaultExpiringOAuth2RefreshToken extends DefaultOAuth2RefreshToken implements ExpiringOAuth2RefreshToken {
 
+    @Serial
     private static final long serialVersionUID = -2756709195772629648L;
 
     private final Date expiration;

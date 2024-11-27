@@ -53,8 +53,8 @@ public class ScopeAuthenticationManager implements AuthenticationManager {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Request creq = ((OAuth2Authentication) authentication).getOAuth2Request();
+        if (authentication instanceof OAuth2Authentication auth2Authentication) {
+            OAuth2Request creq = auth2Authentication.getOAuth2Request();
             List<String> scopes = dedup(creq.getScope());
             int matches = 0;
             int requiredMatches = getRequiredScopes().size();

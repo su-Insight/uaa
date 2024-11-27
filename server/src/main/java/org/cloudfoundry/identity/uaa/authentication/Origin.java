@@ -26,14 +26,11 @@ public class Origin {
         String id;
         if (authentication.getPrincipal() instanceof UaaPrincipal) {
             return ((UaaPrincipal) authentication.getPrincipal()).getId();
-        } else if (authentication instanceof RemoteUserAuthentication) {
-            RemoteUserAuthentication remoteUserAuthentication = (RemoteUserAuthentication) authentication;
+        } else if (authentication instanceof RemoteUserAuthentication remoteUserAuthentication) {
             return remoteUserAuthentication.getId();
-        } else if (authentication instanceof UaaAuthentication) {
-            UaaAuthentication uaaAuthentication = (UaaAuthentication) authentication;
+        } else if (authentication instanceof UaaAuthentication uaaAuthentication) {
             return uaaAuthentication.getPrincipal().getId();
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) authentication;
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken auth) {
             if (auth.getPrincipal() instanceof UaaPrincipal) {
                 return ((UaaPrincipal) auth.getPrincipal()).getId();
             }

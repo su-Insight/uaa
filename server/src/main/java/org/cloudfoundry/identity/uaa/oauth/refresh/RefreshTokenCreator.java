@@ -153,7 +153,7 @@ public class RefreshTokenCreator {
 
     public void ensureRefreshTokenCreationNotRestricted(ArrayList<String> tokenScopes) {
         if (isRestrictRefreshGrant && !tokenScopes.contains(UAA_REFRESH_TOKEN)) {
-            throw new InsufficientScopeException(String.format("Expected scope %s is missing", UAA_REFRESH_TOKEN));
+            throw new InsufficientScopeException("Expected scope %s is missing".formatted(UAA_REFRESH_TOKEN));
         }
     }
 

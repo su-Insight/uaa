@@ -84,7 +84,7 @@ public class ScimGroupEndpoints {
             final @Qualifier("externalGroupMembershipManager") JdbcScimGroupExternalMembershipManager externalMembershipManager) {
         if (groupMaxCount <= 0) {
             throw new IllegalArgumentException(
-                    String.format("Invalid \"groupMaxCount\" value (got %d). Should be positive number.", groupMaxCount)
+                    "Invalid \"groupMaxCount\" value (got %d). Should be positive number.".formatted(groupMaxCount)
             );
         }
 
@@ -573,8 +573,8 @@ public class ScimGroupEndpoints {
     @ExceptionHandler
     public View handleException(Exception t, HttpServletRequest request) throws ScimException {
         ScimException e = new ScimException("Unexpected error", t, HttpStatus.INTERNAL_SERVER_ERROR);
-        if (t instanceof ScimException) {
-            e = (ScimException) t;
+        if (t instanceof ScimException exception) {
+            e = exception;
         } else {
             Class<?> clazz = t.getClass();
             for (Class<?> key : statuses.keySet()) {

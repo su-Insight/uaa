@@ -22,7 +22,7 @@ public class TestUtils {
     public static void assertNoSuchUser(
             final JdbcTemplate template,
             final String userId) {
-        String sql = String.format("select count(id) from users where id='%s'",
+        String sql = "select count(id) from users where id='%s'".formatted(
                 userId);
         assertThat(template.queryForObject(sql, Integer.class), is(0));
     }

@@ -138,7 +138,7 @@ public class EmailAccountCreationService implements AccountCreationService {
                     return matchingRedirectUri;
                 }
             } catch (NoSuchClientException nsce) {
-                logger.debug(String.format("Unable to find client with ID:%s for account activation redirect", clientId), nsce);
+                logger.debug("Unable to find client with ID:%s for account activation redirect".formatted(clientId), nsce);
             }
         }
 
@@ -175,7 +175,7 @@ public class EmailAccountCreationService implements AccountCreationService {
         String companyName = MergedZoneBrandingInformation.resolveBranding().getCompanyName();
         boolean addBranding = StringUtils.hasText(companyName) && identityZoneManager.isCurrentZoneUaa();
         if (addBranding) {
-            return String.format("Activate your %s account", companyName);
+            return "Activate your %s account".formatted(companyName);
         } else {
             return "Activate your account";
         }

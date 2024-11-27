@@ -64,7 +64,7 @@ public class CfAuthenticationTests {
     public void testDefaultScopes() {
         params.set(
                 "credentials",
-                String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
+                "{\"username\":\"%s\",\"password\":\"%s\"}".formatted(testAccounts.getUserName(),
                         testAccounts.getPassword()));
         ResponseEntity<Void> response = serverRunning.postForResponse(serverRunning.getAuthorizationUri(), headers,
                 params);
@@ -77,7 +77,7 @@ public class CfAuthenticationTests {
     public void testInvalidScopes() {
         params.set(
                 "credentials",
-                String.format("{\"username\":\"%s\",\"password\":\"%s\"}", testAccounts.getUserName(),
+                "{\"username\":\"%s\",\"password\":\"%s\"}".formatted(testAccounts.getUserName(),
                         testAccounts.getPassword()));
         params.set("scope", "read");
         ResponseEntity<Void> response = serverRunning.postForResponse(serverRunning.getAuthorizationUri(), headers,

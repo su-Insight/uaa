@@ -149,8 +149,8 @@ public class OauthIDPWrapperFactoryBean {
         String discoveryUrl = (String) idpDefinitionMap.get("discoveryUrl");
         try {
             OIDCIdentityProviderDefinition oidcIdentityProviderDefinition = null;
-            if (idpDefinition instanceof OIDCIdentityProviderDefinition) {
-                oidcIdentityProviderDefinition = (OIDCIdentityProviderDefinition) idpDefinition;
+            if (idpDefinition instanceof OIDCIdentityProviderDefinition definition) {
+                oidcIdentityProviderDefinition = definition;
                 oidcIdentityProviderDefinition.setAdditionalAuthzParameters(parseAdditionalParameters(idpDefinitionMap));
 
                 if (hasText(discoveryUrl)) {

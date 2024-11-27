@@ -1205,7 +1205,7 @@ class IdentityProviderEndpointDocs extends EndpointDocs {
         identityProvider.setType(SAML);
 
         SamlIdentityProviderDefinition providerDefinition = new SamlIdentityProviderDefinition()
-                .setMetaDataLocation(String.format(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID, "http://www.okta.com/" + identityProvider.getOriginKey()))
+                .setMetaDataLocation(BootstrapSamlIdentityProviderDataTests.XML_WITHOUT_ID.formatted("http://www.okta.com/" + identityProvider.getOriginKey()))
                 .setIdpEntityAlias(identityProvider.getOriginKey())
                 .setNameID("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress")
                 .setLinkText("IDPEndpointsMockTests Saml Provider:" + identityProvider.getOriginKey())

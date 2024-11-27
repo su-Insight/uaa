@@ -122,8 +122,7 @@ public class ExternalOAuthAuthenticationFilter implements Filter {
             if (!hasText(message)) {
                 message = ex.getClass().getSimpleName();
             }
-            final String errorMessage = String.format(
-                    "There was an error when authenticating against the external identity provider: %s", message);
+            final String errorMessage = "There was an error when authenticating against the external identity provider: %s".formatted(message);
             request.getSession().setAttribute("oauth_error", errorMessage);
             response.sendRedirect(request.getContextPath() + "/oauth_error");
             return false;

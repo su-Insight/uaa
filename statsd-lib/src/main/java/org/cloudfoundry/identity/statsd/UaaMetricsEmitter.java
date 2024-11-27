@@ -112,8 +112,8 @@ public class UaaMetricsEmitter {
             String prefixName = key.startsWith("/") ? key.substring(1) : key;
             MetricsQueue metric = JsonUtils.readValue(perUrlMetrics.get(key), MetricsQueue.class);
             RequestMetricSummary metricTotals = metric.getTotals();
-            statsDClient.gauge(String.format(prefix + "completed.count", prefixName), metricTotals.getCount());
-            statsDClient.gauge(String.format(prefix + "completed.time", prefixName), (long) metricTotals.getAverageTime());
+            statsDClient.gauge((prefix + "completed.count").formatted(prefixName), metricTotals.getCount());
+            statsDClient.gauge((prefix + "completed.time").formatted(prefixName), (long) metricTotals.getAverageTime());
         }
     }
 
@@ -220,7 +220,7 @@ public class UaaMetricsEmitter {
             emitter.addNotificationListener((notification, handback) -> {
                 String key = notification.getType();
                 String prefix = key.startsWith("/") ? key.substring(1) : key;
-                statsDClient.time(String.format("requests.%s.latency", prefix), (Long) notification.getSource());
+                statsDClient.time("requests.%s.latency".formatted(prefix), (Long) notification.getSource());
             }, null, null);
             notificationsEnabled = true;
         } catch (Exception instanceNotFound) {

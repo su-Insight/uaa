@@ -117,8 +117,7 @@ public abstract class JwtTokenSignedByThisUAA {
 
         KeyInfo signingKey = keyInfoService.getKey(kid, tokenJwt.getHeader().getAlg());
         if (signingKey == null) {
-            throw new InvalidTokenException(String.format(
-                    "Token header claim [kid] references unknown signing key : [%s]", kid
+            throw new InvalidTokenException("Token header claim [kid] references unknown signing key : [%s]".formatted(kid
             ));
         }
 
@@ -233,7 +232,7 @@ public abstract class JwtTokenSignedByThisUAA {
         if (!missingScopes.isEmpty()) {
             String scopeClaimKey = scopeClaimKey().keyName();
             String message =
-                    String.format("Some required \"%s\" are missing: [%s]",
+                    "Some required \"%s\" are missing: [%s]".formatted(
                             scopeClaimKey,
                             String.join(", ", missingScopes));
             throw new InvalidTokenException(message);
@@ -356,8 +355,8 @@ public abstract class JwtTokenSignedByThisUAA {
 
         Object audClaim = claims.get(AUD);
         List<String> audience;
-        if (audClaim instanceof String) {
-            audience = Collections.singletonList((String) audClaim);
+        if (audClaim instanceof String string) {
+            audience = Collections.singletonList(string);
         } else if (audClaim == null) {
             audience = Collections.emptyList();
         } else {
@@ -418,7 +417,7 @@ public abstract class JwtTokenSignedByThisUAA {
         String scopeKeyName = scopeClaimKey.keyName();
 
         if (!claims.containsKey(scopeKeyName)) {
-            String errorMessage = String.format("The token does not bear a \"%s\" claim.", scopeKeyName);
+            String errorMessage = "The token does not bear a \"%s\" claim.".formatted(scopeKeyName);
             logger.error(errorMessage);
             throw new InvalidTokenException(errorMessage);
         }
@@ -429,8 +428,7 @@ public abstract class JwtTokenSignedByThisUAA {
         }
 
         InvalidTokenException unparsableClaimException = new InvalidTokenException(
-                String.format(
-                        "The token's \"%s\" claim is invalid or unparseable.",
+                "The token's \"%s\" claim is invalid or unparseable.".formatted(
                         scopeKeyName
                 )
         );

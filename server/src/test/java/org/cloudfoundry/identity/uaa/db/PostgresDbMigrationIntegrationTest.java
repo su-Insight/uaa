@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -31,7 +30,7 @@ public class PostgresDbMigrationIntegrationTest extends DbMigrationIntegrationTe
         assertThat(tableNames, hasSize(greaterThan(0)));
         for (String tableName : tableNames) {
             int count = jdbcTemplate.queryForObject(checkPrimaryKeyExists, Integer.class, jdbcTemplate.getDataSource().getConnection().getCatalog(), tableName, "%" + tableName + "_pk%");
-            assertThat(format("%s is missing primary key", tableName), count, greaterThanOrEqualTo(1));
+            assertThat("%s is missing primary key".formatted(tableName), count, greaterThanOrEqualTo(1));
         }
 
         try {

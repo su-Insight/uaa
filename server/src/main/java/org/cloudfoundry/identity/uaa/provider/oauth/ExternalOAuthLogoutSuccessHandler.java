@@ -47,7 +47,7 @@ public class ExternalOAuthLogoutSuccessHandler extends SimpleUrlLogoutSuccessHan
         if (logoutUrl == null) {
             final String defaultUrl = getZoneDefaultUrl();
             if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn(String.format("OAuth logout null, use default: %s", defaultUrl));
+                LOGGER.warn("OAuth logout null, use default: %s".formatted(defaultUrl));
             }
             return defaultUrl;
         }

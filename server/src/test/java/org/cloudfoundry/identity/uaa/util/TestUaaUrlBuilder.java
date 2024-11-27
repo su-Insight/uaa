@@ -22,9 +22,9 @@ public class TestUaaUrlBuilder {
         String url;
 
         if (!"".equals(subdomain)) {
-            url = String.format("%s://%s.uaa.%s/%s", scheme, subdomain, systemDomain, path);
+            url = "%s://%s.uaa.%s/%s".formatted(scheme, subdomain, systemDomain, path);
         } else {
-            url = String.format("%s://uaa.%s/%s", scheme, systemDomain, path);
+            url = "%s://uaa.%s/%s".formatted(scheme, systemDomain, path);
         }
 
         return url;

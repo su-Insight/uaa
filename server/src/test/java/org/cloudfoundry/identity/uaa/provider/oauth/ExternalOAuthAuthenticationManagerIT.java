@@ -1272,8 +1272,7 @@ class ExternalOAuthAuthenticationManagerIT {
     private void addTheUserOnAuth() {
         doAnswer(invocation -> {
             Object e = invocation.getArguments()[0];
-            if (e instanceof NewUserAuthenticatedEvent) {
-                NewUserAuthenticatedEvent event = (NewUserAuthenticatedEvent) e;
+            if (e instanceof NewUserAuthenticatedEvent event) {
                 UaaUser user = event.getUser();
                 userDatabase.addUser(user);
             }

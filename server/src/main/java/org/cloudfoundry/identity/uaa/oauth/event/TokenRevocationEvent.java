@@ -7,11 +7,13 @@ import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.springframework.security.core.Authentication;
 
+import java.io.Serial;
 import java.util.HashMap;
 
 public class TokenRevocationEvent extends AbstractUaaEvent {
 
 
+    @Serial
     private static final long serialVersionUID = 8857827649236565674L;
 
     private final String userId;

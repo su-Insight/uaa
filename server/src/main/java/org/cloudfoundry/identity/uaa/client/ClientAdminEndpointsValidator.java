@@ -105,10 +105,10 @@ public class ClientAdminEndpointsValidator implements InitializingBean, ClientDe
     public ClientDetails validate(ClientDetails prototype, boolean create, boolean checkAdmin) throws InvalidClientDetailsException {
 
         UaaClientDetails client = new UaaClientDetails(prototype);
-        if (prototype instanceof UaaClientDetails) {
-            Set<String> scopes = ((UaaClientDetails) prototype).getAutoApproveScopes();
+        if (prototype instanceof UaaClientDetails details) {
+            Set<String> scopes = details.getAutoApproveScopes();
             if (scopes != null) {
-                client.setAutoApproveScopes(((UaaClientDetails) prototype).getAutoApproveScopes());
+                client.setAutoApproveScopes(details.getAutoApproveScopes());
             }
         }
 
@@ -242,8 +242,7 @@ public class ClientAdminEndpointsValidator implements InitializingBean, ClientDe
             }
             clientSecretValidator.validate(client.getClientSecret());
 
-            if (prototype instanceof ClientDetailsCreation) {
-                ClientDetailsCreation clientDetailsCreation = (ClientDetailsCreation) prototype;
+            if (prototype instanceof ClientDetailsCreation clientDetailsCreation) {
                 if (StringUtils.hasText(clientDetailsCreation.getJsonWebKeyUri()) || StringUtils.hasText(clientDetailsCreation.getJsonWebKeySet())) {
                     ClientJwtConfiguration clientJwtConfiguration = ClientJwtConfiguration.parse(clientDetailsCreation.getJsonWebKeyUri(),
                             clientDetailsCreation.getJsonWebKeySet());
@@ -274,7 +273,7 @@ public class ClientAdminEndpointsValidator implements InitializingBean, ClientDe
                 for (String uri : uris) {
                     if (!UaaUrlUtils.isValidRegisteredRedirectUrl(uri) || uri.contains(",")) {
                         throw new InvalidClientDetailsException(
-                                String.format("One of the redirect_uri is invalid: %s", uri));
+                                "One of the redirect_uri is invalid: %s".formatted(uri));
                     }
                 }
             }

@@ -174,7 +174,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
                 }
             }
             //All other cases: throw Exception
-            throw new InsufficientAuthenticationException(String.format("Unable to map issuer, %s , to a single registered provider", issuer));
+            throw new InsufficientAuthenticationException("Unable to map issuer, %s , to a single registered provider".formatted(issuer));
         } catch (IllegalArgumentException | JsonUtils.JsonUtilException x) {
             throw new InsufficientAuthenticationException("Unable to decode expected id_token");
         }
@@ -242,10 +242,10 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
             String username;
             if (hasText(userNameAttributePrefix)) {
                 username = getMappedClaim(userNameAttributePrefix, USER_NAME_ATTRIBUTE_NAME, claims);
-                logger.debug(String.format("Extracted username for claim: %s and username is: %s", userNameAttributePrefix, username));
+                logger.debug("Extracted username for claim: %s and username is: %s".formatted(userNameAttributePrefix, username));
             } else {
                 username = getMappedClaim(null, SUB, claims);
-                logger.debug(String.format("Extracted username for claim: %s and username is: %s", SUB, username));
+                logger.debug("Extracted username for claim: %s and username is: %s".formatted(SUB, username));
             }
             if (!hasText(username)) {
                 throw new InsufficientAuthenticationException("Unable to map claim to a username");
@@ -282,7 +282,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
             Set<String> authorities = oidcAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
             Set<String> result = retainAllMatches(authorities, whiteList);
             if (ObjectUtils.isNotEmpty(result)) {
-                logger.debug(String.format("White listed external OIDC groups:'%s'", result));
+                logger.debug("White listed external OIDC groups:'%s'".formatted(result));
             }
             return result.stream().map(ExternalOAuthUserAuthority::new).collect(Collectors.toList());
         }
@@ -302,18 +302,17 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
 
             Object acr = claims.get(ClaimConstants.ACR);
             if (acr != null) {
-                if (acr instanceof Map) {
-                    Map<String, Object> acrMap = (Map) acr;
+                if (acr instanceof Map acrMap) {
                     Object values = acrMap.get("values");
-                    if (values instanceof Collection) {
-                        authentication.setAuthContextClassRef(new HashSet<>((Collection) values));
-                    } else if (values instanceof String[]) {
-                        authentication.setAuthContextClassRef(new HashSet<>(Arrays.asList((String[]) values)));
+                    if (values instanceof Collection collection) {
+                        authentication.setAuthContextClassRef(new HashSet<>(collection));
+                    } else if (values instanceof String[] strings) {
+                        authentication.setAuthContextClassRef(new HashSet<>(Arrays.asList(strings)));
                     } else {
                         logger.debug(String.format("Unrecognized ACR claim[%s] for user_id: %s", values, authentication.getPrincipal().getId()));
                     }
-                } else if (acr instanceof String) {
-                    authentication.setAuthContextClassRef(new HashSet(Collections.singletonList((String) acr)));
+                } else if (acr instanceof String string) {
+                    authentication.setAuthContextClassRef(new HashSet(Collections.singletonList(string)));
                 } else {
                     logger.debug(String.format("Unrecognized ACR claim[%s] for user_id: %s", acr, authentication.getPrincipal().getId()));
                 }
@@ -325,15 +324,14 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
                     String key = entry.getKey().substring(USER_ATTRIBUTE_PREFIX.length());
                     Object values = claims.get(entry.getValue());
                     if (values != null) {
-                        logger.debug(String.format("Mapped ExternalOAuth attribute %s to %s", key, values));
-                        if (values instanceof List) {
-                            List list = (List) values;
+                        logger.debug("Mapped ExternalOAuth attribute %s to %s".formatted(key, values));
+                        if (values instanceof List list) {
                             List<String> strings = (List<String>) list.stream()
                                     .map(object -> Objects.toString(object, null))
                                     .collect(Collectors.toList());
                             userAttributes.put(key, strings);
-                        } else if (values instanceof String) {
-                            userAttributes.put(key, Collections.singletonList((String) values));
+                        } else if (values instanceof String string) {
+                            userAttributes.put(key, Collections.singletonList(string));
                         } else {
                             userAttributes.put(key, Collections.singletonList(values.toString()));
                         }
@@ -385,13 +383,13 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
             String phoneNumber = getMappedClaim(phoneClaim, "phone_number", claims);
             String email = getMappedClaim(emailClaim, "email", claims);
             Object verifiedObj = claims.get(emailVerifiedClaim == null ? "email_verified" : emailVerifiedClaim);
-            boolean verified = verifiedObj instanceof Boolean ? (Boolean) verifiedObj : false;
+            boolean verified = verifiedObj instanceof Boolean b ? b : false;
 
             if (!StringUtils.hasText(email)) {
                 email = generateEmailIfNullOrEmpty(username);
             }
 
-            logger.debug(String.format("Returning user data for username:%s, email:%s", username, email));
+            logger.debug("Returning user data for username:%s, email:%s".formatted(username, email));
 
             return new UaaUser(
                     new UaaUserPrototype()
@@ -422,11 +420,11 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
         if (isNull(claimObject)) {
             return null;
         }
-        if (claimObject instanceof String) {
-            return (String) claimObject;
+        if (claimObject instanceof String string) {
+            return string;
         }
-        if (claimObject instanceof Collection) {
-            Set<String> entry = ((Collection<?>) claimObject).stream().filter(String.class::isInstance).map(String.class::cast).collect(Collectors.toSet());
+        if (claimObject instanceof Collection<?> collection) {
+            Set<String> entry = collection.stream().filter(String.class::isInstance).map(String.class::cast).collect(Collectors.toSet());
             if (entry.size() == 1) {
                 return entry.stream().collect(Collectors.toList()).get(0);
             } else if (entry.isEmpty()) {
@@ -452,10 +450,10 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
         Set<String> scopes = new HashSet<>();
         for (String g : groupNames) {
             Object roles = claims.get(g);
-            if (roles instanceof String) {
-                scopes.addAll(Arrays.asList(((String) roles).split(",")));
-            } else if (roles instanceof Collection) {
-                scopes.addAll((Collection<? extends String>) roles);
+            if (roles instanceof String string) {
+                scopes.addAll(Arrays.asList(string.split(",")));
+            } else if (roles instanceof Collection collection) {
+                scopes.addAll(collection);
             }
         }
 
@@ -629,14 +627,14 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
                 return null;
             }
 
-            logger.debug(String.format("Performing token check with url:%s", requestUri));
+            logger.debug("Performing token check with url:%s".formatted(requestUri));
             ResponseEntity<Map<String, Object>> responseEntity =
                     getRestTemplate(config)
                             .exchange(requestUri, GET, requestEntity,
                                     new ParameterizedTypeReference<Map<String, Object>>() {
                                     }
                             );
-            logger.debug(String.format("Request completed with status:%s", responseEntity.getStatusCode()));
+            logger.debug("Request completed with status:%s".formatted(responseEntity.getStatusCode()));
             return responseEntity.getBody();
         } else {
             JwtTokenSignedByThisUAA jwtToken = validateToken(idToken, config);
@@ -723,8 +721,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
         logger.debug("Adding new client_id and client_secret for token exchange");
         body.add("client_id", config.getRelyingPartyId());
 
-        if (config instanceof OIDCIdentityProviderDefinition) {
-            OIDCIdentityProviderDefinition oidcIdentityProviderDefinition = (OIDCIdentityProviderDefinition) config;
+        if (config instanceof OIDCIdentityProviderDefinition oidcIdentityProviderDefinition) {
             if (oidcIdentityProviderDefinition.getAdditionalAuthzParameters() != null) {
                 for (Map.Entry<String, String> entry : oidcIdentityProviderDefinition.getAdditionalAuthzParameters().entrySet()) {
                     body.add(entry.getKey(), entry.getValue());
@@ -773,7 +770,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
             return null;
         }
 
-        logger.debug(String.format("Performing token exchange with url:%s and request:%s", requestUri, body));
+        logger.debug("Performing token exchange with url:%s and request:%s".formatted(requestUri, body));
         // A configuration that skips SSL/TLS validation requires clobbering the rest template request factory
         // setup by the bean initializer.
         ResponseEntity<Map<String, String>> responseEntity =
@@ -784,7 +781,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
                                 new ParameterizedTypeReference<Map<String, String>>() {
                                 }
                         );
-        logger.debug(String.format("Request completed with status:%s", responseEntity.getStatusCode()));
+        logger.debug("Request completed with status:%s".formatted(responseEntity.getStatusCode()));
         return responseEntity.getBody() != null ? responseEntity.getBody().get(getTokenFieldName(config)) : UaaStringUtils.EMPTY_STRING;
     }
 

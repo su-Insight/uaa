@@ -48,7 +48,7 @@ public class SecurityFilterChainPostProcessorTests {
         processor.setAdditionalFilters(additionalFilters);
         processor.postProcessAfterInitialization(fc, "");
         assertThat(fc.getFilters()).hasSize(count + 1);
-        assertThat(fc.getFilters().get(expectedPos).getClass()).as(String.format("filter[%d] should be:%s", pos, PositionFilter.class.getSimpleName())).isEqualTo(PositionFilter.class);
+        assertThat(fc.getFilters().get(expectedPos).getClass()).as("filter[%d] should be:%s".formatted(pos, PositionFilter.class.getSimpleName())).isEqualTo(PositionFilter.class);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class SecurityFilterChainPostProcessorTests {
         processor.setAdditionalFilters(additionalFilters);
         processor.postProcessAfterInitialization(fc, "");
         assertThat(fc.getFilters()).hasSize(count + 1);
-        assertThat(clazz).as(String.format("filter[%s] should be at position:%d", clazz.getSimpleName(), expectedPosition)).isEqualTo(fc.getFilters().get(expectedPosition).getClass());
+        assertThat(clazz).as("filter[%s] should be at position:%d".formatted(clazz.getSimpleName(), expectedPosition)).isEqualTo(fc.getFilters().get(expectedPosition).getClass());
     }
 
     @Test

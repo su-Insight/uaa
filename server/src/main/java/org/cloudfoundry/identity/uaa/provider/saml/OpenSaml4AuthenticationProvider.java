@@ -212,7 +212,7 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
             Saml2ResponseValidatorResult result = Saml2ResponseValidatorResult.success();
             String statusCode = getStatusCode(response);
             if (!StatusCode.SUCCESS.equals(statusCode)) {
-                String message = String.format("Invalid status [%s] for SAML response [%s]", statusCode,
+                String message = "Invalid status [%s] for SAML response [%s]".formatted(statusCode,
                         response.getID());
                 result = result.concat(new Saml2Error(Saml2ErrorCodes.INVALID_RESPONSE, message));
             }
@@ -232,7 +232,7 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
                     .getAssertingPartyDetails()
                     .getEntityId();
             if (!StringUtils.hasText(issuer) || !issuer.equals(assertingPartyEntityId)) {
-                String message = String.format("Invalid issuer [%s] for SAML response [%s]", issuer, response.getID());
+                String message = "Invalid issuer [%s] for SAML response [%s]".formatted(issuer, response.getID());
                 result = result.concat(new Saml2Error(Saml2ErrorCodes.INVALID_ISSUER, message));
             }
             if (response.getAssertions().isEmpty()) {
@@ -545,12 +545,12 @@ public final class OpenSaml4AuthenticationProvider implements AuthenticationProv
                     return Saml2ResponseValidatorResult.success();
                 }
             } catch (Exception ex) {
-                String message = String.format("Invalid assertion [%s] for SAML response [%s]: %s", assertion.getID(),
+                String message = "Invalid assertion [%s] for SAML response [%s]: %s".formatted(assertion.getID(),
                         assertion.getParent() != null ? ((Response) assertion.getParent()).getID() : assertion.getID(),
                         ex.getMessage());
                 return Saml2ResponseValidatorResult.failure(new Saml2Error(errorCode, message));
             }
-            String message = String.format("Invalid assertion [%s] for SAML response [%s]: %s", assertion.getID(),
+            String message = "Invalid assertion [%s] for SAML response [%s]: %s".formatted(assertion.getID(),
                     assertion.getParent() != null ? ((Response) assertion.getParent()).getID() : assertion.getID(),
                     context.getValidationFailureMessage());
             return Saml2ResponseValidatorResult.failure(new Saml2Error(errorCode, message));

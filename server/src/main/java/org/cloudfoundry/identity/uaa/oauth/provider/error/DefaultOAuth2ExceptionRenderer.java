@@ -49,8 +49,8 @@ public class DefaultOAuth2ExceptionRenderer implements OAuth2ExceptionRenderer {
         }
         HttpInputMessage inputMessage = createHttpInputMessage(webRequest);
         HttpOutputMessage outputMessage = createHttpOutputMessage(webRequest);
-        if (responseEntity instanceof ResponseEntity && outputMessage instanceof ServerHttpResponse) {
-            ((ServerHttpResponse) outputMessage).setStatusCode(((ResponseEntity<?>) responseEntity).getStatusCode());
+        if (responseEntity instanceof ResponseEntity<?> entity && outputMessage instanceof ServerHttpResponse response) {
+            response.setStatusCode(entity.getStatusCode());
         }
         HttpHeaders entityHeaders = responseEntity.getHeaders();
         if (!entityHeaders.isEmpty()) {

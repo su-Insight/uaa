@@ -240,7 +240,7 @@ public class ClientAdminEndpointsValidatorTests {
         } catch (InvalidClientDetailsException e) {
             return;
         }
-        Assert.fail(String.format("Url %s should not be allowed", url));
+        Assert.fail("Url %s should not be allowed".formatted(url));
     }
 
     private void testValidatorForURL(String url) {

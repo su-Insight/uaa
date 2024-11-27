@@ -50,8 +50,8 @@ public class LoginServerTokenEndpointFilter extends TokenEndpointAuthenticationF
     protected void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException {
         super.onSuccessfulAuthentication(request, response, authResult);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof OAuth2Authentication) {
-            ((OAuth2Authentication) auth).setAuthenticated(true);
+        if (auth instanceof OAuth2Authentication authentication) {
+            authentication.setAuthenticated(true);
         }
     }
 

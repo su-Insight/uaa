@@ -21,8 +21,8 @@ public class RateLimitingConfigInitializer {
         YamlConfigFileDTO localConfigDTO = initialConfig.getLocalConfigFileDTO();
         RateLimitingFactoriesSupplierWithStatus configurationWithStatus = initialConfig.getConfigurationWithStatus();
 
-        if (initialError instanceof RateLimitingConfigException) {
-            logger.logError((RateLimitingConfigException) initialError);
+        if (initialError instanceof RateLimitingConfigException exception) {
+            logger.logError(exception);
         } else if (initialError != null) {
             logger.logUnhandledError(initialError);
         }

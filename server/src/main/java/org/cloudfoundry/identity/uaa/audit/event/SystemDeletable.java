@@ -32,7 +32,7 @@ public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
             IdentityZone identityZone = (IdentityZone) event.getDeleted();
 
             String zoneId = identityZone.getId();
-            getLogger().debug(String.format("Received zone deletion event for id:%s", zoneId));
+            getLogger().debug("Received zone deletion event for id:%s".formatted(zoneId));
             if (identityZone.isUaa()) {
                 getLogger().debug("Attempt to delete default zone ignored:" + event.getDeleted());
                 return;
@@ -41,7 +41,7 @@ public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
         } else if (event.getDeleted() instanceof IdentityProvider) {
             String zoneId = ((IdentityProvider) event.getDeleted()).getIdentityZoneId();
             String origin = ((IdentityProvider) event.getDeleted()).getOriginKey();
-            getLogger().debug(String.format("Received provider deletion event for zone_id:%s and origin:%s", zoneId, origin));
+            getLogger().debug("Received provider deletion event for zone_id:%s and origin:%s".formatted(zoneId, origin));
             if (OriginKeys.UAA.equals(origin)) {
                 getLogger().debug("Attempt to delete default UAA provider ignored:" + event.getDeleted());
                 return;
@@ -50,17 +50,17 @@ public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
         } else if (event.getDeleted() instanceof ClientDetails) {
             String clientId = ((ClientDetails) event.getDeleted()).getClientId();
             String zoneId = event.getIdentityZoneId();
-            getLogger().debug(String.format("Received client deletion event for zone_id:%s and client:%s", zoneId, clientId));
+            getLogger().debug("Received client deletion event for zone_id:%s and client:%s".formatted(zoneId, clientId));
             deleteByClient(clientId, zoneId);
         } else if (event.getDeleted() instanceof UaaUser) {
             String userId = ((UaaUser) event.getDeleted()).getId();
             String zoneId = ((UaaUser) event.getDeleted()).getZoneId();
-            getLogger().debug(String.format("Received UAA user deletion event for zone_id:%s and user:%s", zoneId, userId));
+            getLogger().debug("Received UAA user deletion event for zone_id:%s and user:%s".formatted(zoneId, userId));
             deleteByUser(userId, zoneId);
         } else if (event.getDeleted() instanceof ScimUser) {
             String userId = ((ScimUser) event.getDeleted()).getId();
             String zoneId = ((ScimUser) event.getDeleted()).getZoneId();
-            getLogger().debug(String.format("Received SCIM user deletion event for zone_id:%s and user:%s", zoneId, userId));
+            getLogger().debug("Received SCIM user deletion event for zone_id:%s and user:%s".formatted(zoneId, userId));
             deleteByUser(userId, zoneId);
         } else {
             getLogger().debug("Unsupported deleted event for deletion of object:" + event.getDeleted());
@@ -68,8 +68,8 @@ public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
     }
 
     default void onApplicationEvent(AbstractUaaEvent event) {
-        if (event instanceof EntityDeletedEvent) {
-            onApplicationEvent((EntityDeletedEvent) event);
+        if (event instanceof EntityDeletedEvent deletedEvent) {
+            onApplicationEvent(deletedEvent);
         }
     }
 

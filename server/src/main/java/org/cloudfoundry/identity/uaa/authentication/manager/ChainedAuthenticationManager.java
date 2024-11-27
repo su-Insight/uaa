@@ -50,8 +50,8 @@ public class ChainedAuthenticationManager implements AuthenticationManager {
             return null;
         }
         UsernamePasswordAuthenticationToken output = null;
-        if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            output = (UsernamePasswordAuthenticationToken) authentication;
+        if (authentication instanceof UsernamePasswordAuthenticationToken token) {
+            output = token;
         } else {
             output = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
                     (authentication.getCredentials() != null ? authentication.getCredentials().toString() : null),

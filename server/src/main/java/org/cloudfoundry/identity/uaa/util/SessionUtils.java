@@ -38,7 +38,7 @@ public final class SessionUtils {
         }
 
         if (!(passwordChangeRequired instanceof Boolean)) {
-            throw new IllegalArgumentException(String.format("The %s attribute on the session must be a Boolean", PASSWORD_CHANGE_REQUIRED));
+            throw new IllegalArgumentException("The %s attribute on the session must be a Boolean".formatted(PASSWORD_CHANGE_REQUIRED));
         }
 
         return (Boolean) passwordChangeRequired;

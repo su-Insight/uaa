@@ -344,8 +344,8 @@ public class AccessTokenProviderChainTests {
 
         public OAuth2AccessToken refreshAccessToken(OAuth2ProtectedResourceDetails resource,
                 OAuth2RefreshToken refreshToken, AccessTokenRequest request) throws UserRedirectRequiredException {
-            if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
-                if (((ExpiringOAuth2RefreshToken) refreshToken).getExpiration().getTime() < System
+            if (refreshToken instanceof ExpiringOAuth2RefreshToken token) {
+                if (token.getExpiration().getTime() < System
                         .currentTimeMillis()) {
                     // this is what a real provider would do (re-throw a remote exception)
                     throw new InvalidTokenException("Expired refresh token");

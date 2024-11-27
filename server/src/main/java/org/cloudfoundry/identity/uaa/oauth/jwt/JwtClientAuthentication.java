@@ -124,7 +124,7 @@ public class JwtClientAuthentication {
 
     private static HashMap<String, String> getJwtClientConfigurationElements(Object jwtClientAuthentication) {
         HashMap<String, String> jwtClientConfiguration = null;
-        if (jwtClientAuthentication instanceof Boolean && ((boolean) jwtClientAuthentication)) {
+        if (jwtClientAuthentication instanceof Boolean boolean1 && boolean1) {
             jwtClientConfiguration = new HashMap<>();
         } else if (jwtClientAuthentication instanceof HashMap) {
             jwtClientConfiguration = (HashMap<String, String>) jwtClientAuthentication;

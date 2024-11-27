@@ -156,8 +156,7 @@ public class RemoteAuthenticationEndpointTests {
         RestTemplate restTemplate = new RestTemplate();
         // The default java.net client doesn't allow you to handle 4xx responses
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        if (restTemplate instanceof OAuth2RestTemplate) {
-            OAuth2RestTemplate oAuth2RestTemplate = (OAuth2RestTemplate) restTemplate;
+        if (restTemplate instanceof OAuth2RestTemplate oAuth2RestTemplate) {
             oAuth2RestTemplate.setErrorHandler(new UaaOauth2ErrorHandler(oAuth2RestTemplate.getResource(), HttpStatus.Series.SERVER_ERROR));
         } else {
             restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {

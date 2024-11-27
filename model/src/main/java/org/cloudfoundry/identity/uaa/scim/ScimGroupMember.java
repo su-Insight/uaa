@@ -87,7 +87,7 @@ public class ScimGroupMember<TEntity extends ScimCore> {
 
     @Override
     public String toString() {
-        return String.format("(memberId: %s, type: %s, origin:%s)", getMemberId(), getType(), getOrigin());
+        return "(memberId: %s, type: %s, origin:%s)".formatted(getMemberId(), getType(), getOrigin());
     }
 
     public String getOrigin() {

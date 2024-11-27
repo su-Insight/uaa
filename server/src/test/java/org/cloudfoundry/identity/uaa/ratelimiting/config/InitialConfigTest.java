@@ -15,30 +15,33 @@ import static org.mockito.Mockito.when;
 
 class InitialConfigTest {
     public static final String SAMPLE_RATE_LIMITER_CONFIG_FILE =
-            "ratelimit:\n" +
-                    "  dynamicConfigUrl: urlGoesHere\n" +
-                    "\n" +
-                    "  loggingOption: AllCallsWithDetails\n" +
-                    "  # loggingOption: AllCalls\n" +
-                    "  # loggingOption: OnlyLimited\n" +
-                    "  # OnlyLimited is the default\n" +
-                    "\n" +
-                    "  credentialID: 'JWTjsonField:Claims:email'\n" +
-                    "\n" +
-                    "  limiterMappings:\n" +
-                    "    - name: Info\n" +
-                    "      withCallerRemoteAddressID: 1r/s\n" +
-                    "      pathSelectors:\n" +
-                    "        - 'equals:/info'\n" +
-                    "    - name: Authenticate\n" +
-                    "      withCallerRemoteAddressID: 5r/s\n" +
-                    "      pathSelectors:\n" +
-                    "        - 'equals:/authenticate'\n" +
-                    "";
+            """
+            ratelimit:
+              dynamicConfigUrl: urlGoesHere
+            
+              loggingOption: AllCallsWithDetails
+              # loggingOption: AllCalls
+              # loggingOption: OnlyLimited
+              # OnlyLimited is the default
+            
+              credentialID: 'JWTjsonField:Claims:email'
+            
+              limiterMappings:
+                - name: Info
+                  withCallerRemoteAddressID: 1r/s
+                  pathSelectors:
+                    - 'equals:/info'
+                - name: Authenticate
+                  withCallerRemoteAddressID: 5r/s
+                  pathSelectors:
+                    - 'equals:/authenticate'
+            """;
 
-    private static final String EMPTY_LEADING_DOCS = "\n" +
-            "---\n" +
-            "---\n";
+    private static final String EMPTY_LEADING_DOCS = """
+            
+            ---
+            ---
+            """;
 
     @Test
     void create() {
@@ -96,22 +99,24 @@ class InitialConfigTest {
     }
 
     private static final String SAMPLE_RATE_LIMITER_CONFIG_FILE_ROUND_TRIPPED_THRU_SNAKE_YAML =
-            "!!org.cloudfoundry.identity.uaa.ratelimiting.config.InitialConfig$UaaYamlConfigFileDTO\n"
-                    + "ratelimit:\n"
-                    + "  credentialID: JWTjsonField:Claims:email\n"
-                    + "  dynamicConfigUrl: urlGoesHere\n"
-                    + "  limiterMappings:\n"
-                    + "  - global: null\n"
-                    + "    name: Info\n"
-                    + "    pathSelectors: ['equals:/info']\n"
-                    + "    withCallerCredentialsID: null\n"
-                    + "    withCallerRemoteAddressID: 1r/s\n"
-                    + "    withoutCallerID: null\n"
-                    + "  - global: null\n"
-                    + "    name: Authenticate\n"
-                    + "    pathSelectors: ['equals:/authenticate']\n"
-                    + "    withCallerCredentialsID: null\n"
-                    + "    withCallerRemoteAddressID: 5r/s\n"
-                    + "    withoutCallerID: null\n"
-                    + "  loggingOption: AllCallsWithDetails\n";
+            """
+            !!org.cloudfoundry.identity.uaa.ratelimiting.config.InitialConfig$UaaYamlConfigFileDTO
+            ratelimit:
+              credentialID: JWTjsonField:Claims:email
+              dynamicConfigUrl: urlGoesHere
+              limiterMappings:
+              - global: null
+                name: Info
+                pathSelectors: ['equals:/info']
+                withCallerCredentialsID: null
+                withCallerRemoteAddressID: 1r/s
+                withoutCallerID: null
+              - global: null
+                name: Authenticate
+                pathSelectors: ['equals:/authenticate']
+                withCallerCredentialsID: null
+                withCallerRemoteAddressID: 5r/s
+                withoutCallerID: null
+              loggingOption: AllCallsWithDetails
+            """;
 }

@@ -78,8 +78,7 @@ public class ClientJwtConfiguration implements Cloneable {
             return false;
         }
 
-        if (o instanceof ClientJwtConfiguration) {
-            ClientJwtConfiguration that = (ClientJwtConfiguration) o;
+        if (o instanceof ClientJwtConfiguration that) {
             if (!Objects.equals(jwksUri, that.jwksUri)) {
                 return false;
             }
@@ -240,8 +239,7 @@ public class ClientJwtConfiguration implements Cloneable {
    */
     @JsonIgnore
     public void writeValue(ClientDetails clientDetails) {
-        if (clientDetails instanceof UaaClientDetails) {
-            UaaClientDetails uaaClientDetails = (UaaClientDetails) clientDetails;
+        if (clientDetails instanceof UaaClientDetails uaaClientDetails) {
             uaaClientDetails.setClientJwtConfig(JsonUtils.writeValueAsString(this));
         }
     }
@@ -255,8 +253,7 @@ public class ClientJwtConfiguration implements Cloneable {
    */
     @JsonIgnore
     public static void resetConfiguration(ClientDetails clientDetails) {
-        if (clientDetails instanceof UaaClientDetails) {
-            UaaClientDetails uaaClientDetails = (UaaClientDetails) clientDetails;
+        if (clientDetails instanceof UaaClientDetails uaaClientDetails) {
             uaaClientDetails.setClientJwtConfig(null);
         }
     }

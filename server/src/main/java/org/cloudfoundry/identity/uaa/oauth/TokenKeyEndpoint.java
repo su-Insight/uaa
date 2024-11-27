@@ -122,8 +122,7 @@ public class TokenKeyEndpoint {
         if (principal != null) {
             if (principal instanceof AnonymousAuthenticationToken) {
                 return false;
-            } else if (principal instanceof Authentication) {
-                Authentication auth = (Authentication) principal;
+            } else if (principal instanceof Authentication auth) {
                 if (auth.getAuthorities() != null) {
                     for (GrantedAuthority authority : auth.getAuthorities()) {
                         if ("uaa.resource".equals(authority.getAuthority())) {

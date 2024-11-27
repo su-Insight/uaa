@@ -28,19 +28,21 @@ import static org.junit.Assert.assertEquals;
 public class LdapProviderDefinitionDeserializeTests {
     @Test
     public void type_should_be_ldap() {
-        String json = "{\n" +
-                "  \"active\": true,\n" +
-                "  \"config\": {\n" +
-                "    \"autoAddGroups\": true,\n" +
-                "    \"baseUrl\": \"ldap://test-identity-provider-9bmlg.url\",\n" +
-                "    \"ldapGroupFile\": \"ldap/ldap-groups-null.xml\",\n" +
-                "    \"ldapProfileFile\": \"ldap/ldap-simple-bind.xml\",\n" +
-                "    \"skipSSLVerification\": true\n" +
-                "  },\n" +
-                "  \"name\": \"test-identity-provider-9bmlg\",\n" +
-                "  \"originKey\": \"ldap\",\n" +
-                "  \"type\": \"ldap\"\n" +
-                "}";
+        String json = """
+                {
+                  "active": true,
+                  "config": {
+                    "autoAddGroups": true,
+                    "baseUrl": "ldap://test-identity-provider-9bmlg.url",
+                    "ldapGroupFile": "ldap/ldap-groups-null.xml",
+                    "ldapProfileFile": "ldap/ldap-simple-bind.xml",
+                    "skipSSLVerification": true
+                  },
+                  "name": "test-identity-provider-9bmlg",
+                  "originKey": "ldap",
+                  "type": "ldap"
+                }\
+                """;
         IdentityProvider<LdapIdentityProviderDefinition> def = JsonUtils.readValue(json, new TypeReference<IdentityProvider<LdapIdentityProviderDefinition>>() {
         });
         assertEquals(OriginKeys.LDAP, def.getType());
@@ -49,13 +51,15 @@ public class LdapProviderDefinitionDeserializeTests {
 
     @Test
     public void old_style_type_should_be_ldap() {
-        String json = "{\n" +
-                "\t\"active\": true,\n" +
-                "\t\"config\": \"{\\\"autoAddGroups\\\": true,\\\"baseUrl\\\": \\\"ldap://test-identity-provider-9bmlg.url\\\",\\\"ldapGroupFile\\\": \\\"ldap/ldap-groups-null.xml\\\",\\\"ldapProfileFile\\\": \\\"ldap/ldap-simple-bind.xml\\\",\\\"skipSSLVerification\\\": true}\",\n" +
-                "\t\"name\": \"test-identity-provider-9bmlg\",\n" +
-                "\t\"originKey\": \"ldap\",\n" +
-                "\t\"type\": \"ldap\"\n" +
-                "}";
+        String json = """
+                {
+                	"active": true,
+                	"config": "{\\"autoAddGroups\\": true,\\"baseUrl\\": \\"ldap://test-identity-provider-9bmlg.url\\",\\"ldapGroupFile\\": \\"ldap/ldap-groups-null.xml\\",\\"ldapProfileFile\\": \\"ldap/ldap-simple-bind.xml\\",\\"skipSSLVerification\\": true}",
+                	"name": "test-identity-provider-9bmlg",
+                	"originKey": "ldap",
+                	"type": "ldap"
+                }\
+                """;
         IdentityProvider<LdapIdentityProviderDefinition> def = JsonUtils.readValue(json, new TypeReference<IdentityProvider<LdapIdentityProviderDefinition>>() {
         });
         assertEquals(OriginKeys.LDAP, def.getType());

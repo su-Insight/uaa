@@ -304,8 +304,8 @@ public final class ServerRunning implements MethodRule, RestTemplateHolder, UrlH
     @Override
     public void setRestTemplate(RestOperations restTemplate) {
         this.client = restTemplate;
-        if (restTemplate instanceof HttpAccessor) {
-            ((HttpAccessor) restTemplate).setRequestFactory(new StatelessRequestFactory());
+        if (restTemplate instanceof HttpAccessor accessor) {
+            accessor.setRequestFactory(new StatelessRequestFactory());
         }
     }
 

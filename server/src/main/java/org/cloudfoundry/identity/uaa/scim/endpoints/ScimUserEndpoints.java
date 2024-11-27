@@ -172,7 +172,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     ) {
         if (userMaxCount <= 0) {
             throw new IllegalArgumentException(
-                    String.format("Invalid \"userMaxCount\" value (got %d). Should be positive number.", userMaxCount)
+                    "Invalid \"userMaxCount\" value (got %d). Should be positive number.".formatted(userMaxCount)
             );
         }
 
@@ -247,7 +247,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
             idpsForEmailDomain = idpsForEmailDomain.stream().filter(idp -> !idp.getOriginKey().equals(OriginKeys.UAA)).collect(Collectors.toList());
             if (!idpsForEmailDomain.isEmpty()) {
                 List<String> idpOrigins = idpsForEmailDomain.stream().map(IdentityProvider::getOriginKey).collect(Collectors.toList());
-                throw new ScimException(String.format("The user account is set up for single sign-on. Please use one of these origin(s) : %s", idpOrigins.toString()), HttpStatus.BAD_REQUEST);
+                throw new ScimException("The user account is set up for single sign-on. Please use one of these origin(s) : %s".formatted(idpOrigins.toString()), HttpStatus.BAD_REQUEST);
             }
             passwordValidator.validate(user.getPassword());
         }
@@ -437,8 +437,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
             @RequestParam(value = "redirect_uri") String redirectUri) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
+        if (authentication instanceof OAuth2Authentication oAuth2Authentication) {
 
             if (clientId == null) {
                 clientId = oAuth2Authentication.getOAuth2Request().getClientId();
@@ -632,8 +631,8 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         logger.error("Unhandled exception in SCIM user endpoints. " + t.getMessage());
 
         ScimException e = new ScimException("Unexpected error", t, HttpStatus.INTERNAL_SERVER_ERROR);
-        if (t instanceof ScimException) {
-            e = (ScimException) t;
+        if (t instanceof ScimException exception) {
+            e = exception;
         } else {
             Class<?> clazz = t.getClass();
             for (Class<?> key : statuses.keySet()) {
@@ -693,8 +692,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
 
     private void throwWhenUserManagementIsDisallowed(String origin, HttpServletRequest request) {
         Object attr = request.getAttribute(DisableInternalUserManagementFilter.DISABLE_INTERNAL_USER_MANAGEMENT);
-        if (attr instanceof Boolean) {
-            boolean isUserManagementDisabled = (boolean) attr;
+        if (attr instanceof Boolean isUserManagementDisabled) {
             if (isUserManagementDisabled && (OriginKeys.UAA.equals(origin) || isEmpty(origin))) {
                 throw new InternalUserManagementDisabledException(DisableUserManagementSecurityFilter.INTERNAL_USER_CREATION_IS_CURRENTLY_DISABLED);
             }

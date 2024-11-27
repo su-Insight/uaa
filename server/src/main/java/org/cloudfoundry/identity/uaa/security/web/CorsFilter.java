@@ -157,7 +157,7 @@ public class CorsFilter extends OncePerRequestFilter {
         //Validate if this CORS request is allowed for this method
         String method = request.getMethod();
         if (!isPreflightRequest && !isAllowedMethod(method, configuration)) {
-            logger.debug(String.format("Request with invalid method was rejected: %s", method));
+            logger.debug("Request with invalid method was rejected: %s".formatted(method));
             response.sendError(METHOD_NOT_ALLOWED.value(), "Illegal method.");
             return true;
         }
@@ -170,20 +170,20 @@ public class CorsFilter extends OncePerRequestFilter {
         try {
             originURI = new URI(origin);
         } catch (URISyntaxException e) {
-            logger.debug(String.format("Request with invalid origin was rejected: %s", origin));
+            logger.debug("Request with invalid origin was rejected: %s".formatted(origin));
             response.sendError(FORBIDDEN.value(), "Invalid origin");
             return true;
         }
 
         if (!isAllowedOrigin(origin, configuration)) {
-            logger.debug(String.format("Request with origin: %s was rejected because it didn't match allowed origins", origin));
+            logger.debug("Request with origin: %s was rejected because it didn't match allowed origins".formatted(origin));
             response.sendError(FORBIDDEN.value(), "Illegal origin");
             return true;
         }
 
         String requestUri = request.getRequestURI();
         if (!isAllowedRequestUri(requestUri, configuration)) {
-            logger.debug(String.format("Request with URI: %s was rejected because it didn't match allowed URIs", requestUri));
+            logger.debug("Request with URI: %s was rejected because it didn't match allowed URIs".formatted(requestUri));
             response.sendError(FORBIDDEN.value(), "Illegal request URI");
             return true;
         }
@@ -321,7 +321,7 @@ public class CorsFilter extends OncePerRequestFilter {
                 return true;
             }
         }
-        logger.debug(String.format("The '%s' URI does not allow CORS requests.", uri));
+        logger.debug("The '%s' URI does not allow CORS requests.".formatted(uri));
         return false;
     }
 
@@ -332,7 +332,7 @@ public class CorsFilter extends OncePerRequestFilter {
                 return true;
             }
         }
-        logger.debug(String.format("The '%s' origin is not allowed to make CORS requests.", origin));
+        logger.debug("The '%s' origin is not allowed to make CORS requests.".formatted(origin));
         return false;
     }
 
@@ -375,7 +375,7 @@ public class CorsFilter extends OncePerRequestFilter {
             for (String allowedUri : configuration.getAllowedUris()) {
                 try {
                     configuration.getAllowedUriPatterns().add(Pattern.compile(allowedUri));
-                    logger.debug(String.format("URI '%s' is allowed for a %s CORS requests.", allowedUri, type));
+                    logger.debug("URI '%s' is allowed for a %s CORS requests.".formatted(allowedUri, type));
                 } catch (PatternSyntaxException patternSyntaxException) {
                     logger.error("Invalid regular expression pattern in cors." + type + ".allowed.uris: " + allowedUri, patternSyntaxException);
                 }
@@ -385,7 +385,7 @@ public class CorsFilter extends OncePerRequestFilter {
             for (String allowedOrigin : configuration.getAllowedOrigins()) {
                 try {
                     configuration.getAllowedOriginPatterns().add(Pattern.compile(allowedOrigin));
-                    logger.debug(String.format("Origin '%s' is allowed for a %s CORS requests.", allowedOrigin, type));
+                    logger.debug("Origin '%s' is allowed for a %s CORS requests.".formatted(allowedOrigin, type));
                 } catch (PatternSyntaxException patternSyntaxException) {
                     logger.error("Invalid regular expression pattern in cors." + type + ".allowed.origins: " + allowedOrigin, patternSyntaxException);
                 }
@@ -395,7 +395,7 @@ public class CorsFilter extends OncePerRequestFilter {
 
     //----------------REQUEST INFO ----------------------------------------------//
     public String getRequestInfo(HttpServletRequest request) {
-        return String.format("URI: %s; Scheme: %s; Host: %s; Port: %s; Origin: %s; Method: %s",
+        return "URI: %s; Scheme: %s; Host: %s; Port: %s; Origin: %s; Method: %s".formatted(
                 request.getRequestURI(),
                 request.getScheme(),
                 request.getServerName(),

@@ -1384,7 +1384,7 @@ class IdentityProviderEndpointsAliasMockMvcTests {
     }
 
     private static List<String> getScopesForZone(final String zoneId, final String... scopes) {
-        return Stream.of(scopes).map(scope -> String.format("zones.%s.%s", zoneId, scope)).collect(toList());
+        return Stream.of(scopes).map(scope -> "zones.%s.%s".formatted(zoneId, scope)).collect(toList());
     }
 
     private static IdentityProvider<?> buildOidcIdpWithAliasProperties(

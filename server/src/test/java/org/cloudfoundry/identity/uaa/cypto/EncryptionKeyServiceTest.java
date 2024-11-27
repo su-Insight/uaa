@@ -57,7 +57,7 @@ public class EncryptionKeyServiceTest {
     public void shouldThrowErrorIfActiveEncryptionKeyHasNotBeenProvided() {
         String activeKeyLabel = "active-key" + System.currentTimeMillis();
         expectedException.expect(NoActiveEncryptionKeyProvided.class);
-        expectedException.expectMessage(String.format("UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[label=%s] is undefined", activeKeyLabel));
+        expectedException.expectMessage("UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[label=%s] is undefined".formatted(activeKeyLabel));
 
         encryptionKeyService = new EncryptionKeyService(activeKeyLabel, new ArrayList<>());
     }
@@ -117,7 +117,7 @@ public class EncryptionKeyServiceTest {
 
         expectedException.expect(NoActiveEncryptionKeyProvided.class);
         expectedException.expectMessage(
-                String.format("UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[label=%s, label=%s] is undefined", key2, key3)
+                "UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[label=%s, label=%s] is undefined".formatted(key2, key3)
         );
 
         EncryptionKeyService.EncryptionKey activeEncryptionKey = new EncryptionKeyService.EncryptionKey();

@@ -277,7 +277,7 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
     }
 
     public UserApprovalRequiredException getUserApprovalSignal(AuthorizationCodeResourceDetails resource) {
-        String message = String.format("Do you approve the client '%s' to access your resources with scope=%s",
+        String message = "Do you approve the client '%s' to access your resources with scope=%s".formatted(
                 resource.getClientId(), resource.getScope());
         return new UserApprovalRequiredException(resource.getUserAuthorizationUri(), Collections.singletonMap(
                 OAuth2Utils.USER_OAUTH_APPROVAL, message), resource.getClientId(), resource.getScope());

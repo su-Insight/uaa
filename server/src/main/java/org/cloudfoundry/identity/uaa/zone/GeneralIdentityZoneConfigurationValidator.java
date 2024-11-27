@@ -29,7 +29,7 @@ public class GeneralIdentityZoneConfigurationValidator implements IdentityZoneCo
                     String activeKeyId = samlConfig.getActiveKeyId();
                     if (activeKeyId == null || samlConfig.getKeys().get(activeKeyId) == null) {
 
-                        throw new InvalidIdentityZoneConfigurationException(String.format("Invalid SAML active key ID: '%s'. Couldn't find any matching keys.", activeKeyId));
+                        throw new InvalidIdentityZoneConfigurationException("Invalid SAML active key ID: '%s'. Couldn't find any matching keys.".formatted(activeKeyId));
                     }
 
                     for (Map.Entry<String, SamlKey> entry : samlConfig.getKeys().entrySet()) {
@@ -44,7 +44,7 @@ public class GeneralIdentityZoneConfigurationValidator implements IdentityZoneCo
                     }
                 }
             } catch (GeneralSecurityException ex) {
-                throw new InvalidIdentityZoneConfigurationException(String.format("There is a security problem with the SAML SP Key configuration for key '%s'.", currentKeyId), ex);
+                throw new InvalidIdentityZoneConfigurationException("There is a security problem with the SAML SP Key configuration for key '%s'.".formatted(currentKeyId), ex);
             }
 
             TokenPolicy tokenPolicy = config.getTokenPolicy();
@@ -91,7 +91,7 @@ public class GeneralIdentityZoneConfigurationValidator implements IdentityZoneCo
                 try {
                     Pattern.compile(UaaStringUtils.getCleanedUserControlString(uri));
                 } catch (PatternSyntaxException patternSyntaxException) {
-                    throw new InvalidIdentityZoneConfigurationException(String.format("Invalid value in %s: '%s'.", fieldName, uri), patternSyntaxException);
+                    throw new InvalidIdentityZoneConfigurationException("Invalid value in %s: '%s'.".formatted(fieldName, uri), patternSyntaxException);
                 }
             }
         }

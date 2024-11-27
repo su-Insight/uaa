@@ -113,7 +113,7 @@ class LimiterByCompoundKeyTest {
         }
 
         public boolean equals(Object o) {
-            return (o instanceof Params) && equals((Params) o);
+            return (o instanceof Params p) && equals(p);
         }
 
         public boolean equals(Params them) {

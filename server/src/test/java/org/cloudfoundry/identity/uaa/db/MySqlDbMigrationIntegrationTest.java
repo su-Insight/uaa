@@ -5,7 +5,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.lang.String.format;
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -103,7 +102,7 @@ public class MySqlDbMigrationIntegrationTest extends DbMigrationIntegrationTestP
         assertThat(tableNames, hasSize(greaterThan(0)));
         for (String tableName : tableNames) {
             int count = jdbcTemplate.queryForObject(checkPrimaryKeyExists, Integer.class, jdbcTemplate.getDataSource().getConnection().getCatalog(), tableName);
-            assertThat(format("%s is missing primary key", tableName), count, greaterThanOrEqualTo(1));
+            assertThat("%s is missing primary key".formatted(tableName), count, greaterThanOrEqualTo(1));
         }
     }
 }

@@ -63,11 +63,10 @@ public class LdapLoginAuthenticationManager extends ExternalLoginAuthenticationM
     @Override
     protected MultiValueMap<String, String> getUserAttributes(UserDetails request) {
         MultiValueMap<String, String> result = super.getUserAttributes(request);
-        logger.debug(String.format("Mapping custom attributes for origin:%s and zone:%s", getOrigin(), IdentityZoneHolder.get().getId()));
+        logger.debug("Mapping custom attributes for origin:%s and zone:%s".formatted(getOrigin(), IdentityZoneHolder.get().getId()));
         if (getProviderProvisioning() != null) {
             IdentityProvider provider = getProviderProvisioning().retrieveByOrigin(getOrigin(), IdentityZoneHolder.get().getId());
-            if (request instanceof ExtendedLdapUserDetails) {
-                ExtendedLdapUserDetails ldapDetails = (ExtendedLdapUserDetails) request;
+            if (request instanceof ExtendedLdapUserDetails ldapDetails) {
                 LdapIdentityProviderDefinition ldapIdentityProviderDefinition = ObjectUtils.castInstance(provider.getConfig(), LdapIdentityProviderDefinition.class);
                 Map<String, Object> providerMappings = ldapIdentityProviderDefinition.getAttributeMappings();
                 for (Map.Entry<String, Object> entry : providerMappings.entrySet()) {
@@ -76,13 +75,13 @@ public class LdapLoginAuthenticationManager extends ExternalLoginAuthenticationM
                         String[] values = ldapDetails.getAttribute((String) entry.getValue(), false);
                         if (values != null && values.length > 0) {
                             result.put(key, Arrays.asList(values));
-                            logger.debug(String.format("Mappcustom attribute key:%s and value:%s", key, result.get(key)));
+                            logger.debug("Mappcustom attribute key:%s and value:%s".formatted(key, result.get(key)));
                         }
                     }
                 }
             }
         } else {
-            logger.debug(String.format("Did not find custom attribute configuration for origin:%s and zone:%s", getOrigin(), IdentityZoneHolder.get().getId()));
+            logger.debug("Did not find custom attribute configuration for origin:%s and zone:%s".formatted(getOrigin(), IdentityZoneHolder.get().getId()));
         }
         return result;
     }
@@ -103,8 +102,7 @@ public class LdapLoginAuthenticationManager extends ExternalLoginAuthenticationM
         Set<String> result = new HashSet<>();
         authorities = new LinkedList(authorities != null ? authorities : emptyList());
         for (GrantedAuthority a : authorities) {
-            if (a instanceof LdapAuthority) {
-                LdapAuthority la = (LdapAuthority) a;
+            if (a instanceof LdapAuthority la) {
                 String[] groupNames = la.getAttributeValues("cn");
                 if (groupNames != null) {
                     result.addAll(Arrays.asList(groupNames));

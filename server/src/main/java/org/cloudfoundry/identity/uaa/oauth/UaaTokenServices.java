@@ -849,12 +849,12 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
                 );
         if (claims.containsKey(AUTHORITIES)) {
             Object authoritiesFromClaims = claims.get(AUTHORITIES);
-            if (authoritiesFromClaims instanceof String) {
-                authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) authoritiesFromClaims);
+            if (authoritiesFromClaims instanceof String string) {
+                authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(string);
             }
-            if (authoritiesFromClaims instanceof Collection) {
+            if (authoritiesFromClaims instanceof Collection<?> collection) {
                 authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils
-                        .collectionToCommaDelimitedString((Collection<?>) authoritiesFromClaims));
+                        .collectionToCommaDelimitedString(collection));
             }
         }
 

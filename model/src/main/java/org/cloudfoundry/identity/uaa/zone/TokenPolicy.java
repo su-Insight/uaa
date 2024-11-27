@@ -149,7 +149,7 @@ public class TokenPolicy {
     public void setRefreshTokenFormat(String refreshTokenFormat) {
         if (TokenConstants.TokenFormat.fromStringValue(refreshTokenFormat) == null) {
             List<String> validFormats = TokenConstants.TokenFormat.getStringValues();
-            String message = String.format("Invalid refresh token format %s. Acceptable values are: %s", refreshTokenFormat, validFormats.toString());
+            String message = "Invalid refresh token format %s. Acceptable values are: %s".formatted(refreshTokenFormat, validFormats.toString());
             throw new IllegalArgumentException(message);
         }
         this.refreshTokenFormat = refreshTokenFormat.toLowerCase();

@@ -140,8 +140,8 @@ public class UaaRequestMatcherTests {
         matcher.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON.toString()));
         assertTrue(matcher
                 .matches(request("/somePath",
-                        String.format("%s,%s", MediaType.APPLICATION_JSON.toString(),
-                                MediaType.APPLICATION_XML.toString()))));
+                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
+                        MediaType.APPLICATION_XML.toString()))));
     }
 
     @Test
@@ -152,8 +152,8 @@ public class UaaRequestMatcherTests {
                 MediaType.APPLICATION_FORM_URLENCODED.toString()));
         assertTrue(matcher
                 .matches(request("/somePath",
-                        String.format("%s,%s", MediaType.APPLICATION_JSON.toString(),
-                                MediaType.APPLICATION_XML.toString()))));
+                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
+                        MediaType.APPLICATION_XML.toString()))));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class UaaRequestMatcherTests {
         matcher.setHeaders(Collections.singletonMap("Authorization", Collections.singletonList("Basic")));
         MockHttpServletRequest testRequest = request(
                 "/somePath",
-                String.format("%s,%s", MediaType.APPLICATION_JSON.toString(),
+                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
                         MediaType.APPLICATION_XML.toString()));
         testRequest.addHeader("Authorization", "Basic abc");
         assertTrue(matcher
@@ -175,7 +175,7 @@ public class UaaRequestMatcherTests {
         matcher.setHeaders(Collections.singletonMap("Authorization", Collections.singletonList("Basic")));
         MockHttpServletRequest testRequest = request(
                 "/somePath",
-                String.format("%s,%s", MediaType.APPLICATION_JSON.toString(),
+                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
                         MediaType.APPLICATION_XML.toString()));
         assertFalse(matcher
                 .matches(testRequest));
@@ -189,7 +189,7 @@ public class UaaRequestMatcherTests {
         matcher.setHeaders(configMap);
         MockHttpServletRequest testRequest = request(
                 "/somePath",
-                String.format("%s,%s", MediaType.APPLICATION_JSON.toString(),
+                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
                         MediaType.APPLICATION_XML.toString()));
         testRequest.addHeader("Authorization", "Basic abc");
         assertFalse(matcher
@@ -204,7 +204,7 @@ public class UaaRequestMatcherTests {
         matcher.setHeaders(configMap);
         MockHttpServletRequest testRequest = request(
                 "/somePath",
-                String.format("%s,%s", MediaType.APPLICATION_JSON.toString(),
+                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
                         MediaType.APPLICATION_XML.toString()));
         testRequest.addHeader("Authorization", "non matching header value");
         assertFalse(matcher

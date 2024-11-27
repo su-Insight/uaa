@@ -66,7 +66,7 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
                         newsubdomain = potentialsubdomain;
                     }
                 }
-                logger.debug(String.format("Updating zone id:%s; old subdomain: %s; new subdomain: %s;", dupZone.getId(), dupZone.getSubdomain(), newsubdomain));
+                logger.debug("Updating zone id:%s; old subdomain: %s; new subdomain: %s;".formatted(dupZone.getId(), dupZone.getSubdomain(), newsubdomain));
                 dupZone.setSubdomain(newsubdomain);
                 dupZone = updateIdentityZone(dupZone, jdbcTemplate);
                 zones.put(newsubdomain, Collections.singletonList(dupZone));
@@ -75,7 +75,7 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
         for (IdentityZone zone : identityZones) {
             String subdomain = zone.getSubdomain();
             if (StringUtils.hasText(subdomain) && !subdomain.toLowerCase().equals(subdomain)) {
-                logger.debug(String.format("Lowercasing zone subdomain for id:%s; old subdomain: %s; new subdomain: %s;", zone.getId(), zone.getSubdomain(), zone.getSubdomain().toLowerCase()));
+                logger.debug("Lowercasing zone subdomain for id:%s; old subdomain: %s; new subdomain: %s;".formatted(zone.getId(), zone.getSubdomain(), zone.getSubdomain().toLowerCase()));
                 zone.setSubdomain(subdomain.toLowerCase());
                 updateIdentityZone(zone, jdbcTemplate);
             }
