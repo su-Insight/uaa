@@ -56,7 +56,7 @@ public class DisableIdTokenResponseTypeFilter extends OncePerRequestFilter {
     }
 
     protected boolean applyPath(String path) {
-        if (paths == null || paths.size() == 0 || path == null) {
+        if (paths == null || paths.isEmpty() || path == null) {
             return false;
         }
         AntPathMatcher matcher = new AntPathMatcher();

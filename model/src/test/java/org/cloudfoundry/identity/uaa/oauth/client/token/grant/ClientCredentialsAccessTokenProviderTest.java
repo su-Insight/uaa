@@ -30,9 +30,9 @@ public class ClientCredentialsAccessTokenProviderTest {
     @Rule
     public ExpectedException expected = ExpectedException.none();
 
-    private MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    private final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-    private ClientCredentialsAccessTokenProvider provider = new ClientCredentialsAccessTokenProvider() {
+    private final ClientCredentialsAccessTokenProvider provider = new ClientCredentialsAccessTokenProvider() {
         @Override
         protected OAuth2AccessToken retrieveToken(AccessTokenRequest request, OAuth2ProtectedResourceDetails resource,
                 MultiValueMap<String, String> form, HttpHeaders headers) {

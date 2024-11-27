@@ -36,7 +36,7 @@ import java.util.Date;
 
 public class SessionResetFilter extends OncePerRequestFilter {
 
-    private static Logger logger = LoggerFactory.getLogger(SessionResetFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionResetFilter.class);
 
     private final RedirectStrategy strategy;
     private final String redirectUrl;

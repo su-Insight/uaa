@@ -44,7 +44,7 @@ public class IdentityZoneConfigurationBootstrap implements InitializingBean {
 
     private final IdentityZoneProvisioning provisioning;
     private boolean selfServiceLinksEnabled = true;
-    private String homeRedirect = null;
+    private String homeRedirect;
     private Map<String, Object> selfServiceLinks;
     private List<String> logoutRedirectWhitelist;
     private String logoutRedirectParameterName;
@@ -56,14 +56,14 @@ public class IdentityZoneConfigurationBootstrap implements InitializingBean {
     private String samlSpPrivateKey;
     private String samlSpPrivateKeyPassphrase;
     private String samlSpCertificate;
-    private boolean disableSamlInResponseToCheck = false;
+    private boolean disableSamlInResponseToCheck;
     private boolean samlWantAssertionSigned = true;
     private boolean samlRequestSigned = true;
 
     private Map<String, Map<String, String>> samlKeys;
     private String activeKeyId;
 
-    private boolean idpDiscoveryEnabled = false;
+    private boolean idpDiscoveryEnabled;
     private boolean accountChooserEnabled;
 
     private UserConfig defaultUserConfig;

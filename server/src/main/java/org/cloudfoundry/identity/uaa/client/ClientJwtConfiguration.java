@@ -71,12 +71,18 @@ public class ClientJwtConfiguration implements Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         if (o instanceof ClientJwtConfiguration) {
             ClientJwtConfiguration that = (ClientJwtConfiguration) o;
-            if (!Objects.equals(jwksUri, that.jwksUri)) return false;
+            if (!Objects.equals(jwksUri, that.jwksUri)) {
+                return false;
+            }
             if (jwkSet != null && that.jwkSet != null) {
                 return jwkSet.getKeys().equals(that.jwkSet.getKeys());
             } else {

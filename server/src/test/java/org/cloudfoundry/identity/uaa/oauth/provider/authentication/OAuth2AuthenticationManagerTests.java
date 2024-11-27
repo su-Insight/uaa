@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
  */
 public class OAuth2AuthenticationManagerTests {
 
-    private OAuth2AuthenticationManager manager = new OAuth2AuthenticationManager();
+    private final OAuth2AuthenticationManager manager = new OAuth2AuthenticationManager();
 
-    private ResourceServerTokenServices tokenServices = mock(ResourceServerTokenServices.class);
+    private final ResourceServerTokenServices tokenServices = mock(ResourceServerTokenServices.class);
 
-    private Authentication userAuthentication = new UsernamePasswordAuthenticationToken("marissa", "koala");
+    private final Authentication userAuthentication = new UsernamePasswordAuthenticationToken("marissa", "koala");
 
-    private OAuth2Authentication authentication = new OAuth2Authentication(
+    private final OAuth2Authentication authentication = new OAuth2Authentication(
             RequestTokenFactory.createOAuth2Request("foo", false, Set.of("uaa")), userAuthentication);
 
     {

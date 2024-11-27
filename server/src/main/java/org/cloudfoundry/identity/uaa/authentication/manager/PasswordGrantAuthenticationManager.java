@@ -51,10 +51,10 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class PasswordGrantAuthenticationManager implements AuthenticationManager, ApplicationEventPublisherAware {
 
-    private DynamicZoneAwareAuthenticationManager zoneAwareAuthzAuthenticationManager;
-    private IdentityProviderProvisioning identityProviderProvisioning;
-    private RestTemplateConfig restTemplateConfig;
-    private ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager;
+    private final DynamicZoneAwareAuthenticationManager zoneAwareAuthzAuthenticationManager;
+    private final IdentityProviderProvisioning identityProviderProvisioning;
+    private final RestTemplateConfig restTemplateConfig;
+    private final ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager;
     private ApplicationEventPublisher eventPublisher;
 
     public PasswordGrantAuthenticationManager(DynamicZoneAwareAuthenticationManager zoneAwareAuthzAuthenticationManager, final @Qualifier("identityProviderProvisioning") IdentityProviderProvisioning identityProviderProvisioning, RestTemplateConfig restTemplateConfig, ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager) {
@@ -136,7 +136,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
             }
         } else if (allowedProviders.contains(OriginKeys.LDAP)) {
             loginHintToUse = new UaaLoginHint(OriginKeys.LDAP);
-        } else if (allowedProviders.size() == 0) {
+        } else if (allowedProviders.isEmpty()) {
             throw new BadCredentialsException("The client is not authorized for any identity provider that supports password grant.");
         } else {
             throw new BadCredentialsException("The client is authorized for multiple identity providers that support password grant and could not determine which identity provider to use.");
@@ -205,8 +205,9 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         List<String> promptsToInclude = new ArrayList<>();
         if (prompts != null) {
             for (Prompt prompt : prompts) {
-                if ("username".equals(prompt.getName()) || "password".equals(prompt.getName()) || "passcode".equals(prompt.getName()))
+                if ("username".equals(prompt.getName()) || "password".equals(prompt.getName()) || "passcode".equals(prompt.getName())) {
                     continue;
+                }
                 promptsToInclude.add(prompt.getName());
             }
         }

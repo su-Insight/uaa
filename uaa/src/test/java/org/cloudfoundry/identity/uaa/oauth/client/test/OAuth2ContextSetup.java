@@ -52,15 +52,15 @@ import java.util.Map;
  *
  * Scope: Test
  */
-public class OAuth2ContextSetup extends TestWatchman {
+public final class OAuth2ContextSetup extends TestWatchman {
 
-    private static Log logger = LogFactory.getLog(OAuth2ContextSetup.class);
+    private static final Log logger = LogFactory.getLog(OAuth2ContextSetup.class);
 
     private OAuth2ProtectedResourceDetails resource;
 
     private OAuth2RestTemplate client;
 
-    private Map<String, String> parameters = new LinkedHashMap<String, String>();
+    private Map<String, String> parameters = new LinkedHashMap<>();
 
     private final RestTemplateHolder clientHolder;
 
@@ -289,9 +289,6 @@ public class OAuth2ContextSetup extends TestWatchman {
                         public void evaluate() {
                         }
                     }, list, target).evaluate();
-                }
-                catch (AssumptionViolatedException e) {
-                    throw e;
                 }
                 catch (RuntimeException e) {
                     throw e;

@@ -122,7 +122,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
     private final OidcMetadataFetcher oidcMetadataFetcher;
 
     private TokenEndpointBuilder tokenEndpointBuilder;
-    private KeyInfoService keyInfoService;
+    private final KeyInfoService keyInfoService;
 
     //origin is per thread during execution
     private final ThreadLocal<String> origin = ThreadLocal.withInitial(() -> "unknown");
@@ -279,7 +279,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
         if (whiteList.isEmpty()) {
             return oidcAuthorities;
         } else {
-            Set<String> authorities = oidcAuthorities.stream().map(s -> s.getAuthority()).collect(Collectors.toSet());
+            Set<String> authorities = oidcAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
             Set<String> result = retainAllMatches(authorities, whiteList);
             if (ObjectUtils.isNotEmpty(result)) {
                 logger.debug(String.format("White listed external OIDC groups:'%s'", result));
@@ -470,10 +470,10 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
     @Override
     protected UaaUser userAuthenticated(Authentication request, UaaUser userFromRequest, UaaUser userFromDb) {
         boolean userModified = false;
-        boolean is_invitation_acceptance = isAcceptedInvitationAuthentication();
+        boolean isInvitationAcceptance = isAcceptedInvitationAuthentication();
         String email = userFromRequest.getEmail();
         logger.debug("ExternalOAuth user authenticated:" + email);
-        if (is_invitation_acceptance) {
+        if (isInvitationAcceptance) {
             String invitedUserId = (String) RequestContextHolder.currentRequestAttributes().getAttribute("user_id", RequestAttributes.SCOPE_SESSION);
             logger.debug("ExternalOAuth user accepted invitation, user_id:" + invitedUserId);
             userFromDb = new UaaUser(getUserDatabase().retrieveUserPrototypeById(invitedUserId));
@@ -547,11 +547,13 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
 
     protected String getResponseType(AbstractExternalOAuthIdentityProviderDefinition config) {
         if (RawExternalOAuthIdentityProviderDefinition.class.isAssignableFrom(config.getClass())) {
-            if ("signed_request".equals(config.getResponseType()))
-                return "signed_request"; else if ("code".equals(config.getResponseType()))
+            if ("signed_request".equals(config.getResponseType())) {
+                return "signed_request";
+            } else if ("code".equals(config.getResponseType())) {
                 return "code";
-            else
+            } else {
                 return "token";
+            }
         } else if (OIDCIdentityProviderDefinition.class.isAssignableFrom(config.getClass())) {
             return "id_token";
         } else {
@@ -677,7 +679,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
     protected List<SignatureVerifier> getTokenKeyForUaaOrigin() {
         Map<String, KeyInfo> keys = keyInfoService.getKeys();
         return keys.values().stream()
-                .map(i -> i.getVerifier())
+                .map(KeyInfo::getVerifier)
                 .collect(Collectors.toList());
 
     }

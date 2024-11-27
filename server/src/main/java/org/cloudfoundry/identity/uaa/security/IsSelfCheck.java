@@ -33,7 +33,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class IsSelfCheck {
 
-    private static Logger logger = LoggerFactory.getLogger(IsSelfCheck.class);
+    private static final Logger logger = LoggerFactory.getLogger(IsSelfCheck.class);
 
     private final RevocableTokenProvisioning tokenProvisioning;
 

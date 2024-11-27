@@ -51,9 +51,9 @@ public class InMemoryTokenStore implements TokenStore {
 
     private int flushInterval = DEFAULT_FLUSH_INTERVAL;
 
-    private AuthenticationKeyGenerator authenticationKeyGenerator = null;
+    private AuthenticationKeyGenerator authenticationKeyGenerator;
 
-    private AtomicInteger flushCounter = new AtomicInteger(0);
+    private final AtomicInteger flushCounter = new AtomicInteger(0);
 
     private final Object lockObj = new Object();
 
@@ -249,12 +249,12 @@ public class InMemoryTokenStore implements TokenStore {
 
     public Collection<OAuth2AccessToken> findTokensByClientIdAndUserName(String clientId, String userName) {
         Collection<OAuth2AccessToken> result = userNameToAccessTokenStore.get(getApprovalKey(clientId, userName));
-        return result != null ? Collections.<OAuth2AccessToken>unmodifiableCollection(result) : Collections.emptySet();
+        return result != null ? Collections.unmodifiableCollection(result) : Collections.emptySet();
     }
 
     public Collection<OAuth2AccessToken> findTokensByClientId(String clientId) {
         Collection<OAuth2AccessToken> result = clientIdToAccessTokenStore.get(clientId);
-        return result != null ? Collections.<OAuth2AccessToken>unmodifiableCollection(result) : Collections.emptySet();
+        return result != null ? Collections.unmodifiableCollection(result) : Collections.emptySet();
     }
 
     private void flush() {

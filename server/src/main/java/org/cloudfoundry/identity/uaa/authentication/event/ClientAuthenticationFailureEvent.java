@@ -20,8 +20,8 @@ import org.springframework.security.core.AuthenticationException;
 
 public class ClientAuthenticationFailureEvent extends AbstractUaaAuthenticationEvent {
 
-    private String clientId;
-    private AuthenticationException ex;
+    private final String clientId;
+    private final AuthenticationException ex;
 
     public ClientAuthenticationFailureEvent(Authentication authentication, AuthenticationException ex, String zoneId) {
         super(authentication, zoneId);

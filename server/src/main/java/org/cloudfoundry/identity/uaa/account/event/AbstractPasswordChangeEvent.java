@@ -24,9 +24,9 @@ import org.springframework.security.core.Authentication;
  */
 abstract class AbstractPasswordChangeEvent extends AbstractUaaEvent {
 
-    private UaaUser user;
+    private final UaaUser user;
 
-    private String message;
+    private final String message;
 
     public AbstractPasswordChangeEvent(String message, UaaUser user, Authentication authentication, String zoneId) {
         super(authentication, zoneId);

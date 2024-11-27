@@ -18,11 +18,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class OAuth2AuthenticationEntryPointTests {
 
-    private OAuth2AuthenticationEntryPoint entryPoint = new OAuth2AuthenticationEntryPoint();
+    private final OAuth2AuthenticationEntryPoint entryPoint = new OAuth2AuthenticationEntryPoint();
 
-    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
 
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
 
     {
         entryPoint.setRealmName("foo");

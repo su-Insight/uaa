@@ -51,8 +51,8 @@ public class DisableUserManagementSecurityFilter extends OncePerRequestFilter {
         regex1 += "|^/reset_password.do";
     }
 
-    private Pattern pattern1 = Pattern.compile(regex1);
-    private List<String> methods1 = Arrays.asList("GET", "POST", "PUT", "DELETE");
+    private final Pattern pattern1 = Pattern.compile(regex1);
+    private final List<String> methods1 = Arrays.asList("GET", "POST", "PUT", "DELETE");
 
     public DisableUserManagementSecurityFilter(
             final IdentityProviderProvisioning identityProviderProvisioning,

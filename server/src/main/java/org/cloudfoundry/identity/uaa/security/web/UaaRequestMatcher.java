@@ -37,9 +37,9 @@ public final class UaaRequestMatcher implements RequestMatcher, BeanNameAware {
 
     private HttpMethod method;
 
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, String> parameters = new HashMap<>();
 
-    private Map<String, List<String>> expectedHeaders = new HashMap<String, List<String>>();
+    private final Map<String, List<String>> expectedHeaders = new HashMap<>();
 
     private String name;
 
@@ -177,12 +177,8 @@ public final class UaaRequestMatcher implements RequestMatcher, BeanNameAware {
             return false;
         }
 
-        if (!((this.expectedHeaders == null && other.expectedHeaders == null) || (this.expectedHeaders != null && this.expectedHeaders
-                .equals(other.expectedHeaders)))) {
-            return false;
-        }
-
-        return true;
+        return !!((this.expectedHeaders == null && other.expectedHeaders == null) || (this.expectedHeaders != null && this.expectedHeaders
+                .equals(other.expectedHeaders)));
     }
 
     @Override
@@ -203,7 +199,7 @@ public final class UaaRequestMatcher implements RequestMatcher, BeanNameAware {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("UAAPath(" + name + ") ['").append(path).append("'");
+        sb.append("UAAPath(").append(name).append(") ['").append(path).append("'");
 
         if (accepts != null) {
             sb.append(", ").append(accepts);

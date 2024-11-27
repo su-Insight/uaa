@@ -28,7 +28,7 @@ public class ExtendedLdapUserMapperTest {
     private DirContextAdapter adapter;
     private ExtendedLdapUserMapper mapper;
     private Collection<GrantedAuthority> authorities;
-    private String UAA_MANAGER;
+    private String uaaManager;
 
     @Before
     public void setUp() {

@@ -63,7 +63,7 @@ public class CheckTokenEndpoint implements InitializingBean {
         this.timeService = timeService;
     }
 
-    private Boolean allowQueryString = null;
+    private Boolean allowQueryString;
 
     public boolean isAllowQueryString() {
         return allowQueryString == null ? true : allowQueryString;

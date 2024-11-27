@@ -33,9 +33,9 @@ public class AuthorizationCodeAccessTokenProviderTests {
     @Rule
     public ExpectedException expected = ExpectedException.none();
 
-    private MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    private final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-    private AuthorizationCodeAccessTokenProvider provider = new AuthorizationCodeAccessTokenProvider() {
+    private final AuthorizationCodeAccessTokenProvider provider = new AuthorizationCodeAccessTokenProvider() {
         @Override
         protected OAuth2AccessToken retrieveToken(AccessTokenRequest request, OAuth2ProtectedResourceDetails resource,
                 MultiValueMap<String, String> form, HttpHeaders headers) {
@@ -44,7 +44,7 @@ public class AuthorizationCodeAccessTokenProviderTests {
         }
     };
 
-    private AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
+    private final AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
 
     @Test
     public void supportsResource() {

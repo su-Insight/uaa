@@ -37,9 +37,9 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 public class AccountSavingAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final Rfc6265CookieProcessor rfc6265CookieProcessor;
-    private SavedRequestAwareAuthenticationSuccessHandler redirectingHandler;
-    private CurrentUserCookieFactory currentUserCookieFactory;
-    private Logger logger = LoggerFactory.getLogger(AccountSavingAuthenticationSuccessHandler.class);
+    private final SavedRequestAwareAuthenticationSuccessHandler redirectingHandler;
+    private final CurrentUserCookieFactory currentUserCookieFactory;
+    private final Logger logger = LoggerFactory.getLogger(AccountSavingAuthenticationSuccessHandler.class);
 
     @Autowired
     public AccountSavingAuthenticationSuccessHandler(SavedRequestAwareAuthenticationSuccessHandler redirectingHandler, CurrentUserCookieFactory currentUserCookieFactory) {

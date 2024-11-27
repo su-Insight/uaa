@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ClientMetadataAdminEndpointDocs extends AdminClientCreator {
 
-    private AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator(8);
+    private final AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator(8);
     private MultitenantJdbcClientDetailsService clients;
     private String adminClientTokenWithClientsWrite;
     private String adminUserToken;
@@ -50,7 +50,7 @@ class ClientMetadataAdminEndpointDocs extends AdminClientCreator {
     private static final String SHOW_ON_HOME_PAGE_DESC = "Flag to control visibility on home page";
     private static final String APP_LAUNCH_URL_DESC = "URL to which the app is linked to";
     private static final String APP_ICON_DESC = "Base64 encoded image file";
-    private Snippet responseFields = responseFields(
+    private final Snippet responseFields = responseFields(
             fieldWithPath("clientId").description(CLIENT_ID_DESC),
             fieldWithPath("showOnHomePage").description(SHOW_ON_HOME_PAGE_DESC),
             fieldWithPath("appLaunchUrl").description(APP_LAUNCH_URL_DESC),

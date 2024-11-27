@@ -213,7 +213,7 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
         if (results == null) {
             return;
         }
-        if (memberId.size() == 0) {
+        if (memberId.isEmpty()) {
             return;
         }
         if (!IdentityZoneHolder.get().getId().equals(zoneId)) {
@@ -232,7 +232,7 @@ public class JdbcScimGroupMembershipManager implements ScimGroupMembershipManage
                 memberList = memberList.subList(size, memberList.size());
             }
         } catch (EmptyResultDataAccessException ex) {
-            groups = Collections.EMPTY_LIST;
+            groups = Collections.emptyList();
         }
 
         List<String> nextLevel = new ArrayList<>();

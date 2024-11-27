@@ -39,12 +39,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ScimExternalGroupMappingsEndpointDocs extends EndpointDocs {
-    private final String GROUP_ID_DESC = "The globally unique group ID";
-    private final String ORIGIN_DESC = "Unique alias of the identity provider";
-    private final String SCHEMAS_DESC = "`[\"urn:scim:schemas:core:1.0\"]`";
-    private final String VERSION_DESC = "The version of the group entity";
-    private final String DISPLAY_NAME_DESC = "The identifier specified upon creation of the group, unique within the identity zone";
-    private final String EXTERNAL_GROUP_DESCRIPTION = "The identifier for the group in external identity provider that needs to be mapped to internal UAA groups";
+    private static final String GROUP_ID_DESC = "The globally unique group ID";
+    private static final String ORIGIN_DESC = "Unique alias of the identity provider";
+    private static final String SCHEMAS_DESC = "`[\"urn:scim:schemas:core:1.0\"]`";
+    private static final String VERSION_DESC = "The version of the group entity";
+    private static final String DISPLAY_NAME_DESC = "The identifier specified upon creation of the group, unique within the identity zone";
+    private static final String EXTERNAL_GROUP_DESCRIPTION = "The identifier for the group in external identity provider that needs to be mapped to internal UAA groups";
 
     private static final HeaderDescriptor AUTHORIZATION_HEADER = headerWithName("Authorization").description("Bearer token with authorization for `scim.write` scope");
     private static final HeaderDescriptor IDENTITY_ZONE_ID_HEADER = headerWithName(IdentityZoneSwitchingFilter.HEADER).description("May include this header to administer another zone if using `zones.<zoneId>.admin` or `uaa.admin` scope against the default UAA zone.").optional();

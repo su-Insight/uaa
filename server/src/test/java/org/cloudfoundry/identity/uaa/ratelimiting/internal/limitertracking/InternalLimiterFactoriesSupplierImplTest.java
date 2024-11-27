@@ -89,7 +89,7 @@ class InternalLimiterFactoriesSupplierImplTest extends AbstractExceptionTestSupp
                 Expected.from(all).withGlobal()); // 4 - Global all
     }
 
-    static class Expected {
+    static final class Expected {
         private final LimiterMapping limiterMapping;
         private String callerID;
         private String windowType;

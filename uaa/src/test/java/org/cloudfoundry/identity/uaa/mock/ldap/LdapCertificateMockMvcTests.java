@@ -37,8 +37,8 @@ class LdapCertificateMockMvcTests {
     private static final int LDAP_VALID_LDAPS_PORT = 33637;
     private static final int LDAP_EXPIRED_LDAPS_PORT = LDAP_VALID_LDAPS_PORT + 1;
 
-    private static File LDAP_ROOT_DIRECTORY_EXPIRED;
-    private static File LDAP_ROOT_DIRECTORY_VALID;
+    private static File ldapRootDirectoryExpired;
+    private static File ldapRootDirectoryValid;
     private static InMemoryLdapServer validLdapCertServer;
     private static InMemoryLdapServer expiredLdapCertServer;
     private MockMvcUtils.IdentityZoneCreationResult trustedCertZone;
@@ -55,8 +55,8 @@ class LdapCertificateMockMvcTests {
         File expiredKeystore = new File(classLoader.getResource("certs/expired-self-signed-ldap-cert.jks").getFile());
         File validKeystore = new File(classLoader.getResource("certs/valid-self-signed-ldap-cert.jks").getFile());
         RandomValueStringGenerator generator = new RandomValueStringGenerator();
-        LDAP_ROOT_DIRECTORY_VALID = new File(System.getProperty("java.io.tmpdir"), generator.generate());
-        LDAP_ROOT_DIRECTORY_EXPIRED = new File(System.getProperty("java.io.tmpdir"), generator.generate());
+        ldapRootDirectoryValid = new File(System.getProperty("java.io.tmpdir"), generator.generate());
+        ldapRootDirectoryExpired = new File(System.getProperty("java.io.tmpdir"), generator.generate());
 
         validLdapCertServer = InMemoryLdapServer.startLdapWithTls(LDAP_VALID_LDAP_PORT, LDAP_VALID_LDAPS_PORT, validKeystore);
         expiredLdapCertServer = InMemoryLdapServer.startLdapWithTls(LDAP_EXPIRED_LDAP_PORT, LDAP_EXPIRED_LDAPS_PORT, expiredKeystore);
@@ -66,8 +66,8 @@ class LdapCertificateMockMvcTests {
     static void stopLdapsServers() {
         validLdapCertServer.stop();
         expiredLdapCertServer.stop();
-        FileSystemUtils.deleteRecursively(LDAP_ROOT_DIRECTORY_VALID);
-        FileSystemUtils.deleteRecursively(LDAP_ROOT_DIRECTORY_EXPIRED);
+        FileSystemUtils.deleteRecursively(ldapRootDirectoryValid);
+        FileSystemUtils.deleteRecursively(ldapRootDirectoryExpired);
     }
 
     @BeforeEach

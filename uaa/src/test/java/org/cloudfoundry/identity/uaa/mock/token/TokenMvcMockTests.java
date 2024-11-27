@@ -172,7 +172,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @TestPropertySource(properties = {"uaa.url=https://localhost:8080/uaa", "jwt.token.refresh.format=jwt"})
 public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
-    private String BADSECRET = "badsecret";
+    private String badsecret = "badsecret";
     protected AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
 
     @BeforeEach
@@ -479,9 +479,9 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         Map<String, String> error = JsonUtils.readValue(response, new TypeReference<Map<String, String>>() {
         });
-        String error_description = error.get("error_description");
-        assertNotNull(error_description);
-        assertEquals("password change required", error_description);
+        String errorDescription = error.get("error_description");
+        assertNotNull(errorDescription);
+        assertEquals("password change required", errorDescription);
 
     }
 
@@ -3060,13 +3060,13 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
         });
-        String access_token = (String) bodyMap.get("access_token");
-        assertNotNull(access_token);
+        String accessToken = (String) bodyMap.get("access_token");
+        assertNotNull(accessToken);
 
         clientDetailsService.addClientSecret(clientId, "newSecret", IdentityZoneHolder.get().getId());
         mockMvc.perform(post("/check_token")
                 .header("Authorization", "Basic " + new String(Base64.encode("app:appclientsecret".getBytes())))
-                .param("token", access_token))
+                .param("token", accessToken))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -3091,12 +3091,12 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
             Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
             });
-            String access_token = (String) bodyMap.get("access_token");
-            assertNotNull(access_token);
+            String accessToken = (String) bodyMap.get("access_token");
+            assertNotNull(accessToken);
 
             mockMvc.perform(post("/check_token")
                     .header("Authorization", "Basic " + new String(Base64.encode("app:appclientsecret".getBytes())))
-                    .param("token", access_token))
+                    .param("token", accessToken))
                     .andExpect(status().isOk());
         }
     }
@@ -3118,15 +3118,15 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
         });
-        String access_token = (String) bodyMap.get("access_token");
-        assertNotNull(access_token);
+        String accessToken = (String) bodyMap.get("access_token");
+        assertNotNull(accessToken);
 
         clientDetailsService.addClientSecret(clientId, "newSecret", IdentityZoneHolder.get().getId());
         clientDetailsService.deleteClientSecret(clientId, IdentityZoneHolder.get().getId());
 
         MockHttpServletResponse response = mockMvc.perform(post("/check_token")
                 .header("Authorization", "Basic " + new String(Base64.encode("app:appclientsecret".getBytes())))
-                .param("token", access_token))
+                .param("token", accessToken))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse();
 
@@ -3153,15 +3153,15 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
         });
-        String access_token = (String) bodyMap.get("access_token");
-        assertNotNull(access_token);
+        String accessToken = (String) bodyMap.get("access_token");
+        assertNotNull(accessToken);
 
 
         clientDetailsService.deleteClientSecret(clientId, IdentityZoneHolder.get().getId());
 
         mockMvc.perform(post("/check_token")
                 .header("Authorization", "Basic " + new String(Base64.encode("app:appclientsecret".getBytes())))
-                .param("token", access_token))
+                .param("token", accessToken))
                 .andExpect(status().isOk());
     }
 
@@ -3184,12 +3184,12 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
 
         Map<String, Object> bodyMap = JsonUtils.readValue(body, new TypeReference<Map<String, Object>>() {
         });
-        String access_token = (String) bodyMap.get("access_token");
-        assertNotNull(access_token);
+        String accessToken = (String) bodyMap.get("access_token");
+        assertNotNull(accessToken);
 
         mockMvc.perform(post("/check_token")
                 .header("Authorization", "Basic " + new String(Base64.encode("app:appclientsecret".getBytes())))
-                .param("token", access_token))
+                .param("token", accessToken))
                 .andExpect(status().isOk());
     }
 
@@ -3953,12 +3953,12 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
         List<String> openid = (List<String>) result.get(ClaimConstants.SCOPE);
         assertThat(openid, containsInAnyOrder("openid"));
 
-        Integer auth_time = (Integer) result.get(ClaimConstants.AUTH_TIME);
-        assertNotNull(auth_time);
-        Long previous_logon_time = (Long) result.get(ClaimConstants.PREVIOUS_LOGON_TIME);
-        assertNotNull(previous_logon_time);
+        Integer authTime = (Integer) result.get(ClaimConstants.AUTH_TIME);
+        assertNotNull(authTime);
+        Long previousLogonTime = (Long) result.get(ClaimConstants.PREVIOUS_LOGON_TIME);
+        assertNotNull(previousLogonTime);
         Long dbPreviousLogonTime = webApplicationContext.getBean(UaaUserDatabase.class).retrieveUserById(userId).getPreviousLogonTime();
-        assertEquals(dbPreviousLogonTime, previous_logon_time);
+        assertEquals(dbPreviousLogonTime, previousLogonTime);
 
     }
 
@@ -4075,7 +4075,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
     private void tryLoginWithWrongSecretInHeader(String clientId) throws Exception {
         mockMvc.perform(post("/oauth/token")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .with(httpBasic(clientId, BADSECRET))
+                .with(httpBasic(clientId, badsecret))
                 .param("grant_type", "client_credentials")
         )
         .andExpect(status().isUnauthorized())
@@ -4088,7 +4088,7 @@ public class TokenMvcMockTests extends AbstractTokenMockMvcTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("grant_type", "client_credentials")
                 .param("client_id", clientId)
-                .param("client_secret", BADSECRET)
+                .param("client_secret", badsecret)
         )
         .andExpect(status().isUnauthorized())
                 .andReturn().getResponse().getContentAsString();

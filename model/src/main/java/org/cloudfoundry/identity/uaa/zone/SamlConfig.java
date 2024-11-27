@@ -41,7 +41,7 @@ public class SamlConfig {
     private String activeKeyId;
     private Map<String, SamlKey> keys = new HashMap<>();
     private String entityID;
-    private boolean disableInResponseToCheck = false;
+    private boolean disableInResponseToCheck;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getEntityID() {

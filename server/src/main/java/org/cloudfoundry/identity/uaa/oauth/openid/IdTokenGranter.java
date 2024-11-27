@@ -22,8 +22,8 @@ import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYP
 public class IdTokenGranter {
     private static final Logger logger = LoggerFactory.getLogger(IdTokenGranter.class);
 
-    private final String REQUIRED_OPENID_SCOPE = "openid";
-    private final List<String> GRANT_TYPES_THAT_MAY_GET_ID_TOKENS = Lists.newArrayList(
+    private static final String REQUIRED_OPENID_SCOPE = "openid";
+    private final List<String> grantTypesThatMayGetIdTokens = Lists.newArrayList(
             GRANT_TYPE_AUTHORIZATION_CODE,
             GRANT_TYPE_PASSWORD,
             GRANT_TYPE_IMPLICIT,
@@ -40,7 +40,7 @@ public class IdTokenGranter {
             Set<String> requestedScopes,
             String requestedGrantType
     ) {
-        if (null == user || !GRANT_TYPES_THAT_MAY_GET_ID_TOKENS.contains(requestedGrantType)) {
+        if (null == user || !grantTypesThatMayGetIdTokens.contains(requestedGrantType)) {
             return false;
         }
 

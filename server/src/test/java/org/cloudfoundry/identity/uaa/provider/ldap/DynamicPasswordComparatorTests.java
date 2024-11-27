@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 public class DynamicPasswordComparatorTests {
-    private DynamicPasswordComparator comparator = new DynamicPasswordComparator();
+    private final DynamicPasswordComparator comparator = new DynamicPasswordComparator();
     private static final String[] passwords = {
             "test", //plaintext
             "{sha}qUqP5cyxm6YcTAhz05Hph5gvu9M=", //SHA

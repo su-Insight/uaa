@@ -436,7 +436,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
         Set<String> requestedScopes = userAuthenticationData.scopes;
         String grantType = userAuthenticationData.grantType;
 
-        if (null == requestedScopes || requestedScopes.size() == 0) {
+        if (null == requestedScopes || requestedScopes.isEmpty()) {
             logger.debug("No scopes were granted");
             throw new InvalidTokenException("No scopes were granted");
         }

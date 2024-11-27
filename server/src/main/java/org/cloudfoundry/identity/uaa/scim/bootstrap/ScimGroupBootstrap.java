@@ -46,9 +46,9 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     private Map<String, String> groups;
 
-    private Map<String, Set<String>> groupMembers;
+    private final Map<String, Set<String>> groupMembers;
 
-    private Map<String, Set<String>> groupAdmins;
+    private final Map<String, Set<String>> groupAdmins;
 
     private final ScimGroupProvisioning scimGroupProvisioning;
 
@@ -56,10 +56,10 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     private final ScimUserProvisioning scimUserProvisioning;
 
-    private Map<String, String> defaultUserGroups = Collections.EMPTY_MAP;
-    private Map<String, String> nonDefaultUserGroups = Collections.EMPTY_MAP;
+    private Map<String, String> defaultUserGroups = Collections.emptyMap();
+    private Map<String, String> nonDefaultUserGroups = Collections.emptyMap();
 
-    private Map<String, String> configuredGroups = Collections.EMPTY_MAP;
+    private Map<String, String> configuredGroups = Collections.emptyMap();
 
     private static final String USER_BY_NAME_FILTER = "username eq \"%s\"";
 
@@ -114,7 +114,7 @@ public class ScimGroupBootstrap implements InitializingBean {
      */
     public void setGroups(Map<String, String> groups) {
         if (groups == null) {
-            groups = Collections.EMPTY_MAP;
+            groups = Collections.emptyMap();
         }
         groups.entrySet().forEach(e -> {
             if (!StringUtils.hasText(e.getValue())) {
@@ -127,7 +127,7 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     public void setDefaultUserGroups(Set<String> defaultUserGroups) {
         if (defaultUserGroups == null) {
-            defaultUserGroups = Collections.EMPTY_SET;
+            defaultUserGroups = Collections.emptySet();
         }
         this.defaultUserGroups = defaultUserGroups.stream()
                 .collect(collector);
@@ -137,7 +137,7 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     public void setNonDefaultUserGroups(Set<String> nonDefaultUserGroups) {
         if (nonDefaultUserGroups == null) {
-            nonDefaultUserGroups = Collections.EMPTY_SET;
+            nonDefaultUserGroups = Collections.emptySet();
         }
         this.nonDefaultUserGroups = nonDefaultUserGroups.stream()
                 .collect(collector);
@@ -190,7 +190,7 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        List<ScimGroup> groupInfos = groups.keySet().stream().filter(n -> StringUtils.hasText(n)).map(n -> getOrCreateGroup(n)).collect(Collectors.toList());
+        List<ScimGroup> groupInfos = groups.keySet().stream().filter(n -> StringUtils.hasText(n)).map(this::getOrCreateGroup).collect(Collectors.toList());
         for (int i = 0; i < groupInfos.size(); i++) {
             ScimGroup g = groupInfos.get(i);
             String description = groups.get(g.getDisplayName());
@@ -231,7 +231,7 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     private List<ScimGroupMember> getMembers(Set<String> names) {
         if (names == null || names.isEmpty()) {
-            return Collections.<ScimGroupMember>emptyList();
+            return Collections.emptyList();
         }
 
         List<ScimGroupMember> members = new ArrayList<>();

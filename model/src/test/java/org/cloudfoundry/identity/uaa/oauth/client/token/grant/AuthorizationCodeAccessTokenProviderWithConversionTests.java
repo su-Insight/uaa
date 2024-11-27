@@ -131,9 +131,9 @@ public class AuthorizationCodeAccessTokenProviderWithConversionTests {
 
     private ClientHttpRequestFactory requestFactory;
 
-    private AuthorizationCodeAccessTokenProvider provider = new AuthorizationCodeAccessTokenProvider();
+    private final AuthorizationCodeAccessTokenProvider provider = new AuthorizationCodeAccessTokenProvider();
 
-    private AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
+    private final AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
 
     private void setUpRestTemplate() {
         provider.setRequestFactory(requestFactory);
@@ -213,7 +213,7 @@ public class AuthorizationCodeAccessTokenProviderWithConversionTests {
     }
 
     private Matcher<Throwable> hasCause(final Matcher<?> matcher) {
-        return new TypeSafeMatcher<Throwable>() {
+        return new TypeSafeMatcher<>() {
             public void describeTo(Description description) {
                 description.appendText("exception matching ");
                 description.appendDescriptionOf(matcher);

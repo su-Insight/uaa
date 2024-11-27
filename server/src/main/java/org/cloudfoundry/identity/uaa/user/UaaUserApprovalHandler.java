@@ -133,7 +133,7 @@ public class UaaUserApprovalHandler implements UserApprovalHandler {
     public AuthorizationRequest updateAfterApproval(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
         Map<String, String> approvalParameters = authorizationRequest.getApprovalParameters();
         String flag = approvalParameters.get(OAuth2Utils.USER_OAUTH_APPROVAL);
-        boolean approved = flag != null && flag.toLowerCase().equals("true");
+        boolean approved = flag != null && "true".equals(flag.toLowerCase());
         authorizationRequest.setApproved(approved);
         return authorizationRequest;
     }

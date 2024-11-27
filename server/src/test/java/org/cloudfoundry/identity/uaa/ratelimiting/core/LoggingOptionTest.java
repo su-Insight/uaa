@@ -125,7 +125,7 @@ class LoggingOptionTest {
 
     private static class MockLogger implements Consumer<String> {
         String value;
-        int calls = 0;
+        int calls;
 
         @Override
         public void accept(String value) {

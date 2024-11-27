@@ -49,14 +49,14 @@ public class AccessTokenProviderChainTests {
 
     private BaseOAuth2ProtectedResourceDetails resource;
 
-    private DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken("FOO");
+    private final DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken("FOO");
 
-    private DefaultOAuth2AccessToken refreshedToken = new DefaultOAuth2AccessToken("BAR");
+    private final DefaultOAuth2AccessToken refreshedToken = new DefaultOAuth2AccessToken("BAR");
 
-    private UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken("foo", "bar",
+    private final UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken("foo", "bar",
             Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
 
-    private ClientTokenServices clientTokenServices = Mockito.mock(ClientTokenServices.class);
+    private final ClientTokenServices clientTokenServices = Mockito.mock(ClientTokenServices.class);
 
     public AccessTokenProviderChainTests() {
         resource = new BaseOAuth2ProtectedResourceDetails();
@@ -329,8 +329,7 @@ public class AccessTokenProviderChainTests {
         doReturn(refreshedAccessToken).when(accessTokenProvider).refreshAccessToken(
                 any(OAuth2ProtectedResourceDetails.class), any(OAuth2RefreshToken.class),
                 any(AccessTokenRequest.class));
-        AccessTokenProviderChain chain = new AccessTokenProviderChain(Arrays.asList(accessTokenProvider));
-        return chain;
+        return new AccessTokenProviderChain(Arrays.asList(accessTokenProvider));
     }
 
     private class StubAccessTokenProvider implements AccessTokenProvider {

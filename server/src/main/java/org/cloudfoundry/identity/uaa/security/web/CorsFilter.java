@@ -86,8 +86,8 @@ public class CorsFilter extends OncePerRequestFilter {
     public static final String X_REQUESTED_WITH = "X-Requested-With";
     public static final String WILDCARD = "*";
 
-    private CorsConfiguration xhrConfiguration = new CorsConfiguration();
-    private CorsConfiguration defaultConfiguration = new CorsConfiguration();
+    private final CorsConfiguration xhrConfiguration = new CorsConfiguration();
+    private final CorsConfiguration defaultConfiguration = new CorsConfiguration();
     private final IdentityZoneManager identityZoneManager;
     private final boolean enforceSystemZoneSettings;
 
@@ -250,7 +250,7 @@ public class CorsFilter extends OncePerRequestFilter {
     protected List<String> splitCommaDelimitedString(String s) {
         String[] list = s.replace(" ", "").split(",");
         if (list == null || list.length == 0) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return Arrays.asList(list);
     }

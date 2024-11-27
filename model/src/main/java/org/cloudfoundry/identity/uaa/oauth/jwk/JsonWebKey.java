@@ -137,8 +137,12 @@ public class JsonWebKey {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof JsonWebKey)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof JsonWebKey)) {
+            return false;
+        }
         JsonWebKey that = (JsonWebKey) o;
         return getKid() != null ? (getKid().equals(that.getKid())) : (that.getKid() == null && getKeyProperties().equals(that.getKeyProperties()));
     }

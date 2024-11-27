@@ -17,11 +17,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class OAuth2AccessDeniedHandlerTests {
 
-    private OAuth2AccessDeniedHandler handler = new OAuth2AccessDeniedHandler();
+    private final OAuth2AccessDeniedHandler handler = new OAuth2AccessDeniedHandler();
 
-    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
 
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
 
     @Test
     public void testHandleWithJson() throws Exception {

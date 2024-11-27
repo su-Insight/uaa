@@ -45,13 +45,13 @@ import org.springframework.web.client.RestTemplate;
  */
 public class RemoteTokenServicesTests {
 
-    private RemoteTokenServices services = new RemoteTokenServices();
+    private final RemoteTokenServices services = new RemoteTokenServices();
 
-    private Map<String, Object> body = new HashMap<String, Object>();
+    private final Map<String, Object> body = new HashMap<>();
 
-    private HttpHeaders headers = new HttpHeaders();
+    private final HttpHeaders headers = new HttpHeaders();
 
-    private HttpStatus status = HttpStatus.OK;
+    private final HttpStatus status = HttpStatus.OK;
 
     public RemoteTokenServicesTests() {
         services.setClientId("client");
@@ -66,7 +66,7 @@ public class RemoteTokenServicesTests {
             @Override
             public <T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
                     Class<T> responseType, Object... uriVariables) throws RestClientException {
-                return new ResponseEntity<T>((T) body, headers, status);
+                return new ResponseEntity<>((T) body, headers, status);
             }
         });
     }

@@ -14,9 +14,9 @@ public class TokenRevocationEvent extends AbstractUaaEvent {
 
     private static final long serialVersionUID = 8857827649236565674L;
 
-    private String userId;
-    private String clientId;
-    private String zoneId;
+    private final String userId;
+    private final String clientId;
+    private final String zoneId;
 
     public TokenRevocationEvent(String userId, String clientId, String zoneId, Authentication authentication) {
         super(authentication, IdentityZoneHolder.getCurrentZoneId());
@@ -28,8 +28,12 @@ public class TokenRevocationEvent extends AbstractUaaEvent {
     @Override
     public AuditEvent getAuditEvent() {
         HashMap<String, String> data = new HashMap<>();
-        if (clientId != null) data.put("ClientID", clientId);
-        if (userId != null) data.put("UserID", userId);
+        if (clientId != null) {
+            data.put("ClientID", clientId);
+        }
+        if (userId != null) {
+            data.put("UserID", userId);
+        }
         data.put("ZoneID", zoneId);
 
         return createAuditRecord("clientId:" + clientId + ",userId:" + userId, AuditEventType.TokenRevocationEvent, getOrigin(getAuthentication()), JsonUtils.writeValueAsString(data));

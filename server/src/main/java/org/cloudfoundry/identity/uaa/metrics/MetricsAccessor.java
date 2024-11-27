@@ -16,7 +16,7 @@
 package org.cloudfoundry.identity.uaa.metrics;
 
 class MetricsAccessor {
-    private static ThreadLocal<RequestMetric> current = ThreadLocal.withInitial(() -> null);
+    private static final ThreadLocal<RequestMetric> current = ThreadLocal.withInitial(() -> null);
 
     protected static RequestMetric getCurrent() {
         return current.get();

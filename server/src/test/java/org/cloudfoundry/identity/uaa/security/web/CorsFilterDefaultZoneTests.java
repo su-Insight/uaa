@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.*;
 
 class CorsFilterDefaultZoneTests {
-    private List<String> logEvents = new ArrayList<>();
+    private final List<String> logEvents = new ArrayList<>();
     private AbstractAppender appender;
     IdentityZoneManager mockIdentityZoneManager = mock(IdentityZoneManager.class);
 
@@ -408,10 +408,10 @@ class CorsFilterDefaultZoneTests {
         CorsFilter corsFilter = new CorsFilter(mockIdentityZoneManager, false);
 
         List<String> allowedUris =
-                new ArrayList<String>(Arrays.asList(new String[]{"^/uaa/userinfo(", "^/uaa/logout.do$"}));
+                new ArrayList<>(Arrays.asList(new String[]{"^/uaa/userinfo(", "^/uaa/logout.do$"}));
         corsFilter.getXhrConfiguration().setAllowedUris(allowedUris);
 
-        List<String> allowedOrigins = new ArrayList<String>(Arrays.asList(new String[]{"example.com$"}));
+        List<String> allowedOrigins = new ArrayList<>(Arrays.asList(new String[]{"example.com$"}));
         corsFilter.getXhrConfiguration().setAllowedOrigins(allowedOrigins);
 
         corsFilter.initialize();
@@ -444,7 +444,7 @@ class CorsFilterDefaultZoneTests {
         corsFilter.getXhrConfiguration().setAllowedUris(allowedUris);
         corsFilter.getDefaultConfiguration().setAllowedUris(allowedUris);
 
-        List<String> allowedOrigins = new ArrayList<String>(Collections.singletonList("example.com$"));
+        List<String> allowedOrigins = new ArrayList<>(Collections.singletonList("example.com$"));
         corsFilter.getXhrConfiguration().setAllowedOrigins(allowedOrigins);
         corsFilter.getDefaultConfiguration().setAllowedOrigins(allowedOrigins);
 

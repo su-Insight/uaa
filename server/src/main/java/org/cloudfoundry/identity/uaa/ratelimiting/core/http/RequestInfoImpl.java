@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.identity.uaa.ratelimiting.util.LazyEnumerationToList;
 
-public class RequestInfoImpl implements RequestInfo {
+public final class RequestInfoImpl implements RequestInfo {
     static final String NO_HTTP_SERVLET_REQUEST_TO_PROXY = "No HttpServletRequest to Proxy!";
 
     private final Map<String, LazyEnumerationToList<String>> headerLists = new HashMap<>();

@@ -58,7 +58,7 @@ public class AuthzAuthenticationFilter implements Filter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     private List<String> parameterNames = Collections.emptyList();
 
@@ -164,7 +164,7 @@ public class AuthzAuthenticationFilter implements Filter {
 
                     @Override
                     public String getHeader(String name) {
-                        if (name.equalsIgnoreCase("accept")) {
+                        if ("accept".equalsIgnoreCase(name)) {
                             return "application/json";
                         } else {
                             return ((HttpServletRequest) getRequest()).getHeader(name);

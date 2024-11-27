@@ -96,7 +96,7 @@ public class TokenKeyEndpoint {
     }
 
     private boolean unmodifiedResource(String eTag, String lastModified) {
-        return !eTag.equals("NaN") && lastModified.equals(eTag);
+        return !"NaN".equals(eTag) && lastModified.equals(eTag);
     }
 
     /**

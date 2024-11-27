@@ -121,8 +121,9 @@ public class PasswordComparisonAuthenticator extends AbstractLdapAuthenticator {
         } catch (NamingException e) {
             throw new BadCredentialsException("Bad credentials", e);
         }
-        if (!match)
+        if (!match) {
             throw new BadCredentialsException("Bad credentials");
+        }
         return user;
     }
 

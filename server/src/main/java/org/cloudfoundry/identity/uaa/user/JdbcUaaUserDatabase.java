@@ -35,7 +35,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class JdbcUaaUserDatabase implements UaaUserDatabase {
 
-    private static Logger logger = LoggerFactory.getLogger(JdbcUaaUserDatabase.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbcUaaUserDatabase.class);
 
     private static final String USER_FIELDS = "id,username,password,email,givenName,familyName,created,lastModified,authorities,origin,external_id,verified,identity_zone_id,salt,passwd_lastmodified,phoneNumber,legacy_verification_behavior,passwd_change_required,last_logon_success_time,previous_logon_success_time ";
 
@@ -65,7 +65,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
     private final RowMapper<UaaUser> mapper = new UaaUserRowMapper();
     private final RowMapper<UaaUserPrototype> minimalMapper = new UaaUserPrototypeRowMapper();
     private final RowMapper<UserInfo> userInfoMapper = new UserInfoRowMapper();
-    private String quotedGroupsIdentifier;
+    private final String quotedGroupsIdentifier;
 
     RowMapper<UaaUser> getMapper() {
         return mapper;
@@ -149,7 +149,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
     public UaaUser retrieveUserByEmail(String email, String origin) throws UsernameNotFoundException {
         String sql = caseInsensitive ? DEFAULT_CASE_INSENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY : DEFAULT_CASE_SENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY;
         List<UaaUser> results = jdbcTemplate.query(sql, mapper, email.toLowerCase(Locale.US), true, origin, identityZoneManager.getCurrentIdentityZoneId());
-        if (results.size() == 0) {
+        if (results.isEmpty()) {
             return null;
         } else if (results.size() == 1) {
             return results.get(0);
@@ -162,7 +162,7 @@ public class JdbcUaaUserDatabase implements UaaUserDatabase {
     public UaaUserPrototype retrieveUserPrototypeByEmail(String email, String origin) throws UsernameNotFoundException {
         String sql = caseInsensitive ? DEFAULT_CASE_INSENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY : DEFAULT_CASE_SENSITIVE_USER_BY_EMAIL_AND_ORIGIN_QUERY;
         List<UaaUserPrototype> results = jdbcTemplate.query(sql, minimalMapper, email.toLowerCase(Locale.US), true, origin, identityZoneManager.getCurrentIdentityZoneId());
-        if (results.size() == 0) {
+        if (results.isEmpty()) {
             return null;
         } else if (results.size() == 1) {
             return results.get(0);

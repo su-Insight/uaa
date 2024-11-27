@@ -156,7 +156,9 @@ public abstract class UaaUrlUtils {
             hostnameFromPattern = currentToken;
             break;
         }
-        if (hostnameFromPattern == null) return false;
+        if (hostnameFromPattern == null) {
+            return false;
+        }
 
         int colonLocation = hostnameFromPattern.indexOf(':');
         if (colonLocation > 0) {

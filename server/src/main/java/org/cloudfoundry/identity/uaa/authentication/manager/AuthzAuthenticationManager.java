@@ -40,13 +40,13 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AuthzAuthenticationManager implements AuthenticationManager, ApplicationEventPublisherAware {
-    private HttpSession httpSession;
+    private final HttpSession httpSession;
     private final SanitizedLogFactory.SanitizedLog logger = SanitizedLogFactory.getLog(getClass());
     private final PasswordEncoder encoder;
     private final UaaUserDatabase userDatabase;
     private ApplicationEventPublisher eventPublisher;
     private AccountLoginPolicy accountLoginPolicy;
-    private IdentityProviderProvisioning providerProvisioning;
+    private final IdentityProviderProvisioning providerProvisioning;
 
     private String origin;
     private boolean allowUnverifiedUsers = true;

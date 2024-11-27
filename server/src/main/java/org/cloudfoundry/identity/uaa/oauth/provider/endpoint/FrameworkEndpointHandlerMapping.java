@@ -37,7 +37,7 @@ public class FrameworkEndpointHandlerMapping extends RequestMappingHandlerMappin
 
     private String approvalParameter = OAuth2Utils.USER_OAUTH_APPROVAL;
 
-    private Set<String> paths = new HashSet<>();
+    private final Set<String> paths = new HashSet<>();
 
     private String prefix;
 
@@ -47,11 +47,11 @@ public class FrameworkEndpointHandlerMapping extends RequestMappingHandlerMappin
     public void setPrefix(String prefix) {
         if (!StringUtils.hasText(prefix)) {
             prefix = "";
-        }
-        else
+        } else {
             while (prefix.endsWith("/")) {
                 prefix = prefix.substring(0, prefix.lastIndexOf("/"));
             }
+        }
         this.prefix = prefix;
     }
 

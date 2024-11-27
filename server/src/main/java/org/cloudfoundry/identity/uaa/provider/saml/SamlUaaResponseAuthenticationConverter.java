@@ -17,6 +17,7 @@ import org.cloudfoundry.identity.uaa.web.UaaSavedRequestAwareAuthenticationSucce
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.beans.IdentityZoneManager;
 import org.opensaml.saml.saml2.core.Assertion;
+import org.opensaml.saml.saml2.core.AuthnStatement;
 import org.opensaml.saml.saml2.core.Response;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -115,7 +116,7 @@ public class SamlUaaResponseAuthenticationConverter
         UaaUser user = userManager.createIfMissing(initialPrincipal, addNew, getMappedAuthorities(
                 idp, samlAuthorities), userAttributes);
 
-        List<String> sessionIndexes = assertions.stream().flatMap(assertion -> assertion.getAuthnStatements().stream().filter(Objects::nonNull).map(s -> s.getSessionIndex()).filter(Objects::nonNull)).toList();
+        List<String> sessionIndexes = assertions.stream().flatMap(assertion -> assertion.getAuthnStatements().stream().filter(Objects::nonNull).map(AuthnStatement::getSessionIndex).filter(Objects::nonNull)).toList();
         UaaAuthentication authentication = new UaaAuthentication(
                 new UaaSamlPrincipal(user, sessionIndexes),
                 authenticationToken.getCredentials(),

@@ -44,12 +44,12 @@ class InternalLimiterTest {
         RecordingInternalLimiter B = new RecordingInternalLimiter( KEY_B, 0, false );
         RecordingInternalLimiter Z = new RecordingInternalLimiter( KEY_Z, 1, false );
 
-        List<RecordingInternalLimiter> AZ = List.of(A, Z);
-        List<RecordingInternalLimiter> BZ = List.of(B, Z);
+        List<RecordingInternalLimiter> az = List.of(A, Z);
+        List<RecordingInternalLimiter> bz = List.of(B, Z);
 
-        assertFalse(checkList(AZ));
-        assertTrue(checkList(BZ));
-        assertTrue(checkList(AZ));
+        assertFalse(checkList(az));
+        assertTrue(checkList(bz));
+        assertTrue(checkList(az));
 
         assertEquals("Aok Zok Z-- A-- Bno Aok Zno", compressCalls());
     }
@@ -60,12 +60,12 @@ class InternalLimiterTest {
         RecordingInternalLimiter B = new RecordingInternalLimiter( KEY_B, 200, true );
         RecordingInternalLimiter Z = new RecordingInternalLimiter( KEY_Z, 398, true );
 
-        List<RecordingInternalLimiter> AZ = List.of(A, Z);
-        List<RecordingInternalLimiter> BZ = List.of(B, Z);
+        List<RecordingInternalLimiter> az = List.of(A, Z);
+        List<RecordingInternalLimiter> bz = List.of(B, Z);
 
         Coordinator coordinator = new Coordinator( 2, 9, IllegalStateException::new );
-        run("1", coordinator, AZ);
-        run("2", coordinator, BZ);
+        run("1", coordinator, az);
+        run("2", coordinator, bz);
 
         coordinator.waitForReady();
         coordinator.start();
@@ -79,8 +79,9 @@ class InternalLimiterTest {
     // End of stream:          B2no A1ok Z1ok Z1-- A1-- A1ok Z1ok Z1-- A1-- A1ok Z1ok Z1-- A1-- A1ok Z1no
     private static class StreamProcessor {
         private final List<String> stream;
-        int currentOffsetIndex = 0;
-        String currentNode, nextNode;
+        int currentOffsetIndex;
+        String currentNode;
+        String nextNode;
 
         public StreamProcessor(String compressCalls) {
             stream = new LinkedList<>( Arrays.asList(compressCalls.split(" ")) );
@@ -95,7 +96,7 @@ class InternalLimiterTest {
                 fail("node[" + offsetIndex + "] not 4 characters: " + node + "\n  stream: " + stream);
             }
             String last2char = node.substring(2);
-            if (!last2char.equals("ok") && !last2char.equals("no") && !last2char.equals("--")) {
+            if (!"ok".equals(last2char) && !"no".equals(last2char) && !"--".equals(last2char)) {
                 fail("node[" + offsetIndex + "] bad last 2 characters: " + node + "\n  stream: " + stream);
             }
             return node;
@@ -169,7 +170,9 @@ class InternalLimiterTest {
         private static final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
         private final long timeout;
         private final Function<String, ? extends RuntimeException> awaitFailureExceptionMapper;
-        private final CountDownLatch ready, start, done;
+        private final CountDownLatch ready;
+        private final CountDownLatch start;
+        private final CountDownLatch done;
 
         public Coordinator(int expectedThreads, int timeoutSecs, Function<String, ? extends RuntimeException> awaitFailureExceptionMapper) {
             if (timeoutSecs > 300) { // 5 mins

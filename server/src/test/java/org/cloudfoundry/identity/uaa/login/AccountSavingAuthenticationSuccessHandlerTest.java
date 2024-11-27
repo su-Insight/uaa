@@ -88,7 +88,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
                 "username",
                 "password",
                 "email",
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 "given name",
                 "family name",
                 yesterday,
@@ -102,7 +102,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
         );
 
         UaaPrincipal principal = new UaaPrincipal(user);
-        UaaAuthentication authentication = new UaaAuthentication(principal, null, Collections.EMPTY_LIST, null, true, System.currentTimeMillis());
+        UaaAuthentication authentication = new UaaAuthentication(principal, null, Collections.emptyList(), null, true, System.currentTimeMillis());
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setSecure(secure);
@@ -153,7 +153,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
                 "username",
                 "password",
                 "email",
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 "given name",
                 "family name",
                 yesterday,
@@ -167,7 +167,7 @@ public class AccountSavingAuthenticationSuccessHandlerTest {
         );
 
         UaaPrincipal principal = new UaaPrincipal(user);
-        UaaAuthentication authentication = new UaaAuthentication(principal, null, Collections.EMPTY_LIST, null, true, System.currentTimeMillis());
+        UaaAuthentication authentication = new UaaAuthentication(principal, null, Collections.emptyList(), null, true, System.currentTimeMillis());
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setSecure(secure);

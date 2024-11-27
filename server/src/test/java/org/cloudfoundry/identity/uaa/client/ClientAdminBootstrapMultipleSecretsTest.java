@@ -26,11 +26,11 @@ public class ClientAdminBootstrapMultipleSecretsTest {
     private ClientAdminBootstrap clientAdminBootstrap;
     private Map<String, Map<String, Object>> clients;
     private UaaClientDetails verifyClient;
-    private String clientId = "client1";
+    private final String clientId = "client1";
     private String password1;
     private String password2;
-    private String oldOneSecret = "oldOneSecret";
-    private String oldTwoSecret = "oldTwoSecret";
+    private final String oldOneSecret = "oldOneSecret";
+    private final String oldTwoSecret = "oldTwoSecret";
     private MultitenantClientServices clientRegistrationService;
     private UaaClientDetails oneSecretClient;
     private UaaClientDetails twoSecretClient;

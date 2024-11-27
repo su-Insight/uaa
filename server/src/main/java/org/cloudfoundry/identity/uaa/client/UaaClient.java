@@ -41,11 +41,7 @@ public class UaaClient extends User {
 
     public boolean isAllowPublic() {
         Object allowPublic = Optional.ofNullable(additionalInformation).map(e -> e.get(ClientConstants.ALLOW_PUBLIC)).orElse(Collections.emptyMap());
-        if ((allowPublic instanceof String && Boolean.TRUE.toString().equalsIgnoreCase((String) allowPublic)) || (allowPublic instanceof Boolean && Boolean.TRUE.equals(allowPublic))) {
-            return true;
-        } else {
-            return false;
-        }
+        return (allowPublic instanceof String && Boolean.TRUE.toString().equalsIgnoreCase((String) allowPublic)) || (allowPublic instanceof Boolean && Boolean.TRUE.equals(allowPublic));
     }
 
     public Map<String, Object> getAdditionalInformation() {

@@ -35,7 +35,7 @@ import java.sql.Connection;
  */
 public class InitialPreDatabaseVersioningSchemaCreator extends BaseJavaMigration {
 
-    private String type;
+    private final String type;
 
     public InitialPreDatabaseVersioningSchemaCreator(String type) {
         this.type = type;

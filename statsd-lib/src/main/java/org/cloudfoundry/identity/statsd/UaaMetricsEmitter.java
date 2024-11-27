@@ -47,14 +47,14 @@ import static java.util.Optional.ofNullable;
 import static org.springframework.util.ReflectionUtils.findMethod;
 
 public class UaaMetricsEmitter {
-    private static Logger logger = LoggerFactory.getLogger(UaaMetricsEmitter.class);
+    private static final Logger logger = LoggerFactory.getLogger(UaaMetricsEmitter.class);
 
     private static final RequestMetricSummary MISSING_METRICS = new RequestMetricSummary(0L, 0d, 0L, 0d, 0L, 0d, 0L, 0d);
     private final StatsDClient statsDClient;
     private final MBeanServerConnection server;
     private final MetricsUtils metricsUtils;
     private boolean notificationsEnabled;
-    private ConcurrentMap<String, Long> delta = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Long> delta = new ConcurrentHashMap<>();
 
     public UaaMetricsEmitter(MetricsUtils metricsUtils, StatsDClient statsDClient, MBeanServerConnection server) {
         this.statsDClient = statsDClient;

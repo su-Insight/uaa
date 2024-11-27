@@ -43,7 +43,7 @@ public class PkceValidationServiceTest {
     @Before
     public void createPkceValidationService() throws Exception {
         pkceValidationService = new PkceValidationService(createPkceVerifiers());
-        authorizeRequestParameters = new HashMap<String, String>();
+        authorizeRequestParameters = new HashMap<>();
     }
 
     @Test
@@ -148,7 +148,7 @@ public class PkceValidationServiceTest {
     private Map<String, PkceVerifier> createPkceVerifiers() {
         S256PkceVerifier s256PkceVerifier = new S256PkceVerifier();
         PlainPkceVerifier plainPkceVerifier = new PlainPkceVerifier();
-        Map<String, PkceVerifier> pkceVerifiers = new HashMap<String, PkceVerifier>();
+        Map<String, PkceVerifier> pkceVerifiers = new HashMap<>();
         pkceVerifiers.put(plainPkceVerifier.getCodeChallengeMethod(), plainPkceVerifier);
         pkceVerifiers.put(s256PkceVerifier.getCodeChallengeMethod(), s256PkceVerifier);
         return pkceVerifiers;

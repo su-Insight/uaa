@@ -176,9 +176,9 @@ public class DefaultOAuth2SerializationServiceTests {
         assertTrue(result instanceof OAuth2Exception);
     }
 
-    private static class MapBuilder {
+    private static final class MapBuilder {
 
-        private HashMap<String, String> map = new HashMap<String, String>();
+        private HashMap<String, String> map = new HashMap<>();
 
         private MapBuilder(String key, String value) {
             map.put(key, value);

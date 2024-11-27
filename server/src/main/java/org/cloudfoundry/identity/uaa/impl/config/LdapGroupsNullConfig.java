@@ -19,7 +19,7 @@ public class LdapGroupsNullConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             String ldapGroupsFile = context.getEnvironment().getProperty("ldap.groups.file");
-            return ldapGroupsFile == null || ldapGroupsFile.equals("ldap/ldap-groups-null.xml");
+            return ldapGroupsFile == null || "ldap/ldap-groups-null.xml".equals(ldapGroupsFile);
         }
     }
 

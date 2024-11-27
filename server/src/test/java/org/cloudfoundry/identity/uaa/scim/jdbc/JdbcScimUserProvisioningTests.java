@@ -108,7 +108,7 @@ class JdbcScimUserProvisioningTests {
     @Autowired
     NamedParameterJdbcTemplate namedJdbcTemplate;
     private String joeEmail;
-    private final String JOE_NAME = "joe";
+    private static final String JOE_NAME = "joe";
 
     private SimpleSearchQueryConverter joinConverter;
     private SimpleSearchQueryConverter filterConverter;

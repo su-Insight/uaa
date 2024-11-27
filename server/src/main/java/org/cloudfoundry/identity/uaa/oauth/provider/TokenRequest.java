@@ -94,9 +94,15 @@ public class TokenRequest extends BaseRequest {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        if (!super.equals(obj)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
         TokenRequest other = (TokenRequest) obj;
         return Objects.equals(grantType, other.grantType);
     }

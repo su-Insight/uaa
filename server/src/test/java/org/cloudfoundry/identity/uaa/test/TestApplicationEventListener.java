@@ -19,7 +19,7 @@ import org.springframework.context.ApplicationListener;
 public class TestApplicationEventListener<T extends ApplicationEvent> extends TestApplicationEventHandler<T> implements ApplicationListener<T> {
 
     public static <K extends ApplicationEvent> TestApplicationEventListener<K> forEventClass(Class<K> eventType) {
-        return new TestApplicationEventListener<K>(eventType) {
+        return new TestApplicationEventListener<>(eventType) {
         };
     }
 

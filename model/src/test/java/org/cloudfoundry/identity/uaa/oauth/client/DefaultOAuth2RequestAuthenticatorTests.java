@@ -15,11 +15,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class DefaultOAuth2RequestAuthenticatorTests {
 
-    private DefaultOAuth2RequestAuthenticator authenticator = new DefaultOAuth2RequestAuthenticator();
+    private final DefaultOAuth2RequestAuthenticator authenticator = new DefaultOAuth2RequestAuthenticator();
 
-    private MockClientHttpRequest request = new MockClientHttpRequest();
+    private final MockClientHttpRequest request = new MockClientHttpRequest();
 
-    private DefaultOAuth2ClientContext context = new DefaultOAuth2ClientContext();
+    private final DefaultOAuth2ClientContext context = new DefaultOAuth2ClientContext();
 
     @Test(expected = AccessTokenRequiredException.class)
     public void missingAccessToken() {

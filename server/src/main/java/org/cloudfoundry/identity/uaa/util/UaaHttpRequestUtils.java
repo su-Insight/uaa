@@ -60,7 +60,7 @@ import static java.util.Arrays.stream;
 
 public abstract class UaaHttpRequestUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(UaaHttpRequestUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(UaaHttpRequestUtils.class);
 
     public static ClientHttpRequestFactory createRequestFactory(boolean skipSslValidation, int timeout) {
         return createRequestFactory(getClientBuilder(skipSslValidation, 10, 5, 0), timeout);

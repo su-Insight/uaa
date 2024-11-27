@@ -83,10 +83,10 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
     }
 
     private IdentityZone updateIdentityZone(IdentityZone identityZone, JdbcTemplate jdbcTemplate) {
-        String UPDATE_IDENTITY_ZONE_SQL = "update identity_zone set version=?,lastmodified=?,name=?,subdomain=?,description=? where id=?";
+        String updateIdentityZoneSql = "update identity_zone set version=?,lastmodified=?,name=?,subdomain=?,description=? where id=?";
 
         try {
-            jdbcTemplate.update(UPDATE_IDENTITY_ZONE_SQL, new PreparedStatementSetter() {
+            jdbcTemplate.update(updateIdentityZoneSql, new PreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps) throws SQLException {
                     ps.setInt(1, identityZone.getVersion() + 1);
@@ -105,9 +105,9 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
     }
 
     private IdentityZone retrieveIdentityZone(String id, JdbcTemplate jdbcTemplate) {
-        String IDENTITY_ZONE_BY_ID_QUERY = IDENTITY_ZONES_QUERY + "where id=?";
+        String identityZoneByIdQuery = IDENTITY_ZONES_QUERY + "where id=?";
         try {
-            return jdbcTemplate.queryForObject(IDENTITY_ZONE_BY_ID_QUERY, mapper, id);
+            return jdbcTemplate.queryForObject(identityZoneByIdQuery, mapper, id);
         } catch (EmptyResultDataAccessException x) {
             throw new ZoneDoesNotExistsException("Zone[" + id + "] not found.", x);
         }
@@ -133,7 +133,7 @@ public class V2_7_3__StoreSubDomainAsLowerCase extends BaseJavaMigration {
         }
     }
 
-    private RowMapper<IdentityZone> mapper = (rs, rowNum) -> {
+    private final RowMapper<IdentityZone> mapper = (rs, rowNum) -> {
         IdentityZone identityZone = new IdentityZone();
 
         identityZone.setId(rs.getString(1).trim());

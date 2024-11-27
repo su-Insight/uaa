@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class ObjectUtils {
+public final class ObjectUtils {
 
     private ObjectUtils() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

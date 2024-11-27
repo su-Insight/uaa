@@ -11,7 +11,7 @@ import java.util.Optional;
  * @deprecated Use {@link org.cloudfoundry.identity.uaa.zone.beans.IdentityZoneManager} instead, which still uses this class as a utility.
  */
 @Deprecated(since = "4.29.0")
-public class IdentityZoneHolder {
+public final class IdentityZoneHolder {
 
     private IdentityZoneHolder() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

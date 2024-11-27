@@ -52,7 +52,7 @@ public class SamlServiceProvider {
     @NotNull
     private String name;
     private SamlServiceProviderDefinition config;
-    private int version = 0;
+    private int version;
     private Date created = new Date();
     private Date lastModified = new Date();
     private boolean active = true;
@@ -161,46 +161,59 @@ public class SamlServiceProvider {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         SamlServiceProvider other = (SamlServiceProvider) obj;
         if (config == null) {
-            if (other.config != null)
+            if (other.config != null) {
                 return false;
-        } else if (!config.equals(other.config))
+            }
+        } else if (!config.equals(other.config)) {
             return false;
+        }
         if (created == null) {
-            if (other.created != null)
+            if (other.created != null) {
                 return false;
-        } else if (!created.equals(other.created))
+            }
+        } else if (!created.equals(other.created)) {
             return false;
+        }
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         if (lastModified == null) {
-            if (other.lastModified != null)
+            if (other.lastModified != null) {
                 return false;
-        } else if (!lastModified.equals(other.lastModified))
+            }
+        } else if (!lastModified.equals(other.lastModified)) {
             return false;
+        }
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         if (entityId == null) {
-            if (other.entityId != null)
+            if (other.entityId != null) {
                 return false;
-        } else if (!entityId.equals(other.entityId))
+            }
+        } else if (!entityId.equals(other.entityId)) {
             return false;
-        if (version != other.version)
-            return false;
-        return true;
+        }
+        return !(version != other.version);
     }
 
     @Override

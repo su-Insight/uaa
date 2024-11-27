@@ -43,7 +43,7 @@ public class CfAuthenticationTests {
     @Rule
     public ServerRunning serverRunning = ServerRunning.isRunning();
 
-    private UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
+    private final UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
 
     private MultiValueMap<String, String> params;
 
@@ -52,7 +52,7 @@ public class CfAuthenticationTests {
     @Before
     public void init() {
         ImplicitResourceDetails resource = testAccounts.getDefaultImplicitResource();
-        params = new LinkedMultiValueMap<String, String>();
+        params = new LinkedMultiValueMap<>();
         params.set("client_id", resource.getClientId());
         params.set("redirect_uri", resource.getRedirectUri(new DefaultAccessTokenRequest()));
         params.set("response_type", "token");

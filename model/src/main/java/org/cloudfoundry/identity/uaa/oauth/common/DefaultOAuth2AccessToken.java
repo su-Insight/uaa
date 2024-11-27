@@ -1,5 +1,6 @@
 package org.cloudfoundry.identity.uaa.oauth.common;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.TreeSet;
 @SuppressWarnings("serial")
 public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken {
 
+    @Serial
     private static final long serialVersionUID = -1301199046022198244L;
 
     private String value;
@@ -178,7 +180,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
 
     @Override
     public String toString() {
-        return String.valueOf(getValue());
+        return getValue();
     }
 
     public static OAuth2AccessToken valueOf(Map<String, String> tokenParams) {
@@ -187,7 +189,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
         if (tokenParams.containsKey(EXPIRES_IN)) {
             long expiration = 0;
             try {
-                expiration = Long.parseLong(String.valueOf(tokenParams.get(EXPIRES_IN)));
+                expiration = Long.parseLong(tokenParams.get(EXPIRES_IN));
             }
             catch (NumberFormatException e) {
                 // fall through...

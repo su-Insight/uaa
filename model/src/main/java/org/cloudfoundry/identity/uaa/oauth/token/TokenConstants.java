@@ -36,7 +36,7 @@ public class TokenConstants {
             return this.stringValue;
         }
 
-        static public TokenFormat fromStringValue(String stringValue) {
+        public static TokenFormat fromStringValue(String stringValue) {
             for (TokenFormat tokenFormat : TokenFormat.values()) {
                 if (tokenFormat.stringValue.equalsIgnoreCase(stringValue)) {
                     return tokenFormat;
@@ -45,7 +45,7 @@ public class TokenConstants {
             return null;
         }
 
-        static public List<String> getStringValues() {
+        public static List<String> getStringValues() {
             return Arrays.stream(TokenFormat.values()).map(TokenFormat::getStringValue).collect(Collectors.toList());
         }
     }

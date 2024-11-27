@@ -53,7 +53,7 @@ public final class UaaUserPrototype {
 
     private List<? extends GrantedAuthority> authorities;
 
-    private boolean verified = false;
+    private boolean verified;
 
     private boolean legacyVerificationBehavior;
 

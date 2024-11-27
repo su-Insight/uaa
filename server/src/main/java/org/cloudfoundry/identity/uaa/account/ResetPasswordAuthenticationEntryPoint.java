@@ -44,7 +44,7 @@ public class ResetPasswordAuthenticationEntryPoint implements AuthenticationEntr
 
             @Override
             public String getParameter(String name) {
-                if (name.equals("code")) {
+                if ("code".equals(name)) {
                     return (String) getAttribute(name);
                 }
                 return super.getParameter(name);

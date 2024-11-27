@@ -35,9 +35,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class UsernamePasswordExtractingAuthenticationManagerTests {
 
-    private AuthenticationManager delegate = Mockito.mock(AuthenticationManager.class);
+    private final AuthenticationManager delegate = Mockito.mock(AuthenticationManager.class);
 
-    private UsernamePasswordExtractingAuthenticationManager manager = new UsernamePasswordExtractingAuthenticationManager(
+    private final UsernamePasswordExtractingAuthenticationManager manager = new UsernamePasswordExtractingAuthenticationManager(
             delegate);
 
     @Before

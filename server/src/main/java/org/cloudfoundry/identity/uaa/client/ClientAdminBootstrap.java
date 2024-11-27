@@ -46,7 +46,7 @@ public class ClientAdminBootstrap implements
         ApplicationListener<ContextRefreshedEvent>,
         ApplicationEventPublisherAware {
 
-    private static Logger logger = LoggerFactory.getLogger(ClientAdminBootstrap.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientAdminBootstrap.class);
 
     private final PasswordEncoder passwordEncoder;
     private final MultitenantClientServices clientRegistrationService;
@@ -293,7 +293,9 @@ public class ClientAdminBootstrap implements
         }
         // at least one password has changed: update
         clientRegistrationService.updateClientSecret(clientId, rawPassword1, IdentityZone.getUaaZoneId());
-        if (rawPassword2 != null) clientRegistrationService.addClientSecret(clientId, rawPassword2, IdentityZone.getUaaZoneId());
+        if (rawPassword2 != null) {
+            clientRegistrationService.addClientSecret(clientId, rawPassword2, IdentityZone.getUaaZoneId());
+        }
     }
 
     @Override

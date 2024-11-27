@@ -24,7 +24,7 @@ public class IdentityZoneModifiedEvent extends AbstractUaaEvent {
 
     private static final long serialVersionUID = 562117195472169825L;
 
-    private AuditEventType eventType;
+    private final AuditEventType eventType;
 
     protected static final String dataFormat = "id=%s; subdomain=%s";
 

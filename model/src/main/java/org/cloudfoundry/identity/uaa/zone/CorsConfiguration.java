@@ -52,7 +52,7 @@ public class CorsConfiguration {
 
     private List<String> allowedMethods = Collections.singletonList(GET.toString());
 
-    private boolean allowedCredentials = false;
+    private boolean allowedCredentials;
 
     private int maxAge = 1728000;
 

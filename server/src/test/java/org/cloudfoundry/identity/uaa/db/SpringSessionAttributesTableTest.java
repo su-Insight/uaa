@@ -17,7 +17,8 @@ import java.util.UUID;
 class SpringSessionAttributesTableTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private String primaryId, sessionId;
+    private String primaryId;
+    private String sessionId;
 
     @BeforeEach
     void setUp() {

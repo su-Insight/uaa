@@ -41,7 +41,9 @@ public class JsonWebKeySet<T extends JsonWebKey> {
         Set<T> set = new LinkedHashSet<>();
         //rules for how to override duplicates
         for (T key : keys) {
-            if (key == null) continue;
+            if (key == null) {
+                continue;
+            }
             set.remove(key);
             set.add(key);
         }

@@ -39,8 +39,8 @@ public class IdentityZoneResolvingFilter extends OncePerRequestFilter implements
 
     private final IdentityZoneProvisioning dao;
     private final Set<String> staticResources = Set.of("/resources/", "/vendor/font-awesome/");
-    private Set<String> defaultZoneHostnames = new HashSet<>();
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Set<String> defaultZoneHostnames = new HashSet<>();
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public IdentityZoneResolvingFilter(final IdentityZoneProvisioning dao) {
         this.dao = dao;

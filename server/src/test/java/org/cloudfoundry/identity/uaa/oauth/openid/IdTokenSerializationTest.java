@@ -25,19 +25,13 @@ public class IdTokenSerializationTest {
 
     @Before
     public void setup() {
-        Set<String> amr = new HashSet<String>() {
-            {
-                add("amr1");
-                add("amr2");
-            }
-        };
+        Set<String> amr = new HashSet<>();
+        amr.add("amr1");
+        amr.add("amr2");
 
-        Set<String> acr = new HashSet<String>() {
-            {
-                add("acr1");
-                add("acr2");
-            }
-        };
+        Set<String> acr = new HashSet<>();
+        acr.add("acr1");
+        acr.add("acr2");
 
         DateTimeUtils.setCurrentMillisFixed(1000L);
 

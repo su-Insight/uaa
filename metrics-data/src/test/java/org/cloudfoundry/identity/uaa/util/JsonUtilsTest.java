@@ -91,7 +91,7 @@ class JsonUtilsTest {
 
     @Test
     void testSerializeExcludingProperties() {
-        Map<String, String> groupProperties = JsonUtils.readValue(jsonTestObjectString, new TypeReference<Map<String, String>>() {
+        Map<String, String> groupProperties = JsonUtils.readValue(jsonTestObjectString, new TypeReference<>() {
         });
         String resultString = JsonUtils.serializeExcludingProperties(groupProperties, "group", "pattern", "any.limit", "category");
         assertEquals("{\"limit\":\"1000\"}", resultString);
@@ -101,9 +101,8 @@ class JsonUtilsTest {
     void testSerializeExcludingPropertiesInnerCallFails() {
         Map<String, String> groupProperties = JsonUtils.readValue(jsonTestObjectString, new TypeReference<>() {
         });
-        assertThrows(JsonUtils.JsonUtilException.class, () -> {
-            JsonUtils.serializeExcludingProperties(groupProperties, "limit.unknown");
-        });
+        assertThrows(JsonUtils.JsonUtilException.class, () ->
+            JsonUtils.serializeExcludingProperties(groupProperties, "limit.unknown"));
     }
 
     @Test

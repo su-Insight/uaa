@@ -40,7 +40,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class OauthIDPWrapperFactoryBean {
     private Map<String, AbstractExternalOAuthIdentityProviderDefinition> oauthIdpDefinitions = new HashMap<>();
-    private List<IdentityProviderWrapper> providers = new LinkedList<>();
+    private final List<IdentityProviderWrapper> providers = new LinkedList<>();
 
     public OauthIDPWrapperFactoryBean(Map<String, Map> definitions) {
         if (definitions != null) {

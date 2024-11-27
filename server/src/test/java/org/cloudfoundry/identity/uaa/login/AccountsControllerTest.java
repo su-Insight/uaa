@@ -71,7 +71,7 @@ class AccountsControllerTest {
 
     private MockMvc mockMvc;
 
-    private boolean selfServiceToReset = false;
+    private boolean selfServiceToReset;
 
     @BeforeEach
     void setUp() {

@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 import static org.hamcrest.Matchers.hasItem;
 
-public class PredicateMatcher<T> extends BaseMatcher<T> {
+public final class PredicateMatcher<T> extends BaseMatcher<T> {
 
     private PredicateMatcher() {
     }

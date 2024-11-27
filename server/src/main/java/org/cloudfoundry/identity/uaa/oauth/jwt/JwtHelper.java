@@ -46,7 +46,7 @@ import java.util.Optional;
  * @author Luke Taylor
  * @author Dave Syer
  */
-public class JwtHelper {
+public final class JwtHelper {
     private JwtHelper() {
 
     }
@@ -103,7 +103,7 @@ public class JwtHelper {
  * <p>
  * Handles the JSON parsing and serialization.
  */
-class JwtHeaderHelper {
+final class JwtHeaderHelper {
     private JwtHeaderHelper() {
 
     }

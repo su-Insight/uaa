@@ -29,9 +29,7 @@ public class NullifyFields {
         for (Field f : clazz.getDeclaredFields()) {
             boolean isStatic = Modifier.isStatic(f.getModifiers());
             f.setAccessible(true);
-            if (f.getType().isPrimitive()) {
-                continue;
-            } else {
+            if (!f.getType().isPrimitive()) {
 
                 if (staticFieldsToo && isStatic) {
                     nullifyField(clazz, f);

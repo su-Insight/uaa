@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class OAuth2WebSecurityExpressionHandlerTests {
 
-    private OAuth2WebSecurityExpressionHandler handler = new OAuth2WebSecurityExpressionHandler();
+    private final OAuth2WebSecurityExpressionHandler handler = new OAuth2WebSecurityExpressionHandler();
 
     @Test
     public void testScopesWithOr() throws Exception {

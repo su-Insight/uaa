@@ -84,31 +84,31 @@ import static org.mockito.Mockito.withSettings;
 @ExtendWith(PollutionPreventionExtension.class)
 class ClientAdminEndpointsTests {
 
-    private ClientAdminEndpoints endpoints = null;
+    private ClientAdminEndpoints endpoints;
 
-    private UaaClientDetails input = null;
+    private UaaClientDetails input;
 
     private ClientDetailsModification[] inputs = new ClientDetailsModification[5];
 
-    private UaaClientDetails detail = null;
+    private UaaClientDetails detail;
 
     private UaaClientDetails[] details = new UaaClientDetails[inputs.length];
 
-    private QueryableResourceManager<ClientDetails> clientDetailsService = null;
+    private QueryableResourceManager<ClientDetails> clientDetailsService;
 
     private SecurityContextAccessor mockSecurityContextAccessor;
 
-    private MultitenantClientServices clientRegistrationService = null;
+    private MultitenantClientServices clientRegistrationService;
 
-    private AuthenticationManager mockAuthenticationManager = null;
+    private AuthenticationManager mockAuthenticationManager;
 
-    private ClientAdminEndpointsValidator clientDetailsValidator = null;
+    private ClientAdminEndpointsValidator clientDetailsValidator;
 
     private static final Set<String> SINGLE_REDIRECT_URL = Collections.singleton("http://redirect.url");
 
     private IdentityZone testZone = new IdentityZone();
 
-    private static abstract class NoOpClientDetailsResourceManager implements QueryableResourceManager<ClientDetails> {
+    private abstract static class NoOpClientDetailsResourceManager implements QueryableResourceManager<ClientDetails> {
         @Override
         public ClientDetails create(ClientDetails resource, String zoneId) {
             Map<String, Object> additionalInformation = new HashMap<>(resource.getAdditionalInformation());

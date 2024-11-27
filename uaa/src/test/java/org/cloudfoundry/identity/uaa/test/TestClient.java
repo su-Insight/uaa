@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TestClient {
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     public TestClient(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
@@ -35,8 +35,9 @@ public class TestClient {
                 .param("client_id", clientId)
                 .param(TokenConstants.REQUEST_TOKEN_FORMAT, OPAQUE.getStringValue())
                 .param("scope", scope);
-        if (subdomain != null && !subdomain.equals(""))
+        if (subdomain != null && !"".equals(subdomain)) {
             oauthTokenPost.with(new SetServerNameRequestPostProcessor(subdomain + ".localhost"));
+        }
         MvcResult result = mockMvc.perform(oauthTokenPost)
                 .andExpect(status().isOk())
                 .andReturn();

@@ -1062,7 +1062,10 @@ class AuditCheckMockMvcTests {
                 testAccounts.getAdminClientSecret(),
                 "uaa.admin,scim.write");
 
-        String username = "jacob", firstName = "Jacob", lastName = "Gyllenhammar", email = "jacob@gyllenhammar.non";
+        String username = "jacob";
+        String firstName = "Jacob";
+        String lastName = "Gyllenhammar";
+        String email = "jacob@gyllenhammar.non";
         ScimUser user = new ScimUser();
         user.setPassword("password");
         user.setUserName(username);
@@ -1340,7 +1343,7 @@ class AuditCheckMockMvcTests {
     }
 
     private void assertSingleClientAdminAuditEventFiredWith(AuditEventType expectedEventType, String[] expectedScopes, String[] expectedAuthorities) {
-        List<AbstractUaaEvent> events = testListener.getEvents().stream().filter(e -> e instanceof AbstractClientAdminEvent).collect(Collectors.toList());
+        List<AbstractUaaEvent> events = testListener.getEvents().stream().filter(AbstractClientAdminEvent.class::isInstance).collect(Collectors.toList());
         assertNotNull(events);
         assertEquals(1, events.size());
 

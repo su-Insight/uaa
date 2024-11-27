@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 class PasscodeInformationTest {
     private UaaPrincipal uaaPrincipal;
-    Map<String, Object> authorizationParameters = null;
+    Map<String, Object> authorizationParameters;
 
     @BeforeEach
     public void before() {

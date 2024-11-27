@@ -24,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import java.util.Arrays;
 
@@ -35,7 +34,7 @@ import java.util.Arrays;
 public class DefaultTokenServicesTests {
 
     private DefaultTokenServices services;
-    private TokenStore tokenStore = Mockito.mock(TokenStore.class);
+    private final TokenStore tokenStore = Mockito.mock(TokenStore.class);
 
     @Before
     public void init() throws Exception {
@@ -118,7 +117,7 @@ public class DefaultTokenServicesTests {
     private AuthenticationManager createAuthenticationManager(UserDetailsService userDetailsService) {
         PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
         provider.setPreAuthenticatedUserDetailsService(
-                new UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken>(userDetailsService)
+                new UserDetailsByNameServiceWrapper<>(userDetailsService)
         );
         return new ProviderManager(Arrays.<AuthenticationProvider>asList(provider));
     }

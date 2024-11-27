@@ -103,12 +103,9 @@ public class EncryptionKeyServiceTest {
         expectedException.expect(NoActiveEncryptionKeyProvided.class);
         expectedException.expectMessage("UAA cannot be started as multiple keys have the same label in uaa.encryption.encryption_keys/[label=key-1]");
 
-        EncryptionKeyService.EncryptionKey key1 = new EncryptionKeyService.EncryptionKey() {
-            {
-                put("label", "key-1");
-                put("passphrase", Strings.repeat("a", 8));
-            }
-        };
+        EncryptionKeyService.EncryptionKey key1 = new EncryptionKeyService.EncryptionKey();
+        key1.put("label", "key-1");
+        key1.put("passphrase", Strings.repeat("a", 8));
 
         encryptionKeyService = new EncryptionKeyService("key-1", Lists.newArrayList(key1, key1));
     }

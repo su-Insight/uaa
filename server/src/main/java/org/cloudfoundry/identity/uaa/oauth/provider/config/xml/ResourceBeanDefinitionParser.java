@@ -126,7 +126,7 @@ public class ResourceBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
         }
         builder.addPropertyValue("tokenName", bearerTokenName);
 
-        if (type.equals("password")) {
+        if ("password".equals(type)) {
             String[] attributeNames = {"username", "password"};
             for (String attributeName : attributeNames) {
                 String attribute = element.getAttribute(attributeName);
@@ -168,7 +168,7 @@ public class ResourceBeanDefinitionParser extends AbstractSingleBeanDefinitionPa
     }
 
     private boolean needsUserAuthorizationUri(String type) {
-        return type.equals("authorization_code") || type.equals("implicit");
+        return "authorization_code".equals(type) || "implicit".equals(type);
     }
 
 }

@@ -69,7 +69,7 @@ public class CodeStoreEndpoints {
         }
         // User can supply trace=true or just trace (unspecified) to get stack
         // traces
-        boolean trace = request.getParameter("trace") != null && !request.getParameter("trace").equals("false");
+        boolean trace = request.getParameter("trace") != null && !"false".equals(request.getParameter("trace"));
         return new ConvertingExceptionView(new ResponseEntity<>(new ExceptionReport(e, trace),
                 e.getStatus()), messageConverters);
     }

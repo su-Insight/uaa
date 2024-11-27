@@ -98,8 +98,12 @@ public class OAuth2Authentication extends AbstractAuthenticationToken {
         }
 
         OAuth2Authentication that = (OAuth2Authentication) o;
-        if (!Objects.equals(storedRequest, that.storedRequest)) return false;
-        if (!Objects.equals(userAuthentication, that.userAuthentication)) return false;
+        if (!Objects.equals(storedRequest, that.storedRequest)) {
+            return false;
+        }
+        if (!Objects.equals(userAuthentication, that.userAuthentication)) {
+            return false;
+        }
         return Objects.equals(getDetails(), that.getDetails());
     }
 

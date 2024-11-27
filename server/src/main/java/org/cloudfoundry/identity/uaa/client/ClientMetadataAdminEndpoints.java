@@ -82,7 +82,7 @@ public class ClientMetadataAdminEndpoints {
     public View handleException(ClientMetadataException cme, HttpServletRequest request) {
         logger.error("Unhandled exception in client metadata admin endpoints.", cme);
 
-        boolean trace = request.getParameter("trace") != null && !request.getParameter("trace").equals("false");
+        boolean trace = request.getParameter("trace") != null && !"false".equals(request.getParameter("trace"));
         return new ConvertingExceptionView(new ResponseEntity<>(new ExceptionReport(cme, trace, cme.getExtraInfo()),
                 cme.getStatus()), messageConverters);
     }

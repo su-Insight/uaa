@@ -49,7 +49,7 @@ import java.util.UUID;
  * @author Joel D'sa
  *
  */
-public class UaaTestAccounts implements TestAccounts {
+public final class UaaTestAccounts implements TestAccounts {
     private static final Logger logger = LoggerFactory.getLogger(UaaTestAccounts.class);
 
     static final String UAA_TEST_USERNAME = "uaa.test.username";
@@ -64,9 +64,9 @@ public class UaaTestAccounts implements TestAccounts {
 
     public static final String CODE_VERIFIER = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
 
-    private Environment environment = TestProfileEnvironment.getEnvironment();
-    private UrlHelper server;
-    private static Map<String, OAuth2ProtectedResourceDetails> clientDetails = new HashMap<String, OAuth2ProtectedResourceDetails>();
+    private final Environment environment = TestProfileEnvironment.getEnvironment();
+    private final UrlHelper server;
+    private static final Map<String, OAuth2ProtectedResourceDetails> clientDetails = new HashMap<>();
 
     private UaaTestAccounts(UrlHelper server) {
         this.server = server;
@@ -97,10 +97,9 @@ public class UaaTestAccounts implements TestAccounts {
 
     public UaaUser getUserWithRandomID() {
         String id = UUID.randomUUID().toString();
-        UaaUser user = new UaaUser(id, getUserName(), getPassword(), getEmail(),
+        return new UaaUser(id, getUserName(), getPassword(), getEmail(),
                 UaaAuthority.USER_AUTHORITIES, "Test", "User", new Date(), new Date(), OriginKeys.UAA, "externalId", true,
                 IdentityZoneHolder.get().getId(), id, new Date());
-        return user;
     }
 
     @Override

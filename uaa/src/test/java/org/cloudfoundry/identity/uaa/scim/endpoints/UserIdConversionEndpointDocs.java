@@ -31,9 +31,9 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserIdConversionEndpointDocs extends EndpointDocs {
-    private AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
-    private String clientId = generator.generate().toLowerCase();
-    private String clientSecret = generator.generate().toLowerCase();
+    private final AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
+    private final String clientId = generator.generate().toLowerCase();
+    private final String clientSecret = generator.generate().toLowerCase();
     private ScimUser bob;
     private ScimUser dwayne;
     private String userLookupToken;

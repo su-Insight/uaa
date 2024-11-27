@@ -24,7 +24,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryLdapServer implements Closeable {
+public final class InMemoryLdapServer implements Closeable {
     private static final String JAVAX_NET_SSL_TRUST_STORE = "javax.net.ssl.trustStore";
 
     private static final String[] DEFAULT_ROOTS = {

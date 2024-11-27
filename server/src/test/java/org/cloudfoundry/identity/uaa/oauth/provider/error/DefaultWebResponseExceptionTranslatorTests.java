@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
  * Scope: Test class
  */
 public class DefaultWebResponseExceptionTranslatorTests {
-    private WebResponseExceptionTranslator<OAuth2Exception> translator = new DefaultWebResponseExceptionTranslator();
+    private final WebResponseExceptionTranslator<OAuth2Exception> translator = new DefaultWebResponseExceptionTranslator();
 
     @Test
     public void translateWhenGeneralExceptionThenReturnInternalServerError() throws Exception {

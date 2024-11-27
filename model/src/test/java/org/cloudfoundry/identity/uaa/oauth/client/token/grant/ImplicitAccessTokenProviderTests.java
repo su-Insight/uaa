@@ -36,9 +36,9 @@ public class ImplicitAccessTokenProviderTests {
     @Rule
     public ExpectedException expected = ExpectedException.none();
 
-    private MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    private final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-    private ImplicitAccessTokenProvider provider = new ImplicitAccessTokenProvider() {
+    private final ImplicitAccessTokenProvider provider = new ImplicitAccessTokenProvider() {
         @Override
         protected OAuth2AccessToken retrieveToken(AccessTokenRequest request, OAuth2ProtectedResourceDetails resource,
                 MultiValueMap<String, String> form, HttpHeaders headers) {
@@ -47,7 +47,7 @@ public class ImplicitAccessTokenProviderTests {
         }
     };
 
-    private ImplicitResourceDetails resource = new ImplicitResourceDetails();
+    private final ImplicitResourceDetails resource = new ImplicitResourceDetails();
 
     @Test(expected = IllegalStateException.class)
     public void testRedirectNotSpecified() throws Exception {

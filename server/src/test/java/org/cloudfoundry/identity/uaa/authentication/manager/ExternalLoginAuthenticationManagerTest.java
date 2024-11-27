@@ -59,13 +59,13 @@ public class ExternalLoginAuthenticationManagerTest {
     private UaaUserDatabase uaaUserDatabase;
     private Authentication inputAuth;
     private ExternalLoginAuthenticationManager manager;
-    private String origin = "test";
-    private String beanName = "ExternalLoginAuthenticationManagerTestBean";
+    private final String origin = "test";
+    private final String beanName = "ExternalLoginAuthenticationManagerTestBean";
     private UserDetails userDetails;
-    private String userName = "testUserName";
-    private String password = "";
+    private final String userName = "testUserName";
+    private final String password = "";
     private UaaUser user;
-    private String userId = new AlphanumericRandomValueStringGenerator().generate();
+    private final String userId = new AlphanumericRandomValueStringGenerator().generate();
     private ArgumentCaptor<ApplicationEvent> userArgumentCaptor;
     private IdentityProviderProvisioning providerProvisioning;
     private MultiValueMap<String, String> userAttributes;

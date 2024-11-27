@@ -64,19 +64,19 @@ import static org.junit.Assert.fail;
  * @author Dave Syer
  * 
  */
-public class ServerRunning extends TestWatchman implements RestTemplateHolder, UrlHelper {
+public final class ServerRunning extends TestWatchman implements RestTemplateHolder, UrlHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(ServerRunning.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServerRunning.class);
 
-    private static int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_PORT = 8080;
 
-    private static int DEFAULT_UAA_PORT = 8080;
+    private static final int DEFAULT_UAA_PORT = 8080;
 
-    private static String DEFAULT_HOST = "localhost";
+    private static final String DEFAULT_HOST = "localhost";
 
     private static final String DEFAULT_AUTH_SERVER_ROOT = "/uaa";
 
-    private String authServerRoot = DEFAULT_AUTH_SERVER_ROOT;
+    private final String authServerRoot = DEFAULT_AUTH_SERVER_ROOT;
 
     private int port;
 
@@ -186,7 +186,7 @@ public class ServerRunning extends TestWatchman implements RestTemplateHolder, U
     }
 
     public ResponseEntity<String> getForString(String path, HttpHeaders headers) {
-        HttpEntity<Void> request = new HttpEntity<Void>((Void) null, headers);
+        HttpEntity<Void> request = new HttpEntity<>((Void) null, headers);
         return client.exchange(getUrl(path), HttpMethod.GET, request, String.class);
     }
 

@@ -40,7 +40,7 @@ public class IdentityZoneConfiguration {
             new Prompt(PASSWORD, PASSWORD, "Password"),
             new Prompt("passcode", PASSWORD, "Temporary Authentication Code (Get on at /passcode)")
     );
-    private boolean idpDiscoveryEnabled = false;
+    private boolean idpDiscoveryEnabled;
     private BrandingInformation branding;
     private boolean accountChooserEnabled;
     private UserConfig userConfig = new UserConfig();

@@ -125,7 +125,9 @@ public class UaaTokenStore implements AuthorizationCodeServices {
                 }
                 return code;
             } catch (DataIntegrityViolationException exists) {
-                if (attempt >= maxAttempts) throw exists;
+                if (attempt >= maxAttempts) {
+                    throw exists;
+                }
             }
         }
     }
@@ -260,15 +262,15 @@ public class UaaTokenStore implements AuthorizationCodeServices {
             int pos = 1;
             String code = rs.getString(pos++);
             String userid = rs.getString(pos++);
-            String client_id = rs.getString(pos++);
+            String clientId = rs.getString(pos++);
             long expiresat = rs.getLong(pos++);
             Instant created = rs.getTimestamp(pos++).toInstant();
             byte[] authentication = rs.getBytes(pos++);
 
             if (expiresat == 0) {
-                return new LegacyTokenCode(code, userid, created, client_id, authentication);
+                return new LegacyTokenCode(code, userid, created, clientId, authentication);
             } else {
-                return new NewTokenCode(code, userid, Instant.ofEpochMilli(expiresat), client_id, authentication);
+                return new NewTokenCode(code, userid, Instant.ofEpochMilli(expiresat), clientId, authentication);
             }
         }
     }

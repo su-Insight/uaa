@@ -58,7 +58,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class JwtBearerGrantMockMvcTests extends AbstractTokenMockMvcTests {
 
-    private static RandomValueStringGenerator generator = new RandomValueStringGenerator(12);
+    private static final RandomValueStringGenerator generator = new RandomValueStringGenerator(12);
 
     MockMvcUtils.IdentityZoneCreationResult originZone;
     UaaClientDetails originClient;
@@ -277,8 +277,7 @@ public class JwtBearerGrantMockMvcTests extends AbstractTokenMockMvcTests {
                 .getResponse()
                 .getContentAsString();
         Map<String, Object> tokenMap = JsonUtils.readValue(tokenResponse, Map.class);
-        String accessToken = (String) tokenMap.get("access_token");
-        return accessToken;
+        return (String) tokenMap.get("access_token");
     }
 
     String createProvider(IdentityZone theZone, String verificationKey) throws Exception {

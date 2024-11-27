@@ -454,23 +454,23 @@ class YamlServletProfileInitializerTest {
 
         @Test
         void mergesAndOverridesUaaYml() {
-            ByteArrayResource uaa_yml = new ByteArrayResource(("database:" + NEW_LINE +
+            ByteArrayResource uaaYml = new ByteArrayResource(("database:" + NEW_LINE +
                     "  username: default-username" + NEW_LINE +
                     "  password: default-password" + NEW_LINE +
                     "  url: jdbc://hostname").getBytes());
 
             System.setProperty("CLOUDFOUNDRY_CONFIG_PATH", "cloudfoundryconfigpath");
             when(context.getResource("file:cloudfoundryconfigpath/uaa.yml"))
-                    .thenReturn(uaa_yml);
+                    .thenReturn(uaaYml);
 
-            ByteArrayResource database_credentials_yml = new ByteArrayResource(("database:" + NEW_LINE +
+            ByteArrayResource databaseCredentialsYml = new ByteArrayResource(("database:" + NEW_LINE +
                     "  username: donkey" + NEW_LINE +
                     "  password: kong").getBytes());
 
             String fileName = createSecretsFile("database_credentials.yml");
 
             when(context.getResource(String.format("file:%s", fileName)))
-                    .thenReturn(database_credentials_yml);
+                    .thenReturn(databaseCredentialsYml);
 
             initializer.initialize(context);
             assertEquals("donkey", environment.getProperty("database.username"));

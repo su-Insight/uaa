@@ -46,7 +46,7 @@ public class MetricsUtils {
     public Map<String, ?> getMBeans(String domain, String pattern, MBeanServerConnection server) throws Exception {
         Set<ObjectName> names = server.queryNames(ObjectName.getInstance(domain + ":" + pattern), null);
 
-        Map<String, Object> result = new LinkedHashMap<String, Object>();
+        Map<String, Object> result = new LinkedHashMap<>();
 
         for (ObjectName name : names) {
 
@@ -65,7 +65,7 @@ public class MetricsUtils {
             }
 
             for (String property : name.getKeyPropertyList().keySet()) {
-                if (property.equals("type") || property.equals("name")) {
+                if ("type".equals(property) || "name".equals(property)) {
                     continue;
                 }
                 key = StringUtils.camelToUnderscore(property);

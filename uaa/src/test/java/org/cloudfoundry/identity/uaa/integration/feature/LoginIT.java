@@ -71,7 +71,7 @@ import static org.springframework.http.HttpMethod.POST;
 @ContextConfiguration(classes = DefaultIntegrationTestConfig.class)
 public class LoginIT {
 
-    private final String USER_PASSWORD = "sec3Tas";
+    private static final String USER_PASSWORD = "sec3Tas";
 
     @Autowired
     @Rule

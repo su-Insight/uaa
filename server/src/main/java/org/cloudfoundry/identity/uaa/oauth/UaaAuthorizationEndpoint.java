@@ -81,7 +81,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
-import static java.util.Collections.EMPTY_SET;
+import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.GRANT_TYPE;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_AUTHORIZATION_CODE;
@@ -213,7 +213,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
                         "User must be authenticated with Spring Security before authorization can be completed.");
             }
 
-            if (!(responseTypes.size() > 0)) {
+            if (responseTypes.size() <= 0) {
                 return new ModelAndView(new RedirectView(addQueryParameter(addQueryParameter(resolvedRedirect, "error", "invalid_request"), "error_description", "Missing response_type in authorization request")));
             }
 
@@ -318,10 +318,10 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
             return;
         }
 
-        Set<String> redirectUris = ofNullable(client.getRegisteredRedirectUri()).orElse(EMPTY_SET);
+        Set<String> redirectUris = ofNullable(client.getRegisteredRedirectUri()).orElse(emptySet());
 
         //if the client doesn't have a redirect uri set, the parameter is required.
-        if (redirectUris.size() == 0 && !hasText(redirectUri)) {
+        if (redirectUris.isEmpty() && !hasText(redirectUri)) {
             logger.debug("[prompt=none] Missing redirect_uri");
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             return;
@@ -636,8 +636,8 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
 
         Date expiration = accessToken.getExpiration();
         if (expiration != null) {
-            long expires_in = (expiration.getTime() - System.currentTimeMillis()) / 1000;
-            url.append("&expires_in=").append(expires_in);
+            long expiresIn = (expiration.getTime() - System.currentTimeMillis()) / 1000;
+            url.append("&expires_in=").append(expiresIn);
         }
 
         String originalScope = authorizationRequest.getRequestParameters().get(OAuth2Utils.SCOPE);
@@ -820,7 +820,7 @@ public class UaaAuthorizationEndpoint extends AbstractEndpoint implements Authen
             return authorizationRequest;
         }
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         Map<String, String[]> map = webRequest.getParameterMap();
         for (String key : map.keySet()) {
             String[] values = map.get(key);

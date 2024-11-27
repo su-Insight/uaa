@@ -31,7 +31,7 @@ public class LdapSearchAndCompareConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             String ldapProfileFile = context.getEnvironment().getProperty("ldap.profile.file");
-            return ldapProfileFile != null && ldapProfileFile.equals("ldap/ldap-search-and-compare.xml");
+            return"ldap/ldap-search-and-compare.xml".equals(ldapProfileFile);
         }
     }
 

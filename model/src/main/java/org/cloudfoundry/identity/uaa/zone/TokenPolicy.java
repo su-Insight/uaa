@@ -41,9 +41,9 @@ public class TokenPolicy {
 
     private int accessTokenValidity;
     private int refreshTokenValidity;
-    private boolean jwtRevocable = false;
-    private boolean refreshTokenUnique = false;
-    private boolean refreshTokenRotate = false;
+    private boolean jwtRevocable;
+    private boolean refreshTokenUnique;
+    private boolean refreshTokenRotate;
     private String refreshTokenFormat = OPAQUE.getStringValue();
 
     @JsonGetter("keys")
@@ -99,7 +99,7 @@ public class TokenPolicy {
 
     @JsonIgnore
     public Map<String, KeyInformation> getKeys() {
-        return this.keys == null ? Collections.EMPTY_MAP : new HashMap<>(this.keys);
+        return this.keys == null ? Collections.emptyMap() : new HashMap<>(this.keys);
     }
 
     @JsonIgnore

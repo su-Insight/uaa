@@ -19,7 +19,7 @@ class MetricsQueueTest {
 
     private MetricsQueue queue;
 
-    private UrlGroup uriGroup = new UrlGroup()
+    private final UrlGroup uriGroup = new UrlGroup()
             .setGroup("/uri")
             .setLimit(MAX_TIME)
             .setPattern("/uri")

@@ -49,7 +49,7 @@ public class UserManagedAuthzApprovalHandler implements UserApprovalHandler {
 
         String approvalParameter1 = OAuth2Utils.USER_OAUTH_APPROVAL;
         String flag = authorizationRequest.getApprovalParameters().get(approvalParameter1);
-        boolean userApproval = flag != null && flag.toLowerCase().equals("true");
+        boolean userApproval = flag != null && "true".equals(flag.toLowerCase());
 
         if (logger.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder("Looking up user approved authorizations for ");

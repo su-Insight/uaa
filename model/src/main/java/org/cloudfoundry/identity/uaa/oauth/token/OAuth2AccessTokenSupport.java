@@ -59,7 +59,7 @@ public abstract class OAuth2AccessTokenSupport {
 
     private ClientAuthenticationHandler authenticationHandler = new DefaultClientAuthenticationHandler();
 
-    private ResponseErrorHandler responseErrorHandler = new AccessTokenErrorHandler();
+    private final ResponseErrorHandler responseErrorHandler = new AccessTokenErrorHandler();
 
     private List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
 
@@ -129,7 +129,7 @@ public abstract class OAuth2AccessTokenSupport {
             final AccessTokenRequest copy = request;
 
             final ResponseExtractor<OAuth2AccessToken> delegate = getResponseExtractor();
-            ResponseExtractor<OAuth2AccessToken> extractor = new ResponseExtractor<OAuth2AccessToken>() {
+            ResponseExtractor<OAuth2AccessToken> extractor = new ResponseExtractor<>() {
                 @Override
                 public OAuth2AccessToken extractData(ClientHttpResponse response) throws IOException {
                     if (response.getHeaders().containsKey("Set-Cookie")) {
@@ -173,7 +173,7 @@ public abstract class OAuth2AccessTokenSupport {
 
             for (String key : form.keySet()) {
                 builder.append(separator);
-                builder.append(key + "={" + key + "}");
+                builder.append(key + "={").append(key).append("}");
                 separator = "&";
             }
         }
@@ -206,7 +206,7 @@ public abstract class OAuth2AccessTokenSupport {
     /**
      * Request callback implementation that writes the given object to the request stream.
      */
-    private class OAuth2AuthTokenCallback implements RequestCallback {
+    private final class OAuth2AuthTokenCallback implements RequestCallback {
 
         private final MultiValueMap<String, String> form;
 

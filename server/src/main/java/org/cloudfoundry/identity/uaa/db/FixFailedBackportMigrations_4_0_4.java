@@ -41,7 +41,7 @@ public class FixFailedBackportMigrations_4_0_4  extends BaseJavaMigration {
 
     private static final Logger logger = LoggerFactory.getLogger(FixFailedBackportMigrations_4_0_4.class);
 
-    private String type;
+    private final String type;
 
     private final Map<String, String> scripts;
     private final String checkExistsSql = "SELECT count(*) FROM schema_version WHERE version = ?";

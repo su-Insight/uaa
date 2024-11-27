@@ -32,10 +32,10 @@ public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
 
     private ClientTokenServices clientTokenServices;
 
-    private int clockSkew = 30;
+    private final int clockSkew = 30;
 
     public AccessTokenProviderChain(List<? extends AccessTokenProvider> chain) {
-        this.chain = chain == null ? Collections.<AccessTokenProvider>emptyList()
+        this.chain = chain == null ? Collections.emptyList()
                 : Collections.unmodifiableList(chain);
     }
 

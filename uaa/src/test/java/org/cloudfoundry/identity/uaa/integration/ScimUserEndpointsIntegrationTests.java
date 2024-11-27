@@ -272,7 +272,7 @@ public class ScimUserEndpointsIntegrationTests {
         ScimUser joe = created.getBody();
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
-        Map<String, Object> map = new HashMap<String, Object>(JsonUtils.readValue(JsonUtils.writeValueAsString(joe),
+        Map<String, Object> map = new HashMap<>(JsonUtils.readValue(JsonUtils.writeValueAsString(joe),
                 Map.class));
         map.put("nottheusername", JOE + "0");
         ResponseEntity<Map> response = client.exchange(serverRunning.getUrl(userEndpoint) + "/{id}", HttpMethod.PUT,
@@ -291,7 +291,7 @@ public class ScimUserEndpointsIntegrationTests {
         ScimUser joe = created.getBody();
         HttpHeaders headers = new HttpHeaders();
         headers.add("If-Match", "\"" + joe.getVersion() + "\"");
-        Map<String, Object> map = new HashMap<String, Object>(JsonUtils.readValue(JsonUtils.writeValueAsString(joe),
+        Map<String, Object> map = new HashMap<>(JsonUtils.readValue(JsonUtils.writeValueAsString(joe),
                 Map.class));
         map.put("username", JOE + "0");
         map.remove("userName");
@@ -448,7 +448,7 @@ public class ScimUserEndpointsIntegrationTests {
         Map results = response.getBody();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue("There should be more than zero users", (Integer) results.get("totalResults") > 0);
-        assertTrue("There should be some resources", ((Collection<?>) results.get("resources")).size() > 0);
+        assertTrue("There should be some resources", !((Collection<?>) results.get("resources")).isEmpty());
         @SuppressWarnings("rawtypes")
         Map firstUser = (Map) ((List) results.get("resources")).get(0);
         // [cfid-111] All attributes should be returned if no attributes

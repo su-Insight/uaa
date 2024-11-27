@@ -38,8 +38,8 @@ import static org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils.CLIENT
 
 public class UserTokenGranter extends AbstractTokenGranter {
 
-    private MultitenantClientServices clientDetailsService;
-    private RevocableTokenProvisioning tokenStore;
+    private final MultitenantClientServices clientDetailsService;
+    private final RevocableTokenProvisioning tokenStore;
 
     public UserTokenGranter(AuthorizationServerTokenServices tokenServices,
             MultitenantClientServices clientDetailsService,

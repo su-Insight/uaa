@@ -74,7 +74,7 @@ public class ClientAdminEndpointsValidator implements InitializingBean, ClientDe
 
     private final SecurityContextAccessor securityContextAccessor;
 
-    private Set<String> reservedClientIds = StringUtils.commaDelimitedListToSet(OriginKeys.UAA);
+    private final Set<String> reservedClientIds = StringUtils.commaDelimitedListToSet(OriginKeys.UAA);
 
     private final Set<Character> invalidClientIdsCharacters = Set.of('/', '\\');
 
@@ -201,7 +201,7 @@ public class ClientAdminEndpointsValidator implements InitializingBean, ClientDe
                 }
             }
 
-            Set<String> validAuthorities = new HashSet<String>(NON_ADMIN_VALID_AUTHORITIES);
+            Set<String> validAuthorities = new HashSet<>(NON_ADMIN_VALID_AUTHORITIES);
             if (requestedGrantTypes.contains(GRANT_TYPE_CLIENT_CREDENTIALS)) {
                 // If client_credentials is used then the client might be a
                 // resource server
@@ -264,11 +264,11 @@ public class ClientAdminEndpointsValidator implements InitializingBean, ClientDe
     public void validateClientRedirectUri(ClientDetails client) {
         Set<String> uris = client.getRegisteredRedirectUri();
 
-        for (String grant_type : Arrays.asList(GRANT_TYPE_AUTHORIZATION_CODE, GRANT_TYPE_IMPLICIT)) {
-            if (client.getAuthorizedGrantTypes().contains(grant_type)) {
+        for (String grantType : Arrays.asList(GRANT_TYPE_AUTHORIZATION_CODE, GRANT_TYPE_IMPLICIT)) {
+            if (client.getAuthorizedGrantTypes().contains(grantType)) {
 
                 if (isMissingRedirectUris(uris)) {
-                    throw new InvalidClientDetailsException(grant_type + " grant type requires at least one redirect URL.");
+                    throw new InvalidClientDetailsException(grantType + " grant type requires at least one redirect URL.");
                 }
 
                 for (String uri : uris) {

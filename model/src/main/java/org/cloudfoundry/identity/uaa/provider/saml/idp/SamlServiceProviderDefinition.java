@@ -44,9 +44,9 @@ public class SamlServiceProviderDefinition {
     private String nameID;
     private int singleSignOnServiceIndex;
     private boolean metadataTrustCheck;
-    private boolean skipSslValidation = false;
+    private boolean skipSslValidation;
     private Map<String, Object> attributeMappings = new HashMap<>();
-    private boolean enableIdpInitiatedSso = false;
+    private boolean enableIdpInitiatedSso;
     private Map<String, Object> staticCustomAttributes = new HashMap<>();
 
 
@@ -197,17 +197,30 @@ public class SamlServiceProviderDefinition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SamlServiceProviderDefinition that = (SamlServiceProviderDefinition) o;
 
-        if (singleSignOnServiceIndex != that.singleSignOnServiceIndex) return false;
-        if (metadataTrustCheck != that.metadataTrustCheck) return false;
-        if (skipSslValidation != that.skipSslValidation) return false;
-        if (!Objects.equals(metaDataLocation, that.metaDataLocation))
+        if (singleSignOnServiceIndex != that.singleSignOnServiceIndex) {
             return false;
-        if (!Objects.equals(nameID, that.nameID)) return false;
+        }
+        if (metadataTrustCheck != that.metadataTrustCheck) {
+            return false;
+        }
+        if (skipSslValidation != that.skipSslValidation) {
+            return false;
+        }
+        if (!Objects.equals(metaDataLocation, that.metaDataLocation)) {
+            return false;
+        }
+        if (!Objects.equals(nameID, that.nameID)) {
+            return false;
+        }
         return Objects.equals(attributeMappings, that.attributeMappings);
     }
 
@@ -223,13 +236,13 @@ public class SamlServiceProviderDefinition {
                 '}';
     }
 
-    public static class Builder {
+    public static final class Builder {
 
         private String metaDataLocation;
         private String nameID;
         private int singleSignOnServiceIndex;
         private boolean metadataTrustCheck;
-        private boolean enableIdpInitiatedSso = false;
+        private boolean enableIdpInitiatedSso;
         private boolean skipSslValidation = true;
 
         private Builder() {

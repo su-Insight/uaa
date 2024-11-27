@@ -42,12 +42,7 @@ public class DefaultSecurityContextAccessor implements SecurityContextAccessor {
         if (a instanceof UaaAuthentication) {
             return true;
         }
-
-        if (a != null && a.getPrincipal() instanceof UaaPrincipal) {
-            return true;
-        }
-
-        return false;
+        return a != null && a.getPrincipal() instanceof UaaPrincipal;
     }
 
     @Override
@@ -75,7 +70,7 @@ public class DefaultSecurityContextAccessor implements SecurityContextAccessor {
     }
 
     private boolean hasAnyAdminScope(Authentication a, String... adminRoles) {
-        Set<String> authorites = a == null ? Collections.<String>emptySet() : AuthorityUtils.authorityListToSet(a.getAuthorities());
+        Set<String> authorites = a == null ? Collections.emptySet() : AuthorityUtils.authorityListToSet(a.getAuthorities());
         for (String s : adminRoles) {
             if (authorites.contains(s)) {
                 return true;

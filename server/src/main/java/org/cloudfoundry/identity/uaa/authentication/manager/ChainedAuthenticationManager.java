@@ -123,7 +123,7 @@ public class ChainedAuthenticationManager implements AuthenticationManager {
 
     public static class AuthenticationManagerConfiguration {
         private AuthenticationManager authenticationManager;
-        private String required = null;
+        private String required;
         private Class<? extends AuthenticationException>[] stopIf;
 
         public Class<? extends AuthenticationException>[] getStopIf() {

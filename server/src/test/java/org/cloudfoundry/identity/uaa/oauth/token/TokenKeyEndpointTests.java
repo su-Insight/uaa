@@ -55,7 +55,7 @@ class TokenKeyEndpointTests {
 
     private TokenKeyEndpoint tokenKeyEndpoint = new TokenKeyEndpoint(new KeyInfoService("https://localhost.uaa"));
     private Authentication validUaaResource;
-    private final String SIGNING_KEY_2 = "-----BEGIN RSA PRIVATE KEY-----\n" +
+    private final String signingKey2 = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIIBOQIBAAJBAKIuxhxq0SyeITbTw3SeyHz91eB6xEwRn9PPgl+klu4DRUmVs0h+\n" +
             "UlVjXSTLiJ3r1bJXVded4JzVvNSh5Nw+7zsCAwEAAQJAYeVH8klL39nHhLfIiHF7\n" +
             "5W63FhwktyIATrM4KBFKhXn8i29l76qVqX88LAYpeULric8fGgNoSaYVsHWIOgDu\n" +
@@ -64,7 +64,7 @@ class TokenKeyEndpointTests {
             "H20/OhqZ3/IHAiBSn3/31am8zW+l7UM+Fkc29aij+KDsYQfmmvriSp3/2QIgFtiE\n" +
             "Jkd0KaxkobLdyDrW13QnEaG5TXO0Y85kfu3nP5o=\n" +
             "-----END RSA PRIVATE KEY-----";
-    private final String SIGNING_KEY_3 = "-----BEGIN RSA PRIVATE KEY-----\n" +
+    private final String signingKey3 = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIIBOgIBAAJBAOnndOyLh8axLMyjX+gCglBCeU5Cumjxz9asho5UvO8zf03PWciZ\n" +
             "DGWce+B+n23E1IXbRKHWckCY0UH7fEgbrKkCAwEAAQJAGR9aCJoH8EhRVn1prKKw\n" +
             "Wmx5WPWDzgfC2fzXyuvBCzPZNMQqOxWT9ajr+VysuyFZbz+HGJDqpf9Jl+fcIIUJ\n" +
@@ -155,8 +155,8 @@ class TokenKeyEndpointTests {
         Map<String, String> keysForUaaZone = new HashMap<>();
         keysForUaaZone.put("RsaKey1", SIGNING_KEY_1);
         keysForUaaZone.put("thisIsASymmetricKeyThatShouldNotShowUp", "ItHasSomeTextThatIsNotPEM");
-        keysForUaaZone.put("RsaKey2", SIGNING_KEY_2);
-        keysForUaaZone.put("RsaKey3", SIGNING_KEY_3);
+        keysForUaaZone.put("RsaKey2", signingKey2);
+        keysForUaaZone.put("RsaKey3", signingKey3);
         configureKeysForDefaultZone(keysForUaaZone);
 
         VerificationKeysListResponse keysResponse = tokenKeyEndpoint.getKeys(null);
@@ -173,11 +173,11 @@ class TokenKeyEndpointTests {
         JWSSigner rsaSigner = new KeyInfo("RsaKey1", SIGNING_KEY_1, DEFAULT_UAA_URL).getSigner();
         SignatureVerifier rsaVerifier = new KeyInfo("RsaKey1", SIGNING_KEY_1, DEFAULT_UAA_URL).getVerifier();
 
-        rsaSigner = new KeyInfo("RsaKey2", SIGNING_KEY_2, DEFAULT_UAA_URL).getSigner();
-        rsaVerifier = new KeyInfo("RsaKey2", SIGNING_KEY_2, DEFAULT_UAA_URL).getVerifier();
+        rsaSigner = new KeyInfo("RsaKey2", signingKey2, DEFAULT_UAA_URL).getSigner();
+        rsaVerifier = new KeyInfo("RsaKey2", signingKey2, DEFAULT_UAA_URL).getVerifier();
 
-        rsaSigner = new KeyInfo("RsaKey3", SIGNING_KEY_3, DEFAULT_UAA_URL).getSigner();
-        rsaVerifier = new KeyInfo("RsaKey3", SIGNING_KEY_3, DEFAULT_UAA_URL).getVerifier();
+        rsaSigner = new KeyInfo("RsaKey3", signingKey3, DEFAULT_UAA_URL).getSigner();
+        rsaVerifier = new KeyInfo("RsaKey3", signingKey3, DEFAULT_UAA_URL).getVerifier();
 
         //ensure that none of the keys are padded
         keys.forEach(
@@ -192,8 +192,8 @@ class TokenKeyEndpointTests {
     void listResponseContainsAllKeysWhenAuthenticated() {
         Map<String, String> keysForUaaZone = new HashMap<>();
         keysForUaaZone.put("RsaKey1", SIGNING_KEY_1);
-        keysForUaaZone.put("RsaKey2", SIGNING_KEY_2);
-        keysForUaaZone.put("RsaKey3", SIGNING_KEY_3);
+        keysForUaaZone.put("RsaKey2", signingKey2);
+        keysForUaaZone.put("RsaKey3", signingKey3);
         keysForUaaZone.put("SymmetricKey", "ItHasSomeTextThatIsNotPEM");
         configureKeysForDefaultZone(keysForUaaZone);
 
@@ -202,7 +202,7 @@ class TokenKeyEndpointTests {
         List<String> keyIds = keys.stream().map(VerificationKeyResponse::getId).collect(Collectors.toList());
         assertThat(keyIds, containsInAnyOrder("RsaKey1", "RsaKey2", "RsaKey3", "SymmetricKey"));
 
-        VerificationKeyResponse symKeyResponse = keys.stream().filter(k -> k.getId().equals("SymmetricKey")).findAny().get();
+        VerificationKeyResponse symKeyResponse = keys.stream().filter(k -> "SymmetricKey".equals(k.getId())).findAny().get();
         assertEquals("ItHasSomeTextThatIsNotPEM", symKeyResponse.getKey());
     }
 
@@ -210,7 +210,7 @@ class TokenKeyEndpointTests {
     void tokenKeyEndpoint_ReturnsAllKeysForZone() {
         Map<String, String> keys = new HashMap<>();
         keys.put("key1", SIGNING_KEY_1);
-        keys.put("key2", SIGNING_KEY_2);
+        keys.put("key2", signingKey2);
         createAndSetTestZoneWithKeys(keys);
 
         VerificationKeysListResponse keysResponse = tokenKeyEndpoint.getKeys(mock(Principal.class));

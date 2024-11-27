@@ -50,7 +50,7 @@ public class RemoteAuthenticationEndpointTests {
     @Rule
     public ServerRunning serverRunning = ServerRunning.isRunning();
 
-    private UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
+    private final UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
 
     @Test
     public void remoteAuthenticationSucceedsWithCorrectCredentials() {
@@ -174,7 +174,7 @@ public class RemoteAuthenticationEndpointTests {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
+        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.set("username", username);
         if (password != null) {
             parameters.set("password", password);

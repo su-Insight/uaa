@@ -5,7 +5,7 @@ import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.provider.SamlIdentityProviderDefinition;
 
 // Attempt to move usages to Saml2TestUtils style
-public class SamlTestUtils {
+public final class SamlTestUtils {
 
     private SamlTestUtils() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

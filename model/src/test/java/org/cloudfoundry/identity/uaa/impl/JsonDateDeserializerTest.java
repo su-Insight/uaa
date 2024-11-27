@@ -26,7 +26,7 @@ import java.util.Date;
 public class JsonDateDeserializerTest {
 
     String testDateString = "2017-07-07T23:25:01.297Z";
-    Exception exceptionOccured = null;
+    Exception exceptionOccured;
 
     @Test
     public void testParsing() throws IOException, ParseException {

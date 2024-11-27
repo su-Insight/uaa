@@ -32,12 +32,11 @@ public class CachingPasswordEncoder implements PasswordEncoder {
     private final byte[] secret;
     private final byte[] salt;
 
-    private final int ITERATIONS = 25;
-    private final int MAX_KEYS = 1000;
-    private final int MAX_ENCODED_PASSWORDS = 5;
+    private static final int ITERATIONS = 25;
+    private static final int MAX_KEYS = 1000;
+    private static final int MAX_ENCODED_PASSWORDS = 5;
     private final Duration CACHE_TTL = Duration.ofMinutes(5L);
-
-    private volatile Cache<CharSequence, Set<String>> cache = null;
+    private volatile Cache<CharSequence, Set<String>> cache;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -97,7 +96,6 @@ public class CachingPasswordEncoder implements PasswordEncoder {
         }
         return result;
     }
-
 
     String cacheEncode(CharSequence rawPassword) {
         byte[] digest = digest(rawPassword);

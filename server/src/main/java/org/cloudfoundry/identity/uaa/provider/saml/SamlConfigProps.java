@@ -44,7 +44,7 @@ public class SamlConfigProps {
      * Default assertionConsumerIndex if IDP value is not set
      * Defaults to 0
      */
-    private int assertionConsumerIndex = 0;
+    private int assertionConsumerIndex;
 
     /**
      * The activeKeyId in the keys map

@@ -27,7 +27,8 @@ class BindYamlTest {
     }
 
     public static class Point {
-        public int x, y;
+        public int x;
+        public int y;
         public Integer z;
 
         public Point(int x, int y, Integer z) {

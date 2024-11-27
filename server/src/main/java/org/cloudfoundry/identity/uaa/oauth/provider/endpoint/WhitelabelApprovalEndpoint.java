@@ -107,7 +107,7 @@ public class WhitelabelApprovalEndpoint {
         for (Iterator<String> iterator = scopes.keySet().iterator(); iterator.hasNext(); ) {
             String scope = iterator.next();
             String approved = "true".equals(scopes.get(scope)) ? " checked" : "";
-            String denied = !"true".equals(scopes.get(scope)) ? " checked" : "";
+            String denied = "true".equals(scopes.get(scope)) ? "" : " checked";
             scope = HtmlUtils.htmlEscape(scope);
 
             builder.append("<li><div class=\"form-group\">");

@@ -48,7 +48,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Collections.EMPTY_SET;
+import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 
 public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> implements AuthenticationManager, ApplicationEventPublisherAware, BeanNameAware {
@@ -177,7 +177,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
                 logger.debug("Storing custom attributes for user_id:" + authentication.getPrincipal().getId());
                 UserInfo userInfo = new UserInfo()
                         .setUserAttributes(authentication.getUserAttributes())
-                        .setRoles(new LinkedList(ofNullable(authentication.getExternalGroups()).orElse(EMPTY_SET)));
+                        .setRoles(new LinkedList(ofNullable(authentication.getExternalGroups()).orElse(emptySet())));
                 getUserDatabase().storeUserInfo(authentication.getPrincipal().getId(), userInfo);
             }
         }
@@ -297,11 +297,8 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
     }
 
     protected boolean haveUserAttributesChanged(UaaUser existingUser, UaaUser user) {
-        if (!StringUtils.equals(existingUser.getGivenName(), user.getGivenName()) || !StringUtils.equals(existingUser.getFamilyName(), user.getFamilyName()) ||
-                !StringUtils.equals(existingUser.getPhoneNumber(), user.getPhoneNumber()) || !StringUtils.equals(existingUser.getEmail(), user.getEmail()) || !StringUtils.equals(existingUser.getExternalId(), user.getExternalId())) {
-            return true;
-        }
-        return false;
+        return !StringUtils.equals(existingUser.getGivenName(), user.getGivenName()) || !StringUtils.equals(existingUser.getFamilyName(), user.getFamilyName()) ||
+                !StringUtils.equals(existingUser.getPhoneNumber(), user.getPhoneNumber()) || !StringUtils.equals(existingUser.getEmail(), user.getEmail()) || !StringUtils.equals(existingUser.getExternalId(), user.getExternalId());
     }
 
     protected List<? extends GrantedAuthority> mapAuthorities(String origin, Collection<? extends GrantedAuthority> authorities) {

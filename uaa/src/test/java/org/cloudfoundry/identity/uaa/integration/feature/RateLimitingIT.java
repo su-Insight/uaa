@@ -77,22 +77,22 @@ public class RateLimitingIT {
         ResponseEntity<String> response = restTemplate.getForEntity(baseUrl + "/info", String.class);
         assertNotEquals(HttpStatus.TOO_MANY_REQUESTS, response.getStatusCode());
         boolean rateLimited = false;
-        int INFO_LIMIT = 20;
-        int REQUEST_COUNT = 50;
+        int infoLimit = 20;
+        int requestCount = 50;
         //Limit on /info is set to 20
-        List<ResponseEntity> responses = new ArrayList<>(REQUEST_COUNT);
+        List<ResponseEntity> responses = new ArrayList<>(requestCount);
         //Many Requests should hit the RL
-        IntStream.range(0, REQUEST_COUNT).forEach(x -> responses.add(restTemplate.getForEntity(baseUrl + "/info", String.class)));
+        IntStream.range(0, requestCount).forEach(x -> responses.add(restTemplate.getForEntity(baseUrl + "/info", String.class)));
         //Check numbers
         long limits = responses.stream().filter(s -> HttpStatus.TOO_MANY_REQUESTS.equals(s.getStatusCode())).count();
         long oKs = responses.stream().filter(s -> HttpStatus.OK.equals(s.getStatusCode())).count();
-        assertEquals(REQUEST_COUNT, limits + oKs);
+        assertEquals(requestCount, limits + oKs);
         //Expect limited count around expected ones, more limited then with OK and check with tolerance of 2 that only expected limits are done
-        if (limits > oKs && limits > (INFO_LIMIT - 2) && limits < (REQUEST_COUNT - INFO_LIMIT + 2)) {
+        if (limits > oKs && limits > (infoLimit - 2) && limits < (requestCount - infoLimit + 2)) {
             rateLimited = true;
         }
         assertTrue(
-                "Rate limit counters are not as expected. Request: " + REQUEST_COUNT + ", Limit: " + INFO_LIMIT + ", blocked: " + limits
+                "Rate limit counters are not as expected. Request: " + requestCount + ", Limit: " + infoLimit + ", blocked: " + limits
                         + ", allowed: " + oKs, rateLimited);
         //After 1s, New Limit should be available
         TimeUnit.SECONDS.sleep(1);

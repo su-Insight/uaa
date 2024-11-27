@@ -6,7 +6,7 @@ import org.cloudfoundry.identity.uaa.audit.event.AbstractUaaEvent;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 
-public class UserModifiedEvent extends AbstractUaaEvent {
+public final class UserModifiedEvent extends AbstractUaaEvent {
 
     private static final long serialVersionUID = 8139998613071093676L;
     private final ScimUser scimUser;

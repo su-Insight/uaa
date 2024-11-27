@@ -30,7 +30,7 @@ public class LdapSimpleBindConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             String ldapProfileFile = context.getEnvironment().getProperty("ldap.profile.file");
-            return ldapProfileFile == null || ldapProfileFile.equals("ldap/ldap-simple-bind.xml");
+            return ldapProfileFile == null || "ldap/ldap-simple-bind.xml".equals(ldapProfileFile);
         }
     }
 

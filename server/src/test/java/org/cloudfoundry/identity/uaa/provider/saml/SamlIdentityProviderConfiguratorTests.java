@@ -76,7 +76,7 @@ public class SamlIdentityProviderConfiguratorTests {
     IdentityProvider<SamlIdentityProviderDefinition> idp2;
 
     public static final String singleAddAlias = "sample-alias";
-    private SamlIdentityProviderDefinition singleAdd = null;
+    private SamlIdentityProviderDefinition singleAdd;
     private SlowHttpServer slowHttpServer;
     private SamlIdentityProviderConfigurator configurator;
     private SamlConfiguration samlConfiguration;

@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
 
-public class MergedZoneBrandingInformation implements BrandingInformationSource {
+public final class MergedZoneBrandingInformation implements BrandingInformationSource {
 
     private MergedZoneBrandingInformation() {
 

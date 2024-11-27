@@ -59,7 +59,7 @@ public class OAuth2ExceptionJackson2DeserializerTests {
         String accessToken = "{\"error\": \"insufficient_scope\", \"error_description\": \"insufficient scope\", \"scope\": \"bar foo\"}";
         InsufficientScopeException result = (InsufficientScopeException) mapper.readValue(accessToken, OAuth2Exception.class);
         assertEquals("insufficient scope", result.getMessage());
-        assertEquals("bar foo", result.getAdditionalInformation().get("scope").toString());
+        assertEquals("bar foo", result.getAdditionalInformation().get("scope"));
     }
 
     @Test

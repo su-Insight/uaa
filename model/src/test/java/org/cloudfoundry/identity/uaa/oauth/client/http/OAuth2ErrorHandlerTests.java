@@ -283,7 +283,7 @@ public class OAuth2ErrorHandlerTests {
             }
         };
 
-        ArrayList<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+        ArrayList<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         messageConverters.add(extractor);
         handler.setMessageConverters(messageConverters);
 

@@ -26,9 +26,9 @@ public class RefreshTokenCreator {
     private final TokenValidityResolver refreshTokenValidityResolver;
     private final TokenEndpointBuilder tokenEndpointBuilder;
     private TimeService timeService;
-    private KeyInfoService keyInfoService;
+    private final KeyInfoService keyInfoService;
 
-    private final String UAA_REFRESH_TOKEN = "uaa.offline_token";
+    private static final String UAA_REFRESH_TOKEN = "uaa.offline_token";
 
     public RefreshTokenCreator(boolean isRestrictRefreshGrant,
             TokenValidityResolver refreshTokenValidityResolver,

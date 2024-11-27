@@ -343,7 +343,7 @@ class UaaStringUtilsTest {
     @Test
     void testGetAuthoritiesFromStrings() {
         List<? extends GrantedAuthority> authorities = UaaStringUtils.getAuthoritiesFromStrings(null);
-        assertThat(authorities).isEqualTo(Collections.EMPTY_LIST);
+        assertThat(authorities).isEqualTo(Collections.emptyList());
         assertThat(UaaStringUtils.getStringsFromAuthorities(null)).isEmpty();
         authorities = UaaStringUtils.getAuthoritiesFromStrings(Collections.singletonList("uaa.user"));
         assertThat(UaaStringUtils.getStringsFromAuthorities(authorities)).isEqualTo(Set.of("uaa.user"));

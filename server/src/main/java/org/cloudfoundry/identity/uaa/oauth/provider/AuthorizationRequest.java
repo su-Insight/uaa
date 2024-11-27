@@ -57,7 +57,7 @@ public class AuthorizationRequest extends BaseRequest implements Serializable {
      * This will be altered by the User Approval Endpoint and/or the
      * UserApprovalHandler as appropriate.
      */
-    private boolean approved = false;
+    private boolean approved;
 
     /**
      * The resolved redirect URI of this request. A URI may be present in the
@@ -258,28 +258,37 @@ public class AuthorizationRequest extends BaseRequest implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!super.equals(obj))
+        }
+        if (!super.equals(obj)) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         AuthorizationRequest other = (AuthorizationRequest) obj;
         if (approvalParameters == null) {
-            if (other.approvalParameters != null)
+            if (other.approvalParameters != null) {
                 return false;
-        } else if (!approvalParameters.equals(other.approvalParameters))
+            }
+        } else if (!approvalParameters.equals(other.approvalParameters)) {
             return false;
+        }
         if (responseTypes == null) {
-            if (other.responseTypes != null)
+            if (other.responseTypes != null) {
                 return false;
-        } else if (!responseTypes.equals(other.responseTypes))
+            }
+        } else if (!responseTypes.equals(other.responseTypes)) {
             return false;
+        }
         if (state == null) {
-            if (other.state != null)
+            if (other.state != null) {
                 return false;
-        } else if (!state.equals(other.state))
+            }
+        } else if (!state.equals(other.state)) {
             return false;
+        }
         return true;
     }
 

@@ -32,7 +32,7 @@ import java.util.UUID;
 
 public abstract class Create_Groups_For_Zones_2_5_2 extends BaseJavaMigration {
 
-    private static Logger logger = LoggerFactory.getLogger(Create_Groups_For_Zones_2_5_2.class);
+    private static final Logger logger = LoggerFactory.getLogger(Create_Groups_For_Zones_2_5_2.class);
 
     protected abstract String getIdentifierQuoteChar();
 

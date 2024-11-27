@@ -25,7 +25,7 @@ import org.cloudfoundry.identity.uaa.authentication.UaaAuthenticationDetails;
  */
 public class PrincipalAuthenticationFailureEvent extends AbstractUaaPrincipalEvent {
 
-    private String name;
+    private final String name;
 
     public PrincipalAuthenticationFailureEvent(String name, UaaAuthenticationDetails details, String zoneId) {
         super(details == null ? UaaAuthenticationDetails.UNKNOWN : details, zoneId);

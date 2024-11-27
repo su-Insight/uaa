@@ -153,10 +153,10 @@ class IdentityZoneEndpointsMockMvcTests {
 
     private final AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
 
-    private String identityClientToken = null;
-    private String identityClientZonesReadToken = null;
-    private String identityClientZonesWriteToken = null;
-    private String adminToken = null;
+    private String identityClientToken;
+    private String identityClientZonesReadToken;
+    private String identityClientZonesWriteToken;
+    private String adminToken;
     private TestApplicationEventListener<IdentityZoneModifiedEvent> zoneModifiedEventListener;
     private TestApplicationEventListener<ClientCreateEvent> clientCreateEventListener;
     private TestApplicationEventListener<ClientDeleteEvent> clientDeleteEventListener;
@@ -2053,8 +2053,9 @@ class IdentityZoneEndpointsMockMvcTests {
         mockMvc.perform(post).andExpect(status().isUnauthorized());
 
         MockHttpServletRequestBuilder get = get("/Users").header("Authorization", "Bearer " + defaultZoneAdminToken);
-        if (subdomain != null && !subdomain.equals(""))
+        if (subdomain != null && !"".equals(subdomain)) {
             get.with(new SetServerNameRequestPostProcessor(subdomain + ".localhost"));
+        }
 
         mockMvc.perform(get).andExpect(status().isUnauthorized()).andReturn();
     }
@@ -2318,8 +2319,9 @@ class IdentityZoneEndpointsMockMvcTests {
                 .header("Authorization", "Bearer " + token)
                 .contentType(APPLICATION_JSON)
                 .content(requestBody);
-        if (subdomain != null && !subdomain.isEmpty())
+        if (subdomain != null && !subdomain.isEmpty()) {
             post.with(new SetServerNameRequestPostProcessor(subdomain + ".localhost"));
+        }
 
         MvcResult result = mockMvc.perform(post)
                 .andExpect(status().isCreated())
@@ -2450,8 +2452,9 @@ class IdentityZoneEndpointsMockMvcTests {
 
     private List<ScimUser> getUsersInZone(String subdomain, String token) throws Exception {
         MockHttpServletRequestBuilder get = get("/Users").header("Authorization", "Bearer " + token);
-        if (subdomain != null && !subdomain.equals(""))
+        if (subdomain != null && !"".equals(subdomain)) {
             get.with(new SetServerNameRequestPostProcessor(subdomain + ".localhost"));
+        }
 
         MvcResult mvcResult = mockMvc.perform(get).andExpect(status().isOk()).andReturn();
 

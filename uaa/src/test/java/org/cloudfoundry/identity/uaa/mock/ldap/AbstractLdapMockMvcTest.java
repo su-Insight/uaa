@@ -69,7 +69,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LDAP;
 import static org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils.CookieCsrfPostProcessor.cookieCsrf;
 import static org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils.createClient;
@@ -354,7 +354,7 @@ public abstract class AbstractLdapMockMvcTest {
 
         //default whitelist
         def = provider.getConfig();
-        def.setExternalGroupsWhitelist(EMPTY_LIST);
+        def.setExternalGroupsWhitelist(emptyList());
         provider.setConfig(def);
         updateLdapProvider();
         IdentityZoneHolder.set(zone.getZone().getIdentityZone());
@@ -374,30 +374,30 @@ public abstract class AbstractLdapMockMvcTest {
         assumeTrue("ldap-groups-map-to-scopes.xml, ldap-groups-as-scopes.xml".contains(ldapGroup));
 
         final String MANAGER = "uaaManager";
-        final String MANAGERS = "managers";
-        final String DENVER_CO = "Denver,CO";
-        final String COST_CENTER = "costCenter";
-        final String COST_CENTERS = COST_CENTER + "s";
-        final String JOHN_THE_SLOTH = "John the Sloth";
-        final String KARI_THE_ANT_EATER = "Kari the Ant Eater";
-        final String FIRST_NAME = "first_name";
-        final String FAMILY_NAME = "family_name";
-        final String PHONE_NUMBER = "phone_number";
-        final String EMAIL_VERIFIED = "email_verified";
+        final String managers = "managers";
+        final String denverCo = "Denver,CO";
+        final String costCenter = "costCenter";
+        final String costCenters = costCenter + "s";
+        final String johnTheSloth = "John the Sloth";
+        final String kariTheAntEater = "Kari the Ant Eater";
+        final String firstName = "first_name";
+        final String familyName = "family_name";
+        final String phoneNumber = "phone_number";
+        final String emailVerified = "email_verified";
 
 
         Map<String, Object> attributeMappings = new HashMap<>();
 
         LdapIdentityProviderDefinition definition = provider.getConfig();
 
-        attributeMappings.put("user.attribute." + MANAGERS, MANAGER);
-        attributeMappings.put("user.attribute." + COST_CENTERS, COST_CENTER);
+        attributeMappings.put("user.attribute." + managers, MANAGER);
+        attributeMappings.put("user.attribute." + costCenters, costCenter);
 
         //test to remap the user/person properties
-        attributeMappings.put(FIRST_NAME, "sn");
-        attributeMappings.put(PHONE_NUMBER, "givenname");
-        attributeMappings.put(FAMILY_NAME, "telephonenumber");
-        attributeMappings.put(EMAIL_VERIFIED, "emailVerified");
+        attributeMappings.put(firstName, "sn");
+        attributeMappings.put(phoneNumber, "givenname");
+        attributeMappings.put(familyName, "telephonenumber");
+        attributeMappings.put(emailVerified, "emailVerified");
 
         definition.setAttributeMappings(attributeMappings);
         provider.setConfig(definition);
@@ -411,12 +411,12 @@ public abstract class AbstractLdapMockMvcTest {
         UaaAuthentication authentication = (UaaAuthentication) ((SecurityContext) result.getRequest().getSession().getAttribute(SPRING_SECURITY_CONTEXT_KEY)).getAuthentication();
 
         assertEquals(2, authentication.getUserAttributes().size(), "Expected two user attributes");
-        assertNotNull(authentication.getUserAttributes().get(COST_CENTERS), "Expected cost center attribute");
-        assertEquals(DENVER_CO, authentication.getUserAttributes().getFirst(COST_CENTERS));
+        assertNotNull(authentication.getUserAttributes().get(costCenters), "Expected cost center attribute");
+        assertEquals(denverCo, authentication.getUserAttributes().getFirst(costCenters));
 
-        assertNotNull(authentication.getUserAttributes().get(MANAGERS), "Expected manager attribute");
-        assertEquals(2, authentication.getUserAttributes().get(MANAGERS).size(), "Expected 2 manager attribute values");
-        assertThat(authentication.getUserAttributes().get(MANAGERS), containsInAnyOrder(JOHN_THE_SLOTH, KARI_THE_ANT_EATER));
+        assertNotNull(authentication.getUserAttributes().get(managers), "Expected manager attribute");
+        assertEquals(2, authentication.getUserAttributes().get(managers).size(), "Expected 2 manager attribute values");
+        assertThat(authentication.getUserAttributes().get(managers), containsInAnyOrder(johnTheSloth, kariTheAntEater));
 
         assertEquals("8885550986", getFamilyName(username));
         assertEquals("Marissa", getPhoneNumber(username));
@@ -627,7 +627,7 @@ public abstract class AbstractLdapMockMvcTest {
         assertThat(testLogger.getMessageCount(), is(5));
         String zoneId = zone.getZone().getIdentityZone().getId();
         ScimUser createdUser = jdbcScimUserProvisioning.retrieveAll(zoneId)
-                .stream().filter(dbUser -> dbUser.getUserName().equals("marissa2")).findFirst().get();
+                .stream().filter(dbUser -> "marissa2".equals(dbUser.getUserName())).findFirst().get();
         String userCreatedLogMessage = testLogger.getFirstLogMessageOfType(AuditEventType.UserCreatedEvent);
         String expectedMessage = String.format(
                 "UserCreatedEvent ('[\"user_id=%s\",\"username=marissa2\"]'): principal=%s, origin=[caller=null], identityZoneId=[%s]",
@@ -646,7 +646,7 @@ public abstract class AbstractLdapMockMvcTest {
     // see also similar test for SAML in SamlAuthenticationMockMvcTests.java
     @Test
     void passcodeGrantIdTokenContainsExternalGroupsAsRolesClaim() throws Exception {
-        assumeTrue(ldapGroup.equals("ldap-groups-as-scopes.xml") || ldapGroup.equals("ldap-groups-map-to-scopes.xml"));
+        assumeTrue("ldap-groups-as-scopes.xml".equals(ldapGroup) || "ldap-groups-map-to-scopes.xml".equals(ldapGroup));
 
         LdapIdentityProviderDefinition definition = provider.getConfig();
         // External groups will only appear as roles if they are whitelisted
@@ -1066,7 +1066,7 @@ public abstract class AbstractLdapMockMvcTest {
 
     @Test
     void testLdapScopes() {
-        assumeTrue(ldapGroup.equals("ldap-groups-as-scopes.xml"));
+        assumeTrue("ldap-groups-as-scopes.xml".equals(ldapGroup));
         AuthenticationManager manager = (AuthenticationManager) getBean("ldapAuthenticationManager");
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("marissa3", "ldap3");
         Authentication auth = manager.authenticate(token);
@@ -1081,7 +1081,7 @@ public abstract class AbstractLdapMockMvcTest {
 
     @Test
     void testLdapScopesFromChainedAuth() {
-        assumeTrue(ldapGroup.equals("ldap-groups-as-scopes.xml"));
+        assumeTrue("ldap-groups-as-scopes.xml".equals(ldapGroup));
         AuthenticationManager manager = (AuthenticationManager) getWebApplicationContext().getBean("zoneAwareAuthzAuthenticationManager");
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("marissa3", "ldap3");
         IdentityZoneHolder.set(zone.getZone().getIdentityZone());
@@ -1097,7 +1097,7 @@ public abstract class AbstractLdapMockMvcTest {
 
     @Test
     void testNestedLdapScopes() {
-        if (!ldapGroup.equals("ldap-groups-as-scopes.xml")) {
+        if (!"ldap-groups-as-scopes.xml".equals(ldapGroup)) {
             return;
         }
         Set<String> defaultAuthorities = Sets.newHashSet(zone.getZone().getIdentityZone().getConfig().getUserConfig().getDefaultGroups());
@@ -1133,7 +1133,7 @@ public abstract class AbstractLdapMockMvcTest {
     }
 
     void doTestNestedLdapGroupsMappedToScopes(String username, String password, String[] expected) {
-        assumeTrue(ldapGroup.equals("ldap-groups-map-to-scopes.xml"));
+        assumeTrue("ldap-groups-map-to-scopes.xml".equals(ldapGroup));
         transferDefaultMappingsToZone(zone.getZone().getIdentityZone());
         IdentityZoneHolder.set(zone.getZone().getIdentityZone());
         AuthenticationManager manager = getWebApplicationContext().getBean(DynamicZoneAwareAuthenticationManager.class);
@@ -1216,7 +1216,7 @@ public abstract class AbstractLdapMockMvcTest {
 
     @Test
     void testStopIfException() throws Exception {
-        if (ldapProfile.equals("ldap-simple-bind.xml") && ldapGroup.equals("ldap-groups-null.xml")) {
+        if ("ldap-simple-bind.xml".equals(ldapProfile) && "ldap-groups-null.xml".equals(ldapGroup)) {
             ScimUser user = new ScimUser();
             String userName = "user" + new RandomValueStringGenerator().generate() + "@example.com";
             user.setUserName(userName);
@@ -1230,7 +1230,7 @@ public abstract class AbstractLdapMockMvcTest {
     }
 
     void doTestNestedLdapGroupsMappedToScopesWithDefaultScopes(String username, String password, String[] expected) {
-        assumeTrue(ldapGroup.equals("ldap-groups-map-to-scopes.xml"));
+        assumeTrue("ldap-groups-map-to-scopes.xml".equals(ldapGroup));
         AuthenticationManager manager = getWebApplicationContext().getBean(DynamicZoneAwareAuthenticationManager.class);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         transferDefaultMappingsToZone(zone.getZone().getIdentityZone());

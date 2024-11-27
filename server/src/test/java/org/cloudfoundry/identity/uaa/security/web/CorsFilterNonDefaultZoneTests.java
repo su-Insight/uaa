@@ -427,7 +427,7 @@ class CorsFilterNonDefaultZoneTests {
         List<String> allowedUris = new ArrayList<>(Arrays.asList("^/uaa/userinfo$", "^/uaa/logout\\.do$"));
         identityZone.getConfig().getCorsPolicy().getXhrConfiguration().setAllowedUris(allowedUris);
 
-        List<String> allowedOrigins = new ArrayList<String>(Collections.singletonList("example.com$"));
+        List<String> allowedOrigins = new ArrayList<>(Collections.singletonList("example.com$"));
         identityZone.getConfig().getCorsPolicy().getXhrConfiguration().setAllowedOrigins(allowedOrigins);
 
         identityZone.getConfig().getCorsPolicy().getXhrConfiguration().setAllowedHeaders(
@@ -444,7 +444,7 @@ class CorsFilterNonDefaultZoneTests {
         identityZone.getConfig().getCorsPolicy().getDefaultConfiguration().setAllowedMethods(allowedMethods);
         List<String> allowedUris = new ArrayList<>(Arrays.asList("^/uaa/userinfo$", "^/uaa/logout\\.do$"));
         identityZone.getConfig().getCorsPolicy().getDefaultConfiguration().setAllowedUris(allowedUris);
-        List<String> allowedOrigins = new ArrayList<String>(Collections.singletonList("example.com$"));
+        List<String> allowedOrigins = new ArrayList<>(Collections.singletonList("example.com$"));
         identityZone.getConfig().getCorsPolicy().getDefaultConfiguration().setAllowedOrigins(allowedOrigins);
         identityZone.getConfig().getCorsPolicy().getDefaultConfiguration().setAllowedHeaders(
                 Arrays.asList("Accept", "Authorization", "X-Requested-With"));

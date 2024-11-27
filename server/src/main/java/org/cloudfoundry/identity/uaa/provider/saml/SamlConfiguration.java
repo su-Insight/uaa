@@ -45,7 +45,7 @@ public class SamlConfiguration {
     @Value("${login.saml.nameID:'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified'}")
     private String legacyNameId = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified";
     @Value("${login.saml.assertionConsumerIndex:0}")
-    private int legacyAssertionConsumerIndex = 0;
+    private int legacyAssertionConsumerIndex;
     @Value("${login.saml.metadataTrustCheck:true}")
     private boolean legacyMetadataTrustCheck = true;
     @Value("${login.showSamlLoginLink:true}")
@@ -93,7 +93,7 @@ public class SamlConfiguration {
         if (value == null) {
             return false;
         }
-        return !value.isEmpty() && !value.equals("null");
+        return !value.isEmpty() && !"null".equals(value);
     }
 
     @Autowired

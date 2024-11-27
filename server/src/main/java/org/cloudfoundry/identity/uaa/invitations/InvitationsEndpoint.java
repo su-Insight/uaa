@@ -120,7 +120,7 @@ public class InvitationsEndpoint {
                         } catch (MalformedURLException mue) {
                             invitationsResponse.getFailedInvites().add(InvitationsResponse.failure(email, "invitation.exception.url", String.format("Malformed url: %s", invitationLink)));
                         }
-                    } else if (providers.size() == 0) {
+                    } else if (providers.isEmpty()) {
                         invitationsResponse.getFailedInvites().add(InvitationsResponse.failure(email, "provider.non-existent", "No authentication provider found."));
                     } else {
                         invitationsResponse.getFailedInvites().add(InvitationsResponse.failure(email, "provider.ambiguous", "Multiple authentication providers found."));
@@ -141,7 +141,7 @@ public class InvitationsEndpoint {
     private ScimUser findOrCreateUser(String email, String origin) {
         email = email.trim().toLowerCase();
         List<ScimUser> results = scimUserProvisioning.retrieveByEmailAndZone(email, origin, IdentityZoneHolder.get().getId());
-        if (results == null || results.size() == 0) {
+        if (results == null || results.isEmpty()) {
             ScimUser user = new ScimUser(null, email, "", "");
             user.setPrimaryEmail(email.toLowerCase());
             user.setOrigin(origin);

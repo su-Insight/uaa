@@ -21,13 +21,13 @@ import static org.junit.Assert.assertNull;
  * Scope: Test class
  */
 public class DefaultUserAuthenticationConverterTests {
-    private DefaultUserAuthenticationConverter converter = new DefaultUserAuthenticationConverter();
+    private final DefaultUserAuthenticationConverter converter = new DefaultUserAuthenticationConverter();
 
     @Test
     public void shouldExtractAuthenticationWhenAuthoritiesIsCollection() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(UserAuthenticationConverter.USERNAME, "test_user");
-        ArrayList<String> lists = new ArrayList<String>();
+        ArrayList<String> lists = new ArrayList<>();
         lists.add("a1");
         lists.add("a2");
         map.put(UserAuthenticationConverter.AUTHORITIES, lists);
@@ -40,7 +40,7 @@ public class DefaultUserAuthenticationConverterTests {
 
     @Test
     public void shouldExtractAuthenticationWhenAuthoritiesIsString() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(UserAuthenticationConverter.USERNAME, "test_user");
         map.put(UserAuthenticationConverter.AUTHORITIES, "a1,a2");
 
@@ -51,7 +51,7 @@ public class DefaultUserAuthenticationConverterTests {
 
     @Test
     public void shouldExtractAuthenticationWhenUserDetailsProvided() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(UserAuthenticationConverter.USERNAME, "test_user");
 
         UserDetailsService userDetailsService = Mockito.mock(UserDetailsService.class);
@@ -65,7 +65,7 @@ public class DefaultUserAuthenticationConverterTests {
 
     @Test
     public void shouldExtractWithDefaultUsernameClaimWhenNotSet() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(UserAuthenticationConverter.USERNAME, "test_user");
 
         Authentication authentication = converter.extractAuthentication(map);
@@ -88,7 +88,7 @@ public class DefaultUserAuthenticationConverterTests {
         DefaultUserAuthenticationConverter converter = new DefaultUserAuthenticationConverter();
         converter.setUserClaimName(customUserClaim);
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(customUserClaim, "test_user");
 
         Authentication authentication = converter.extractAuthentication(map);

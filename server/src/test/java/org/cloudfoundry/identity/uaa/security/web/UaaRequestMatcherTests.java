@@ -97,7 +97,7 @@ public class UaaRequestMatcherTests {
         // Accept only JSON
         UaaRequestMatcher matcher = new UaaRequestMatcher("/somePath");
         matcher.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON.toString()));
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("source", "foo");
         params.put("response_type", "token");
         matcher.setParameters(params);
@@ -184,7 +184,7 @@ public class UaaRequestMatcherTests {
     @Test
     public void pathMatcherMatchesOneOfMultipleHeaders() {
         UaaRequestMatcher matcher = new UaaRequestMatcher("/somePath");
-        Map<String, List<String>> configMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> configMap = new HashMap<>();
         configMap.put("Authorization", Arrays.asList(new String[]{"Basic", "Bearer"}));
         matcher.setHeaders(configMap);
         MockHttpServletRequest testRequest = request(
@@ -199,7 +199,7 @@ public class UaaRequestMatcherTests {
     @Test
     public void pathMatcherDoesNotMatchOneOfMultipleHeaders() {
         UaaRequestMatcher matcher = new UaaRequestMatcher("/somePath");
-        Map<String, List<String>> configMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> configMap = new HashMap<>();
         configMap.put("Authorization", Arrays.asList(new String[]{"Basic", "Bearer"}));
         matcher.setHeaders(configMap);
         MockHttpServletRequest testRequest = request(

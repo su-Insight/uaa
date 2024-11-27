@@ -89,7 +89,7 @@ public class TokenEndpoint extends AbstractEndpoint {
             throw new InvalidRequestException("Missing grant type");
         }
 
-        if (tokenRequest.getGrantType().equals("implicit")) {
+        if ("implicit".equals(tokenRequest.getGrantType())) {
             throw new InvalidGrantException("Implicit grant type not supported from token endpoint");
         }
 

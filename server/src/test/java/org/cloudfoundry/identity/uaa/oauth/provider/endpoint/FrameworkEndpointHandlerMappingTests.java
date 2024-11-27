@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
  */
 public class FrameworkEndpointHandlerMappingTests {
 
-    private FrameworkEndpointHandlerMapping mapping = new FrameworkEndpointHandlerMapping();
+    private final FrameworkEndpointHandlerMapping mapping = new FrameworkEndpointHandlerMapping();
 
     @Test
     public void defaults() throws Exception {

@@ -36,9 +36,9 @@ import java.util.Base64;
  */
 public class ClientBasicAuthenticationFilter extends OncePerRequestFilter {
     private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
-    private AuthenticationEntryPoint authenticationEntryPoint;
-    private AuthenticationManager authenticationManager;
-    private boolean enableUriEncodingCompatibilityMode;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AuthenticationManager authenticationManager;
+    private final boolean enableUriEncodingCompatibilityMode;
 
     /**
      * Creates an instance which will authenticate against the supplied
@@ -97,7 +97,7 @@ public class ClientBasicAuthenticationFilter extends OncePerRequestFilter {
                 headerEncodedCreds = "false";
             }
 
-            if (enableUriEncodingCompatibilityMode && !headerEncodedCreds.toLowerCase().equals("true")) {
+            if (enableUriEncodingCompatibilityMode && !"true".equals(headerEncodedCreds.toLowerCase())) {
                 clientId = tokens[0];
                 clientSecret = tokens[1];
             } else {

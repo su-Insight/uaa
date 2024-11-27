@@ -54,7 +54,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ApprovalsMockMvcTests extends AbstractTokenMockMvcTests {
 
-    private RandomValueStringGenerator generator = new RandomValueStringGenerator();
+    private final RandomValueStringGenerator generator = new RandomValueStringGenerator();
     private ScimUser user1;
     private ClientDetails client1;
 

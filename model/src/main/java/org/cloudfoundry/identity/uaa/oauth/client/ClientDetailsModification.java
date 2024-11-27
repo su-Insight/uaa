@@ -42,7 +42,9 @@ public class ClientDetailsModification extends UaaClientDetails {
 
     @JsonGetter("action")
     private String getActionForSerialization() {
-        if (action.equals(NONE)) return null;
+        if (action.equals(NONE)) {
+            return null;
+        }
         return getAction();
     }
 

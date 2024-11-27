@@ -2,7 +2,7 @@ package org.cloudfoundry.identity.uaa.ratelimiting.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class IntUtils {
+public final class IntUtils {
 
     private IntUtils() {
     }

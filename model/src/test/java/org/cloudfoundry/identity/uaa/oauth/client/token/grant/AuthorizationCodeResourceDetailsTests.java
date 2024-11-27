@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class AuthorizationCodeResourceDetailsTests {
 
-    private AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
+    private final AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
 
     @Test
     public void testGetDefaultRedirectUri() {

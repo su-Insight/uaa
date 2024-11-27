@@ -176,7 +176,7 @@ public class TokenEndpointAuthenticationFilter implements Filter {
      */
     protected Authentication extractCredentials(HttpServletRequest request) {
         String grantType = request.getParameter(OAuth2Utils.GRANT_TYPE);
-        if (grantType != null && grantType.equals("password")) {
+        if ("password".equals(grantType)) {
             UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
                     request.getParameter("username"), request.getParameter("password"));
             result.setDetails(authenticationDetailsSource.buildDetails(request));

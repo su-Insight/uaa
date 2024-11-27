@@ -43,7 +43,7 @@ public class ConvertingExceptionView implements View {
 
     private static final Logger logger = LoggerFactory.getLogger(ConvertingExceptionView.class);
 
-    private ResponseEntity<? extends ExceptionReport> responseEntity;
+    private final ResponseEntity<? extends ExceptionReport> responseEntity;
 
     private final HttpMessageConverter<?>[] messageConverters;
 
@@ -121,7 +121,7 @@ public class ConvertingExceptionView implements View {
         }
         MediaType.sortByQualityValue(acceptedMediaTypes);
         Class<?> returnValueType = returnValue.getClass();
-        List<MediaType> allSupportedMediaTypes = new ArrayList<MediaType>();
+        List<MediaType> allSupportedMediaTypes = new ArrayList<>();
         if (messageConverters != null) {
             for (MediaType acceptedMediaType : acceptedMediaTypes) {
                 for (@SuppressWarnings("rawtypes")

@@ -87,10 +87,10 @@ public class SecurityFilterChainPostProcessor implements BeanPostProcessor {
     }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private boolean requireHttps = false;
+    private boolean requireHttps;
     private List<String> redirectToHttps = Collections.emptyList();
     private List<String> ignore = Collections.emptyList();
-    private boolean dumpRequests = false;
+    private boolean dumpRequests;
     private int httpsPort;
 
     private Map<Class<? extends Exception>, ReasonPhrase> errorMap = new HashMap<>();

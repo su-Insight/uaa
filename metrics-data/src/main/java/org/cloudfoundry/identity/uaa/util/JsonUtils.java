@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Date;
 import java.util.Map;
 
@@ -134,6 +135,7 @@ public class JsonUtils {
     }
 
     public static class JsonUtilException extends RuntimeException {
+        @Serial
         private static final long serialVersionUID = -4804245225960963421L;
 
         public JsonUtilException(Throwable cause) {
@@ -192,7 +194,7 @@ public class JsonUtils {
     }
 
     public static boolean hasLength(CharSequence str) {
-        return !(str == null || str.length() == 0);
+        return !(str == null || str.isEmpty());
     }
 
     public static boolean hasText(CharSequence str) {

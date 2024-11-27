@@ -24,7 +24,7 @@ public class MapWrapper {
 
     private final StandardEvaluationContext context;
 
-    private Object target;
+    private final Object target;
 
     public MapWrapper(Object target) {
         this.target = target;

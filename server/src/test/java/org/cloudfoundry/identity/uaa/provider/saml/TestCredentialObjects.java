@@ -12,7 +12,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 
-public class TestCredentialObjects {
+public final class TestCredentialObjects {
 
     private TestCredentialObjects() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

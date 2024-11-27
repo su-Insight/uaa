@@ -363,7 +363,7 @@ public abstract class JwtTokenSignedByThisUAA {
         } else {
             try {
                 audience = ((List<?>) audClaim).stream()
-                        .map(s -> (String) s)
+                        .map(String.class::cast)
                         .collect(toList());
             } catch (ClassCastException ex) {
                 throw new InvalidTokenException("The token's audience claim is invalid or unparseable.", ex);
@@ -408,7 +408,9 @@ public abstract class JwtTokenSignedByThisUAA {
     }
 
     private static boolean equals(Object a, Object b) {
-        if (a == null) return b == null;
+        if (a == null) {
+            return b == null;
+        }
         return a.equals(b);
     }
 
@@ -440,7 +442,7 @@ public abstract class JwtTokenSignedByThisUAA {
         List<?> scopes = (List<?>) scopeClaim;
 
         if (scopes.stream().allMatch(String.class::isInstance)) {
-            return scopes.stream().map(o -> (String) o).collect(toList());
+            return scopes.stream().map(String.class::cast).collect(toList());
         } else {
             throw unparsableClaimException;
         }

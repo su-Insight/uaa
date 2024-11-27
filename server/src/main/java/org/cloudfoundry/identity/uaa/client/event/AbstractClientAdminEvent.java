@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractClientAdminEvent extends AbstractUaaEvent {
 
-    private ClientDetails nonExistent = new UaaClientDetails("non-existent", "", "", "", "");
+    private final ClientDetails nonExistent = new UaaClientDetails("non-existent", "", "", "", "");
 
-    private ClientDetails client;
+    private final ClientDetails client;
 
     public AbstractClientAdminEvent(ClientDetails client, Authentication principal, String zoneId) {
         super(principal, zoneId);

@@ -69,7 +69,7 @@ class ScimGroupEndpointDocs extends EndpointDocs {
     private static final HeaderDescriptor IDENTITY_ZONE_ID_HEADER = headerWithName(IdentityZoneSwitchingFilter.HEADER).description("May include this header to administer another zone if using `zones.<zoneId>.admin` or `uaa.admin` scope against the default UAA zone.").optional();
     private static final HeaderDescriptor IDENTITY_ZONE_SUBDOMAIN_HEADER = headerWithName(IdentityZoneSwitchingFilter.SUBDOMAIN_HEADER).optional().description("If using a `zones.<zoneId>.admin` scope/token, indicates what zone this request goes to by supplying a subdomain.");
 
-    private FieldDescriptor[] responseFieldDescriptors = {
+    private final FieldDescriptor[] responseFieldDescriptors = {
             fieldWithPath("id").description("The globally unique group ID"),
             fieldWithPath("displayName").description("The identifier specified upon creation of the group, unique within the identity zone"),
             fieldWithPath("description").description("Human readable description of the group, displayed e.g. when approving scopes"),

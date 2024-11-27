@@ -19,10 +19,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class WhitelabelApprovalEndpointTests {
 
-    private WhitelabelApprovalEndpoint endpoint = new WhitelabelApprovalEndpoint();
-    private Map<String, String> parameters = new HashMap<String, String>();
-    private MockHttpServletRequest request = new MockHttpServletRequest();
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final WhitelabelApprovalEndpoint endpoint = new WhitelabelApprovalEndpoint();
+    private final Map<String, String> parameters = new HashMap<>();
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
 
     private AuthorizationRequest createFromParameters(Map<String, String> authorizationParameters) {
         AuthorizationRequest request = new AuthorizationRequest();
@@ -37,7 +37,7 @@ public class WhitelabelApprovalEndpointTests {
     public void testApprovalPage() throws Exception {
         request.setContextPath("/foo");
         parameters.put("client_id", "client");
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         model.put("authorizationRequest", createFromParameters(parameters));
         ModelAndView result = endpoint.getAccessConfirmation(model, request);
         result.getView().render(result.getModel(), request, response);
@@ -53,7 +53,7 @@ public class WhitelabelApprovalEndpointTests {
     public void testApprovalPageWithScopes() throws Exception {
         request.setContextPath("/foo");
         parameters.put("client_id", "client");
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         model.put("authorizationRequest", createFromParameters(parameters));
         model.put("scopes", Collections.singletonMap("scope.read", "true"));
         ModelAndView result = endpoint.getAccessConfirmation(model, request);
@@ -72,7 +72,7 @@ public class WhitelabelApprovalEndpointTests {
         request.setContextPath("/foo");
         request.setAttribute("_csrf", new DefaultCsrfToken("X-CSRF-TOKEN", "_csrf", "FOO"));
         parameters.put("client_id", "client");
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         model.put("authorizationRequest", createFromParameters(parameters));
         ModelAndView result = endpoint.getAccessConfirmation(model, request);
         result.getView().render(result.getModel(), request, response);
@@ -87,7 +87,7 @@ public class WhitelabelApprovalEndpointTests {
     public void testApprovalPageWithSuspectScope() throws Exception {
         request.setContextPath("/foo");
         parameters.put("client_id", "client");
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         model.put("authorizationRequest", createFromParameters(parameters));
         String scope = "${T(java.lang.Runtime).getRuntime().exec(\"cd ..\")}";
         String escapedScope = "T(java.lang.Runtime).getRuntime().exec(&quot;cd ..&quot;)";
@@ -110,7 +110,7 @@ public class WhitelabelApprovalEndpointTests {
         request.setContextPath("/foo");
         request.setAttribute("_csrf", new DefaultCsrfToken("X-CSRF-TOKEN", "_csrf", "FOO"));
         parameters.put("client_id", "client");
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         model.put("authorizationRequest", createFromParameters(parameters));
         model.put("scopes", Collections.singletonMap("scope.read", "true"));
         ModelAndView result = endpoint.getAccessConfirmation(model, request);
@@ -131,7 +131,7 @@ public class WhitelabelApprovalEndpointTests {
         request.setContextPath("/foo");
         request.setAttribute("_csrf", new DefaultCsrfToken("X-CSRF-TOKEN", "_csrf", "FOO"));
         parameters.put("client_id", "client");
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         model.put("authorizationRequest", createFromParameters(parameters));
         ModelAndView result = endpoint.getAccessConfirmation(model, request);
         result.getView().render(result.getModel(), request, response);

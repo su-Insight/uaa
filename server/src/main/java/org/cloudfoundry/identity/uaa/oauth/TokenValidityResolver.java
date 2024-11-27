@@ -9,9 +9,9 @@ import static java.util.Optional.ofNullable;
 
 public class TokenValidityResolver {
     public static final int DEFAULT_TO_GLOBAL_POLICY = -1;
-    private int globalTokenValiditySeconds;
+    private final int globalTokenValiditySeconds;
     private TimeService timeService;
-    private ClientTokenValidity clientTokenValidity;
+    private final ClientTokenValidity clientTokenValidity;
 
     public TokenValidityResolver(ClientTokenValidity clientTokenValidity,
             int globalTokenValiditySeconds,

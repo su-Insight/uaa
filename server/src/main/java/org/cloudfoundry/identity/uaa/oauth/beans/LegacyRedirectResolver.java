@@ -202,7 +202,7 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
 
         private Matcher redirectMatcher;
         private boolean isValidRedirect = true;
-        private boolean hasWildcardPort = false;
+        private boolean hasWildcardPort;
         private AntPathMatcher matcher;
         private String redirectUri;
 

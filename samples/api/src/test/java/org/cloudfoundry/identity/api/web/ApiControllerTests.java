@@ -48,7 +48,7 @@ public class ApiControllerTests {
     @Test
     public void testWithUser() throws Exception {
         controller.setInfo(new ClassPathResource("info.tmpl"));
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         View view = controller.info(model, new UsernamePasswordAuthenticationToken(testAccounts.getUserName(), "<NONE>"));
         MockHttpServletResponse response = new MockHttpServletResponse();
         view.render(model, new MockHttpServletRequest(), response);

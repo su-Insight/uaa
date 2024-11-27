@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Returns Log instance that replaces \n, \r, \t with a | to prevent log forging.
  */
-public class SanitizedLogFactory {
+public final class SanitizedLogFactory {
 
     private SanitizedLogFactory() {
     }

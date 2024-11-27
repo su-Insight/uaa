@@ -105,7 +105,9 @@ public class StaleUrlCache implements UrlContentCache {
             UriRequest other = (UriRequest) obj;
             if (uri == null) {
                 return other.uri == null;
-            } else return uri.equals(other.uri);
+            } else {
+                return uri.equals(other.uri);
+            }
         }
     }
 

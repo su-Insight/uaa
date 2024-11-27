@@ -28,10 +28,10 @@ import java.util.Arrays;
 
 public class GroupModifiedEvent extends AbstractUaaEvent {
 
-    private String groupId;
-    private String groupName;
-    private String[] members;
-    private AuditEventType eventType;
+    private final String groupId;
+    private final String groupName;
+    private final String[] members;
+    private final AuditEventType eventType;
 
     protected GroupModifiedEvent(String groupId, String name, String[] members, AuditEventType type, Authentication authentication, String zoneId) {
         super(authentication, zoneId);
@@ -115,15 +115,19 @@ public class GroupModifiedEvent extends AbstractUaaEvent {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
 
             GroupInfo groupInfo = (GroupInfo) o;
 
-            if (!group.equals(groupInfo.group)) return false;
-            if (!Arrays.equals(members, groupInfo.members)) return false;
-
-            return true;
+            if (!group.equals(groupInfo.group)) {
+                return false;
+            }
+            return !!Arrays.equals(members, groupInfo.members);
         }
 
         @Override

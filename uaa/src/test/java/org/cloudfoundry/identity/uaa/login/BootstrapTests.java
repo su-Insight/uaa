@@ -70,7 +70,7 @@ class BootstrapTests {
             LOGIN_IDP_METADATA_URL,
             LOGIN_SAML_METADATA_TRUST_CHECK);
 
-    private final static MockServletContext mockServletContext = new MockServletContext() {
+    private static final MockServletContext mockServletContext = new MockServletContext() {
         @Override
         @NonNull
         public RequestDispatcher getNamedDispatcher(@Nullable String path) {
@@ -164,8 +164,8 @@ class BootstrapTests {
         ScimGroupProvisioning scimGroupProvisioning = context.getBean("scimGroupProvisioning", ScimGroupProvisioning.class);
         List<ScimGroup> scimGroups = scimGroupProvisioning.retrieveAll(IdentityZoneHolder.get().getId());
         Assertions.assertThat(scimGroups)
-                .haveAtLeastOne(new Condition<>(g -> g.getDisplayName().equals("pony") && g.getDescription().equals("The magic of friendship"), "pony group"))
-                .haveAtLeastOne(new Condition<>(g -> g.getDisplayName().equals("cat") && g.getDescription().equals("The cat"), "cat group"));
+                .haveAtLeastOne(new Condition<>(g -> "pony".equals(g.getDisplayName()) && "The magic of friendship".equals(g.getDescription()), "pony group"))
+                .haveAtLeastOne(new Condition<>(g -> "cat".equals(g.getDisplayName()) && "The cat".equals(g.getDescription()), "cat group"));
 
         IdentityZoneConfigurationBootstrap zoneBootstrap = context.getBean(IdentityZoneConfigurationBootstrap.class);
         assertThat(zoneBootstrap.getHomeRedirect()).isEqualTo("https://deprecated.home_redirect.com");

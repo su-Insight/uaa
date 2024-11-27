@@ -316,7 +316,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         throwWhenUserManagementIsDisallowed(user.getOrigin(), request);
         throwWhenInvalidSelfEdit(user, userId, request, authentication);
 
-        if (etag.equals("NaN")) {
+        if ("NaN".equals(etag)) {
             throw new ScimException("Missing If-Match for PUT", HttpStatus.BAD_REQUEST);
         }
         int version = getVersion(userId, etag);
@@ -349,7 +349,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
             HttpServletResponse response,
             OAuth2Authentication authentication) {
 
-        if (etag.equals("NaN")) {
+        if ("NaN".equals(etag)) {
             throw new ScimException("Missing If-Match for PUT", HttpStatus.BAD_REQUEST);
         }
 
@@ -478,7 +478,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         while (value.endsWith("\"")) {
             value = value.substring(0, value.length() - 1);
         }
-        if (value.equals("*")) {
+        if ("*".equals(value)) {
             return scimUserProvisioning.retrieve(userId, identityZoneManager.getCurrentIdentityZoneId()).getVersion();
         }
         try {
@@ -511,7 +511,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         List<ScimUser> result;
         Set<String> attributes = StringUtils.commaDelimitedListToSet(attributesCommaSeparated);
         try {
-            result = scimUserProvisioning.query(filter, sortBy, sortOrder.equals("ascending"), identityZoneManager.getCurrentIdentityZoneId());
+            result = scimUserProvisioning.query(filter, sortBy, "ascending".equals(sortOrder), identityZoneManager.getCurrentIdentityZoneId());
             for (ScimUser user : UaaPagingUtils.subList(result, startIndex, count)) {
                 if (attributes.isEmpty() || attributes.stream().anyMatch("groups"::equalsIgnoreCase)) {
                     syncGroups(user);
@@ -646,7 +646,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         incrementErrorCounts(e);
         // User can supply trace=true or just trace (unspecified) to get stack
         // traces
-        boolean trace = request.getParameter("trace") != null && !request.getParameter("trace").equals("false");
+        boolean trace = request.getParameter("trace") != null && !"false".equals(request.getParameter("trace"));
         return new ConvertingExceptionView(new ResponseEntity<>(new ExceptionReport(e, trace, e.getExtraInfo()),
                 e.getStatus()), messageConverters);
     }

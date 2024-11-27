@@ -35,7 +35,7 @@ public class V1_5_4__NormalizeTableAndColumnNames extends BaseJavaMigration {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     // the system table `information_schema.columns` has columns like: table_name, column_name, column_type, extra, column_default, table_schema
-    private String colQueryForMysql5 = "SELECT CONCAT(\n"
+    private final String colQueryForMysql5 = "SELECT CONCAT(\n"
             +
             "'ALTER TABLE ', table_name, \n"
             +
@@ -49,7 +49,7 @@ public class V1_5_4__NormalizeTableAndColumnNames extends BaseJavaMigration {
             "WHERE table_schema = 'uaa' \n" +
             "ORDER BY line";
 
-    private String colQueryTemplateForMysql8 = "SELECT CONCAT(\n"
+    private final String colQueryTemplateForMysql8 = "SELECT CONCAT(\n"
             +
             "'ALTER TABLE `', table_name, '`' \n"
             +

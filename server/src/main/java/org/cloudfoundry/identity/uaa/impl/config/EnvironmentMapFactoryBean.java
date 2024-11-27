@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class EnvironmentMapFactoryBean implements FactoryBean<Map<String, ?>>, EnvironmentAware {
 
-    private static Logger logger = LoggerFactory.getLogger(EnvironmentMapFactoryBean.class);
+    private static final Logger logger = LoggerFactory.getLogger(EnvironmentMapFactoryBean.class);
 
     private static final Collection<String> STATIC_PROPERTY_SOURCES = Arrays.asList(
             StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME,

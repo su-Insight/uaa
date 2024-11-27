@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class BackwardsCompatibleDelegatingPasswordEncoder implements PasswordEncoder {
 
-    private final String OPTIONAL_BCRYPT_PREFIX = "bcrypt";
+    private static final String OPTIONAL_BCRYPT_PREFIX = "bcrypt";
     private final BCryptPasswordEncoder defaultPasswordEncoder;
 
     public BackwardsCompatibleDelegatingPasswordEncoder(final BCryptPasswordEncoder defaultPasswordEncoder) {

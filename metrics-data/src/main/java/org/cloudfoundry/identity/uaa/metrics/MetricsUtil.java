@@ -15,7 +15,7 @@
 
 package org.cloudfoundry.identity.uaa.metrics;
 
-public class MetricsUtil {
+public final class MetricsUtil {
     public static final String GLOBAL_GROUP = "uaa.global.metrics";
 
     // Utility classes should not have public constructors
@@ -69,7 +69,7 @@ public class MetricsUtil {
 
         @Override
         public String toString() {
-            return Long.valueOf(get()).toString();
+            return Long.toString(get());
         }
     }
 
@@ -94,7 +94,7 @@ public class MetricsUtil {
 
         @Override
         public String toString() {
-            return Double.valueOf(get()).toString();
+            return Double.toString(get());
         }
     }
 }

@@ -27,8 +27,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  */
 public class JdbcPagingListFactory {
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
-    private LimitSqlAdapter limitSqlAdapter;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final LimitSqlAdapter limitSqlAdapter;
 
     public JdbcPagingListFactory(NamedParameterJdbcTemplate jdbcTemplate, LimitSqlAdapter limitSqlAdapter) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,6 +36,6 @@ public class JdbcPagingListFactory {
     }
 
     public <T> List<T> createJdbcPagingList(String sql, Map<String, ?> args, RowMapper<T> mapper, int pageSize) {
-        return new JdbcPagingList<T>(jdbcTemplate, limitSqlAdapter, sql, args, mapper, pageSize);
+        return new JdbcPagingList<>(jdbcTemplate, limitSqlAdapter, sql, args, mapper, pageSize);
     }
 }

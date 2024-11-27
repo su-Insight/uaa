@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.EMPTY_MAP;
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -284,7 +284,7 @@ public class GeneralIdentityZoneConfigurationValidatorTests {
 
     @Test
     public void validate_without_legacy_key() throws InvalidIdentityZoneConfigurationException {
-        samlConfig.setKeys(EMPTY_MAP);
+        samlConfig.setKeys(emptyMap());
         assertNull(samlConfig.getActiveKeyId());
         samlConfig.addKey("key-1", new SamlKey(key1, passphrase1, certificate1));
         samlConfig.addAndActivateKey("key-2", new SamlKey(key2, passphrase2, certificate2));
@@ -293,7 +293,7 @@ public class GeneralIdentityZoneConfigurationValidatorTests {
 
     @Test
     public void validate_without_legacy_key_and_null_active_key() throws InvalidIdentityZoneConfigurationException {
-        samlConfig.setKeys(EMPTY_MAP);
+        samlConfig.setKeys(emptyMap());
         assertNull(samlConfig.getActiveKeyId());
         samlConfig.addKey("key-1", new SamlKey(key1, passphrase1, certificate1));
         samlConfig.addKey("key-2", new SamlKey(key2, passphrase2, certificate2));
@@ -304,14 +304,14 @@ public class GeneralIdentityZoneConfigurationValidatorTests {
 
     @Test
     public void validate_no_keys() throws Exception {
-        samlConfig.setKeys(EMPTY_MAP);
+        samlConfig.setKeys(emptyMap());
         assertNull(samlConfig.getActiveKeyId());
         validator.validate(zone, mode);
     }
 
     @Test
     public void validate_isser_no_keys() throws Exception {
-        samlConfig.setKeys(EMPTY_MAP);
+        samlConfig.setKeys(emptyMap());
         zone.getConfig().setIssuer("http://localhost/new");
         assertNull(samlConfig.getActiveKeyId());
         expection.expect(InvalidIdentityZoneConfigurationException.class);

@@ -17,7 +17,7 @@ import javax.xml.namespace.QName;
 import java.time.Instant;
 
 @Slf4j
-public class OpenSamlXmlUtils {
+public final class OpenSamlXmlUtils {
 
     private OpenSamlXmlUtils() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

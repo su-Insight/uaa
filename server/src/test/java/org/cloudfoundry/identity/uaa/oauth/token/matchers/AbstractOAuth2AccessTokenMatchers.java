@@ -11,6 +11,7 @@ import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
 public abstract class AbstractOAuth2AccessTokenMatchers<T> extends TypeSafeMatcher<T> {
 
     protected Matcher<?> value;
-    public static ThreadLocal<Map<String, RevocableToken>> revocableTokens = ThreadLocal.withInitial(() -> emptyMap());
+    public static ThreadLocal<Map<String, RevocableToken>> revocableTokens = ThreadLocal.withInitial(Collections::emptyMap);
     private KeyInfoService keyInfoService;
 
     public AbstractOAuth2AccessTokenMatchers(Matcher<?> value) {
@@ -44,11 +45,13 @@ public abstract class AbstractOAuth2AccessTokenMatchers<T> extends TypeSafeMatch
 
     protected Map<String, Object> getClaims(T token) {
         String tokenValue = null;
-        if (token instanceof OAuth2AccessToken)
-            tokenValue = ((OAuth2AccessToken) token).getValue(); else if (token instanceof OAuth2RefreshToken)
+        if (token instanceof OAuth2AccessToken) {
+            tokenValue = ((OAuth2AccessToken) token).getValue();
+        } else if (token instanceof OAuth2RefreshToken) {
             tokenValue = ((OAuth2RefreshToken) token).getValue();
-        else
+        } else {
             throw new IllegalArgumentException("token must be instanceof OAuth2AccessToken or OAuth2RefreshToken");
+        }
 
         Jwt tokenJwt = JwtHelper.decode(getToken(tokenValue));
         assertNotNull(tokenJwt);

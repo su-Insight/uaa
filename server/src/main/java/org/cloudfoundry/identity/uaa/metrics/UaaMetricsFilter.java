@@ -50,7 +50,7 @@ public class UaaMetricsFilter extends OncePerRequestFilter implements UaaMetrics
     private final Map<String, MetricsQueue> perUriMetrics;
     private final LinkedHashMap<AntPathRequestMatcher, UrlGroup> urlGroups;
     private boolean enabled = true;
-    private boolean perRequestMetrics = false;
+    private boolean perRequestMetrics;
 
     private NotificationPublisher notificationPublisher;
 

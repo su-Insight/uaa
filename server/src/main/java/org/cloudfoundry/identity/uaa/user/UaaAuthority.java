@@ -83,7 +83,7 @@ public enum UaaAuthority implements GrantedAuthority {
     }
 
     public static GrantedAuthority authority(String value) {
-        return value.equals("uaa.admin") ? UAA_ADMIN : value.contains("uaa.user") ? UAA_USER
+        return "uaa.admin".equals(value) ? UAA_ADMIN : value.contains("uaa.user") ? UAA_USER
                 : new SimpleGrantedAuthority(value);
     }
 }

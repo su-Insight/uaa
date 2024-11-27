@@ -22,7 +22,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 public class TestClassNullifier {
 
-    private volatile static Class<?> clazz;
+    private static volatile Class<?> clazz;
 
     @BeforeEach
     public void trackClass() {

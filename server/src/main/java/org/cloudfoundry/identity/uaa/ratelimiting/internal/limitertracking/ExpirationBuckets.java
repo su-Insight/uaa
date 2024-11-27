@@ -24,7 +24,7 @@ public class ExpirationBuckets implements CompoundKeyExpirationAdder,
     private final long buckets; // need long version for efficient bounds checking
     private final List<CompoundKey>[] expirationsBucketRing;
     private ExpirationBucketMapping ebm;
-    private volatile boolean wereDying = false;
+    private volatile boolean wereDying;
 
     public ExpirationBuckets(NanoTimeSupplier currentTimeSupplier, CompoundKeyPurger compoundKeyPurger,
             int minimumBuckets) {
@@ -123,7 +123,7 @@ public class ExpirationBuckets implements CompoundKeyExpirationAdder,
         return powerOf2;
     }
 
-    public static class BucketRingBoundsException extends IllegalStateException {
+    public static final class BucketRingBoundsException extends IllegalStateException {
         private BucketRingBoundsException(ExpirationBucketMapping ebm, long buckets, long secondOfInterest) {
             super("Second requested outside of current BucketRing window: " +
                     ebm.currentRingBucketBaseSecond +

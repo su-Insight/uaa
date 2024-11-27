@@ -29,7 +29,7 @@ public class IdentityZone {
     @NotNull
     private String name;
 
-    private int version = 0;
+    private int version;
 
     private String description;
 

@@ -44,12 +44,12 @@ import java.util.TreeMap;
  */
 public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider {
 
-    private StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
+    private final StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
 
-    private String scopePrefix = OAuth2Utils.SCOPE_PREFIX;
+    private final String scopePrefix = OAuth2Utils.SCOPE_PREFIX;
 
-    private RequestEnhancer authorizationRequestEnhancer = new DefaultRequestEnhancer();
-    private boolean stateMandatory = true;
+    private final RequestEnhancer authorizationRequestEnhancer = new DefaultRequestEnhancer();
+    private final boolean stateMandatory = true;
 
     public boolean supportsResource(OAuth2ProtectedResourceDetails resource) {
         return resource instanceof AuthorizationCodeResourceDetails
@@ -79,7 +79,7 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
         final AccessTokenRequest copy = request;
 
         final ResponseExtractor<ResponseEntity<Void>> delegate = getAuthorizationResponseExtractor();
-        ResponseExtractor<ResponseEntity<Void>> extractor = new ResponseExtractor<ResponseEntity<Void>>() {
+        ResponseExtractor<ResponseEntity<Void>> extractor = new ResponseExtractor<>() {
             @Override
             public ResponseEntity<Void> extractData(ClientHttpResponse response) throws IOException {
                 if (response.getHeaders().containsKey("Set-Cookie")) {

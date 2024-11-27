@@ -68,7 +68,7 @@ class CachingPasswordEncoderTest {
         assertTrue(passwordEncoder.matches(password, encoded));
         assertTrue(cachingPasswordEncoder.matches(password, encoded));
 
-        assertTrue(cachingPasswordEncoder.getOrCreateHashList(cacheKey).size() > 0,
+        assertTrue(!cachingPasswordEncoder.getOrCreateHashList(cacheKey).isEmpty(),
                 "Password is no longer cached when we expected it to be cached");
 
         Thread.sleep(shortTTL.toMillis() + 100);

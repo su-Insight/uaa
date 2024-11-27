@@ -87,7 +87,7 @@ public class OAuth2ClientContextFilterTests {
         MockHttpServletResponse response = new MockHttpServletResponse();
         FilterChain filterChain = mock(FilterChain.class);
         String redirect = "https://example.com/authorize";
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("foo", "bar");
         params.put("scope", "spam");
         UserRedirectRequiredException exception = new UserRedirectRequiredException(
@@ -104,7 +104,7 @@ public class OAuth2ClientContextFilterTests {
     @Test
     public void testVanillaRedirectUri() throws Exception {
         String redirect = "https://example.com/authorize";
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("foo", "bar");
         params.put("scope", "spam");
         testRedirectUri(redirect, params, redirect + "?foo=bar&scope=spam");
@@ -113,7 +113,7 @@ public class OAuth2ClientContextFilterTests {
     @Test
     public void testTwoScopesRedirectUri() throws Exception {
         String redirect = "https://example.com/authorize";
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("foo", "bar");
         params.put("scope", "spam scope2");
         testRedirectUri(redirect, params, redirect + "?foo=bar&scope=spam%20scope2");

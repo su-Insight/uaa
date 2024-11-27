@@ -161,7 +161,7 @@ public class UaaClientDetails implements ClientDetails {
             return false;
         }
         for (String auto : autoApproveScopes) {
-            if (auto.equals("true") || auto.equals(scope)) {
+            if ("true".equals(auto) || auto.equals(scope)) {
                 return true;
             }
         }

@@ -77,7 +77,7 @@ class ClientJwtConfigurationTest {
         when(mockedKey.getKeys()).thenReturn(keyList);
         ClientJwtConfiguration privateKey = new ClientJwtConfiguration(null, mockedKey);
         when(mockedKey.getKeySetMap()).thenThrow(new IllegalStateException("error"));
-        assertThrows(InvalidClientDetailsException.class, () -> privateKey.getCleanString());
+        assertThrows(InvalidClientDetailsException.class, privateKey::getCleanString);
         ClientJwtConfiguration privateKey2 = new ClientJwtConfiguration("hello", null);
         assertNull(privateKey2.getCleanString());
     }

@@ -38,11 +38,11 @@ public class ConvertingExceptionViewTests {
 
     private ConvertingExceptionView view;
 
-    private HttpMessageConverter<?>[] messageConverters = new HttpMessageConverter<?>[]{new StringHttpMessageConverter()};
+    private final HttpMessageConverter<?>[] messageConverters = new HttpMessageConverter<?>[]{new StringHttpMessageConverter()};
 
-    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
 
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
 
     @Test
     public void testGetContentType() {

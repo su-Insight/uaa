@@ -49,8 +49,7 @@ public class PkceValidationService {
      * @return Set of supported code challenge methods.
      */
     public Set<String> getSupportedCodeChallengeMethods() {
-        Set<String> supportedCodeChallengeMethods = this.pkceVerifiers.keySet();
-        return supportedCodeChallengeMethods;
+        return this.pkceVerifiers.keySet();
     }
 
     /**

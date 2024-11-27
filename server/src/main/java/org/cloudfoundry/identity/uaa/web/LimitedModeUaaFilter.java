@@ -35,14 +35,14 @@ public class LimitedModeUaaFilter extends OncePerRequestFilter {
     public static final String ERROR_CODE = "uaa_unavailable";
     public static final String ERROR_MESSAGE = "UAA intentionally in limited mode, operation not permitted. Please try later.";
     public static final long STATUS_INTERVAL_MS = 5000;
-    private static Logger logger = LoggerFactory.getLogger(LimitedModeUaaFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(LimitedModeUaaFilter.class);
 
     private Set<String> permittedMethods = emptySet();
     private List<AntPathRequestMatcher> endpoints = emptyList();
-    private volatile boolean enabled = false;
-    private File statusFile = null;
+    private volatile boolean enabled;
+    private File statusFile;
     private TimeService timeService = new TimeServiceImpl();
-    private AtomicLong lastFileCheck = new AtomicLong(0);
+    private final AtomicLong lastFileCheck = new AtomicLong(0);
 
     @Override
     protected void doFilterInternal(

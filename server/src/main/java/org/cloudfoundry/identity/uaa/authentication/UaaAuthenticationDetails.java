@@ -197,28 +197,37 @@ public class UaaAuthenticationDetails implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         UaaAuthenticationDetails other = (UaaAuthenticationDetails) obj;
         if (clientId == null) {
-            if (other.clientId != null)
+            if (other.clientId != null) {
                 return false;
-        } else if (!clientId.equals(other.clientId))
+            }
+        } else if (!clientId.equals(other.clientId)) {
             return false;
+        }
         if (origin == null) {
-            if (other.origin != null)
+            if (other.origin != null) {
                 return false;
-        } else if (!origin.equals(other.origin))
+            }
+        } else if (!origin.equals(other.origin)) {
             return false;
+        }
         if (sessionId == null) {
-            if (other.sessionId != null)
+            if (other.sessionId != null) {
                 return false;
-        } else if (!sessionId.equals(other.sessionId))
+            }
+        } else if (!sessionId.equals(other.sessionId)) {
             return false;
+        }
         return true;
     }
 

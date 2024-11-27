@@ -1586,7 +1586,7 @@ public class DeprecatedUaaTokenServicesTests {
 
     @Test
     public void testReadAccessToken() {
-        readAccessToken(EMPTY_SET);
+        readAccessToken(emptySet());
     }
 
     @Test
@@ -1748,7 +1748,7 @@ public class DeprecatedUaaTokenServicesTests {
         params.put("grant_type", "refresh_token");
         params.put("client_id", CLIENT_ID);
         params.put("token_format", OPAQUE.getStringValue());
-        OAuth2AccessToken newAccessToken = tokenServices.refreshAccessToken(composite.getRefreshToken().getValue(), new TokenRequest(params, CLIENT_ID, Collections.EMPTY_SET, "refresh_token"));
+        OAuth2AccessToken newAccessToken = tokenServices.refreshAccessToken(composite.getRefreshToken().getValue(), new TokenRequest(params, CLIENT_ID, Collections.emptySet(), "refresh_token"));
         assertThat("Opaque access token must be shorter than 37 characters", newAccessToken.getValue().length(), lessThanOrEqualTo(36));
         assertThat("Opaque refresh token must be shorter than 37 characters", newAccessToken.getRefreshToken().getValue().length(), lessThanOrEqualTo(36));
     }

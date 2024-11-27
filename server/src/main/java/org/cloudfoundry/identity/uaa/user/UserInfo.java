@@ -58,12 +58,18 @@ public class UserInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserInfo)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UserInfo)) {
+            return false;
+        }
 
         UserInfo userInfo = (UserInfo) o;
 
-        if (!compareRoles(getRoles(), ((UserInfo) o).getRoles())) return false;
+        if (!compareRoles(getRoles(), ((UserInfo) o).getRoles())) {
+            return false;
+        }
         return getUserAttributes() != null ? getUserAttributes().equals(userInfo.getUserAttributes()) : userInfo.getUserAttributes() == null;
     }
 

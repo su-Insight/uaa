@@ -51,7 +51,7 @@ public class BootstrapSamlIdentityProviderData implements InitializingBean {
     private boolean legacyMetadataTrustCheck = true;
     private boolean legacyShowSamlLink = true;
     private List<IdentityProviderWrapper<SamlIdentityProviderDefinition>> samlProviders = new LinkedList<>();
-    private Map<String, Map<String, Object>> providers = null;
+    private Map<String, Map<String, Object>> providers;
     private final SamlIdentityProviderConfigurator samlConfigurator;
 
     public BootstrapSamlIdentityProviderData(final @Qualifier("metaDataProviders") SamlIdentityProviderConfigurator samlConfigurator

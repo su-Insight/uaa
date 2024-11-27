@@ -331,8 +331,8 @@ class MultitenantJdbcClientDetailsServiceTests {
         assertEquals("myRedirectUri", uaaUaaClientDetails.getRegisteredRedirectUri() .iterator().next());
         assertEquals(1, uaaUaaClientDetails.getAuthorities().size());
         assertEquals("myAuthority", uaaUaaClientDetails.getAuthorities().iterator() .next().getAuthority());
-        assertEquals(new Integer(100), uaaUaaClientDetails.getAccessTokenValiditySeconds());
-        assertEquals(new Integer(200), uaaUaaClientDetails.getRefreshTokenValiditySeconds());
+        assertEquals(Integer.valueOf(100), uaaUaaClientDetails.getAccessTokenValiditySeconds());
+        assertEquals(Integer.valueOf(200), uaaUaaClientDetails.getRefreshTokenValiditySeconds());
     }
 
     @Test
@@ -444,9 +444,9 @@ class MultitenantJdbcClientDetailsServiceTests {
                 .iterator();
         assertEquals("myAuthority1", authorities.next().getAuthority());
         assertEquals("myAuthority2", authorities.next().getAuthority());
-        assertEquals(new Integer(100),
+        assertEquals(Integer.valueOf(100),
                 clientDetails.getAccessTokenValiditySeconds());
-        assertEquals(new Integer(200),
+        assertEquals(Integer.valueOf(200),
                 clientDetails.getRefreshTokenValiditySeconds());
         assertTrue(clientDetails.isAutoApprove("read"));
     }

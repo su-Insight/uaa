@@ -49,8 +49,9 @@ public final class ClientAuthentication {
                 return CLIENT_SECRET_BASIC;
             } else if (hasKeyConfiguration) {
                 return PRIVATE_KEY_JWT;
-            } else
+            } else {
                 return NONE;
+            }
         }
     }
 }

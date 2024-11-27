@@ -34,7 +34,7 @@ public final class SnippetUtils {
         return new ConstrainableField(name);
     }
 
-    public static class ConstrainableParameter extends ParameterDescriptor {
+    public static final class ConstrainableParameter extends ParameterDescriptor {
         private ConstrainableParameter(String name) {
             super(name);
         }
@@ -53,7 +53,7 @@ public final class SnippetUtils {
         }
     }
 
-    public static class ConstrainableHeader extends HeaderDescriptor {
+    public static final class ConstrainableHeader extends HeaderDescriptor {
         private ConstrainableHeader(String name) {
             super(name);
         }
@@ -73,7 +73,7 @@ public final class SnippetUtils {
         }
     }
 
-    public static class ConstrainableField extends FieldDescriptor {
+    public static final class ConstrainableField extends FieldDescriptor {
         private ConstrainableField(String name) {
             super(name);
         }

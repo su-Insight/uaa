@@ -115,8 +115,9 @@ subprojects {
         retry {
             def failOnPassedAfterRetrySystemProperty = Boolean.parseBoolean(
                     System.getProperty("failOnPassedAfterRetry", "false"));
-            if (!failOnPassedAfterRetrySystemProperty)
+            if (!failOnPassedAfterRetrySystemProperty) {
                 logger.warn("retry: Flaky tests will not make the test run fail because failOnPassedAfterRetry is false.")
+            }
 
             // Configure the retry extension
             failOnPassedAfterRetry = failOnPassedAfterRetrySystemProperty

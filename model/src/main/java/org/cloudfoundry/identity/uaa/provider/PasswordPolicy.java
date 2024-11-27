@@ -33,8 +33,12 @@ public class PasswordPolicy extends GenericPasswordPolicy<PasswordPolicy> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
 
         PasswordPolicy that = (PasswordPolicy) obj;
         return super.equals(obj) && this.expirePasswordInMonths == that.expirePasswordInMonths;

@@ -968,7 +968,7 @@ class ScimUserBootstrapTests {
 
     private static class AuthEventRunnable implements Runnable {
 
-        static volatile AssertionError failure = null;
+        static volatile AssertionError failure;
         private final int iterations = 50;
 
         private final ExternalGroupAuthorizationEvent externalGroupAuthorizationEvent;
@@ -982,7 +982,9 @@ class ScimUserBootstrapTests {
         @Override
         public void run() {
             for (int i = 0; i < iterations; i++) {
-                if (failure != null) break;
+                if (failure != null) {
+                    break;
+                }
                 try {
                     bootstrap.onApplicationEvent(externalGroupAuthorizationEvent);
                 } catch (MemberNotFoundException e) {

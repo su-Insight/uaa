@@ -42,7 +42,7 @@ public class ResourceOwnerPasswordTokenGranterTests {
     private Authentication validUser = new UsernamePasswordAuthenticationToken("foo", "bar",
             Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
 
-    private UaaClientDetails client = new UaaClientDetails("foo", "resource", "scope", "password", "ROLE_USER");
+    private final UaaClientDetails client = new UaaClientDetails("foo", "resource", "scope", "password", "ROLE_USER");
 
     private AuthenticationManager authenticationManager = new AuthenticationManager() {
         public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -50,17 +50,17 @@ public class ResourceOwnerPasswordTokenGranterTests {
         }
     };
 
-    private DefaultTokenServices providerTokenServices = new DefaultTokenServices();
+    private final DefaultTokenServices providerTokenServices = new DefaultTokenServices();
 
-    private ClientDetailsService clientDetailsService = new ClientDetailsService() {
+    private final ClientDetailsService clientDetailsService = new ClientDetailsService() {
         public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
             return client;
         }
     };
 
-    private OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+    private final OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
 
-    private TokenRequest tokenRequest;
+    private final TokenRequest tokenRequest;
 
     public ResourceOwnerPasswordTokenGranterTests() {
         String clientId = "client";
@@ -68,7 +68,7 @@ public class ResourceOwnerPasswordTokenGranterTests {
         clientDetails.setClientId(clientId);
 
         providerTokenServices.setTokenStore(new InMemoryTokenStore());
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         parameters.put("username", "foo");
         parameters.put("password", "bar");
         parameters.put("client_id", clientId);

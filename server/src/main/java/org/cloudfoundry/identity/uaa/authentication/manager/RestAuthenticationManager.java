@@ -57,11 +57,11 @@ public class RestAuthenticationManager implements AuthenticationManager {
 
     private RestOperations restTemplate = new RestTemplate();
 
-    private static String DEFAULT_LOGIN_URL = "http://uaa.cloudfoundry.com/authenticate";
+    private static final String DEFAULT_LOGIN_URL = "http://uaa.cloudfoundry.com/authenticate";
 
     private String remoteUrl = DEFAULT_LOGIN_URL;
 
-    private boolean nullPassword = false;
+    private boolean nullPassword;
 
 
     /**
@@ -132,7 +132,7 @@ public class RestAuthenticationManager implements AuthenticationManager {
     }
 
     protected Object getParameters(String username, String password) {
-        MultiValueMap<String, Object> parameters = new LinkedMaskingMultiValueMap<String, Object>("password");
+        MultiValueMap<String, Object> parameters = new LinkedMaskingMultiValueMap<>("password");
         parameters.set("username", username);
         parameters.set("password", password);
         return parameters;

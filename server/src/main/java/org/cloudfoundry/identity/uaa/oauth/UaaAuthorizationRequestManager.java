@@ -68,9 +68,9 @@ public class UaaAuthorizationRequestManager implements OAuth2RequestFactory {
 
     private final SecurityContextAccessor securityContextAccessor;
 
-    private UaaUserDatabase uaaUserDatabase;
+    private final UaaUserDatabase uaaUserDatabase;
 
-    private IdentityProviderProvisioning providerProvisioning;
+    private final IdentityProviderProvisioning providerProvisioning;
     private final IdentityZoneManager identityZoneManager;
 
     public UaaAuthorizationRequestManager(final MultitenantClientServices clientDetailsService,
@@ -283,7 +283,7 @@ public class UaaAuthorizationRequestManager implements OAuth2RequestFactory {
         for (String scope : scopes) {
             if (scopeToResource.containsKey(scope)) {
                 resourceIds.add(scopeToResource.get(scope));
-            } else if (scope.contains(scopeSeparator) && !scope.endsWith(scopeSeparator) && !scope.equals("uaa.none")) {
+            } else if (scope.contains(scopeSeparator) && !scope.endsWith(scopeSeparator) && !"uaa.none".equals(scope)) {
                 String id = scope.substring(0, scope.lastIndexOf(scopeSeparator));
                 resourceIds.add(id);
             }
@@ -402,13 +402,16 @@ public class UaaAuthorizationRequestManager implements OAuth2RequestFactory {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null || getClass() != obj.getClass())
+            }
+            if (obj == null || getClass() != obj.getClass()) {
                 return false;
+            }
             UaaTokenRequest other = (UaaTokenRequest) obj;
-            if (!Objects.equals(resourceIds, other.resourceIds))
+            if (!Objects.equals(resourceIds, other.resourceIds)) {
                 return false;
+            }
             return Objects.equals(responseTypes, other.responseTypes);
         }
     }

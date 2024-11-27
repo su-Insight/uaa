@@ -112,7 +112,7 @@ public class ScimGroupEndpoints {
     }
 
     private List<ScimGroup> filterForCurrentUser(List<ScimGroup> input, int startIndex, int count, boolean includeMembers) {
-        List<ScimGroup> response = new ArrayList<ScimGroup>();
+        List<ScimGroup> response = new ArrayList<>();
         int expectedResponseSize = Math.min(count, input.size());
         boolean needMore = response.size() < expectedResponseSize;
         while (needMore && startIndex <= input.size()) {
@@ -222,7 +222,8 @@ public class ScimGroupEndpoints {
         } catch (IllegalArgumentException e) {
             throw new ScimException("Invalid filter expression: [" + filter + "]", e, HttpStatus.BAD_REQUEST);
         }
-        final String filterOrigin = origin, filterGroup = externalGroup;
+        final String filterOrigin = origin;
+        final String filterGroup = externalGroup;
         result.removeIf(em -> hasText(filterOrigin) && !em.getOrigin().equals(filterOrigin));
         result.removeIf(em -> hasText(filterGroup) && !em.getExternalGroup().equals(filterGroup));
 
@@ -401,7 +402,7 @@ public class ScimGroupEndpoints {
         try {
             group.setZoneId(identityZoneManager.getCurrentIdentityZoneId());
             ScimGroup updated = dao.update(groupId, group, identityZoneManager.getCurrentIdentityZoneId());
-            if (group.getMembers() != null && group.getMembers().size() > 0) {
+            if (group.getMembers() != null && !group.getMembers().isEmpty()) {
                 membershipManager.updateOrAddMembers(updated.getId(),
                         group.getMembers(),
                         identityZoneManager.getCurrentIdentityZoneId());
@@ -472,7 +473,7 @@ public class ScimGroupEndpoints {
         if (!group.getDisplayName().matches(ZONE_MANAGING_SCOPE_REGEX)) {
             throw new ScimException("Invalid group name.", HttpStatus.BAD_REQUEST);
         }
-        if (group.getMembers() == null || group.getMembers().size() == 0) {
+        if (group.getMembers() == null || group.getMembers().isEmpty()) {
             throw new ScimException("Invalid group members, you have to add at least one member.",
                     HttpStatus.BAD_REQUEST);
         }
@@ -585,7 +586,7 @@ public class ScimGroupEndpoints {
         }
         // User can supply trace=true or just trace (unspecified) to get stack
         // traces
-        boolean trace = request.getParameter("trace") != null && !request.getParameter("trace").equals("false");
+        boolean trace = request.getParameter("trace") != null && !"false".equals(request.getParameter("trace"));
         return new ConvertingExceptionView(new ResponseEntity<ExceptionReport>(new ExceptionReport(e, trace),
                 e.getStatus()), messageConverters);
     }
@@ -598,7 +599,7 @@ public class ScimGroupEndpoints {
         while (value.endsWith("\"")) {
             value = value.substring(0, value.length() - 1);
         }
-        if (value.equals("*")) {
+        if ("*".equals(value)) {
             return dao.retrieve(groupId, identityZoneManager.getCurrentIdentityZoneId()).getVersion();
         }
         try {

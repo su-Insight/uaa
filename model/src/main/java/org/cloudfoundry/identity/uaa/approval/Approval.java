@@ -111,7 +111,9 @@ public class Approval {
 
     @JsonDeserialize(using = JsonDateDeserializer.class)
     public Approval setLastUpdatedAt(Date lastUpdatedAt) {
-        if (lastUpdatedAt == null) throw new IllegalArgumentException("lastUpdatedAt cannot be null");
+        if (lastUpdatedAt == null) {
+            throw new IllegalArgumentException("lastUpdatedAt cannot be null");
+        }
         this.lastUpdatedAt = lastUpdatedAt;
         return this;
     }

@@ -51,7 +51,7 @@ public class ImplicitTokenGrantIntegrationTests {
     @Rule
     public ServerRunning serverRunning = ServerRunning.isRunning();
 
-    private UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
+    private final UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
 
     @Rule
     public TestAccountSetup testAccountSetup = TestAccountSetup.standard(serverRunning, testAccounts);
@@ -89,7 +89,7 @@ public class ImplicitTokenGrantIntegrationTests {
         String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", testAccounts.getUserName(),
                 testAccounts.getPassword());
 
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("credentials", credentials);
         ResponseEntity<Void> result = serverRunning.postForResponse(implicitUrl(), headers, formData);
 
@@ -108,7 +108,7 @@ public class ImplicitTokenGrantIntegrationTests {
         String credentials = String.format("{ \"username\":\"%s\", \"password\":\"%s\" }", testAccounts.getUserName(),
                 testAccounts.getPassword());
 
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("credentials", credentials);
         ResponseEntity<Void> result = serverRunning.postForResponse(implicitUrl(), headers, formData);
 

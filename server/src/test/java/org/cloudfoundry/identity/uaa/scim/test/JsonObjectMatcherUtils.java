@@ -43,7 +43,7 @@ public class JsonObjectMatcherUtils extends BaseMatcher<String> {
     @Override
     public boolean matches(Object item) {
 
-        if (!String.class.isInstance(item)) {
+        if (!(item instanceof String)) {
             return false;
         }
 

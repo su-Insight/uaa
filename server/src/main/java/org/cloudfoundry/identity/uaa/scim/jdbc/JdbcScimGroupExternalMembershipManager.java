@@ -26,7 +26,7 @@ import java.util.List;
 public class JdbcScimGroupExternalMembershipManager
         implements ScimGroupExternalMembershipManager {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -62,7 +62,7 @@ public class JdbcScimGroupExternalMembershipManager
                     EXTERNAL_GROUP_MAPPING_TABLE
             );
 
-    private RowMapper<ScimGroupExternalMember> rowMapper;
+    private final RowMapper<ScimGroupExternalMember> rowMapper;
 
     private ScimGroupProvisioning scimGroupProvisioning;
 

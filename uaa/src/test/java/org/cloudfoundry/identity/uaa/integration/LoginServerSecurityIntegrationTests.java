@@ -62,7 +62,7 @@ import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LOGIN_SERVER;
 public class LoginServerSecurityIntegrationTests {
 
     private final String JOE = "joe" + new RandomValueStringGenerator().generate().toLowerCase();
-    private final String LOGIN_SERVER_JOE = "ls_joe" + new RandomValueStringGenerator().generate().toLowerCase();
+    private final String loginServerJoe = "ls_joe" + new RandomValueStringGenerator().generate().toLowerCase();
 
     @Rule
     public ServerRunning serverRunning = ServerRunning.isRunning();
@@ -118,7 +118,7 @@ public class LoginServerSecurityIntegrationTests {
 
         userForLoginServer = new ScimUser();
         userForLoginServer.setPassword("password");
-        userForLoginServer.setUserName(LOGIN_SERVER_JOE);
+        userForLoginServer.setUserName(loginServerJoe);
         userForLoginServer.setName(new ScimUser.Name("Joe_login_server", "User"));
         userForLoginServer.addEmail("joe_ls@blah.com");
         userForLoginServer.setVerified(true);

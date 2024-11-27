@@ -233,7 +233,7 @@ public abstract class AbstractDefaultTokenServicesTests {
     protected OAuth2Authentication createAuthentication() {
         return new OAuth2Authentication(
                 RequestTokenFactory.createOAuth2Request(null, "id", null, false,
-                        new LinkedHashSet<String>(Arrays.asList("read", "write")), null, null, null, null),
+                        new LinkedHashSet<>(Arrays.asList("read", "write")), null, null, null, null),
                 new TestAuthentication("test2", false));
     }
 

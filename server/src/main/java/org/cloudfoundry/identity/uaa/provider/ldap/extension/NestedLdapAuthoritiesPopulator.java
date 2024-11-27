@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 
 /**
  * A LDAP authority populator that can recursively search static nested groups.
@@ -86,7 +86,7 @@ public class NestedLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopula
         if (MEMBER_OF.equals(getGroupSearchBase())) {
             String[] memberOfs = user.getStringAttributes(MEMBER_OF);
             if (memberOfs == null || memberOfs.length == 0) {
-                return EMPTY_LIST;
+                return emptyList();
             } else {
                 return Arrays.stream(memberOfs).map(s -> new LdapAuthority(s, s)).collect(Collectors.toList());
             }
@@ -98,10 +98,10 @@ public class NestedLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopula
     @Override
     public Set<GrantedAuthority> getGroupMembershipRoles(String userDn, String username) {
         if (getGroupSearchBase() == null) {
-            return new HashSet<GrantedAuthority>();
+            return new HashSet<>();
         }
 
-        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+        Set<GrantedAuthority> authorities = new HashSet<>();
 
         performNestedSearch(userDn, username, authorities, getMaxSearchDepth());
 
@@ -148,7 +148,7 @@ public class NestedLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopula
                 role = getRolePrefix() + role;
                 circular = circular | (!authorities.add(new LdapAuthority(role, dn, record)));
             }
-            String roleName = roles.size() > 0 ? roles.iterator().next() : dn;
+            String roleName = roles.isEmpty() ? dn : roles.iterator().next();
             if (!circular) {
                 performNestedSearch(dn, roleName, authorities, (depth - 1));
             }

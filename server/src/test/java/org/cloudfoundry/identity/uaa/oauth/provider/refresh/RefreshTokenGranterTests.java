@@ -38,27 +38,27 @@ import static org.junit.Assert.assertTrue;
  */
 public class RefreshTokenGranterTests {
 
-    private Authentication validUser = new UsernamePasswordAuthenticationToken("foo", "bar",
+    private final Authentication validUser = new UsernamePasswordAuthenticationToken("foo", "bar",
             Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
-    private AuthenticationManager authenticationManager = new AuthenticationManager() {
+    private final AuthenticationManager authenticationManager = new AuthenticationManager() {
         public Authentication authenticate(Authentication authentication) throws AuthenticationException {
             return validUser;
         }
     };
 
-    private UaaClientDetails client = new UaaClientDetails("foo", "resource", "scope", "refresh_token", "ROLE_USER");
+    private final UaaClientDetails client = new UaaClientDetails("foo", "resource", "scope", "refresh_token", "ROLE_USER");
 
-    private TokenStore tokenStore = new InMemoryTokenStore();
-    private DefaultTokenServices providerTokenServices = new DefaultTokenServices();
+    private final TokenStore tokenStore = new InMemoryTokenStore();
+    private final DefaultTokenServices providerTokenServices = new DefaultTokenServices();
 
-    private ClientDetailsService clientDetailsService = new ClientDetailsService() {
+    private final ClientDetailsService clientDetailsService = new ClientDetailsService() {
         public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
             return client;
         }
     };
 
-    private OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+    private final OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
 
     private OAuth2AccessToken accessToken;
 
@@ -88,7 +88,7 @@ public class RefreshTokenGranterTests {
     }
 
     private TokenRequest createRefreshTokenRequest(String refreshToken) {
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<>();
         parameters.put("grant_type", "refresh_token");
         parameters.put("refresh_token", refreshToken);
         return requestFactory.createTokenRequest(parameters, client);

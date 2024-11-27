@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LOGIN_SERVER;
 import static org.cloudfoundry.identity.uaa.oauth.client.ClientConstants.ALLOWED_PROVIDERS;
 import static org.hamcrest.Matchers.not;
@@ -74,7 +74,7 @@ public class DomainFilterTest {
             "</md:EntityDescriptor>";
 
     UaaClientDetails client;
-    List<IdentityProvider> activeProviders = EMPTY_LIST;
+    List<IdentityProvider> activeProviders = emptyList();
     IdentityProvider uaaProvider;
     IdentityProvider ldapProvider;
     IdentityProvider samlProvider1;
@@ -147,15 +147,15 @@ public class DomainFilterTest {
 
     @Test
     public void test_no_allowed_client_providers() {
-        client.addAdditionalInformation(ALLOWED_PROVIDERS, EMPTY_LIST);
+        client.addAdditionalInformation(ALLOWED_PROVIDERS, emptyList());
         assertThat(filter.filter(activeProviders, client, email), Matchers.containsInAnyOrder());
     }
 
     @Test
     public void test_single_positive_email_domain_match() {
         uaaDef.setEmailDomain(null);
-        samlDef1.setEmailDomain(EMPTY_LIST);
-        samlDef2.setEmailDomain(EMPTY_LIST);
+        samlDef1.setEmailDomain(emptyList());
+        samlDef2.setEmailDomain(emptyList());
         ldapDef.setEmailDomain(Collections.singletonList("test.org"));
         configureTestData();
         assertThat(filter.filter(activeProviders, client, email), Matchers.containsInAnyOrder(ldapProvider));
@@ -165,7 +165,7 @@ public class DomainFilterTest {
     @Test
     public void test_multiple_positive_email_domain_matches() {
         uaaDef.setEmailDomain(null);
-        samlDef1.setEmailDomain(EMPTY_LIST);
+        samlDef1.setEmailDomain(emptyList());
         samlDef2.setEmailDomain(Arrays.asList("test.org", "test2.org"));
         ldapDef.setEmailDomain(Collections.singletonList("test.org"));
         configureTestData();
@@ -175,7 +175,7 @@ public class DomainFilterTest {
     @Test
     public void test_multiple_positive_email_domain_matches_wildcard() {
         uaaDef.setEmailDomain(null);
-        samlDef1.setEmailDomain(EMPTY_LIST);
+        samlDef1.setEmailDomain(emptyList());
         samlDef2.setEmailDomain(Collections.singletonList("*.org"));
         ldapDef.setEmailDomain(Collections.singletonList("*.org"));
         configureTestData();
@@ -185,7 +185,7 @@ public class DomainFilterTest {
     @Test
     public void test_multiple_positive_long_email_domain_matches_wildcard() {
         uaaDef.setEmailDomain(null);
-        samlDef1.setEmailDomain(EMPTY_LIST);
+        samlDef1.setEmailDomain(emptyList());
         samlDef2.setEmailDomain(Collections.singletonList("*.*.*.com"));
         ldapDef.setEmailDomain(Collections.singletonList("*.*.test2.com"));
         configureTestData();
@@ -195,7 +195,7 @@ public class DomainFilterTest {
     @Test
     public void test_multiple_positive_email_domain_matches_single_client_allowed_provider() {
         uaaDef.setEmailDomain(null);
-        samlDef1.setEmailDomain(EMPTY_LIST);
+        samlDef1.setEmailDomain(emptyList());
         samlDef2.setEmailDomain(Arrays.asList("test.org", "test2.org"));
         ldapDef.setEmailDomain(Collections.singletonList("test.org"));
         client.addAdditionalInformation(ALLOWED_PROVIDERS, Collections.singletonList(samlProvider2.getOriginKey()));
@@ -238,18 +238,18 @@ public class DomainFilterTest {
 
     @Test
     public void test_uaa_is_catch_all() {
-        ldapDef.setEmailDomain(EMPTY_LIST);
-        samlDef1.setEmailDomain(EMPTY_LIST);
-        samlDef2.setEmailDomain(EMPTY_LIST);
+        ldapDef.setEmailDomain(emptyList());
+        samlDef1.setEmailDomain(emptyList());
+        samlDef2.setEmailDomain(emptyList());
         configureTestData();
         assertThat(filter.filter(activeProviders, client, email), Matchers.containsInAnyOrder(uaaProvider));
     }
 
     @Test
     public void test_uaa_is_not_catch_all_without_fallback() {
-        ldapDef.setEmailDomain(EMPTY_LIST);
-        samlDef1.setEmailDomain(EMPTY_LIST);
-        samlDef2.setEmailDomain(EMPTY_LIST);
+        ldapDef.setEmailDomain(emptyList());
+        samlDef1.setEmailDomain(emptyList());
+        samlDef2.setEmailDomain(emptyList());
         configureTestData();
         assertThat(filter.filter(activeProviders, client, email, false), not(Matchers.containsInAnyOrder(uaaProvider)));
     }

@@ -114,6 +114,7 @@ public final class UaaTokenUtils {
                 k1 = (k1 << 15) | (k1 >>> 17);  // ROTL32(k1,15);
                 k1 *= c2;
                 h1 ^= k1;
+                break;
             default:
         }
 
@@ -210,9 +211,9 @@ public final class UaaTokenUtils {
     public static String constructTokenEndpointUrl(String issuer, IdentityZone identityZone) throws URISyntaxException {
         URI uri;
         if (!identityZone.isUaa()) {
-            String zone_issuer = identityZone.getConfig() != null ? identityZone.getConfig().getIssuer() : null;
-            if (zone_issuer != null) {
-                uri = validateIssuer(zone_issuer);
+            String zoneIssuer = identityZone.getConfig() != null ? identityZone.getConfig().getIssuer() : null;
+            if (zoneIssuer != null) {
+                uri = validateIssuer(zoneIssuer);
                 return UriComponentsBuilder.fromUri(uri).pathSegment("oauth/token").build().toUriString();
             }
         }

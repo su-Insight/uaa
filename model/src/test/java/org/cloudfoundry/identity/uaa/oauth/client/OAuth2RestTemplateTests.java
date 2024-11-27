@@ -49,7 +49,7 @@ public class OAuth2RestTemplateTests {
 
     private OAuth2RestTemplate restTemplate;
 
-    private AccessTokenProvider accessTokenProvider = Mockito.mock(AccessTokenProvider.class);
+    private final AccessTokenProvider accessTokenProvider = Mockito.mock(AccessTokenProvider.class);
 
     private ClientHttpRequest request;
 

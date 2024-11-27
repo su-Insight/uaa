@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 class PurgeableSessionMap extends ConcurrentHashMap<String, Session> {
-    private final static Logger logger = LoggerFactory.getLogger(PurgeableSessionMap.class);
+    private static final Logger logger = LoggerFactory.getLogger(PurgeableSessionMap.class);
 
     @Scheduled(fixedDelayString = "${servlet-session-purge-delay:900000}")
     public void purge() {

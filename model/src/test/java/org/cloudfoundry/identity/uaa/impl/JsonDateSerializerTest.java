@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class JsonDateSerializerTest {
 
-    Exception exceptionOccured = null;
+    Exception exceptionOccured;
 
     @Test
     public void testFormatting() throws IOException {

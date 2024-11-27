@@ -26,7 +26,8 @@ class UaaMetricsEmitterTest {
     private MBeanMap mBeanMap1;
     private MBeanMap mBeanMap2;
     private MetricsUtils metricsUtils;
-    private UaaMetrics uaaMetrics1, uaaMetrics2;
+    private UaaMetrics uaaMetrics1;
+    private UaaMetrics uaaMetrics2;
     private NotificationBroadcasterSupport emitter;
 
     @BeforeEach
@@ -198,7 +199,7 @@ class UaaMetricsEmitterTest {
         Mockito.verify(statsDClient, times(0)).gauge(anyString(), anyLong());
     }
 
-    private String staticContentJson = "{\n" +
+    private final String staticContentJson = "{\n" +
             "   \"lastRequests\":[\n" +
             "      {\n" +
             "         \"uri\":\"/uaa/resources/oss/stylesheets/application.css\",\n" +
@@ -295,7 +296,7 @@ class UaaMetricsEmitterTest {
             "   }\n" +
             "}";
 
-    private String uiJson = "{  \n" +
+    private final String uiJson = "{  \n" +
             "   \"lastRequests\":[  ],\n" +
             "   \"detailed\":{  \n" +
             "      \"REDIRECT\":{  \n" +
@@ -331,7 +332,7 @@ class UaaMetricsEmitterTest {
             "   }\n" +
             "}";
 
-    private String globalsJson1 = "{\n" +
+    private final String globalsJson1 = "{\n" +
             "   \"lastRequests\":[\n" +
             "      {\n" +
             "         \"uri\":\"/uaa/\",\n" +
@@ -429,7 +430,7 @@ class UaaMetricsEmitterTest {
             "}";
 
     //values have increased
-    private String globalsJson2 = globalsJson1
+    private final String globalsJson2 = globalsJson1
             .replace("\"count\":3087,\n", "\"count\":3091,\n") //total
             .replace("         \"count\":763,\n", "         \"count\":764,\n") //redirect
             .replace("         \"count\":175,\n", "         \"count\":176,\n") //client_error

@@ -80,7 +80,7 @@ public class IdentityProviderBootstrap
     private boolean disableInternalUserManagement;
 
     @Setter
-    private List<String> originsToDelete = null;
+    private List<String> originsToDelete;
     private ApplicationEventPublisher publisher;
 
     public IdentityProviderBootstrap(

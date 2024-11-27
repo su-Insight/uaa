@@ -71,7 +71,7 @@ public class SocialClientUserDetails extends AbstractAuthenticationToken {
         }
     }
 
-    private String username;
+    private final String username;
 
     private String email;
 

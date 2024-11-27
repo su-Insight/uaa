@@ -160,7 +160,7 @@ public class NetworkTestUtils {
         private final int status;
         private final HttpHeaders headers;
         private final String responseBody;
-        private volatile boolean wasInvoked = false;
+        private volatile boolean wasInvoked;
 
         public SimpleHttpResponseHandler(int status, HttpHeaders headers, String responseBody) {
             this.status = status;

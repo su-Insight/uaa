@@ -19,7 +19,7 @@ import org.cloudfoundry.identity.uaa.util.UaaUrlUtils;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public class SamlRedirectUtils {
+public final class SamlRedirectUtils {
 
     private SamlRedirectUtils() {
         throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");

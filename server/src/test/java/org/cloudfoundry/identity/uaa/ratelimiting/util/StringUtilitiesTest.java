@@ -27,22 +27,22 @@ class StringUtilitiesTest {
     @Test
     void options() {
         String expectedEMPTY = "";
-        String expectedJUST_NULLS = "null";
+        String expectedJUSTNULLS = "null";
         String expectedVALUES = "'Martin Fowler', 7, null, 2, or 5"; // Note in reverse order
 
         assertEquals(expectedEMPTY, StringUtilities.options(EMPTY), "EMPTY");
-        assertEquals(expectedJUST_NULLS, StringUtilities.options(JUST_NULLS), "JUST_NULLS");
+        assertEquals(expectedJUSTNULLS, StringUtilities.options(JUST_NULLS), "JUST_NULLS");
         assertEquals(expectedVALUES, StringUtilities.options(VALUES), "VALUES");
 
         String oneLabel = "type";
         assertEquals("no " + oneLabel + "s" + expectedEMPTY, StringUtilities.options(oneLabel, EMPTY), "EMPTY 1label");
-        assertEquals("the " + oneLabel + " is: " + expectedJUST_NULLS, StringUtilities.options(oneLabel, JUST_NULLS), "JUST_NULLS 1label");
+        assertEquals("the " + oneLabel + " is: " + expectedJUSTNULLS, StringUtilities.options(oneLabel, JUST_NULLS), "JUST_NULLS 1label");
         assertEquals("the " + oneLabel + "s are: " + expectedVALUES, StringUtilities.options(oneLabel, VALUES), "VALUES 1label");
 
         String labelSingular = "child";
         String labelPlural = "children";
         assertEquals("no " + labelPlural + expectedEMPTY, StringUtilities.options(labelSingular, labelPlural, EMPTY), "EMPTY 2labels");
-        assertEquals("the " + labelSingular + " is: " + expectedJUST_NULLS, StringUtilities.options(labelSingular, labelPlural, JUST_NULLS), "JUST_NULLS 2labels");
+        assertEquals("the " + labelSingular + " is: " + expectedJUSTNULLS, StringUtilities.options(labelSingular, labelPlural, JUST_NULLS), "JUST_NULLS 2labels");
         assertEquals("the " + labelPlural + " are: " + expectedVALUES, StringUtilities.options(labelSingular, labelPlural, VALUES), "VALUES 2labels");
     }
 }

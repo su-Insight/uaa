@@ -59,11 +59,11 @@ abstract class BaseOAuth2AccessTokenJacksonTest {
         accessToken.setExpiration(expiration);
         DefaultOAuth2RefreshToken refreshToken = new DefaultOAuth2RefreshToken("refresh-value");
         accessToken.setRefreshToken(refreshToken);
-        Set<String> scope = new TreeSet<String>();
+        Set<String> scope = new TreeSet<>();
         scope.add("read");
         scope.add("write");
         accessToken.setScope(scope);
-        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("one", "two");
         map.put("three", 4);
         map.put("five", Collections.singletonMap("six", 7));

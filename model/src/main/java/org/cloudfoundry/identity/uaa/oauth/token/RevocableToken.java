@@ -122,14 +122,24 @@ public class RevocableToken {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RevocableToken)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RevocableToken)) {
+            return false;
+        }
 
         RevocableToken that = (RevocableToken) o;
 
-        if (!getTokenId().equals(that.getTokenId())) return false;
-        if (!getClientId().equals(that.getClientId())) return false;
-        if (!getUserId().equals(that.getUserId())) return false;
+        if (!getTokenId().equals(that.getTokenId())) {
+            return false;
+        }
+        if (!getClientId().equals(that.getClientId())) {
+            return false;
+        }
+        if (!getUserId().equals(that.getUserId())) {
+            return false;
+        }
         return getZoneId().equals(that.getZoneId());
 
     }

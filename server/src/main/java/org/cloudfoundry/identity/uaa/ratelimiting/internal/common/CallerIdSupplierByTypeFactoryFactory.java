@@ -10,7 +10,7 @@ import org.cloudfoundry.identity.uaa.ratelimiting.core.http.RequestInfo;
 
 import lombok.RequiredArgsConstructor;
 
-public class CallerIdSupplierByTypeFactoryFactory {
+public final class CallerIdSupplierByTypeFactoryFactory {
 
     private CallerIdSupplierByTypeFactoryFactory() {
     }

@@ -461,7 +461,7 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
             count = clientMaxCount;
         }
 
-        List<ClientDetails> result = new ArrayList<ClientDetails>();
+        List<ClientDetails> result = new ArrayList<>();
         List<ClientDetails> clients;
         try {
             clients = clientDetailsService.query(filter, sortBy, "ascending".equalsIgnoreCase(sortOrder), IdentityZoneHolder.get().getId());
@@ -613,7 +613,7 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
     @ExceptionHandler(NoSuchClientException.class)
     public ResponseEntity<Void> handleNoSuchClient(NoSuchClientException e) {
         incrementErrorCounts(e);
-        return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ClientAlreadyExistsException.class)
@@ -688,7 +688,7 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
             if (baseInput.getAutoApproveScopes() != null) {
                 details.setAutoApproveScopes(baseInput.getAutoApproveScopes());
             } else {
-                details.setAutoApproveScopes(new HashSet<String>());
+                details.setAutoApproveScopes(new HashSet<>());
                 if (existing instanceof UaaClientDetails) {
                     UaaClientDetails existingDetails = (UaaClientDetails) existing;
                     if (existingDetails.getAutoApproveScopes() != null) {
@@ -723,7 +723,7 @@ public class ClientAdminEndpoints implements ApplicationEventPublisherAware {
             details.setScope(existing.getScope());
         }
 
-        Map<String, Object> additionalInformation = new HashMap<String, Object>(existing.getAdditionalInformation());
+        Map<String, Object> additionalInformation = new HashMap<>(existing.getAdditionalInformation());
         additionalInformation.putAll(input.getAdditionalInformation());
         for (String key : Collections.unmodifiableSet(additionalInformation.keySet())) {
             if (additionalInformation.get(key) == null) {

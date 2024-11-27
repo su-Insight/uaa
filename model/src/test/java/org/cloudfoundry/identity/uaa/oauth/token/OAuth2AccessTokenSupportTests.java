@@ -36,23 +36,23 @@ import static org.junit.Assert.assertEquals;
  */
 public class OAuth2AccessTokenSupportTests {
 
-    private ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
+    private final ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
 
-    private HttpHeaders requestHeaders = new HttpHeaders();
+    private final HttpHeaders requestHeaders = new HttpHeaders();
 
-    private MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>();
+    private final MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
 
     private StubHttpClientResponse response;
 
     private IOException error;
 
-    private DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken("FOO");
+    private final DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken("FOO");
 
-    private AccessTokenRequest request = new DefaultAccessTokenRequest();
+    private final AccessTokenRequest request = new DefaultAccessTokenRequest();
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private OAuth2AccessTokenSupport support = new OAuth2AccessTokenSupport(){
+    private final OAuth2AccessTokenSupport support = new OAuth2AccessTokenSupport(){
     };
 
     @Before

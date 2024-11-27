@@ -305,11 +305,11 @@ class TokenKeyEndpointMockMvcTests {
         assertEquals("sig", use);
 
 
-        Object key_ops = key.get("key_ops");
+        Object keyOps = key.get("key_ops");
         //an String[] containing values like
         //sign, verify, encrypt, decrypt, wrapKey, unwrapKey, deriveKey, deriveBits
         //should not be used together with 'use' (mutually exclusive)
-        assertNull(key_ops);
+        assertNull(keyOps);
 
         Object alg = key.get("alg");
         //optional - algorithm of key

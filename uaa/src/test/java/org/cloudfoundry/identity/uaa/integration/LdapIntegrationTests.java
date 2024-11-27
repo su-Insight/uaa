@@ -64,13 +64,13 @@ class LdapIntegrationTests {
     void test_LDAP_Custom_User_Attributes_In_ID_Token() {
         assertThat(doesSupportZoneDNS()).as("Expected testzone1.localhost and testzone2.localhost to resolve to 127.0.0.1").isTrue();
 
-        final String COST_CENTER = "costCenter";
-        final String COST_CENTERS = "costCenters";
-        final String DENVER_CO = "Denver,CO";
-        final String MANAGER = "uaaManager";
-        final String MANAGERS = "managers";
-        final String JOHN_THE_SLOTH = "John the Sloth";
-        final String KARI_THE_ANT_EATER = "Kari the Ant Eater";
+        final String costCenter = "costCenter";
+        final String costCenters = "costCenters";
+        final String denverCo = "Denver,CO";
+        final String manager = "uaaManager";
+        final String managers = "managers";
+        final String johnTheSloth = "John the Sloth";
+        final String kariTheAntEater = "Kari the Ant Eater";
 
         String baseUrl = serverRunning.getBaseUrl();
 
@@ -120,8 +120,8 @@ class LdapIntegrationTests {
                 true,
                 100,
                 true);
-        ldapIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + COST_CENTERS, COST_CENTER);
-        ldapIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + MANAGERS, MANAGER);
+        ldapIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + costCenters, costCenter);
+        ldapIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + managers, manager);
         ldapIdentityProviderDefinition.addWhiteListedGroup("marissaniner");
         ldapIdentityProviderDefinition.addWhiteListedGroup("marissaniner2");
 
@@ -164,8 +164,8 @@ class LdapIntegrationTests {
 
         assertThat(claims).containsKey(ClaimConstants.USER_ATTRIBUTES);
         Map<String, List<String>> userAttributes = (Map<String, List<String>>) claims.get(ClaimConstants.USER_ATTRIBUTES);
-        assertThat(userAttributes.get(COST_CENTERS)).contains(DENVER_CO);
-        assertThat(userAttributes.get(MANAGERS)).contains(JOHN_THE_SLOTH, KARI_THE_ANT_EATER);
+        assertThat(userAttributes.get(costCenters)).contains(denverCo);
+        assertThat(userAttributes.get(managers)).contains(johnTheSloth, kariTheAntEater);
 
         assertThat(claims).containsKey(ClaimConstants.ROLES);
         List<String> roles = (List<String>) claims.get(ClaimConstants.ROLES);

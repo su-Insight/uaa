@@ -24,7 +24,7 @@ import java.util.function.UnaryOperator;
  * A utility class to build a {@link RelyingPartyRegistration} object from the given parameters
  */
 @Slf4j
-public class RelyingPartyRegistrationBuilder {
+public final class RelyingPartyRegistrationBuilder {
 
     private static final UnaryOperator<String> assertionConsumerServiceLocationFunction = "{baseUrl}/saml/SSO/alias/%s"::formatted;
     private static final UnaryOperator<String> singleLogoutServiceResponseLocationFunction = "{baseUrl}/saml/SingleLogout/alias/%s"::formatted;
@@ -62,8 +62,12 @@ public class RelyingPartyRegistrationBuilder {
         }
 
         builder.entityId(params.samlEntityID);
-        if (params.rpRegistrationId != null) builder.registrationId(params.rpRegistrationId);
-        if (params.samlSpNameId != null) builder.nameIdFormat(params.samlSpNameId);
+        if (params.rpRegistrationId != null) {
+            builder.registrationId(params.rpRegistrationId);
+        }
+        if (params.samlSpNameId != null) {
+            builder.nameIdFormat(params.samlSpNameId);
+        }
 
         return builder
                 .signingX509Credentials(cred -> params.keys.stream()

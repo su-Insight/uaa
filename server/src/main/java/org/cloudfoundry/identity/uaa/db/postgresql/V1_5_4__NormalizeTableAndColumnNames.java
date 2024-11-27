@@ -32,7 +32,7 @@ public class V1_5_4__NormalizeTableAndColumnNames extends BaseJavaMigration {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private String colQuery = "SELECT 'noop', \n" +
+    private final String colQuery = "SELECT 'noop', \n" +
             "  c.relname as table_name,\n" +
             "  a.attname as column_name \n" +
             "FROM pg_catalog.pg_class c\n" +

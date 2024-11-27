@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.cloudfoundry.identity.uaa.util.UaaStringUtils.retainAllMatches;
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 
 public class LdapLoginAuthenticationManager extends ExternalLoginAuthenticationManager {
 
@@ -101,7 +101,7 @@ public class LdapLoginAuthenticationManager extends ExternalLoginAuthenticationM
 
     protected Set<String> getAuthoritesAsNames(Collection<? extends GrantedAuthority> authorities) {
         Set<String> result = new HashSet<>();
-        authorities = new LinkedList(authorities != null ? authorities : EMPTY_LIST);
+        authorities = new LinkedList(authorities != null ? authorities : emptyList());
         for (GrantedAuthority a : authorities) {
             if (a instanceof LdapAuthority) {
                 LdapAuthority la = (LdapAuthority) a;

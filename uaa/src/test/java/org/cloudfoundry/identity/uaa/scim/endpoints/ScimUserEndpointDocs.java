@@ -116,7 +116,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
 
     private final String requiredUserUpdateScopes = "Access token with `scim.write`, `uaa.admin`, or `openid` required. The `openid` scope only allows the user to update their **own** first and last name, when `origin` is `uaa`.";
 
-    private FieldDescriptor[] searchResponseFields = {
+    private final FieldDescriptor[] searchResponseFields = {
             fieldWithPath("startIndex").type(NUMBER).description(startIndexDescription),
             fieldWithPath("itemsPerPage").type(NUMBER).description(countAndItemsPerPageDescription),
             fieldWithPath("totalResults").type(NUMBER).description(totalResultsDescription),
@@ -160,7 +160,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("resources[].meta.created").type(STRING).description(metaCreatedDesc)
     };
 
-    private Snippet createFields = requestFields(
+    private final Snippet createFields = requestFields(
             fieldWithPath("userName").required().type(STRING).description(usernameDescription),
             fieldWithPath("password").optional(null).type(STRING).description(passwordDescription),
             fieldWithPath("name").required().type(OBJECT).description(nameObjectDescription),
@@ -182,7 +182,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("meta.*").optional().ignored().type(OBJECT).description("SCIM object meta data not read.")
     );
 
-    private FieldDescriptor[] createResponse = {
+    private final FieldDescriptor[] createResponse = {
             fieldWithPath("schemas").type(ARRAY).description(schemasDescription),
             fieldWithPath("id").type(STRING).description(userIdDescription),
             fieldWithPath("userName").type(STRING).description(usernameDescription),
@@ -213,7 +213,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("meta.created").type(STRING).description(metaCreatedDesc)
     };
 
-    private Snippet updateFields = requestFields(
+    private final Snippet updateFields = requestFields(
             fieldWithPath("schemas").ignored().type(ARRAY).description(schemasDescription),
             fieldWithPath("id").ignored().type(STRING).description(userIdDescription),
             fieldWithPath("userName").required().type(STRING).description(usernameDescription),
@@ -238,7 +238,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("meta.*").ignored().type(OBJECT).description("SCIM object meta data not read.")
     );
 
-    private FieldDescriptor[] updateResponse = {
+    private final FieldDescriptor[] updateResponse = {
             fieldWithPath("schemas").type(ARRAY).description(schemasDescription),
             fieldWithPath("id").type(STRING).description(userIdDescription),
             fieldWithPath("userName").type(STRING).description(usernameDescription),
@@ -277,7 +277,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("meta.created").type(STRING).description(metaCreatedDesc)
     };
 
-    private Snippet patchFields = requestFields(
+    private final Snippet patchFields = requestFields(
             fieldWithPath("schemas").ignored().type(ARRAY).description(schemasDescription),
             fieldWithPath("id").ignored().type(STRING).description(userIdDescription),
             fieldWithPath("userName").required().type(STRING).description(usernameDescription),
@@ -309,7 +309,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
     private final String sortOrderDescription = "Sort order, ascending/descending";
     private final String countDescription = "Max number of results to be returned";
 
-    private ParameterDescriptor[] searchUsersParameters = {
+    private final ParameterDescriptor[] searchUsersParameters = {
             parameterWithName("filter").optional(null).description(scimFilterDescription).attributes(key("type").value(STRING)),
             parameterWithName("sortBy").optional("created").description(sortByDescription).attributes(key("type").value(STRING)),
             parameterWithName("sortOrder").optional("ascending").description(sortOrderDescription).attributes(key("type").value(STRING)),
@@ -317,11 +317,11 @@ class ScimUserEndpointDocs extends EndpointDocs {
             parameterWithName("count").optional("100").description(countDescription).attributes(key("type").value(NUMBER))
     };
 
-    private ParameterDescriptor[] searchWithAttributes = ArrayUtils.addAll(
+    private final ParameterDescriptor[] searchWithAttributes = ArrayUtils.addAll(
             searchUsersParameters,
             parameterWithName("attributes").optional(null).description(scimAttributeDescription).attributes(key("type").value(STRING)));
 
-    private FieldDescriptor[] searchWithAttributesResponseFields = {
+    private final FieldDescriptor[] searchWithAttributesResponseFields = {
             fieldWithPath("startIndex").type(NUMBER).description(startIndexDescription),
             fieldWithPath("itemsPerPage").type(NUMBER).description(countAndItemsPerPageDescription),
             fieldWithPath("totalResults").type(NUMBER).description(totalResultsDescription),

@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @EqualsAndHashCode
 @Getter
-public class PathSelector {
+public final class PathSelector {
     private final PathMatchType type;
     private final String path;
 

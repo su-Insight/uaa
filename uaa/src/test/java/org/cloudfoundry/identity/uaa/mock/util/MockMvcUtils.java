@@ -1265,7 +1265,7 @@ public final class MockMvcUtils {
 
     public static class CookieCsrfPostProcessor implements RequestPostProcessor {
 
-        private boolean useInvalidToken = false;
+        private boolean useInvalidToken;
 
         public static CookieCsrfPostProcessor cookieCsrf() {
             return new CookieCsrfPostProcessor();
@@ -1312,7 +1312,7 @@ public final class MockMvcUtils {
         }
     }
 
-    private static class HttpBearerAuthRequestPostProcessor implements RequestPostProcessor {
+    private static final class HttpBearerAuthRequestPostProcessor implements RequestPostProcessor {
         private final String headerValue;
 
         private HttpBearerAuthRequestPostProcessor(String authorization) {

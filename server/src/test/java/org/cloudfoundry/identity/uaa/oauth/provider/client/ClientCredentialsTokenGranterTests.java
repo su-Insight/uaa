@@ -42,7 +42,7 @@ public class ClientCredentialsTokenGranterTests {
         when(clientDetailsService.loadClientByClientId(any())).thenReturn(mock(ClientDetails.class));
         when(requestFactory.createOAuth2Request(any(), any())).thenReturn(oAuth2Request);
         when(tokenServices.createAccessToken(any())).thenReturn(mock(OAuth2AccessToken.class));
-        when(oAuth2Request.getAuthorities()).thenReturn(Collections.EMPTY_LIST);
+        when(oAuth2Request.getAuthorities()).thenReturn(Collections.emptyList());
         assertNotNull(clientCredentialsTokenGranter.grant(TokenConstants.GRANT_TYPE_CLIENT_CREDENTIALS, tokenRequest));
     }
 
@@ -52,7 +52,7 @@ public class ClientCredentialsTokenGranterTests {
         when(clientDetailsService.loadClientByClientId(any())).thenReturn(mock(ClientDetails.class));
         when(requestFactory.createOAuth2Request(any(), any())).thenReturn(oAuth2Request);
         when(tokenServices.createAccessToken(any())).thenReturn(null);
-        when(oAuth2Request.getAuthorities()).thenReturn(Collections.EMPTY_LIST);
+        when(oAuth2Request.getAuthorities()).thenReturn(Collections.emptyList());
         assertNull(clientCredentialsTokenGranter.grant(TokenConstants.GRANT_TYPE_CLIENT_CREDENTIALS, tokenRequest));
     }
 }

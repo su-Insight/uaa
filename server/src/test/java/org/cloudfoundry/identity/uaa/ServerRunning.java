@@ -77,22 +77,22 @@ import static org.junit.Assert.assertTrue;
  * @author Dave Syer
  * 
  */
-public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper {
+public final class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(ServerRunning.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServerRunning.class);
 
-    private Environment environment;
+    private final Environment environment;
 
     // Static so that we only test once on failure: speeds up test suite
-    private static Map<Integer, Boolean> serverOnline = new HashMap<Integer, Boolean>();
+    private static final Map<Integer, Boolean> serverOnline = new HashMap<>();
 
     private final boolean integrationTest;
 
-    private static int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_PORT = 8080;
 
-    private static String DEFAULT_HOST = "localhost";
+    private static final String DEFAULT_HOST = "localhost";
 
-    private static String DEFAULT_ROOT_PATH = "/uaa";
+    private static final String DEFAULT_ROOT_PATH = "/uaa";
 
     private int port;
 
@@ -142,7 +142,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper 
      * @param rootPath the rootPath to set
      */
     public void setRootPath(String rootPath) {
-        if (rootPath.equals("/")) {
+        if ("/".equals(rootPath)) {
             rootPath = "";
         } else {
             if (!rootPath.startsWith("/")) {

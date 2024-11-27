@@ -26,7 +26,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 
 import java.util.*;
 
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.provider.ExternalIdentityProviderDefinition.USER_ATTRIBUTE_PREFIX;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
@@ -50,18 +50,18 @@ class LdapLoginAuthenticationManagerTests {
     private static final String TEST_EMAIL = "email@email.org";
     private static final String USERNAME = "username";
     private static final String EMAIL_ATTRIBUTE = "email";
-    private final String GIVEN_NAME_ATTRIBUTE = "firstname";
-    private final String FAMILY_NAME_ATTRIBUTE = "surname";
-    private final String PHONE_NUMBER_ATTTRIBUTE = "digits";
+    private static final String GIVEN_NAME_ATTRIBUTE = "firstname";
+    private static final String FAMILY_NAME_ATTRIBUTE = "surname";
+    private static final String PHONE_NUMBER_ATTTRIBUTE = "digits";
     private static LdapUserDetails userDetails;
 
-    private final String DENVER_CO = "Denver,CO";
-    private final String COST_CENTER = "costCenter";
-    private final String COST_CENTERS = "costCenters";
-    private final String JOHN_THE_SLOTH = "John the Sloth";
-    private final String KARI_THE_ANT_EATER = "Kari the Ant Eater";
-    private final String UAA_MANAGER = "uaaManager";
-    private final String MANAGERS = "managers";
+    private static final String DENVER_CO = "Denver,CO";
+    private static final String COST_CENTER = "costCenter";
+    private static final String COST_CENTERS = "costCenters";
+    private static final String JOHN_THE_SLOTH = "John the Sloth";
+    private static final String KARI_THE_ANT_EATER = "Kari the Ant Eater";
+    private static final String UAA_MANAGER = "uaaManager";
+    private static final String MANAGERS = "managers";
 
     private LdapLoginAuthenticationManager am;
     private ApplicationEventPublisher publisher;
@@ -247,7 +247,7 @@ class LdapLoginAuthenticationManagerTests {
         );
 
 
-        definition.setExternalGroupsWhitelist(EMPTY_LIST);
+        definition.setExternalGroupsWhitelist(emptyList());
         assertThat(am.getExternalUserAuthorities(authDetails),
                 containsInAnyOrder()
         );
@@ -346,13 +346,13 @@ class LdapLoginAuthenticationManagerTests {
 
     private ExtendedLdapUserImpl getAuthDetails(String email, String givenName, String familyName, String phoneNumber, AttributeInfo... attributes) {
         String[] emails = {email};
-        String[] given_names = {givenName};
-        String[] family_names = {familyName};
-        String[] phone_numbers = {phoneNumber};
+        String[] givenNames = {givenName};
+        String[] familyNames = {familyName};
+        String[] phoneNumbers = {phoneNumber};
         info.put(EMAIL_ATTRIBUTE, emails);
-        info.put(GIVEN_NAME_ATTRIBUTE, given_names);
-        info.put(FAMILY_NAME_ATTRIBUTE, family_names);
-        info.put(PHONE_NUMBER_ATTTRIBUTE, phone_numbers);
+        info.put(GIVEN_NAME_ATTRIBUTE, givenNames);
+        info.put(FAMILY_NAME_ATTRIBUTE, familyNames);
+        info.put(PHONE_NUMBER_ATTTRIBUTE, phoneNumbers);
         for (AttributeInfo i : attributes) {
             info.put(i.getName(), i.getValues());
         }

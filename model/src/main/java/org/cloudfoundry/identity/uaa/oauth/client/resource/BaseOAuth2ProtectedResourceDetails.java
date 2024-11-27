@@ -129,7 +129,6 @@ public class BaseOAuth2ProtectedResourceDetails implements OAuth2ProtectedResour
 
         BaseOAuth2ProtectedResourceDetails that = (BaseOAuth2ProtectedResourceDetails) o;
         return !(id != null ? !id.equals(that.id) : that.id != null);
-
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.regex.Pattern;
 
 public class BannerValidator {
-    private static Pattern hexColorPattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
+    private static final Pattern hexColorPattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
 
     public static void validate(Banner banner) throws InvalidIdentityZoneConfigurationException {
         if (banner != null) {

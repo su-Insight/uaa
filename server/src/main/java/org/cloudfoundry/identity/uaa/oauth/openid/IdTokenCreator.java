@@ -47,15 +47,15 @@ import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.ZONE_ID;
 import static org.cloudfoundry.identity.uaa.util.UaaTokenUtils.getRevocableTokenSignature;
 
 public class IdTokenCreator {
-    private final String ROLES_SCOPE = "roles";
+    private static final String ROLES_SCOPE = "roles";
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private TokenEndpointBuilder tokenEndpointBuilder;
+    private final TokenEndpointBuilder tokenEndpointBuilder;
     private final IdentityZoneManager identityZoneManager;
     private TimeService timeService;
-    private TokenValidityResolver tokenValidityResolver;
-    private UaaUserDatabase uaaUserDatabase;
-    private MultitenantClientServices multitenantClientServices;
-    private Set<String> excludedClaims;
+    private final TokenValidityResolver tokenValidityResolver;
+    private final UaaUserDatabase uaaUserDatabase;
+    private final MultitenantClientServices multitenantClientServices;
+    private final Set<String> excludedClaims;
 
     public IdTokenCreator(final TokenEndpointBuilder tokenEndpointBuilder,
             final TimeService timeService,

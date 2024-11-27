@@ -54,8 +54,8 @@ public class ClientAdminEndpointsValidatorTests {
     ClientAdminEndpointsValidator validator;
     ClientSecretValidator secretValidator;
 
-    private List wildCardUrls = Arrays.asList("*", "**", "*/**", "**/*", "*/*", "**/**");
-    private List httpWildCardUrls = Arrays.asList(
+    private final List wildCardUrls = Arrays.asList("*", "**", "*/**", "**/*", "*/*", "**/**");
+    private final List httpWildCardUrls = Arrays.asList(
             "http://*",
             "http://**",
             "http://*/**",

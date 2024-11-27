@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class SimpleAttributeNameMapper implements AttributeNameMapper {
 
-    private Map<String, String> paramsMap = Collections.<String, String>emptyMap();
+    private Map<String, String> paramsMap = Collections.emptyMap();
 
     public SimpleAttributeNameMapper(Map<String, String> paramsMap) {
         this.paramsMap = paramsMap;

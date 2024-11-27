@@ -102,18 +102,31 @@ public abstract class GenericPasswordPolicy<T extends GenericPasswordPolicy<T>> 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         GenericPasswordPolicy<?> that = (GenericPasswordPolicy<?>) o;
 
-        if (minLength != that.minLength) return false;
-        if (maxLength != that.maxLength) return false;
-        if (requireUpperCaseCharacter != that.requireUpperCaseCharacter) return false;
-        if (requireLowerCaseCharacter != that.requireLowerCaseCharacter) return false;
-        if (requireDigit != that.requireDigit) return false;
-        if (requireSpecialCharacter != that.requireSpecialCharacter) return false;
-        return true;
+        if (minLength != that.minLength) {
+            return false;
+        }
+        if (maxLength != that.maxLength) {
+            return false;
+        }
+        if (requireUpperCaseCharacter != that.requireUpperCaseCharacter) {
+            return false;
+        }
+        if (requireLowerCaseCharacter != that.requireLowerCaseCharacter) {
+            return false;
+        }
+        if (requireDigit != that.requireDigit) {
+            return false;
+        }
+        return !(requireSpecialCharacter != that.requireSpecialCharacter);
 
     }
 

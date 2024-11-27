@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class InvitationsEndpointDocs extends EndpointDocs {
 
-    private AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
+    private final AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
     private String domain;
     private String clientId;
     private String token;

@@ -39,7 +39,7 @@ class LdapMockMvcTests {
 
 class LdapSimpleBindTest extends AbstractLdapMockMvcTest {
     private static InMemoryLdapServer ldapContainer;
-    private static int ldapPort = 44389;
+    private static final int ldapPort = 44389;
 
     LdapSimpleBindTest() {
         super(
@@ -81,8 +81,8 @@ class LdapSimpleBindTest extends AbstractLdapMockMvcTest {
 
 class LdapSearchAndCompareTest extends AbstractLdapMockMvcTest {
     private static InMemoryLdapServer ldapContainer;
-    private static int ldapPort = 44390;
-    private static int ldapSPort = 44337;
+    private static final int ldapPort = 44390;
+    private static final int ldapSPort = 44337;
 
     LdapSearchAndCompareTest() {
         super(
@@ -124,8 +124,8 @@ class LdapSearchAndCompareTest extends AbstractLdapMockMvcTest {
 
 class LdapSearchAndBindTest extends AbstractLdapMockMvcTest {
     private static InMemoryLdapServer ldapContainer;
-    private static int ldapPort = 44391;
-    private static int ldapSPort = 44338;
+    private static final int ldapPort = 44391;
+    private static final int ldapSPort = 44338;
 
     LdapSearchAndBindTest() {
         super(

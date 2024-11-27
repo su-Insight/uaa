@@ -82,18 +82,18 @@ public class ApprovalsAdminEndpoints implements InitializingBean {
         List<Approval> approvals = UaaPagingUtils.subList(input, startIndex, count);
 
         // Find the clients for these approvals
-        Set<String> clientIds = new HashSet<String>();
+        Set<String> clientIds = new HashSet<>();
         for (Approval approval : approvals) {
             clientIds.add(approval.getClientId());
         }
 
         // Find the auto approved scopes for these clients
-        Map<String, Set<String>> clientAutoApprovedScopes = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> clientAutoApprovedScopes = new HashMap<>();
         for (String clientId : clientIds) {
             UaaClientDetails client = (UaaClientDetails) clientDetailsService.loadClientByClientId(clientId, IdentityZoneHolder.get().getId());
 
             Set<String> autoApproved = client.getAutoApproveScopes();
-            Set<String> autoApprovedScopes = new HashSet<String>();
+            Set<String> autoApprovedScopes = new HashSet<>();
             if (autoApproved != null) {
                 if (autoApproved.contains("true")) {
                     autoApprovedScopes.addAll(client.getScope());
@@ -105,7 +105,7 @@ public class ApprovalsAdminEndpoints implements InitializingBean {
             clientAutoApprovedScopes.put(clientId, autoApprovedScopes);
         }
 
-        List<Approval> filteredApprovals = new ArrayList<Approval>();
+        List<Approval> filteredApprovals = new ArrayList<>();
         // Remove auto approved scopes
         for (Approval approval : approvals) {
             if (!(clientAutoApprovedScopes.containsKey(approval.getClientId())

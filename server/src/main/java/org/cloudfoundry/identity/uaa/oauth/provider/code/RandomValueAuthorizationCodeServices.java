@@ -14,7 +14,7 @@ import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerato
  */
 public abstract class RandomValueAuthorizationCodeServices implements AuthorizationCodeServices {
 
-    private RandomValueStringGenerator generator = new RandomValueStringGenerator();
+    private final RandomValueStringGenerator generator = new RandomValueStringGenerator();
 
     protected abstract void store(String code, OAuth2Authentication authentication);
 

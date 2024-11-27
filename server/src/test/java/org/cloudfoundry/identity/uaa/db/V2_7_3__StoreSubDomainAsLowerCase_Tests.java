@@ -132,10 +132,10 @@ class V2_7_3__StoreSubDomainAsLowerCase_Tests {
     }
 
     protected void createIdentityZoneThroughSQL(IdentityZone identityZone) {
-        String ID_ZONE_FIELDS = "id,version,created,lastmodified,name,subdomain,description";
-        String CREATE_IDENTITY_ZONE_SQL = "insert into identity_zone(" + ID_ZONE_FIELDS + ") values (?,?,?,?,?,?,?)";
+        String idZoneFields = "id,version,created,lastmodified,name,subdomain,description";
+        String createIdentityZoneSql = "insert into identity_zone(" + idZoneFields + ") values (?,?,?,?,?,?,?)";
 
-        jdbcTemplate.update(CREATE_IDENTITY_ZONE_SQL, ps -> {
+        jdbcTemplate.update(createIdentityZoneSql, ps -> {
             ps.setString(1, identityZone.getId().trim());
             ps.setInt(2, identityZone.getVersion());
             ps.setTimestamp(3, new Timestamp(new Date().getTime()));

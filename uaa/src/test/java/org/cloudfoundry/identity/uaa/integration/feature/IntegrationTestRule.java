@@ -29,9 +29,9 @@ import java.util.Map;
 import static org.junit.Assert.assertTrue;
 
 public class IntegrationTestRule implements TestRule {
-    private static Logger logger = LoggerFactory.getLogger(IntegrationTestRule.class);
+    private static final Logger logger = LoggerFactory.getLogger(IntegrationTestRule.class);
 
-    private static Map<String, Boolean> sharedStatuses = new HashMap<>();
+    private static final Map<String, Boolean> sharedStatuses = new HashMap<>();
 
     private final String baseUrl;
 

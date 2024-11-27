@@ -92,7 +92,7 @@ public class IdentityProviderEndpoints implements ApplicationEventPublisherAware
     private final TransactionTemplate transactionTemplate;
     private final IdentityProviderAliasHandler idpAliasHandler;
 
-    private ApplicationEventPublisher publisher = null;
+    private ApplicationEventPublisher publisher;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {

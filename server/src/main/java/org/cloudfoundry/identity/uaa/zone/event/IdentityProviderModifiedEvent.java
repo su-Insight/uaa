@@ -24,7 +24,7 @@ public class IdentityProviderModifiedEvent extends AbstractUaaEvent {
 
     private static final long serialVersionUID = -4559543713244231262L;
 
-    private AuditEventType eventType;
+    private final AuditEventType eventType;
 
     protected static final String dataFormat = "id=%s; type=%s; origin=%s; zone=%s";
 

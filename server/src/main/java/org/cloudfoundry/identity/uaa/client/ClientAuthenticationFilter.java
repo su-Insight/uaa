@@ -70,7 +70,7 @@ public class ClientAuthenticationFilter extends AbstractPreAuthenticatedProcessi
 
     private PreAuthenticatedPrincipalSource<?> principalSource;
 
-    private boolean oauth2Available = false;
+    private boolean oauth2Available;
 
     /**
      * @param principalSource the PreAuthenticatedPrincipalSource to set

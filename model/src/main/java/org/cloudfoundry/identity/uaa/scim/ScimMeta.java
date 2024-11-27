@@ -23,11 +23,11 @@ import org.cloudfoundry.identity.uaa.impl.JsonDateSerializer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ScimMeta {
-    private int version = 0;
+    private int version;
 
     private Date created = new Date();
 
-    private Date lastModified = null;
+    private Date lastModified;
 
     private String[] attributes;
 

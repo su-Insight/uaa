@@ -69,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.oauth.client.ClientConstants.REQUIRED_USER_GROUPS;
 import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.EMAIL;
 import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.GRANTED_SCOPES;
@@ -223,7 +223,7 @@ public class JwtTokenSignedByThisUAATest {
                 .withAuthorities(Collections.singletonList(new SimpleGrantedAuthority("acme.dev"))));
 
         uaaUser = userDb.retrieveUserById(USER_ID);
-        uaaUserGroups = uaaUser.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.toList());
+        uaaUserGroups = uaaUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
     }
 
@@ -256,7 +256,7 @@ public class JwtTokenSignedByThisUAATest {
         assertThat(jwtTokenSignedByThisUAA.toString(), notNullValue());
         assertThat(jwtTokenSignedByThisUAA.getJwt().toString(), notNullValue());
         assertThat(jwtTokenSignedByThisUAA.getJwt().getHeader().toString(), notNullValue());
-        assertThat(jwtTokenSignedByThisUAA.getJwt().getEncoded().toString(), notNullValue());
+        assertThat(jwtTokenSignedByThisUAA.getJwt().getEncoded(), notNullValue());
         assertThat(jwtTokenSignedByThisUAA.getJwt().getHeader().getAlg(), containsString("HS512"));
     }
 
@@ -378,7 +378,7 @@ public class JwtTokenSignedByThisUAATest {
     }
 
     private String getToken() {
-        return getToken(EMPTY_LIST);
+        return getToken(emptyList());
     }
 
     private String getToken(Collection<String> excludedClaims) {

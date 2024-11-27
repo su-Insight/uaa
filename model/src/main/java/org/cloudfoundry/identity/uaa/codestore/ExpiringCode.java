@@ -76,28 +76,30 @@ public class ExpiringCode {
 
     @JsonIgnore
     public boolean isExpired() {
-        if (expiresAt == null)
+        if (expiresAt == null) {
             return false;
+        }
         return expiresAt.getTime() < System.currentTimeMillis();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof ExpiringCode))
+        }
+        if (!(o instanceof ExpiringCode)) {
             return false;
+        }
 
         ExpiringCode that = (ExpiringCode) o;
 
-        if (!Objects.equals(code, that.code))
+        if (!Objects.equals(code, that.code)) {
             return false;
-        if (!Objects.equals(data, that.data))
+        }
+        if (!Objects.equals(data, that.data)) {
             return false;
-        if (!Objects.equals(expiresAt, that.expiresAt))
-            return false;
-
-        return true;
+        }
+        return !!Objects.equals(expiresAt, that.expiresAt);
     }
 
     @Override

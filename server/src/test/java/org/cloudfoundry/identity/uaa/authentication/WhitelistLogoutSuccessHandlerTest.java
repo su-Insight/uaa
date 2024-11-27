@@ -26,7 +26,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.Collections;
 
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils.CLIENT_ID;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,7 +49,7 @@ class WhitelistLogoutSuccessHandlerTest {
         response = new MockHttpServletResponse();
         UaaClientDetails client = new UaaClientDetails(CLIENT_ID, "", "", "", "", "http://*.testing.com,http://testing.com");
         clientDetailsService = mock(MultitenantClientServices.class);
-        handler = new WhitelistLogoutSuccessHandler(EMPTY_LIST);
+        handler = new WhitelistLogoutSuccessHandler(emptyList());
         handler.setDefaultTargetUrl("/login");
         handler.setAlwaysUseDefaultTargetUrl(true);
         handler.setTargetUrlParameter("redirect");

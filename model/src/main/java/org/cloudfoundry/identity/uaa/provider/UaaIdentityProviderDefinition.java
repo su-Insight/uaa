@@ -20,7 +20,7 @@ public class UaaIdentityProviderDefinition extends AbstractIdentityProviderDefin
 
     private PasswordPolicy passwordPolicy;
     private LockoutPolicy lockoutPolicy;
-    private boolean disableInternalUserManagement = false;
+    private boolean disableInternalUserManagement;
 
     public UaaIdentityProviderDefinition() {
     }

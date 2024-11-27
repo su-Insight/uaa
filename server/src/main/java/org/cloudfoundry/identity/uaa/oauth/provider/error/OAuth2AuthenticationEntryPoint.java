@@ -50,9 +50,9 @@ public class OAuth2AuthenticationEntryPoint extends AbstractOAuth2SecurityExcept
         }
         StringBuilder builder = new StringBuilder();
         builder.append(typeName + " ");
-        builder.append("realm=\"" + realmName + "\"");
+        builder.append("realm=\"").append(realmName).append("\"");
         if (existing != null) {
-            builder.append(", " + existing);
+            builder.append(", ").append(existing);
         }
         HttpHeaders update = new HttpHeaders();
         update.putAll(response.getHeaders());

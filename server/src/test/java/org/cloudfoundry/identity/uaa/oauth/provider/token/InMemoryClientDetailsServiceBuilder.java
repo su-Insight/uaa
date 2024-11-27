@@ -16,7 +16,7 @@ import java.util.Map;
 public class InMemoryClientDetailsServiceBuilder extends
         ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder> {
 
-    private Map<String, UaaClientDetails> clientDetails = new HashMap<>();
+    private final Map<String, UaaClientDetails> clientDetails = new HashMap<>();
 
     @Override
     protected void addClient(String clientId, ClientDetails value) {

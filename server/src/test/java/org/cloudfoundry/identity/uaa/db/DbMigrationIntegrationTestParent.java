@@ -29,7 +29,7 @@ public abstract class DbMigrationIntegrationTestParent {
     protected JdbcTemplate jdbcTemplate;
 
     MigrationTestRunner migrationTestRunner;
-    private boolean dbNeedsResetting = false;
+    private boolean dbNeedsResetting;
 
     protected abstract String onlyRunTestsForActiveSpringProfileName();
 

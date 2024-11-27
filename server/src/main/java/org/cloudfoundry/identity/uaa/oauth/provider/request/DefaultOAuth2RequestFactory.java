@@ -30,7 +30,7 @@ public class DefaultOAuth2RequestFactory implements OAuth2RequestFactory {
 
     private SecurityContextAccessor securityContextAccessor = new DefaultSecurityContextAccessor();
 
-    private boolean checkUserScopes = false;
+    private boolean checkUserScopes;
 
     public DefaultOAuth2RequestFactory(ClientDetailsService clientDetailsService) {
         this.clientDetailsService = clientDetailsService;

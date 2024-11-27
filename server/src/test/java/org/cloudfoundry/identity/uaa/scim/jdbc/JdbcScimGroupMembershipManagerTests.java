@@ -670,7 +670,9 @@ class JdbcScimGroupMembershipManagerTests {
     private void validateM5(int i, Set<ScimGroup> m5, int prefix) {
         int count = 0;
         for (ScimGroup g : m5) {
-            if (g.getId().startsWith("testGroup" + prefix)) count++;
+            if (g.getId().startsWith("testGroup" + prefix)) {
+                count++;
+            }
         }
         Assert.assertEquals(i, count);
     }
@@ -692,9 +694,9 @@ class JdbcScimGroupMembershipManagerTests {
             final String origin,
             final JdbcTemplate jdbcTemplate,
             final String zoneId) {
-        final String gId_withZone = IdentityZone.getUaaZoneId().equals(zoneId) ? gId : zoneId + "-" + gId;
-        final String mId_WithZone = IdentityZone.getUaaZoneId().equals(zoneId) ? mId : zoneId + "-" + mId;
-        jdbcTemplate.execute(String.format(ADD_MEMBER_SQL_FORMAT, gId_withZone, mId_WithZone, mType, origin, zoneId));
+        final String gIdWithZone = IdentityZone.getUaaZoneId().equals(zoneId) ? gId : zoneId + "-" + gId;
+        final String mIdWithZone = IdentityZone.getUaaZoneId().equals(zoneId) ? mId : zoneId + "-" + mId;
+        jdbcTemplate.execute(String.format(ADD_MEMBER_SQL_FORMAT, gIdWithZone, mIdWithZone, mType, origin, zoneId));
     }
 
     private void addGroup(

@@ -1,4 +1,4 @@
-Project identityServer = parent.subprojects.find { it.name.equals("cloudfoundry-identity-server") }
+Project identityServer = parent.subprojects.find { "cloudfoundry-identity-server".equals(it.name) }
 
 apply(plugin: "war")
 

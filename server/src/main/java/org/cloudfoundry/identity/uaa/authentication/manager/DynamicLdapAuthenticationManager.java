@@ -25,10 +25,10 @@ import java.nio.file.ProviderNotFoundException;
 
 public class DynamicLdapAuthenticationManager implements AuthenticationManager {
     private final LdapIdentityProviderDefinition definition;
-    private ClassPathXmlApplicationContext context = null;
-    private ScimGroupExternalMembershipManager scimGroupExternalMembershipManager;
-    private ScimGroupProvisioning scimGroupProvisioning;
-    private LdapLoginAuthenticationManager ldapLoginAuthenticationManager;
+    private ClassPathXmlApplicationContext context;
+    private final ScimGroupExternalMembershipManager scimGroupExternalMembershipManager;
+    private final ScimGroupProvisioning scimGroupProvisioning;
+    private final LdapLoginAuthenticationManager ldapLoginAuthenticationManager;
     private AuthenticationManager manager;
     private AuthenticationManager ldapManagerActual;
     private ApplicationEventPublisher eventPublisher;

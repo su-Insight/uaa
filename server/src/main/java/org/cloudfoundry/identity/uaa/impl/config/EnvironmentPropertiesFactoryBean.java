@@ -34,7 +34,7 @@ public class EnvironmentPropertiesFactoryBean implements FactoryBean<Properties>
 
     private Environment environment;
 
-    private Map<String, Object> defaultProperties = new HashMap<String, Object>();
+    private final Map<String, Object> defaultProperties = new HashMap<>();
 
     public void setDefaultProperties(Properties defaultProperties) {
         this.defaultProperties.clear();

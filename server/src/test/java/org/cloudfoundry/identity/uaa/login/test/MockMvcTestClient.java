@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class MockMvcTestClient {
 
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     public MockMvcTestClient(MockMvc mockMvc) {
         this.mockMvc = mockMvc;

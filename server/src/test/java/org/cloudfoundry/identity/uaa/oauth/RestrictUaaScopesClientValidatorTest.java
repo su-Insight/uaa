@@ -48,21 +48,21 @@ public class RestrictUaaScopesClientValidatorTest {
         for (String s : badScopes) {
             client.setScope(Collections.singletonList(s));
             validateClient(restrictModes, nonRestrictModes, client, s);
-            client.setScope(Collections.EMPTY_LIST);
+            client.setScope(Collections.emptyList());
             client.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority(s)));
             validateClient(restrictModes, nonRestrictModes, client, s);
-            client.setAuthorities(Collections.EMPTY_LIST);
+            client.setAuthorities(Collections.emptyList());
         }
 
         for (String s : goodScopes) {
             List<ClientDetailsValidator.Mode> goodmodes = new LinkedList<>(restrictModes);
             goodmodes.addAll(nonRestrictModes);
             client.setScope(Collections.singletonList(s));
-            validateClient(Collections.EMPTY_LIST, goodmodes, client, s);
-            client.setScope(Collections.EMPTY_LIST);
+            validateClient(Collections.emptyList(), goodmodes, client, s);
+            client.setScope(Collections.emptyList());
             client.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority(s)));
-            validateClient(Collections.EMPTY_LIST, goodmodes, client, s);
-            client.setAuthorities(Collections.EMPTY_LIST);
+            validateClient(Collections.emptyList(), goodmodes, client, s);
+            client.setAuthorities(Collections.emptyList());
         }
 
     }

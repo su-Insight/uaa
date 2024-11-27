@@ -162,12 +162,12 @@ public final class LdapUtils {
         }
 
         //if flat attributes are set in the properties
-        final String LDAP_ATTR_MAP_PREFIX = LdapIdentityProviderDefinition.LDAP_ATTRIBUTE_MAPPINGS + ".";
+        final String ldapAttrMapPrefix = LdapIdentityProviderDefinition.LDAP_ATTRIBUTE_MAPPINGS + ".";
         for (Map.Entry<String, Object> entry : ldapConfig.entrySet()) {
             if (!LdapIdentityProviderDefinition.LDAP_PROPERTY_NAMES.contains(entry.getKey()) &&
-                    entry.getKey().startsWith(LDAP_ATTR_MAP_PREFIX) &&
+                    entry.getKey().startsWith(ldapAttrMapPrefix) &&
                     entry.getValue() instanceof String) {
-                definition.addAttributeMapping(entry.getKey().substring(LDAP_ATTR_MAP_PREFIX.length()), entry.getValue());
+                definition.addAttributeMapping(entry.getKey().substring(ldapAttrMapPrefix.length()), entry.getValue());
             }
         }
 

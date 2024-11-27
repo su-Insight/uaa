@@ -46,7 +46,9 @@ public class LdapAuthority implements GrantedAuthority {
     }
 
     public LdapAuthority(String role, String dn, Map<String, String[]> attributes) {
-        if (role == null) throw new NullPointerException("role can not be null");
+        if (role == null) {
+            throw new NullPointerException("role can not be null");
+        }
         this.role = role;
         this.dn = dn;
         this.attributes = attributes;
@@ -79,15 +81,19 @@ public class LdapAuthority implements GrantedAuthority {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof LdapAuthority)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LdapAuthority)) {
+            return false;
+        }
 
         LdapAuthority that = (LdapAuthority) o;
 
-        if (!dn.equals(that.dn)) return false;
-        if (!Objects.equals(role, that.role)) return false;
-
-        return true;
+        if (!dn.equals(that.dn)) {
+            return false;
+        }
+        return !!Objects.equals(role, that.role);
     }
 
     @Override

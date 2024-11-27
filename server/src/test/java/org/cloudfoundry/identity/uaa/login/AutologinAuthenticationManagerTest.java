@@ -84,7 +84,7 @@ class AutologinAuthenticationManagerTest {
                                 "test-username",
                                 "password",
                                 "email@email.com",
-                                Collections.EMPTY_LIST,
+                                Collections.emptyList(),
                                 "given name",
                                 "family name",
                                 new Date(System.currentTimeMillis()),

@@ -24,10 +24,10 @@ public class JwtAlgorithms {
     public static final String DEFAULT_HMAC = "HMACSHA256";
     public static final String DEFAULT_EC = "SHA256withECDSA";
     public static final String DEFAULT_RSA = "SHA256withRSA";
-    private static final Map<String, String> sigAlgs = new HashMap<String, String>();
-    private static final Map<String, String> javaToSigAlgs = new HashMap<String, String>();
-    private static final Map<String, String> keyAlgs = new HashMap<String, String>();
-    private static final Map<String, String> javaToKeyAlgs = new HashMap<String, String>();
+    private static final Map<String, String> sigAlgs = new HashMap<>();
+    private static final Map<String, String> javaToSigAlgs = new HashMap<>();
+    private static final Map<String, String> keyAlgs = new HashMap<>();
+    private static final Map<String, String> javaToKeyAlgs = new HashMap<>();
 
     static {
         sigAlgs.put("HS256", DEFAULT_HMAC);

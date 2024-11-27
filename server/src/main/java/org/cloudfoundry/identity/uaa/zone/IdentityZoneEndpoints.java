@@ -99,7 +99,7 @@ public class IdentityZoneEndpoints implements ApplicationEventPublisherAware {
     @RequestMapping(value = "{id}", method = GET)
     public IdentityZone getIdentityZone(@PathVariable String id) {
         List<IdentityZone> result = filterForCurrentZone(Collections.singletonList(zoneDao.retrieveIgnoreActiveFlag(id)));
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             throw new ZoneDoesNotExistsException("Zone does not exist or is not accessible.");
         }
         return removeKeys(result.get(0));

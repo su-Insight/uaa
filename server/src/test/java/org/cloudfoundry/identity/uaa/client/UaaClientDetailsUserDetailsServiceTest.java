@@ -17,7 +17,7 @@ public class UaaClientDetailsUserDetailsServiceTest {
     @Test(expected = UsernameNotFoundException.class)
     public void shouldThrowUsernameNotFoundExceptionWhenNoSuchClient() throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(UserAuthenticationConverter.USERNAME, "test_user");
 
         ClientDetailsService clientDetailsService = Mockito.mock(ClientDetailsService.class);
@@ -31,7 +31,7 @@ public class UaaClientDetailsUserDetailsServiceTest {
     @Test(expected = ClientRegistrationException.class)
     public void shouldConductOriginalException() throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(UserAuthenticationConverter.USERNAME, "test_user");
 
         ClientDetailsService clientDetailsService = Mockito.mock(ClientDetailsService.class);

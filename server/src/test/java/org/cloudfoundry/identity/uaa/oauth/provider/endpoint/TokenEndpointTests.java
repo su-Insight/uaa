@@ -70,10 +70,9 @@ public class TokenEndpointTests {
             Collections.singleton(new SimpleGrantedAuthority("ROLE_CLIENT")));
 
     private TokenRequest createFromParameters(Map<String, String> parameters) {
-        TokenRequest request = new TokenRequest(parameters, parameters.get(OAuth2Utils.CLIENT_ID),
+        return new TokenRequest(parameters, parameters.get(OAuth2Utils.CLIENT_ID),
                 OAuth2Utils.parseParameterList(parameters.get(OAuth2Utils.SCOPE)),
                 parameters.get(OAuth2Utils.GRANT_TYPE));
-        return request;
     }
 
     @Before
@@ -98,7 +97,7 @@ public class TokenEndpointTests {
     @Test
     public void testGetAccessTokenWithNoClientId() throws HttpRequestMethodNotSupportedException {
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put(OAuth2Utils.GRANT_TYPE, "authorization_code");
 
         OAuth2AccessToken expectedToken = new DefaultOAuth2AccessToken("FOO");
@@ -125,7 +124,7 @@ public class TokenEndpointTests {
 
         when(clientDetailsService.loadClientByClientId(clientId)).thenReturn(clientDetails);
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put("client_id", clientId);
         parameters.put("scope", "read");
         parameters.put("grant_type", "authorization_code");
@@ -152,13 +151,13 @@ public class TokenEndpointTests {
 
     @Test(expected = HttpRequestMethodNotSupportedException.class)
     public void testGetAccessTokenWithUnsupportedRequestParameters() throws HttpRequestMethodNotSupportedException {
-        endpoint.getAccessToken(clientAuthentication, new HashMap<String, String>());
+        endpoint.getAccessToken(clientAuthentication, new HashMap<>());
     }
 
     @Test
     public void testGetAccessTokenWithSupportedRequestParametersNotPost() throws HttpRequestMethodNotSupportedException {
-        endpoint.setAllowedRequestMethods(new HashSet<HttpMethod>(Arrays.asList(HttpMethod.GET)));
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        endpoint.setAllowedRequestMethods(new HashSet<>(Arrays.asList(HttpMethod.GET)));
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put("client_id", clientId);
         parameters.put("scope", "read");
         parameters.put("grant_type", "authorization_code");
@@ -182,7 +181,7 @@ public class TokenEndpointTests {
 
     @Test(expected = InvalidGrantException.class)
     public void testImplicitGrant() throws HttpRequestMethodNotSupportedException {
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put(OAuth2Utils.GRANT_TYPE, "implicit");
         parameters.put("client_id", clientId);
         parameters.put("scope", "read");
@@ -199,7 +198,7 @@ public class TokenEndpointTests {
     public void testGetAccessTokenReturnsHeaderContentTypeJson() throws Exception {
         when(clientDetailsService.loadClientByClientId(clientId)).thenReturn(clientDetails);
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put("client_id", clientId);
         parameters.put("scope", "read");
         parameters.put("grant_type", "authorization_code");
@@ -223,7 +222,7 @@ public class TokenEndpointTests {
     public void testRefreshTokenGrantTypeWithoutRefreshTokenParameter() throws Exception {
         when(clientDetailsService.loadClientByClientId(clientId)).thenReturn(clientDetails);
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put("client_id", clientId);
         parameters.put("scope", "read");
         parameters.put("grant_type", "refresh_token");
@@ -238,7 +237,7 @@ public class TokenEndpointTests {
     public void testGetAccessTokenWithRefreshToken() throws Exception {
         when(clientDetailsService.loadClientByClientId(clientId)).thenReturn(clientDetails);
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<>();
         parameters.put("client_id", clientId);
         parameters.put("scope", "read");
         parameters.put("grant_type", "refresh_token");

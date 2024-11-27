@@ -22,13 +22,13 @@ import static org.cloudfoundry.identity.uaa.metrics.MetricsUtil.addToAverage;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestMetricSummary {
-    long count = 0;
+    long count;
     double averageTime = 0;
-    long intolerableCount = 0;
+    long intolerableCount;
     double averageIntolerableTime = 0;
-    long databaseQueryCount = 0;
+    long databaseQueryCount;
     double averageDatabaseQueryTime = 0;
-    long databaseIntolerableQueryCount = 0;
+    long databaseIntolerableQueryCount;
     double averageDatabaseIntolerableQueryTime = 0;
 
     public RequestMetricSummary() {

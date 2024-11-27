@@ -35,7 +35,7 @@ public class FlywayConfiguration {
             DataSource dataSource,
             DataSourceAccessor dataSourceAccessor,
             @Qualifier("platform") String platform) {
-        Flyway flyway = Flyway.configure()
+        return Flyway.configure()
                 .baselineOnMigrate(true)
                 .dataSource(dataSource)
                 .locations("classpath:org/cloudfoundry/identity/uaa/db/" + platform + "/")
@@ -43,7 +43,6 @@ public class FlywayConfiguration {
                 .validateOnMigrate(false)
                 .table(VERSION_TABLE)
                 .load();
-        return flyway;
     }
 
     private static final String MIGRATIONS_ENABLED = "uaa.migrationsEnabled";
@@ -56,7 +55,7 @@ public class FlywayConfiguration {
             @Override
             public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
                 var migrationsEnabled = context.getEnvironment().getProperty(MIGRATIONS_ENABLED, "true");
-                return !migrationsEnabled.equals("false");
+                return !"false".equals(migrationsEnabled);
             }
         }
 
@@ -77,7 +76,7 @@ public class FlywayConfiguration {
             @Override
             public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
                 var migrationsEnabled = context.getEnvironment().getProperty(MIGRATIONS_ENABLED, "true");
-                return migrationsEnabled.equals("false");
+                return "false".equals(migrationsEnabled);
             }
         }
 

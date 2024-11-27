@@ -26,7 +26,7 @@ class ChainedAuthenticationManagerTest {
     private AuthenticationManager authenticateFalse;
     private AuthenticationManager authenticateThrow;
     private ChainedAuthenticationManager.AuthenticationManagerConfiguration[] managers;
-    private ChainedAuthenticationManager authMgr = new ChainedAuthenticationManager();
+    private final ChainedAuthenticationManager authMgr = new ChainedAuthenticationManager();
     private AuthenticationManager loginAuthenticationManager;
 
     private class UsernamePasswordAuthenticationManager implements AuthenticationManager {

@@ -127,7 +127,7 @@ public class UaaSavedRequestCache extends HttpSessionRequestCache implements Fil
         private final Map<String, String[]> parameters;
 
         public ClientRedirectSavedRequest(HttpServletRequest request, String redirectUrl) {
-            super(request, req -> req.getServerPort());
+            super(request, ServletRequest::getServerPort);
             this.redirectUrl = redirectUrl;
             parameters = Collections.unmodifiableMap(UaaUrlUtils.getParameterMap(redirectUrl));
         }

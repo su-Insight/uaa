@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestApplicationEventHandler<T extends ApplicationEvent> {
-    protected final List<T> events = new ArrayList<T>();
+    protected final List<T> events = new ArrayList<>();
     protected final Class<T> clazz;
 
     public TestApplicationEventHandler(Class<T> eventType) {
@@ -47,7 +47,7 @@ public class TestApplicationEventHandler<T extends ApplicationEvent> {
     }
 
     public T getEarliestEvent() {
-        if (events.size() > 0) {
+        if (!events.isEmpty()) {
             return events.get(0);
         } else {
             return null;
@@ -55,7 +55,7 @@ public class TestApplicationEventHandler<T extends ApplicationEvent> {
     }
 
     public T getLatestEvent() {
-        if (events.size() > 0) {
+        if (!events.isEmpty()) {
             return events.get(events.size() - 1);
         } else {
             return null;

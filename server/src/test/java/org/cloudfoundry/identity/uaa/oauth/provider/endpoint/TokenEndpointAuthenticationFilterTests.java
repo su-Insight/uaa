@@ -35,24 +35,24 @@ import static org.mockito.Mockito.when;
  */
 public class TokenEndpointAuthenticationFilterTests {
 
-    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
 
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-    private MockFilterChain chain = new MockFilterChain();
+    private final MockFilterChain chain = new MockFilterChain();
 
-    private AuthenticationManager authenticationManager = Mockito.mock(AuthenticationManager.class);
+    private final AuthenticationManager authenticationManager = Mockito.mock(AuthenticationManager.class);
 
-    private UaaClientDetails client = new UaaClientDetails("foo", "resource", "scope", "authorization_code",
+    private final UaaClientDetails client = new UaaClientDetails("foo", "resource", "scope", "authorization_code",
             "ROLE_CLIENT");
 
-    private ClientDetailsService clientDetailsService = new ClientDetailsService() {
+    private final ClientDetailsService clientDetailsService = new ClientDetailsService() {
         public ClientDetails loadClientByClientId(String clientId) throws OAuth2Exception {
             return client;
         }
     };
 
-    private OAuth2RequestFactory oAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+    private final OAuth2RequestFactory oAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
 
     @Before
     public void init() {
@@ -71,7 +71,7 @@ public class TokenEndpointAuthenticationFilterTests {
     public void testPasswordGrant() throws Exception {
         request.setParameter("grant_type", "password");
         request.setParameter("client_id", "foo");
-        when(authenticationManager.authenticate(Mockito.<Authentication>any())).thenReturn(
+        when(authenticationManager.authenticate(Mockito.any())).thenReturn(
                 new UsernamePasswordAuthenticationToken("foo", "bar", AuthorityUtils
                         .commaSeparatedStringToAuthorityList("ROLE_USER")));
         TokenEndpointAuthenticationFilter filter = new TokenEndpointAuthenticationFilter(authenticationManager, oAuth2RequestFactory);
@@ -86,7 +86,7 @@ public class TokenEndpointAuthenticationFilterTests {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("client", "secret"));
         request.setParameter("grant_type", "password");
-        when(authenticationManager.authenticate(Mockito.<Authentication>any())).thenReturn(
+        when(authenticationManager.authenticate(Mockito.any())).thenReturn(
                 new UsernamePasswordAuthenticationToken("foo", "bar", AuthorityUtils
                         .commaSeparatedStringToAuthorityList("ROLE_USER")));
         TokenEndpointAuthenticationFilter filter = new TokenEndpointAuthenticationFilter(authenticationManager, oAuth2RequestFactory);

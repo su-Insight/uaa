@@ -31,8 +31,12 @@ public class ClientSecretPolicy extends GenericPasswordPolicy<ClientSecretPolicy
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
 
         ClientSecretPolicy that = (ClientSecretPolicy) obj;
         return super.equals(obj) && this.expireSecretInMonths == that.expireSecretInMonths;

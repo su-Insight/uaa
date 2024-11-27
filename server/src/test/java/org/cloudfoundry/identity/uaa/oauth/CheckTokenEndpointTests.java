@@ -108,7 +108,7 @@ public class CheckTokenEndpointTests {
     private String signerKey;
     private boolean useOpaque;
 
-    private AuthorizationRequest authorizationRequest = null;
+    private AuthorizationRequest authorizationRequest;
     private UaaUserPrototype uaaUserPrototype;
     private UaaUser user;
     private UaaClientDetails defaultClient;

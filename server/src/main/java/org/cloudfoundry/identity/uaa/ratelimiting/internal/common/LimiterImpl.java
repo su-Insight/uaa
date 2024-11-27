@@ -12,7 +12,7 @@ import org.cloudfoundry.identity.uaa.ratelimiting.core.CompoundKey;
 import org.cloudfoundry.identity.uaa.ratelimiting.core.Limiter;
 import org.cloudfoundry.identity.uaa.ratelimiting.core.LoggingOption;
 
-public class LimiterImpl implements Limiter {
+public final class LimiterImpl implements Limiter {
     private static final String NOT_LIMITED = "forward   "; // these three constant values should be the same length
     private static final String LIMITED = "--LIMIT-- ";
     private static final String NOT_CALLED = "noCheck   ";
@@ -21,7 +21,7 @@ public class LimiterImpl implements Limiter {
     private final List<CompoundKey> orderedLimiterKeys;
     private final Boolean[] calledAndLimited;
     private final int[] remaining;
-    private int updateIndex = 0;
+    private int updateIndex;
     private boolean limiting;
     private int indexOfLimiting;
 

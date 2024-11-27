@@ -26,25 +26,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Collections.EMPTY_LIST;
-import static java.util.Collections.EMPTY_MAP;
-import static java.util.Collections.EMPTY_SET;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
 
 public class UaaAuthenticationDeserializer extends JsonDeserializer<UaaAuthentication> implements UaaAuthenticationJsonBase {
     @Override
     public UaaAuthentication deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         UaaAuthenticationDetails details = null;
         UaaPrincipal princpal = null;
-        List<? extends GrantedAuthority> authorities = EMPTY_LIST;
-        Set<String> externalGroups = EMPTY_SET;
-        Set<String> authenticationMethods = EMPTY_SET;
+        List<? extends GrantedAuthority> authorities = emptyList();
+        Set<String> externalGroups = emptySet();
+        Set<String> authenticationMethods = emptySet();
         Set<String> authNContextClassRef = null;
         long expiresAt = -1;
         long authenticatedTime = -1;
         boolean authenticated = false;
         long previousLoginSuccessTime = -1;
         String idpIdToken = null;
-        Map<String, List<String>> userAttributes = EMPTY_MAP;
+        Map<String, List<String>> userAttributes = emptyMap();
         while (jp.nextToken() != JsonToken.END_OBJECT) {
             if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                 String fieldName = jp.getCurrentName();

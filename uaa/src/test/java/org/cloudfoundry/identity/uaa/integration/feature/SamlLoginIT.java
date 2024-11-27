@@ -918,13 +918,13 @@ public class SamlLoginIT {
     @Test
     void samlLoginCustomUserAttributesAndRolesInIDToken() throws Exception {
 
-        final String COST_CENTER = "costCenter";
-        final String COST_CENTERS = "costCenters";
-        final String DENVER_CO = "Denver,CO";
-        final String MANAGER = "manager";
-        final String MANAGERS = "managers";
-        final String JOHN_THE_SLOTH = "John the Sloth";
-        final String KARI_THE_ANT_EATER = "Kari the Ant Eater";
+        final String costCenter = "costCenter";
+        final String costCenters = "costCenters";
+        final String denverCo = "Denver,CO";
+        final String manager = "manager";
+        final String managers = "managers";
+        final String johnTheSloth = "John the Sloth";
+        final String kariTheAntEater = "Kari the Ant Eater";
 
         //ensure we are able to resolve DNS for hostname testzone1.localhost
         String zoneId = "testzone1";
@@ -963,8 +963,8 @@ public class SamlLoginIT {
         // create a SAML external IDP
         SamlIdentityProviderDefinition samlIdentityProviderDefinition = createTestZone1IDP(SAML_ORIGIN);
         samlIdentityProviderDefinition.setStoreCustomAttributes(true);
-        samlIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + COST_CENTERS, COST_CENTER);
-        samlIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + MANAGERS, MANAGER);
+        samlIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + costCenters, costCenter);
+        samlIdentityProviderDefinition.addAttributeMapping(USER_ATTRIBUTE_PREFIX + managers, manager);
 
         // External groups will only appear as roles if they are allowlisted
         samlIdentityProviderDefinition.setExternalGroupsWhitelist(List.of("*"));
@@ -1046,8 +1046,8 @@ public class SamlLoginIT {
 
         assertThat(claims).containsKey(USER_ATTRIBUTES);
         Map<String, List<String>> userAttributes = (Map<String, List<String>>) claims.get(USER_ATTRIBUTES);
-        assertThat(userAttributes.get(COST_CENTERS)).containsExactlyInAnyOrder(DENVER_CO);
-        assertThat(userAttributes.get(MANAGERS)).containsExactlyInAnyOrder(JOHN_THE_SLOTH, KARI_THE_ANT_EATER);
+        assertThat(userAttributes.get(costCenters)).containsExactlyInAnyOrder(denverCo);
+        assertThat(userAttributes.get(managers)).containsExactlyInAnyOrder(johnTheSloth, kariTheAntEater);
 
         //validate that ID token contains the correct roles
         String[] expectedRoles = new String[]{"saml.user", "saml.admin"};
@@ -1058,10 +1058,10 @@ public class SamlLoginIT {
         UserInfoResponse userInfo = IntegrationTestUtils.getUserInfo(zoneUrl, authCodeTokenResponse.get("access_token"));
 
         Map<String, List<String>> userAttributeMap = userInfo.getUserAttributes();
-        List<String> costCenterData = userAttributeMap.get(COST_CENTERS);
-        List<String> managerData = userAttributeMap.get(MANAGERS);
-        assertThat(costCenterData).containsExactlyInAnyOrder(DENVER_CO);
-        assertThat(managerData).containsExactlyInAnyOrder(JOHN_THE_SLOTH, KARI_THE_ANT_EATER);
+        List<String> costCenterData = userAttributeMap.get(costCenters);
+        List<String> managerData = userAttributeMap.get(managers);
+        assertThat(costCenterData).containsExactlyInAnyOrder(denverCo);
+        assertThat(managerData).containsExactlyInAnyOrder(johnTheSloth, kariTheAntEater);
 
         // user info should contain the user's roles
         List<String> userInfoRoles = userInfo.getRoles();

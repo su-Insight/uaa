@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import lombok.RequiredArgsConstructor;
 
-public class StringUtilities {
+public final class StringUtilities {
 
     private StringUtilities() {
     }

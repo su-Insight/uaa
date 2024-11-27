@@ -49,7 +49,7 @@ public class UaaResetPasswordService implements ResetPasswordService, Applicatio
     private final ExpiringCodeStore expiringCodeStore;
     private final PasswordValidator passwordValidator;
     private final MultitenantClientServices clientDetailsService;
-    private ResourcePropertySource resourcePropertySource;
+    private final ResourcePropertySource resourcePropertySource;
     private final IdentityZoneManager identityZoneManager;
     private ApplicationEventPublisher publisher;
 

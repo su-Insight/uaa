@@ -26,12 +26,12 @@ public class IdleTimer {
 
     TimeService timeService = new TimeServiceImpl();
 
-    private long inflightRequests = 0;
-    private long idleTime = 0;
+    private long inflightRequests;
+    private long idleTime;
 
     private long lastIdleStart = timeService.getCurrentTimeMillis();
     private final long startTime = timeService.getCurrentTimeMillis();
-    private long requestCount = 0;
+    private long requestCount;
 
     public synchronized void endRequest() {
         switch ((int) --inflightRequests) {

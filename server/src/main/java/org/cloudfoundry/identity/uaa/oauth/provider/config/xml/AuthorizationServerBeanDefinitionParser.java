@@ -305,7 +305,7 @@ public class AuthorizationServerBeanDefinitionParser
                         new TypedStringValue(approvalPage, String.class));
             }
         }
-        if (StringUtils.hasText(enableCheckToken) && enableCheckToken.equals("true")) {
+        if (StringUtils.hasText(enableCheckToken) && "true".equals(enableCheckToken)) {
             // configure the check token endpoint
             BeanDefinitionBuilder checkTokenEndpointBean = BeanDefinitionBuilder
                     .rootBeanDefinition(CheckTokenEndpoint.class);

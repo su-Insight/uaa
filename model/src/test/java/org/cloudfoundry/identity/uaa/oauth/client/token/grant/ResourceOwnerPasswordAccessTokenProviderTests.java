@@ -32,9 +32,9 @@ public class ResourceOwnerPasswordAccessTokenProviderTests {
     @Rule
     public ExpectedException expected = ExpectedException.none();
 
-    private MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+    private final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-    private ResourceOwnerPasswordAccessTokenProvider provider = new ResourceOwnerPasswordAccessTokenProvider() {
+    private final ResourceOwnerPasswordAccessTokenProvider provider = new ResourceOwnerPasswordAccessTokenProvider() {
         @Override
         protected OAuth2AccessToken retrieveToken(AccessTokenRequest request, OAuth2ProtectedResourceDetails resource,
                 MultiValueMap<String, String> form, HttpHeaders headers) {
@@ -50,7 +50,7 @@ public class ResourceOwnerPasswordAccessTokenProviderTests {
         }
     };
 
-    private ResourceOwnerPasswordResourceDetails resource = new ResourceOwnerPasswordResourceDetails();
+    private final ResourceOwnerPasswordResourceDetails resource = new ResourceOwnerPasswordResourceDetails();
 
     @Test
     public void supportsResource() {

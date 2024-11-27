@@ -20,15 +20,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class UaaUserEditorTests {
-    private static UaaTestAccounts testAccounts = UaaTestAccounts.standard(null);
+    private static final UaaTestAccounts testAccounts = UaaTestAccounts.standard(null);
 
-    private static String unm = testAccounts.getUserName();
-    private static String pwd = testAccounts.getPassword();
-    private static String email = "marissa@test.org";
-    private static String fnm = "Marissa";
-    private static String lnm = "Bloggs";
-    private static String auth1 = "uaa.admin,dash.user";
-    private static String auth2 = "openid";
+    private static final String unm = testAccounts.getUserName();
+    private static final String pwd = testAccounts.getPassword();
+    private static final String email = "marissa@test.org";
+    private static final String fnm = "Marissa";
+    private static final String lnm = "Bloggs";
+    private static final String auth1 = "uaa.admin,dash.user";
+    private static final String auth2 = "openid";
 
     @Test
     public void testShortFormat() {

@@ -31,18 +31,18 @@ import static org.junit.Assert.assertNull;
  */
 public class OAuth2AuthenticationProcessingFilterTests {
 
-    private OAuth2AuthenticationProcessingFilter filter = new OAuth2AuthenticationProcessingFilter();
+    private final OAuth2AuthenticationProcessingFilter filter = new OAuth2AuthenticationProcessingFilter();
 
-    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletRequest request = new MockHttpServletRequest();
 
-    private MockHttpServletResponse response = new MockHttpServletResponse();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-    private Authentication userAuthentication = new UsernamePasswordAuthenticationToken("marissa", "koala");
+    private final Authentication userAuthentication = new UsernamePasswordAuthenticationToken("marissa", "koala");
 
-    private OAuth2Authentication authentication = new OAuth2Authentication(RequestTokenFactory.createOAuth2Request(
+    private final OAuth2Authentication authentication = new OAuth2Authentication(RequestTokenFactory.createOAuth2Request(
             null, "foo", null, false, null, null, null, null, null), userAuthentication);
 
-    private FilterChain chain = Mockito.mock(FilterChain.class);
+    private final FilterChain chain = Mockito.mock(FilterChain.class);
 
     {
         filter.setAuthenticationManager(new AuthenticationManager() {

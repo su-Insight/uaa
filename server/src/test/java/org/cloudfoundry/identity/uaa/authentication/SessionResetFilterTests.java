@@ -71,7 +71,7 @@ public class SessionResetFilterTests {
 
         UaaPrincipal principal = new UaaPrincipal(user);
 
-        authentication = new UaaAuthentication(principal, null, Collections.EMPTY_LIST, null, true, System.currentTimeMillis());
+        authentication = new UaaAuthentication(principal, null, Collections.emptyList(), null, true, System.currentTimeMillis());
 
         chain = mock(FilterChain.class);
         request = mock(HttpServletRequest.class);
@@ -87,7 +87,7 @@ public class SessionResetFilterTests {
                 "username",
                 "password",
                 "email",
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 "given name",
                 "family name",
                 yesterday,
@@ -105,7 +105,7 @@ public class SessionResetFilterTests {
                 "username-1",
                 "password",
                 "email",
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 "given name",
                 "family name",
                 yesterday,
@@ -150,7 +150,7 @@ public class SessionResetFilterTests {
     @Test
     public void passwordNotModifiedDoesNotCheckAuthTime() throws Exception {
         UaaPrincipal principal = new UaaPrincipal(userWithNoPasswordModification);
-        Authentication authentication = new UaaAuthentication(principal, null, Collections.EMPTY_LIST, null, true, System.currentTimeMillis());
+        Authentication authentication = new UaaAuthentication(principal, null, Collections.emptyList(), null, true, System.currentTimeMillis());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filter.doFilterInternal(request, response, chain);
         verify(chain, times(1)).doFilter(request, response);

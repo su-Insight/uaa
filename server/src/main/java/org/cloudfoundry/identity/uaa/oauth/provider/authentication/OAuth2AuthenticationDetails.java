@@ -144,26 +144,34 @@ public class OAuth2AuthenticationDetails implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null || getClass() != obj.getClass())
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
+        }
         OAuth2AuthenticationDetails other = (OAuth2AuthenticationDetails) obj;
         if (sessionId == null) {
-            if (other.sessionId != null)
+            if (other.sessionId != null) {
                 return false;
-        } else if (!sessionId.equals(other.sessionId))
+            }
+        } else if (!sessionId.equals(other.sessionId)) {
             return false;
+        }
         if (tokenType == null) {
-            if (other.tokenType != null)
+            if (other.tokenType != null) {
                 return false;
-        } else if (!tokenType.equals(other.tokenType))
+            }
+        } else if (!tokenType.equals(other.tokenType)) {
             return false;
+        }
         if (tokenValue == null) {
-            if (other.tokenValue != null)
+            if (other.tokenValue != null) {
                 return false;
-        } else if (!tokenValue.equals(other.tokenValue))
+            }
+        } else if (!tokenValue.equals(other.tokenValue)) {
             return false;
+        }
         return true;
     }
 

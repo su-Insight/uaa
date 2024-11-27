@@ -56,11 +56,11 @@ class UaaAuthorizationRequestManagerTests {
 
     private IdentityProviderProvisioning providerProvisioning = mock(IdentityProviderProvisioning.class);
 
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, String> parameters = new HashMap<>();
 
     private UaaClientDetails client = new UaaClientDetails();
 
-    private UaaUser user = null;
+    private UaaUser user;
 
     private SecurityContextAccessor mockSecurityContextAccessor;
 

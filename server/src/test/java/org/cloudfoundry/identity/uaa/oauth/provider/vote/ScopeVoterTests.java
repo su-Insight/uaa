@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ScopeVoterTests {
 
-    private ScopeVoter voter = new ScopeVoter();
+    private final ScopeVoter voter = new ScopeVoter();
 
     @Test
     public void testAbstainIfNotOAuth2() throws Exception {

@@ -72,7 +72,7 @@ public class IdentityProvider<T extends AbstractIdentityProviderDefinition> impl
     @NotNull
     private String type;
     private T config;
-    private int version = 0;
+    private int version;
     private Date created = new Date();
     @JsonProperty("last_modified")
     private Date lastModified = new Date();
@@ -206,48 +206,65 @@ public class IdentityProvider<T extends AbstractIdentityProviderDefinition> impl
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         IdentityProvider other = (IdentityProvider) obj;
         if (config == null) {
-            if (other.config != null)
+            if (other.config != null) {
                 return false;
-        } else if (!config.equals(other.config))
+            }
+        } else if (!config.equals(other.config)) {
             return false;
+        }
         if (created == null) {
-            if (other.created != null)
+            if (other.created != null) {
                 return false;
-        } else if (!created.equals(other.created))
+            }
+        } else if (!created.equals(other.created)) {
             return false;
+        }
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         if (lastModified == null) {
-            if (other.lastModified != null)
+            if (other.lastModified != null) {
                 return false;
-        } else if (!lastModified.equals(other.lastModified))
+            }
+        } else if (!lastModified.equals(other.lastModified)) {
             return false;
+        }
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         if (originKey == null) {
-            if (other.originKey != null)
+            if (other.originKey != null) {
                 return false;
-        } else if (!originKey.equals(other.originKey))
+            }
+        } else if (!originKey.equals(other.originKey)) {
             return false;
+        }
         if (type == null) {
-            if (other.type != null)
+            if (other.type != null) {
                 return false;
-        } else if (!type.equals(other.type))
+            }
+        } else if (!type.equals(other.type)) {
             return false;
+        }
         if (aliasId == null) {
             if (other.aliasId != null) {
                 return false;

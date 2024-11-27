@@ -9,7 +9,7 @@ import org.cloudfoundry.identity.uaa.ratelimiting.core.config.exception.RateLimi
 
 import lombok.RequiredArgsConstructor;
 
-public class RequestsPerWindowSecs {
+public final class RequestsPerWindowSecs {
     public static final int MAX_WINDOW_SECONDS = (int) Duration.ofMinutes(30).toSeconds();
     static final int MIN_WINDOW_SECONDS = 1; // also the default
     static final String INVALID_REQUESTS_PREFIX = "Requests (before the 'r/') must ";

@@ -25,7 +25,7 @@ public class ServiceProviderModifiedEvent extends AbstractUaaEvent {
 
     private static final long serialVersionUID = -204120790766086570L;
 
-    private AuditEventType eventType;
+    private final AuditEventType eventType;
 
     protected static final String dataFormat = "id=%s; name=%s; entityID=%s";
 

@@ -98,7 +98,7 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
         List<AuthenticationManagerConfiguration> delegates = new LinkedList<>();
 
         String origin = loginHint == null ? null : loginHint.getOrigin();
-        if (uaaProvider.isActive() && (origin == null || origin.equals("uaa"))) {
+        if (uaaProvider.isActive() && (origin == null || "uaa".equals(origin))) {
             AuthenticationManagerConfiguration uaaConfig = new AuthenticationManagerConfiguration(internalUaaAuthenticationManager, null);
             uaaConfig.setStopIf(
                     AccountNotVerifiedException.class,
@@ -108,7 +108,7 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
             delegates.add(uaaConfig);
         }
 
-        if (ldapProvider.isActive() && (origin == null || origin.equals("ldap"))) {
+        if (ldapProvider.isActive() && (origin == null || "ldap".equals(origin))) {
             //has LDAP IDP config changed since last time?
             DynamicLdapAuthenticationManager existing = getLdapAuthenticationManager(zone, ldapProvider);
             if (!existing.getDefinition().equals(ldapProvider.getConfig())) {
@@ -118,11 +118,11 @@ public class DynamicZoneAwareAuthenticationManager implements AuthenticationMana
             DynamicLdapAuthenticationManager ldapAuthenticationManager = getLdapAuthenticationManager(zone, ldapProvider);
             AuthenticationManagerConfiguration ldapConfig =
                     new AuthenticationManagerConfiguration(ldapAuthenticationManager,
-                            delegates.size() > 0 ? ChainedAuthenticationManager.IF_PREVIOUS_FALSE : null);
+                            delegates.isEmpty() ? null : ChainedAuthenticationManager.IF_PREVIOUS_FALSE);
             delegates.add(ldapConfig);
         }
 
-        if (delegates.size() == 0 && origin != null) {
+        if (delegates.isEmpty() && origin != null) {
             throw new ProviderNotFoundException("The origin provided in the login hint is invalid.");
         }
 

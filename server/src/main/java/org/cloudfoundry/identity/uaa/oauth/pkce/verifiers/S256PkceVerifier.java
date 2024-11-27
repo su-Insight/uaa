@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class S256PkceVerifier implements PkceVerifier {
 
-    private static Logger logger = LoggerFactory.getLogger(S256PkceVerifier.class);
+    private static final Logger logger = LoggerFactory.getLogger(S256PkceVerifier.class);
     private final String codeChallengeMethod = "S256";
 
     public S256PkceVerifier() {

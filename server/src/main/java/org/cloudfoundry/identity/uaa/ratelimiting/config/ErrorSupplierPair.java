@@ -7,7 +7,7 @@ import org.cloudfoundry.identity.uaa.ratelimiting.util.StringUtilities;
 import lombok.Getter;
 
 @Getter
-public class ErrorSupplierPair {
+public final class ErrorSupplierPair {
     private final InternalLimiterFactoriesSupplier supplier;
     private final Exception error;
     private final String errorMsg;

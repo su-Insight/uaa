@@ -407,7 +407,9 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         //Bootstrap will not have authenticated session
-        if (authentication == null) return null;
+        if (authentication == null) {
+            return null;
+        }
         if (authentication.getPrincipal() instanceof UaaPrincipal) {
             userId = ((UaaPrincipal) authentication.getPrincipal()).getId();
         } else if (authentication.getPrincipal() instanceof String) {

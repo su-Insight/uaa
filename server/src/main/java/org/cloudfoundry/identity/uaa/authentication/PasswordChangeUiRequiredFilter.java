@@ -17,8 +17,8 @@ import java.io.IOException;
 
 public class PasswordChangeUiRequiredFilter extends OncePerRequestFilter {
 
-    private final static String MATCH_PATH = "/force_password_change";
-    private final static String COMPLETED_PATH = "/force_password_change_completed";
+    private static final String MATCH_PATH = "/force_password_change";
+    private static final String COMPLETED_PATH = "/force_password_change_completed";
 
     private final AntPathRequestMatcher matchPath;
     private final AntPathRequestMatcher completedPath;

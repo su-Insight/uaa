@@ -104,11 +104,17 @@ public class ScimGroupMember<TEntity extends ScimCore> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ScimGroupMember member = (ScimGroupMember) o;
-        if (getMemberId() != null ? !getMemberId().equals(member.getMemberId()) : member.getMemberId() != null) return false;
+        if (getMemberId() != null ? !getMemberId().equals(member.getMemberId()) : member.getMemberId() != null) {
+            return false;
+        }
         return getType() == member.getType();
     }
 

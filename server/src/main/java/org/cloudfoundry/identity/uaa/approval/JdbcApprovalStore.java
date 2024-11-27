@@ -75,7 +75,7 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     public static final String DELETE_OF_USER_APPROVALS_BY_PROVIDER = "delete from authz_approvals where user_id in (select id from users where origin = ? and identity_zone_id = ?)";
 
 
-    private boolean handleRevocationsAsExpiry = false;
+    private boolean handleRevocationsAsExpiry;
     private ApplicationEventPublisher applicationEventPublisher;
 
     public JdbcApprovalStore(JdbcTemplate jdbcTemplate) {
@@ -120,7 +120,9 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
                 ps.setTimestamp(6, new Timestamp(approval.getLastUpdatedAt().getTime()));
                 ps.setString(7, zoneId);
             });
-            if (count == 0) throw new EmptyResultDataAccessException("Approval add failed", 1);
+            if (count == 0) {
+                throw new EmptyResultDataAccessException("Approval add failed", 1);
+            }
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         publish(new ApprovalModifiedEvent(approval, authentication));

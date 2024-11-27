@@ -44,7 +44,7 @@ public class JdbcPagingList<E> extends AbstractList<E> {
 
     private final int size;
 
-    private int start = 0;
+    private int start;
 
     private List<E> current;
 
@@ -167,9 +167,9 @@ public class JdbcPagingList<E> extends AbstractList<E> {
 
         private final Iterator<T> iterator;
 
-        private boolean polled = false;
+        private boolean polled;
 
-        private boolean hasNext = false;
+        private boolean hasNext;
 
         private T next;
 

@@ -45,12 +45,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ListUserTokenMockMvcTests extends AbstractTokenMockMvcTests {
 
-    private ClientDetails client1withTokensListScope, client2,client3;
+    private ClientDetails client1withTokensListScope;
+    private ClientDetails client2;
+    private ClientDetails client3;
     private ScimUser user1withTokensListScope;
     private ScimUser user2;
-    private RandomValueStringGenerator generator = new RandomValueStringGenerator();
-    private MultiValueMap<String, String> tokensPerUser = new LinkedMultiValueMap<>();
-    private MultiValueMap<String, String> tokensPerClient = new LinkedMultiValueMap<>();
+    private final RandomValueStringGenerator generator = new RandomValueStringGenerator();
+    private final MultiValueMap<String, String> tokensPerUser = new LinkedMultiValueMap<>();
+    private final MultiValueMap<String, String> tokensPerClient = new LinkedMultiValueMap<>();
     private String adminClientToken;
     private String tokensListToken;
 

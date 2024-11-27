@@ -58,7 +58,7 @@ public class ZoneAwareClientSecretPolicyValidator implements ClientSecretValidat
 
     public static final String DEFAULT_MESSAGE_PATH = "/clientsecret-messages.properties";
 
-    private static PropertiesMessageResolver messageResolver;
+    private static final PropertiesMessageResolver messageResolver;
 
     static {
         messageResolver = messageResolver(DEFAULT_MESSAGE_PATH);

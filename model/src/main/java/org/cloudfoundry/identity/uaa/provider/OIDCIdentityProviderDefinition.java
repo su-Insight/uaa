@@ -30,14 +30,14 @@ import static java.util.Collections.emptyMap;
 public class OIDCIdentityProviderDefinition extends AbstractExternalOAuthIdentityProviderDefinition<OIDCIdentityProviderDefinition>
         implements Cloneable {
     private URL discoveryUrl;
-    private boolean passwordGrantEnabled = false;
-    private boolean setForwardHeader = false;
+    private boolean passwordGrantEnabled;
+    private boolean setForwardHeader;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<Prompt> prompts = null;
+    private List<Prompt> prompts;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object jwtClientAuthentication;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<String, String> additionalAuthzParameters = null;
+    private Map<String, String> additionalAuthzParameters;
 
     public URL getDiscoveryUrl() {
         return discoveryUrl;
@@ -96,16 +96,30 @@ public class OIDCIdentityProviderDefinition extends AbstractExternalOAuthIdentit
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         OIDCIdentityProviderDefinition that = (OIDCIdentityProviderDefinition) o;
 
-        if (this.passwordGrantEnabled != that.passwordGrantEnabled) return false;
-        if (this.setForwardHeader != that.setForwardHeader) return false;
-        if (!Objects.equals(this.jwtClientAuthentication, that.jwtClientAuthentication)) return false;
-        if (!Objects.equals(this.additionalAuthzParameters, that.additionalAuthzParameters)) return false;
+        if (this.passwordGrantEnabled != that.passwordGrantEnabled) {
+            return false;
+        }
+        if (this.setForwardHeader != that.setForwardHeader) {
+            return false;
+        }
+        if (!Objects.equals(this.jwtClientAuthentication, that.jwtClientAuthentication)) {
+            return false;
+        }
+        if (!Objects.equals(this.additionalAuthzParameters, that.additionalAuthzParameters)) {
+            return false;
+        }
         return Objects.equals(discoveryUrl, that.discoveryUrl);
 
     }

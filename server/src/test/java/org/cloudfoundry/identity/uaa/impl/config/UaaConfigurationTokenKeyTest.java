@@ -12,7 +12,7 @@ class UaaConfigurationTokenKeyTest {
 
     private static final String tokenKeyYaml = getResourceAsString(UaaConfigurationTokenKeyTest.class, "JwtTokenKey.yaml");
 
-    private YamlConfigurationValidator<UaaConfiguration> validator = new YamlConfigurationValidator<UaaConfiguration>(
+    private final YamlConfigurationValidator<UaaConfiguration> validator = new YamlConfigurationValidator<>(
             new UaaConfiguration.UaaConfigConstructor());
 
     private UaaConfiguration createValidator(final String yaml) {

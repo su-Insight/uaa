@@ -11,7 +11,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 
-public class JacksonObjectMapperConfig {
+public final class JacksonObjectMapperConfig {
 
     private JacksonObjectMapperConfig() {
     }

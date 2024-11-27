@@ -97,7 +97,7 @@ public class ScimUserBootstrap implements
     }
 
     private void deleteUsers(@NotNull List<String> deleteList) {
-        if (deleteList.size() == 0) {
+        if (deleteList.isEmpty()) {
             return;
         }
         StringBuilder filter = new StringBuilder();
