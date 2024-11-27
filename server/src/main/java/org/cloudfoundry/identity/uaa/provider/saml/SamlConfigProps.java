@@ -3,6 +3,7 @@ package org.cloudfoundry.identity.uaa.provider.saml;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.cloudfoundry.identity.uaa.saml.SamlKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.Nullable;
 
@@ -52,6 +53,7 @@ public class SamlConfigProps {
 
     /**
      * Map of key IDs to SamlKey objects
+     * This replaces the deprecated settings from login.* and login.saml.*
      */
     private Map<String, SamlKey> keys = new HashMap<>();
 
@@ -86,6 +88,39 @@ public class SamlConfigProps {
      * Defaults to false
      */
     private Boolean disableInResponseToCheck = false;
+
+    /**
+     * Legacy setting: login.saml.serviceProviderKey
+     */
+    private String serviceProviderKey;
+
+    /**
+     * Legacy setting: login.saml.serviceProviderKeyPassword
+     */
+    private String serviceProviderKeyPassword;
+
+    /**
+     * Legacy setting: login.saml.serviceProviderCertificate
+     */
+    private String serviceProviderCertificate;
+
+    /**
+     * Deprecated but sill working: login.serviceProviderKey
+     */
+    @Value("${login.serviceProviderKey:null}")
+    private String legacyServiceProviderKey;
+
+    /**
+     * Deprecated but sill working: login.serviceProviderKeyPassword
+     */
+    @Value("${login.serviceProviderKeyPassword:null}")
+    private String legacyServiceProviderKeyPassword;
+
+    /**
+     * Deprecated but sill working: login.serviceProviderCertificate
+     */
+    @Value("${login.serviceProviderCertificate:null}")
+    private String legacyServiceProviderCertificate;
 
     /**
      * Get the active key
