@@ -27,13 +27,14 @@ import org.cloudfoundry.identity.uaa.provider.IdentityProviderProvisioning;
 import org.cloudfoundry.identity.uaa.provider.OIDCIdentityProviderDefinition;
 import org.cloudfoundry.identity.uaa.provider.oauth.ExternalOAuthAuthenticationManager;
 import org.cloudfoundry.identity.uaa.provider.oauth.ExternalOAuthCodeToken;
-import org.cloudfoundry.identity.uaa.provider.oauth.ExternalOAuthProviderConfigurator;
 import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ParameterizedTypeReference;
@@ -80,7 +81,6 @@ class PasswordGrantAuthenticationManagerTest {
     private IdentityProviderProvisioning identityProviderProvisioning;
     private RestTemplateConfig restTemplateConfig;
     private ExternalOAuthAuthenticationManager externalOAuthAuthenticationManager;
-    private ExternalOAuthProviderConfigurator externalOAuthProviderConfigurator;
     private ApplicationEventPublisher eventPublisher;
 
     private IdentityProvider idp;
@@ -95,7 +95,6 @@ class PasswordGrantAuthenticationManagerTest {
         identityProviderProvisioning = mock(IdentityProviderProvisioning.class);
         restTemplateConfig = mock(RestTemplateConfig.class);
         externalOAuthAuthenticationManager = mock(ExternalOAuthAuthenticationManager.class);
-        externalOAuthProviderConfigurator = mock(ExternalOAuthProviderConfigurator.class);
 
         idp = mock(IdentityProvider.class);
         idpConfig = mock(OIDCIdentityProviderDefinition.class);
@@ -111,12 +110,16 @@ class PasswordGrantAuthenticationManagerTest {
         uaaProvider = mock(IdentityProvider.class);
         when(uaaProvider.getType()).thenReturn(OriginKeys.UAA);
         when(uaaProvider.getOriginKey()).thenReturn(OriginKeys.UAA);
+        when(uaaProvider.isActive()).thenReturn(true);
         ldapProvider = mock(IdentityProvider.class);
         when(ldapProvider.getType()).thenReturn(OriginKeys.LDAP);
         when(ldapProvider.getOriginKey()).thenReturn(OriginKeys.LDAP);
+        when(ldapProvider.isActive()).thenReturn(true);
 
         when(identityProviderProvisioning.retrieveActive("uaa")).thenReturn(Arrays.asList(idp, uaaProvider, ldapProvider));
-        when(externalOAuthProviderConfigurator.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(idp);
+        when(identityProviderProvisioning.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(idp);
+        when(identityProviderProvisioning.retrieveByOrigin("uaa", "uaa")).thenReturn(uaaProvider);
+        when(identityProviderProvisioning.retrieveByOrigin("ldap", "uaa")).thenReturn(ldapProvider);
 
         Authentication clientAuth = mock(Authentication.class);
         when(clientAuth.getName()).thenReturn("clientid");
@@ -125,7 +128,7 @@ class PasswordGrantAuthenticationManagerTest {
         when(clientAuth.getPrincipal()).thenReturn(uaaClient);
         when(uaaClient.getAdditionalInformation()).thenReturn(mock(Map.class));
 
-        instance = new PasswordGrantAuthenticationManager(zoneAwareAuthzAuthenticationManager, identityProviderProvisioning, restTemplateConfig, externalOAuthAuthenticationManager, externalOAuthProviderConfigurator);
+        instance = new PasswordGrantAuthenticationManager(zoneAwareAuthzAuthenticationManager, identityProviderProvisioning, restTemplateConfig, externalOAuthAuthenticationManager);
         IdentityZoneHolder.clear();
         eventPublisher = mock(ApplicationEventPublisher.class);
         instance.setApplicationEventPublisher(eventPublisher);
@@ -144,7 +147,7 @@ class PasswordGrantAuthenticationManagerTest {
         instance.authenticate(auth);
 
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
-        verify(externalOAuthProviderConfigurator, times(0)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(0)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(1)).retrieveActive(any());
     }
 
@@ -184,7 +187,7 @@ class PasswordGrantAuthenticationManagerTest {
         ArgumentCaptor<ExternalOAuthCodeToken> tokenArgumentCaptor = ArgumentCaptor.forClass(ExternalOAuthCodeToken.class);
         verify(externalOAuthAuthenticationManager, times(1)).authenticate(tokenArgumentCaptor.capture());
         verify(zoneAwareAuthzAuthenticationManager, times(0)).authenticate(any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(0)).retrieveActive(any());
 
         HttpEntity httpEntity = httpEntityArgumentCaptor.getValue();
@@ -238,7 +241,7 @@ class PasswordGrantAuthenticationManagerTest {
         ArgumentCaptor<ExternalOAuthCodeToken> tokenArgumentCaptor = ArgumentCaptor.forClass(ExternalOAuthCodeToken.class);
         verify(externalOAuthAuthenticationManager, times(1)).authenticate(tokenArgumentCaptor.capture());
         verify(zoneAwareAuthzAuthenticationManager, times(0)).authenticate(any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(0)).retrieveActive(any());
 
         HttpEntity httpEntity = httpEntityArgumentCaptor.getValue();
@@ -317,7 +320,7 @@ class PasswordGrantAuthenticationManagerTest {
         when(loginHint.getOrigin()).thenReturn("oidcprovider2");
         Authentication auth = mock(Authentication.class);
         when(zoneAwareAuthzAuthenticationManager.extractLoginHint(auth)).thenReturn(loginHint);
-        when(externalOAuthProviderConfigurator.retrieveByOrigin(any(), any())).thenThrow(new EmptyResultDataAccessException(1));
+        when(identityProviderProvisioning.retrieveByOrigin(any(), any())).thenThrow(new EmptyResultDataAccessException(1));
 
         try {
             instance.authenticate(auth);
@@ -337,7 +340,7 @@ class PasswordGrantAuthenticationManagerTest {
         when(localIdp.getType()).thenReturn(OriginKeys.SAML);
 
         when(identityProviderProvisioning.retrieveActive("uaa")).thenReturn(Arrays.asList(uaaProvider, ldapProvider, localIdp));
-        when(externalOAuthProviderConfigurator.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(localIdp);
+        when(identityProviderProvisioning.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(localIdp);
         UaaLoginHint loginHint = mock(UaaLoginHint.class);
         when(loginHint.getOrigin()).thenReturn("oidcprovider");
         Authentication auth = mock(Authentication.class);
@@ -362,7 +365,7 @@ class PasswordGrantAuthenticationManagerTest {
         when(idpConfig.isPasswordGrantEnabled()).thenReturn(false);
 
         when(identityProviderProvisioning.retrieveActive("uaa")).thenReturn(Arrays.asList(uaaProvider, ldapProvider, localIdp));
-        when(externalOAuthProviderConfigurator.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(localIdp);
+        when(identityProviderProvisioning.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(localIdp);
         UaaLoginHint loginHint = mock(UaaLoginHint.class);
         when(loginHint.getOrigin()).thenReturn("oidcprovider");
         Authentication auth = mock(Authentication.class);
@@ -387,7 +390,7 @@ class PasswordGrantAuthenticationManagerTest {
         when(idpConfig.isPasswordGrantEnabled()).thenReturn(true);
 
         when(identityProviderProvisioning.retrieveActive("uaa")).thenReturn(Arrays.asList(uaaProvider, ldapProvider, localIdp));
-        when(externalOAuthProviderConfigurator.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(localIdp);
+        when(identityProviderProvisioning.retrieveByOrigin("oidcprovider", "uaa")).thenReturn(localIdp);
         UaaLoginHint loginHint = mock(UaaLoginHint.class);
         when(loginHint.getOrigin()).thenReturn("oidcprovider");
         Authentication auth = mock(Authentication.class);
@@ -540,7 +543,7 @@ class PasswordGrantAuthenticationManagerTest {
         ArgumentCaptor<ExternalOAuthCodeToken> tokenArgumentCaptor = ArgumentCaptor.forClass(ExternalOAuthCodeToken.class);
         verify(externalOAuthAuthenticationManager, times(1)).authenticate(tokenArgumentCaptor.capture());
         verify(zoneAwareAuthzAuthenticationManager, times(0)).authenticate(any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(0)).retrieveActive(any());
 
         HttpEntity httpEntity = httpEntityArgumentCaptor.getValue();
@@ -630,22 +633,29 @@ class PasswordGrantAuthenticationManagerTest {
         verify(zoneAwareAuthzAuthenticationManager, times(0)).setLoginHint(any(), any());
     }
 
-    @Test
-    void testPasswordGrant_NoLoginHintWithDefaultUaa() {
+    @ParameterizedTest
+    @ValueSource(strings = { OriginKeys.UAA, OriginKeys.LDAP })
+    void testPasswordGrant_NoLoginHintWithDefaultUaaOrLdap(final String loginHintOrigin) {
         Authentication auth = mock(Authentication.class);
         when(zoneAwareAuthzAuthenticationManager.extractLoginHint(auth)).thenReturn(null);
         Map<String, Object> additionalInformation = new HashMap<>();
-        additionalInformation.put(ClientConstants.ALLOWED_PROVIDERS, Collections.singletonList("uaa"));
+        additionalInformation.put(ClientConstants.ALLOWED_PROVIDERS, Collections.singletonList(loginHintOrigin));
         when(uaaClient.getAdditionalInformation()).thenReturn(additionalInformation);
-        IdentityZoneHolder.get().getConfig().setDefaultIdentityProvider("uaa");
+        IdentityZoneHolder.get().getConfig().setDefaultIdentityProvider(loginHintOrigin);
 
         instance.authenticate(auth);
+
+        /* should not read all in the zone during lookup of possible providers
+         * - "uaa" or "ldap" is used, but not as login hint */
+        final String idzId = IdentityZoneHolder.get().getId();
+        verify(identityProviderProvisioning, times(0)).retrieveActive(idzId);
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(loginHintOrigin, idzId);
 
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
         ArgumentCaptor<UaaLoginHint> captor = ArgumentCaptor.forClass(UaaLoginHint.class);
         verify(zoneAwareAuthzAuthenticationManager, times(1)).setLoginHint(eq(auth), captor.capture());
         assertNotNull(captor.getValue());
-        assertEquals("uaa", captor.getValue().getOrigin());
+        assertEquals(loginHintOrigin, captor.getValue().getOrigin());
     }
 
     @Test
@@ -671,7 +681,7 @@ class PasswordGrantAuthenticationManagerTest {
         ArgumentCaptor<ExternalOAuthCodeToken> tokenArgumentCaptor = ArgumentCaptor.forClass(ExternalOAuthCodeToken.class);
         verify(externalOAuthAuthenticationManager, times(1)).authenticate(tokenArgumentCaptor.capture());
         verify(zoneAwareAuthzAuthenticationManager, times(0)).authenticate(any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(0)).retrieveActive(any());
 
         HttpEntity httpEntity = httpEntityArgumentCaptor.getValue();
@@ -718,28 +728,34 @@ class PasswordGrantAuthenticationManagerTest {
         verify(rt, times(1)).exchange(eq("http://localhost:8080/uaa/oauth/token"), eq(HttpMethod.POST), any(HttpEntity.class),eq(new ParameterizedTypeReference<Map<String,String>>(){}));
         verify(externalOAuthAuthenticationManager, times(1)).authenticate(any(ExternalOAuthCodeToken.class));
         verify(zoneAwareAuthzAuthenticationManager, times(0)).authenticate(any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(0)).retrieveActive(any());
     }
 
-    @Test
-    void testOIDCPasswordGrant_LoginHintUaaOverridesDefaultOidc() {
+    @ParameterizedTest
+    @ValueSource(strings = { OriginKeys.UAA, OriginKeys.LDAP })
+    void testOIDCPasswordGrant_LoginHintUaaOrLdapOverridesDefaultOidc(final String loginHintOrigin) {
         UaaLoginHint loginHint = mock(UaaLoginHint.class);
-        when(loginHint.getOrigin()).thenReturn("uaa");
+        when(loginHint.getOrigin()).thenReturn(loginHintOrigin);
         Authentication auth = mock(Authentication.class);
-        when(zoneAwareAuthzAuthenticationManager.extractLoginHint(auth)).thenReturn(null);
+        when(zoneAwareAuthzAuthenticationManager.extractLoginHint(auth)).thenReturn(loginHint);
         Map<String, Object> additionalInformation = new HashMap<>();
-        additionalInformation.put(ClientConstants.ALLOWED_PROVIDERS, Collections.singletonList("uaa"));
+        additionalInformation.put(ClientConstants.ALLOWED_PROVIDERS, Collections.singletonList(loginHintOrigin));
         when(uaaClient.getAdditionalInformation()).thenReturn(additionalInformation);
         IdentityZoneHolder.get().getConfig().setDefaultIdentityProvider("oidcprovider");
 
         instance.authenticate(auth);
 
+        // should read only "uaa" or "ldap" IdP during lookup of possible providers
+        final String idzId = IdentityZoneHolder.get().getId();
+        verify(identityProviderProvisioning, times(0)).retrieveActive(idzId);
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(loginHintOrigin, idzId);
+
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
         ArgumentCaptor<UaaLoginHint> captor = ArgumentCaptor.forClass(UaaLoginHint.class);
         verify(zoneAwareAuthzAuthenticationManager, times(1)).setLoginHint(eq(auth), captor.capture());
         assertNotNull(captor.getValue());
-        assertEquals("uaa", captor.getValue().getOrigin());
+        assertEquals(loginHintOrigin, captor.getValue().getOrigin());
     }
 
     @Test
@@ -764,7 +780,7 @@ class PasswordGrantAuthenticationManagerTest {
         verify(rt, times(1)).exchange(eq("http://localhost:8080/uaa/oauth/token"), eq(HttpMethod.POST), any(HttpEntity.class),eq(new ParameterizedTypeReference<Map<String,String>>(){}));
         verify(externalOAuthAuthenticationManager, times(1)).authenticate(any(ExternalOAuthCodeToken.class));
         verify(zoneAwareAuthzAuthenticationManager, times(0)).authenticate(any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, atLeast(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(1)).retrieveActive(any());
     }
 
@@ -783,7 +799,7 @@ class PasswordGrantAuthenticationManagerTest {
         when(localIdp.getType()).thenReturn(OriginKeys.OIDC10);
         when(idpConfig.isPasswordGrantEnabled()).thenReturn(false);
         when(identityProviderProvisioning.retrieveActive("uaa")).thenReturn(Arrays.asList(uaaProvider, ldapProvider, localIdp));
-        when(externalOAuthProviderConfigurator.retrieveByOrigin("oidcprovider","uaa")).thenReturn(localIdp);
+        when(identityProviderProvisioning.retrieveByOrigin("oidcprovider","uaa")).thenReturn(localIdp);
 
         try {
             instance.authenticate(auth);
@@ -822,7 +838,7 @@ class PasswordGrantAuthenticationManagerTest {
 
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
         verify(zoneAwareAuthzAuthenticationManager, times(0)).setLoginHint(any(), any());
-        verify(externalOAuthProviderConfigurator, times(1)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(1)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(1)).retrieveActive(any());
     }
 
@@ -877,7 +893,7 @@ class PasswordGrantAuthenticationManagerTest {
 
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
         verify(zoneAwareAuthzAuthenticationManager, times(0)).setLoginHint(any(), any());
-        verify(externalOAuthProviderConfigurator, times(0)).retrieveByOrigin(any(), any());
+        verify(identityProviderProvisioning, times(0)).retrieveByOrigin(any(), any());
         verify(identityProviderProvisioning, times(1)).retrieveActive(any());
     }
 
