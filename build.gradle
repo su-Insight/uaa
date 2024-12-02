@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.Path
 
 buildscript {
     apply(from: "dependencies.gradle")
@@ -200,7 +200,7 @@ cargo {
     }
 
     local {
-        configHomeDir = file(Paths.get(System.getProperty("java.io.tmpdir") + "/uaa-${applicationPort}"))
+        configHomeDir = file(Path.of(System.getProperty("java.io.tmpdir"), "uaa-${applicationPort}"))
         startStopTimeout = Integer.parseInt(System.getProperty("startStopTimeout", "540000"))
         rmiPort = applicationPort + 10
 
@@ -301,9 +301,9 @@ tasks.register('manifests', Copy) {
 }
 
 tasks.register('cleanCargoConfDir') {
-    delete(file(System.getProperty("java.io.tmpdir") + "/cargo/uaa-${applicationPort}"))
+    delete(Path.of(System.getProperty("java.io.tmpdir"), "cargo", "uaa-${applicationPort}"))
     try {
-        Files.createDirectory(Paths.get(System.getProperty("java.io.tmpdir") + "/uaa-${applicationPort}"))
+        Files.createDirectory(Path.of(System.getProperty("java.io.tmpdir"), "uaa-${applicationPort}"))
     } catch (ignored) {
     }
 }
