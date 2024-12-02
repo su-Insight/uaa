@@ -22,7 +22,7 @@ public class LdapGroupsAsScopesConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             String ldapGroupsFile = context.getEnvironment().getProperty("ldap.groups.file");
-            return"ldap/ldap-groups-as-scopes.xml".equals(ldapGroupsFile);
+            return "ldap/ldap-groups-as-scopes.xml".equals(ldapGroupsFile);
         }
     }
 

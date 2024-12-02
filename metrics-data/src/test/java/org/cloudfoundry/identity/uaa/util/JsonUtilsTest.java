@@ -19,31 +19,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JsonUtilsTest {
-    private static final String jsonTestObjectString = "{\"pattern\":\"/pattern\",\"group\":\"group\",\"limit\":1000,\"category\":\"category\"}";
+    private static final String JSON_TEST_OBJECT_STRING = "{\"pattern\":\"/pattern\",\"group\":\"group\",\"limit\":1000,\"category\":\"category\"}";
 
     @Test
     void writeValueAsString() {
         String testObjectString = JsonUtils.writeValueAsString(getTestObject());
         assertNotNull(testObjectString);
-        assertEquals(jsonTestObjectString, testObjectString);
+        assertEquals(JSON_TEST_OBJECT_STRING, testObjectString);
     }
 
     @Test
     void writeValueAsBytes() {
         byte[] testObject = JsonUtils.writeValueAsBytes(getTestObject());
         assertNotNull(testObject);
-        assertEquals(jsonTestObjectString, new String(testObject));
+        assertEquals(JSON_TEST_OBJECT_STRING, new String(testObject));
     }
 
     @Test
     void testreadValueStringClass() {
-        assertNotNull(JsonUtils.readValue(jsonTestObjectString, UrlGroup.class));
+        assertNotNull(JsonUtils.readValue(JSON_TEST_OBJECT_STRING, UrlGroup.class));
         assertNull(JsonUtils.readValue((String) null, UrlGroup.class));
     }
 
     @Test
     void testReadValueByteClass() {
-        assertNotNull(JsonUtils.readValue(jsonTestObjectString.getBytes(), UrlGroup.class));
+        assertNotNull(JsonUtils.readValue(JSON_TEST_OBJECT_STRING.getBytes(), UrlGroup.class));
         assertNull(JsonUtils.readValue((byte[]) null, UrlGroup.class));
     }
 
@@ -69,7 +69,7 @@ class JsonUtilsTest {
 
     @Test
     void testReadValueBytes() {
-        assertNotNull(JsonUtils.readValue(jsonTestObjectString.getBytes(), new TypeReference<Map<String, Object>>() {
+        assertNotNull(JsonUtils.readValue(JSON_TEST_OBJECT_STRING.getBytes(), new TypeReference<Map<String, Object>>() {
         }));
         assertNull(JsonUtils.readValue((byte[]) null, new TypeReference<Map<String, Object>>() {
         }));
@@ -77,7 +77,7 @@ class JsonUtilsTest {
 
     @Test
     void testReadValueString() {
-        assertNotNull(JsonUtils.readValue(jsonTestObjectString, new TypeReference<Map<String, Object>>() {
+        assertNotNull(JsonUtils.readValue(JSON_TEST_OBJECT_STRING, new TypeReference<Map<String, Object>>() {
         }));
         assertNull(JsonUtils.readValue((String) null, new TypeReference<Map<String, Object>>() {
         }));
@@ -91,7 +91,7 @@ class JsonUtilsTest {
 
     @Test
     void testSerializeExcludingProperties() {
-        Map<String, String> groupProperties = JsonUtils.readValue(jsonTestObjectString, new TypeReference<>() {
+        Map<String, String> groupProperties = JsonUtils.readValue(JSON_TEST_OBJECT_STRING, new TypeReference<>() {
         });
         String resultString = JsonUtils.serializeExcludingProperties(groupProperties, "group", "pattern", "any.limit", "category");
         assertEquals("{\"limit\":\"1000\"}", resultString);
@@ -99,10 +99,10 @@ class JsonUtilsTest {
 
     @Test
     void testSerializeExcludingPropertiesInnerCallFails() {
-        Map<String, String> groupProperties = JsonUtils.readValue(jsonTestObjectString, new TypeReference<>() {
+        Map<String, String> groupProperties = JsonUtils.readValue(JSON_TEST_OBJECT_STRING, new TypeReference<>() {
         });
         assertThrows(JsonUtils.JsonUtilException.class, () ->
-            JsonUtils.serializeExcludingProperties(groupProperties, "limit.unknown"));
+                JsonUtils.serializeExcludingProperties(groupProperties, "limit.unknown"));
     }
 
     @Test

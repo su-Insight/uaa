@@ -140,8 +140,8 @@ public class UaaRequestMatcherTests {
         matcher.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON.toString()));
         assertTrue(matcher
                 .matches(request("/somePath",
-                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
-                        MediaType.APPLICATION_XML.toString()))));
+                        "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
+                                MediaType.APPLICATION_XML.toString()))));
     }
 
     @Test
@@ -152,8 +152,8 @@ public class UaaRequestMatcherTests {
                 MediaType.APPLICATION_FORM_URLENCODED.toString()));
         assertTrue(matcher
                 .matches(request("/somePath",
-                "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
-                        MediaType.APPLICATION_XML.toString()))));
+                        "%s,%s".formatted(MediaType.APPLICATION_JSON.toString(),
+                                MediaType.APPLICATION_XML.toString()))));
     }
 
     @Test

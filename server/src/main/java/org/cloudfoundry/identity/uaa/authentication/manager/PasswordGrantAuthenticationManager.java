@@ -42,7 +42,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_PASSWORD;
@@ -113,10 +117,10 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         String useOrigin = loginHint != null && loginHint.getOrigin() != null ? loginHint.getOrigin() : defaultOrigin;
         if (useOrigin != null) {
             try {
-                IdentityProvider<?> retrievedByOrigin = identityProviderProvisioning.retrieveByOrigin(useOrigin,
-                    IdentityZoneHolder.get().getId());
+                IdentityProvider<?> retrievedByOrigin = identityProviderProvisioning.retrieveByOrigin(useOrigin, IdentityZoneHolder.get().getId());
                 if (retrievedByOrigin != null && retrievedByOrigin.isActive() && retrievedByOrigin.getOriginKey().equals(useOrigin)
-                    && providerSupportsPasswordGrant(retrievedByOrigin) && (allowedProviders == null || allowedProviders.contains(useOrigin))) {
+                        && providerSupportsPasswordGrant(retrievedByOrigin)
+                        && (allowedProviders == null || allowedProviders.contains(useOrigin))) {
                     return retrievedByOrigin;
                 }
             } catch (EmptyResultDataAccessException e) {
@@ -158,7 +162,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
             throw new ProviderConfigurationException("External OpenID Connect provider configuration is missing relyingPartySecret, jwtClientAuthentication or authMethod.");
         }
         String calcAuthMethod = ClientAuthentication.getCalculatedMethod(config.getAuthMethod(), clientSecret != null, config.getJwtClientAuthentication() != null);
-        String userName = authentication.getPrincipal() instanceof String ? (String) authentication.getPrincipal() : null;
+        String userName = authentication.getPrincipal() instanceof String pStr ? pStr : null;
         if (userName == null || authentication.getCredentials() == null || !(authentication.getCredentials() instanceof String)) {
             throw new BadCredentialsException("Request is missing username or password.");
         }
@@ -187,8 +191,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         } else {
             params.add(AbstractClientParametersAuthenticationFilter.CLIENT_ID, clientId);
         }
-        if (config.isSetForwardHeader() && authentication.getDetails() != null && authentication.getDetails() instanceof UaaAuthenticationDetails) {
-            UaaAuthenticationDetails details = (UaaAuthenticationDetails) authentication.getDetails();
+        if (config.isSetForwardHeader() && authentication.getDetails() != null && authentication.getDetails() instanceof UaaAuthenticationDetails details) {
             if (details.getOrigin() != null) {
                 headers.add("X-Forwarded-For", details.getOrigin());
             }
@@ -226,7 +229,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         String idToken = null;
         try {
-            ResponseEntity<Map<String, String>> tokenResponse = rt.exchange(tokenUrl.toString(), HttpMethod.POST, request, new ParameterizedTypeReference<Map<String, String>>(){
+            ResponseEntity<Map<String, String>> tokenResponse = rt.exchange(tokenUrl.toString(), HttpMethod.POST, request, new ParameterizedTypeReference<Map<String, String>>() {
             });
 
             if (tokenResponse.hasBody()) {

@@ -30,7 +30,7 @@ public class LdapSearchAndBindConfig {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             String ldapProfileFile = context.getEnvironment().getProperty("ldap.profile.file");
-            return"ldap/ldap-search-and-bind.xml".equals(ldapProfileFile);
+            return "ldap/ldap-search-and-bind.xml".equals(ldapProfileFile);
         }
     }
 

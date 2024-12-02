@@ -122,7 +122,7 @@ class LimiterManagerImplTest {
 
     Map<CompoundKey, InternalLimiter> instanceTracking = new LinkedHashMap<>();
 
-    private void record(List<InternalLimiter> iLimiters) {
+    private void recordCall(List<InternalLimiter> iLimiters) {
         boolean limit = lm.createLimiter(iLimiters, LoggingOption.DEFAULT).shouldLimit();
         for (InternalLimiter currentLimiter : iLimiters) {
             CompoundKey compoundKey = currentLimiter.getCompoundKey();
@@ -140,7 +140,7 @@ class LimiterManagerImplTest {
     String callerID;
     String servletPath;
 
-    AuthorizationCredentialIdExtractor credentialIdExtractor =  info  -> callerID;
+    AuthorizationCredentialIdExtractor credentialIdExtractor = info -> callerID;
 
     RequestInfo requestInfo = new RequestInfo() {
         @Override
@@ -162,7 +162,7 @@ class LimiterManagerImplTest {
     private void call(String servletPath, String callerID) {
         this.servletPath = servletPath;
         this.callerID = callerID;
-        record(lm.generateLimiterList(requestInfo, lm.getFactorySupplier()));
+        recordCall(lm.generateLimiterList(requestInfo, lm.getFactorySupplier()));
     }
 
     private void check(String expectedResult, String limiterName, String callerID) {

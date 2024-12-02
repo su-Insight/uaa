@@ -10,9 +10,12 @@ import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
 import org.cloudfoundry.identity.uaa.authentication.event.IdentityProviderAuthenticationFailureEvent;
 import org.cloudfoundry.identity.uaa.authentication.event.IdentityProviderAuthenticationSuccessEvent;
 import org.cloudfoundry.identity.uaa.authentication.manager.DynamicZoneAwareAuthenticationManager;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.mock.util.InterceptingLogger;
 import org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils;
+import org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.oauth.jwt.Jwt;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
@@ -28,7 +31,9 @@ import org.cloudfoundry.identity.uaa.user.UaaUser;
 import org.cloudfoundry.identity.uaa.user.UaaUserDatabase;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.UaaStringUtils;
-import org.cloudfoundry.identity.uaa.zone.*;
+import org.cloudfoundry.identity.uaa.zone.IdentityZone;
+import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
+import org.cloudfoundry.identity.uaa.zone.UserConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,9 +54,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils;
-import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
-import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -67,31 +69,63 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LDAP;
 import static org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils.CookieCsrfPostProcessor.cookieCsrf;
 import static org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils.createClient;
+import static org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken.ACCESS_TOKEN;
+import static org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken.REFRESH_TOKEN;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_PASSWORD;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_REFRESH_TOKEN;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpHeaders.*;
-import static org.springframework.http.MediaType.*;
-import static org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken.ACCESS_TOKEN;
-import static org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken.REFRESH_TOKEN;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpHeaders.HOST;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @DefaultTestContext
 @ExtendWith(InMemoryLdapServer.LdapTrustStoreExtension.class)
@@ -192,7 +226,8 @@ public abstract class AbstractLdapMockMvcTest {
         getMockMvc().perform(
                         delete("/identity-zones/{id}", zone.getZone().getIdentityZone().getId())
                                 .header("Authorization", "Bearer " + zone.getDefaultZoneAdminToken())
-                                .accept(APPLICATION_JSON))
+                                .accept(APPLICATION_JSON)
+                )
                 .andExpect(status().isOk());
         MockMvcUtils.removeEventListener(webApplicationContext, listener);
     }
@@ -256,7 +291,8 @@ public abstract class AbstractLdapMockMvcTest {
                         .param("enterprise_email", "email")
                         .param("code", code)
                         .header(HOST, host)
-                        .with(cookieCsrf()))
+                        .with(cookieCsrf())
+                )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl(expectRedirectToLogin))
                 .andExpect(unauthenticated())
@@ -316,14 +352,16 @@ public abstract class AbstractLdapMockMvcTest {
         code = getWebApplicationContext().getBean(JdbcTemplate.class).queryForObject("select code from expiring_code_store", String.class);
 
         session = (MockHttpSession) result.getRequest().getSession(false);
-        getMockMvc().perform(post("/invitations/accept_enterprise.do")
-                        .session(session)
-                        .param("enterprise_username", "marissa2")
-                        .param("enterprise_password", LDAP)
-                        .param("enterprise_email", "email")
-                        .param("code", code)
-                        .header(HOST, host)
-                        .with(cookieCsrf()))
+        getMockMvc().perform(
+                        post("/invitations/accept_enterprise.do")
+                                .session(session)
+                                .param("enterprise_username", "marissa2")
+                                .param("enterprise_password", LDAP)
+                                .param("enterprise_email", "email")
+                                .param("code", code)
+                                .header(HOST, host)
+                                .with(cookieCsrf())
+                )
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString("The authenticated email does not match the invited email. Please log in using a different account.")))
                 .andReturn();
@@ -430,8 +468,7 @@ public abstract class AbstractLdapMockMvcTest {
         assumeFalse(!(ldapProfile.contains("ldap-search-and-bind.xml") &&
                 ldapGroup.contains("ldap-groups-map-to-scopes.xml")));
 
-        getMockMvc().perform(get("/login")
-                        .header(HOST, host))
+        getMockMvc().perform(get("/login").header(HOST, host))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"))
                 .andExpect(model().attributeDoesNotExist("saml"));
@@ -441,7 +478,8 @@ public abstract class AbstractLdapMockMvcTest {
                         .with(cookieCsrf())
                         .header(HOST, host)
                         .param("username", "marissa2")
-                        .param("password", LDAP))
+                        .param("password", LDAP)
+                )
                 .andExpect(status().isFound())
                 .andExpect(authenticated())
                 .andExpect(redirectedUrl("/"));
@@ -576,7 +614,7 @@ public abstract class AbstractLdapMockMvcTest {
                 .getContentAsString();
 
         assertThat(response, not(containsString("bindPassword")));
-        IdentityProvider<LdapIdentityProviderDefinition> provider = JsonUtils.readValue(response, new TypeReference<IdentityProvider<LdapIdentityProviderDefinition>>() {
+        provider = JsonUtils.readValue(response, new TypeReference<>() {
         });
         assertNull(provider.getConfig().getBindPassword());
 

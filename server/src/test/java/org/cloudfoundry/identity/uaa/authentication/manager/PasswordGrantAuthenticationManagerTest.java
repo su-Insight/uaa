@@ -621,7 +621,6 @@ class PasswordGrantAuthenticationManagerTest {
         instance.authenticate(auth);
 
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
-        ArgumentCaptor<UaaLoginHint> captor = ArgumentCaptor.forClass(UaaLoginHint.class);
         verify(zoneAwareAuthzAuthenticationManager, times(0)).setLoginHint(any(), any());
     }
 
@@ -633,12 +632,11 @@ class PasswordGrantAuthenticationManagerTest {
         instance.authenticate(auth);
 
         verify(zoneAwareAuthzAuthenticationManager, times(1)).authenticate(auth);
-        ArgumentCaptor<UaaLoginHint> captor = ArgumentCaptor.forClass(UaaLoginHint.class);
         verify(zoneAwareAuthzAuthenticationManager, times(0)).setLoginHint(any(), any());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { OriginKeys.UAA, OriginKeys.LDAP })
+    @ValueSource(strings = {OriginKeys.UAA, OriginKeys.LDAP})
     void testPasswordGrant_NoLoginHintWithDefaultUaaOrLdap(final String loginHintOrigin) {
         Authentication auth = mock(Authentication.class);
         when(zoneAwareAuthzAuthenticationManager.extractLoginHint(auth)).thenReturn(null);
@@ -739,7 +737,7 @@ class PasswordGrantAuthenticationManagerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { OriginKeys.UAA, OriginKeys.LDAP })
+    @ValueSource(strings = {OriginKeys.UAA, OriginKeys.LDAP})
     void testOIDCPasswordGrant_LoginHintUaaOrLdapOverridesDefaultOidc(final String loginHintOrigin) {
         UaaLoginHint loginHint = mock(UaaLoginHint.class);
         when(loginHint.getOrigin()).thenReturn(loginHintOrigin);

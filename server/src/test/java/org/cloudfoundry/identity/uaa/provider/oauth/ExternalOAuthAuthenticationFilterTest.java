@@ -119,7 +119,7 @@ class ExternalOAuthAuthenticationFilterTest {
             HttpServletResponse mockResponse = mock(HttpServletResponse.class);
 
             assertThrows(HttpSessionRequiredException.class, () ->
-                externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
+                    externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
             verify(mockFilterChain, never()).doFilter(mockRequest, mockResponse);
         }
 
@@ -132,7 +132,7 @@ class ExternalOAuthAuthenticationFilterTest {
             HttpServletResponse mockResponse = mock(HttpServletResponse.class);
 
             assertThrows(CsrfException.class, () ->
-                externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
+                    externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
             verify(mockFilterChain, never()).doFilter(mockRequest, mockResponse);
         }
 
@@ -145,7 +145,7 @@ class ExternalOAuthAuthenticationFilterTest {
             HttpServletResponse mockResponse = mock(HttpServletResponse.class);
 
             assertThrows(CsrfException.class, () ->
-                externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
+                    externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
             verify(mockFilterChain, never()).doFilter(mockRequest, mockResponse);
         }
 
@@ -159,7 +159,7 @@ class ExternalOAuthAuthenticationFilterTest {
             HttpServletResponse mockResponse = mock(HttpServletResponse.class);
 
             assertThrows(CsrfException.class, () ->
-                externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
+                    externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain));
             verify(mockFilterChain, never()).doFilter(mockRequest, mockResponse);
         }
     }
@@ -194,7 +194,7 @@ class ExternalOAuthAuthenticationFilterTest {
             RequestDispatcher mockRequestDispatcher = mock(RequestDispatcher.class);
 
             HttpServletRequest mockRequest = mockRedirectRequest(ORIGIN_KEY, request ->
-                when(request.getRequestDispatcher("/login_implicit")).thenReturn(mockRequestDispatcher));
+                    when(request.getRequestDispatcher("/login_implicit")).thenReturn(mockRequestDispatcher));
             HttpServletResponse mockResponse = mock(HttpServletResponse.class);
 
             externalOAuthAuthenticationFilter.doFilter(mockRequest, mockResponse, mockFilterChain);

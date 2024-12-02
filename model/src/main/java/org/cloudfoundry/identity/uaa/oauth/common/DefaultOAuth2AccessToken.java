@@ -1,5 +1,7 @@
 package org.cloudfoundry.identity.uaa.oauth.common;
 
+import lombok.Data;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
@@ -12,28 +14,46 @@ import java.util.TreeSet;
 
 /**
  * Moved class implementation of from spring-security-oauth2 into UAA
- *
+ * <p/>
  * The class was taken over from the legacy project with minor refactorings
  * based on sonar.
- *
+ * <p/>
  * Scope: OAuth2 client
  */
-@SuppressWarnings("serial")
+@Data
 public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken {
 
     @Serial
     private static final long serialVersionUID = -1301199046022198244L;
 
+    /**
+     *  The token value.
+     */
     private String value;
 
+    /**
+     *  The instant the token expires.
+     */
     private Date expiration;
 
+    /**
+     *  The token type, as introduced in draft 11 of the OAuth 2 spec.
+     *  The spec doesn't define (yet) that the valid token types are,
+     *  but says it's required so the default will just be "undefined".
+     */
     private String tokenType = BEARER_TYPE.toLowerCase();
 
+    /**
+     *  The refresh token associated with the access token, if any.
+     */
     private transient OAuth2RefreshToken refreshToken;
 
     private Set<String> scopeSet;
 
+    /**
+     *  Additional information that token granters would like to add to the token, e.g., to support new token types.
+     * (default empty)
+     */
     private transient Map<String, Object> additionalInformation = Collections.emptyMap();
 
     /**
@@ -54,7 +74,7 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
     /**
      * Copy constructor for access token.
      * 
-     * @param accessToken
+     * @param accessToken a OAuth2AccessToken
      */
     public DefaultOAuth2AccessToken(OAuth2AccessToken accessToken) {
         this(accessToken.getValue());
@@ -63,19 +83,6 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
         setExpiration(accessToken.getExpiration());
         setScope(accessToken.getScope());
         setTokenType(accessToken.getTokenType());
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    /**
-     * The token value.
-     * 
-     * @return The token value.
-     */
-    public String getValue() {
-        return value;
     }
 
     public int getExpiresIn() {
@@ -87,67 +94,12 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
     }
 
     /**
-     * The instant the token expires.
-     * 
-     * @return The instant the token expires.
-     */
-    public Date getExpiration() {
-        return expiration;
-    }
-
-    /**
-     * The instant the token expires.
-     * 
-     * @param expiration The instant the token expires.
-     */
-    public void setExpiration(Date expiration) {
-        this.expiration = expiration;
-    }
-
-    /**
      * Convenience method for checking expiration
      * 
-     * @return true if the expiration is befor ethe current time
+     * @return true if the expiration is before the current time
      */
     public boolean isExpired() {
         return expiration != null && expiration.before(new Date());
-    }
-
-    /**
-     * The token type, as introduced in draft 11 of the OAuth 2 spec. The spec doesn't define (yet) that the valid token
-     * types are, but says it's required so the default will just be "undefined".
-     * 
-     * @return The token type, as introduced in draft 11 of the OAuth 2 spec.
-     */
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    /**
-     * The token type, as introduced in draft 11 of the OAuth 2 spec.
-     * 
-     * @param tokenType The token type, as introduced in draft 11 of the OAuth 2 spec.
-     */
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    /**
-     * The refresh token associated with the access token, if any.
-     * 
-     * @return The refresh token associated with the access token, if any.
-     */
-    public OAuth2RefreshToken getRefreshToken() {
-        return refreshToken;
-    }
-
-    /**
-     * The refresh token associated with the access token, if any.
-     * 
-     * @param refreshToken The refresh token associated with the access token, if any.
-     */
-    public void setRefreshToken(OAuth2RefreshToken refreshToken) {
-        this.refreshToken = refreshToken;
     }
 
     /**
@@ -221,23 +173,13 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
     }
 
     /**
-     * Additional information that token granters would like to add to the token, e.g. to support new token types.
-     * 
-     * @return the additional information (default empty)
-     */
-    public Map<String, Object> getAdditionalInformation() {
-        return additionalInformation;
-    }
-
-    /**
-     * Additional information that token granters would like to add to the token, e.g. to support new token types. If
-     * the values in the map are primitive then remote communication is going to always work. It should also be safe to
-     * use maps (nested if desired), or something that is explicitly serializable by Jackson.
+     * Additional information that token granters would like to add to the token, e.g., to support new token types.
+     * If the values in the map are primitive, then remote communication is going to always work.
+     * It should also be safe to use maps (nested if desired), or something that is explicitly serializable by Jackson.
      * 
      * @param additionalInformation the additional information to set
      */
     public void setAdditionalInformation(Map<String, Object> additionalInformation) {
         this.additionalInformation = new LinkedHashMap<>(additionalInformation);
     }
-
 }
