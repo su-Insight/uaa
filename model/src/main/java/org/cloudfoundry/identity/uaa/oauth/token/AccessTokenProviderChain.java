@@ -1,5 +1,6 @@
 package org.cloudfoundry.identity.uaa.oauth.token;
 
+import lombok.Setter;
 import org.cloudfoundry.identity.uaa.oauth.client.resource.OAuth2AccessDeniedException;
 import org.cloudfoundry.identity.uaa.oauth.client.resource.OAuth2ProtectedResourceDetails;
 import org.cloudfoundry.identity.uaa.oauth.client.resource.UserRedirectRequiredException;
@@ -19,10 +20,10 @@ import java.util.List;
 
 /**
  * Moved class AccessTokenProviderChain implementation of from spring-security-oauth2 into UAA
- *
+ * <p/>
  * The class was taken over from the legacy project with minor refactorings
  * based on sonar.
- *
+ * <p/>
  * Scope: OAuth2 client
  */
 public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
@@ -30,22 +31,19 @@ public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
 
     private final List<AccessTokenProvider> chain;
 
+    /**
+     *  Token services for long-term persistence of access tokens.
+     */
+    @Setter
     private ClientTokenServices clientTokenServices;
 
-    private final int clockSkew = 30;
+    // clockSkew is set via reflection in tests, so suppress local and static
+    @SuppressWarnings({"FieldCanBeLocal","java:S1170"})
+    private final int clockSkew = 30; // NO SONAR
 
     public AccessTokenProviderChain(List<? extends AccessTokenProvider> chain) {
         this.chain = chain == null ? Collections.emptyList()
                 : Collections.unmodifiableList(chain);
-    }
-
-    /**
-     * Token services for long-term persistence of access tokens.
-     *
-     * @param clientTokenServices the clientTokenServices to set
-     */
-    public void setClientTokenServices(ClientTokenServices clientTokenServices) {
-        this.clientTokenServices = clientTokenServices;
     }
 
     public boolean supportsResource(OAuth2ProtectedResourceDetails resource) {
@@ -71,7 +69,7 @@ public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
             throws UserRedirectRequiredException, AccessDeniedException {
 
         OAuth2AccessToken accessToken = null;
-        OAuth2AccessToken existingToken = null;
+        OAuth2AccessToken existingToken;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth instanceof AnonymousAuthenticationToken) {
@@ -104,7 +102,7 @@ public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
         // Give unauthenticated users a chance to get a token and be redirected
 
         if (accessToken == null) {
-            // looks like we need to try to obtain a new token.
+            // we need to obtain a new token.
             accessToken = obtainNewAccessTokenInternal(resource, request);
 
             if (accessToken == null) {
@@ -148,7 +146,6 @@ public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
      * @param resource The resource.
      * @param refreshToken The refresh token.
      * @return The access token, or null if failed.
-     * @throws UserRedirectRequiredException
      */
     public OAuth2AccessToken refreshAccessToken(OAuth2ProtectedResourceDetails resource,
             OAuth2RefreshToken refreshToken, AccessTokenRequest request)
@@ -183,7 +180,7 @@ public class AccessTokenProviderChain extends OAuth2AccessTokenSupport
         Calendar expiresAt = (Calendar) now.clone();
         if (token.getExpiration() != null) {
             expiresAt.setTime(token.getExpiration());
-            expiresAt.add(Calendar.SECOND, -this.clockSkew);
+            expiresAt.add(Calendar.SECOND, -clockSkew);
         }
         return now.after(expiresAt);
     }

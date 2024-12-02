@@ -589,7 +589,7 @@ public class LoginInfoEndpoint {
 
     @RequestMapping(value = {"/delete_saved_account"})
     public String deleteSavedAccount(HttpServletRequest request, HttpServletResponse response, String userId) {
-        Cookie cookie = new Cookie("Saved-Account-" + userId, "");
+        Cookie cookie = new Cookie("Saved-Account-%s".formatted(userId), "");
         cookie.setMaxAge(0);
         cookie.setPath(request.getContextPath() + "/login");
         response.addCookie(cookie);

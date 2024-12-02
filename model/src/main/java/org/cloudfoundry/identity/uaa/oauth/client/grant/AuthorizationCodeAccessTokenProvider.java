@@ -31,25 +31,23 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 
 /**
  * Moved class AuthorizationCodeAccessTokenProvider implementation of from spring-security-oauth2 into UAA
- *
+ * <p/>
  * The class was taken over from the legacy project with minor refactorings
  * based on sonar.
- *
+ * <p/>
  * Scope: OAuth2 client
  */
 public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider {
 
     private final StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
 
-    private final String scopePrefix = OAuth2Utils.SCOPE_PREFIX;
-
     private final RequestEnhancer authorizationRequestEnhancer = new DefaultRequestEnhancer();
-    private final boolean stateMandatory = true;
 
     public boolean supportsResource(OAuth2ProtectedResourceDetails resource) {
         return resource instanceof AuthorizationCodeResourceDetails
@@ -70,7 +68,7 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
         if (request.containsKey(OAuth2Utils.USER_OAUTH_APPROVAL)) {
             form.set(OAuth2Utils.USER_OAUTH_APPROVAL, request.getFirst(OAuth2Utils.USER_OAUTH_APPROVAL));
             for (String scope : details.getScope()) {
-                form.set(scopePrefix + scope, request.getFirst(OAuth2Utils.USER_OAUTH_APPROVAL));
+                form.set(OAuth2Utils.SCOPE_PREFIX + scope, request.getFirst(OAuth2Utils.USER_OAUTH_APPROVAL));
             }
         } else {
             form.putAll(getParametersForAuthorizeRequest(resource, request));
@@ -88,7 +86,8 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
                 return delegate.extractData(response);
             }
         };
-        // Instead of using restTemplate.exchange we use an explicit response extractor here so it can be overridden by
+
+        // Instead of using restTemplate.exchange, we use an explicit response extractor here so it can be overridden by
         // subclasses
         ResponseEntity<Void> response = getRestTemplate().execute(resource.getUserAuthorizationUri(), HttpMethod.POST,
                 getRequestCallback(form, headers), extractor, form.toSingleValueMap());
@@ -105,11 +104,7 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
             request.setStateKey(map.get(OAuth2Utils.STATE));
             if (request.getPreservedState() == null) {
                 String redirectUri = resource.getRedirectUri(request);
-                if (redirectUri != null) {
-                    request.setPreservedState(redirectUri);
-                } else {
-                    request.setPreservedState(new Object());
-                }
+                request.setPreservedState(Objects.requireNonNullElseGet(redirectUri, Object::new));
             }
         }
 
@@ -178,15 +173,16 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
         form.set(OAuth2Utils.CODE, request.getAuthorizationCode());
 
         Object preservedState = request.getPreservedState();
-        if ((request.getStateKey() != null || stateMandatory) && preservedState == null) {
-            // The token endpoint has no use for the state so we don't send it back, but we are using it
+        request.getStateKey();
+        if (preservedState == null) {
+            // The token endpoint has no use for the state, so we don't send it back, but we are using it
             // for CSRF detection client side...
             throw new InvalidRequestException("Possible CSRF detected - state parameter was required but no state could be found");
         }
 
         // Extracting the redirect URI from a saved request should ignore the current URI, so it's not simply a call to
         // resource.getRedirectUri()
-        String redirectUri = null;
+        String redirectUri;
         // Get the redirect uri from the stored state
         if (preservedState instanceof String) {
             // Use the preserved state in preference if it is there
@@ -248,7 +244,7 @@ public class AuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSuppo
     private UserRedirectRequiredException getRedirectForAuthorization(AuthorizationCodeResourceDetails resource,
             AccessTokenRequest request) {
 
-        // we don't have an authorization code yet. So first get that.
+        // We don't have an authorization code yet. So first get that.
         TreeMap<String, String> requestParameters = new TreeMap<>();
         requestParameters.put(OAuth2Utils.RESPONSE_TYPE, OAuth2Utils.CODE); // oauth2 spec, section 3
         requestParameters.put(OAuth2Utils.CLIENT_ID, resource.getClientId());

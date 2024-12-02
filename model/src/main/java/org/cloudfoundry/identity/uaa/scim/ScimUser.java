@@ -271,7 +271,7 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
             if (!Objects.equals(type, email.type)) {
                 return false;
             }
-            return !!Objects.equals(value, email.value);
+            return Objects.equals(value, email.value);
         }
 
         @Override
@@ -550,10 +550,12 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
         this.origin = origin;
     }
 
+    @Override
     public String getExternalId() {
         return externalId;
     }
 
+    @Override
     public ScimUser setExternalId(String externalId) {
         this.externalId = externalId;
         return this;
@@ -697,11 +699,9 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
 
     /**
      * Adds a new phone number with null type.
-     *
-     * @param newPhoneNumber
      */
     public void addPhoneNumber(String newPhoneNumber) {
-        if (newPhoneNumber == null || newPhoneNumber.trim().length() == 0) {
+        if (newPhoneNumber == null || newPhoneNumber.trim().isEmpty()) {
             return;
         }
 
@@ -792,7 +792,7 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
                     break;
                 }
             }
-            List<Email> currentEmails = ofNullable(getEmails()).orElse(new ArrayList());
+            List<Email> currentEmails = ofNullable(getEmails()).orElse(new ArrayList<>());
             if (primary != null) {
                 for (Email e : currentEmails) {
                     e.setPrimary(false);
@@ -855,22 +855,22 @@ public class ScimUser extends ScimCore<ScimUser> implements EntityWithAlias {
                     setName(new Name());
                     break;
                 case "NAME.FAMILYNAME":
-                    ofNullable(getName()).ifPresent(name -> name.setFamilyName(null));
+                    ofNullable(getName()).ifPresent(n -> n.setFamilyName(null));
                     break;
                 case "NAME.GIVENNAME":
-                    ofNullable(getName()).ifPresent(name -> name.setGivenName(null));
+                    ofNullable(getName()).ifPresent(n -> n.setGivenName(null));
                     break;
                 case "NAME.FORMATTED":
-                    ofNullable(getName()).ifPresent(name -> name.setFormatted(null));
+                    ofNullable(getName()).ifPresent(n -> n.setFormatted(null));
                     break;
                 case "NAME.HONORIFICPREFIX":
-                    ofNullable(getName()).ifPresent(name -> name.setHonorificPrefix(null));
+                    ofNullable(getName()).ifPresent(n -> n.setHonorificPrefix(null));
                     break;
                 case "NAME.HONORIFICSUFFIX":
-                    ofNullable(getName()).ifPresent(name -> name.setHonorificSuffix(null));
+                    ofNullable(getName()).ifPresent(n -> n.setHonorificSuffix(null));
                     break;
                 case "NAME.MIDDLENAME":
-                    ofNullable(getName()).ifPresent(name -> name.setMiddleName(null));
+                    ofNullable(getName()).ifPresent(n -> n.setMiddleName(null));
                     break;
                 default:
                     throw new IllegalArgumentException("Attribute %s cannot be removed using \"Meta.attributes\"".formatted(attribute));

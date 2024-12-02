@@ -13,23 +13,6 @@
  *******************************************************************************/
 package org.cloudfoundry.identity.uaa.scim.jdbc;
 
-import static java.sql.Types.VARCHAR;
-import static java.util.stream.Collectors.joining;
-import static org.springframework.util.StringUtils.hasText;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.cloudfoundry.identity.uaa.audit.event.SystemDeletable;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.resources.ResourceMonitor;
@@ -71,9 +54,29 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static java.sql.Types.VARCHAR;
+import static java.util.stream.Collectors.joining;
+import static org.springframework.util.StringUtils.hasText;
+
 @Component("scimUserProvisioning")
 public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         implements ScimUserProvisioning, ResourceMonitor<ScimUser>, SystemDeletable {
+
+    private static final String ATTEMPT_UPDATE_ERROR_MESSAGE = "Attempt to update a user (%s) with wrong version: expected=%d but found=%d";
+    private static final String USER_DOES_NOT_EXIST_MESSAGE = "User %s does not exist";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -167,7 +170,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         try {
             return jdbcTemplate.queryForObject(USER_BY_ID_QUERY, mapper, id, zoneId);
         } catch (EmptyResultDataAccessException e) {
-            throw new ScimResourceNotFoundException("User " + id + " does not exist");
+            throw new ScimResourceNotFoundException(USER_DOES_NOT_EXIST_MESSAGE.formatted(id));
         }
     }
 
@@ -250,7 +253,9 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         if (isCheckOriginEnabled(userConfig)) {
             checkOrigin(user.getOrigin(), zoneId);
         }
-        logger.debug("Creating new user: {}", UaaStringUtils.getCleanedUserControlString(user.getUserName()));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating new user: {}", UaaStringUtils.getCleanedUserControlString(user.getUserName()));
+        }
 
         final String id = UUID.randomUUID().toString();
         final String identityZoneId = zoneId;
@@ -319,7 +324,9 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
 
     @Override
     public ScimUser update(final String id, final ScimUser user, final String zoneId) throws InvalidScimResourceException {
-        logger.debug("Updating user " + user.getUserName());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Updating user {}", user.getUserName());
+        }
         final String origin = hasText(user.getOrigin()) ? user.getOrigin() : OriginKeys.UAA;
         user.setOrigin(origin);
 
@@ -357,7 +364,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         });
         ScimUser result = retrieve(id, zoneId);
         if (updated == 0) {
-            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(id,
+            throw new OptimisticLockingFailureException(ATTEMPT_UPDATE_ERROR_MESSAGE.formatted(id,
                     result.getVersion(), user.getVersion()));
         }
         if (updated > 1) {
@@ -385,7 +392,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             ps.setString(5, zoneId);
         });
         if (updated == 0) {
-            throw new ScimResourceNotFoundException("User " + id + " does not exist");
+            throw new ScimResourceNotFoundException(USER_DOES_NOT_EXIST_MESSAGE.formatted(id));
         }
         if (updated != 1) {
             throw new ScimResourceConstraintFailedException("User " + id + " duplicated");
@@ -404,7 +411,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
                             String.class
                     );
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new ScimResourceNotFoundException("User " + id + " does not exist");
+            throw new ScimResourceNotFoundException(USER_DOES_NOT_EXIST_MESSAGE.formatted(id));
         }
 
         return passwordEncoder.matches(password, currentPassword);
@@ -423,7 +430,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             ps.setString(3, zoneId);
         });
         if (updated == 0) {
-            throw new ScimResourceNotFoundException("User " + userId + " does not exist");
+            throw new ScimResourceNotFoundException(USER_DOES_NOT_EXIST_MESSAGE.formatted(userId));
         }
     }
 
@@ -434,7 +441,9 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     }
 
     private ScimUser deactivateUser(ScimUser user, int version, String zoneId) {
-        logger.debug("Deactivating user: " + user.getId());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Deactivating user: {}", user.getId());
+        }
         int updated;
         if (version < 0) {
             // Ignore
@@ -443,7 +452,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
             updated = jdbcTemplate.update(DEACTIVATE_USER_SQL + " and version=?", false, user.getId(), zoneId, version);
         }
         if (updated == 0) {
-            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(user.getId(),
+            throw new OptimisticLockingFailureException(ATTEMPT_UPDATE_ERROR_MESSAGE.formatted(user.getId(),
                     user.getVersion(), version));
         }
         if (updated > 1) {
@@ -456,7 +465,9 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     @Override
     public ScimUser verifyUser(String id, int version, String zoneId) throws ScimResourceNotFoundException,
             InvalidScimResourceException {
-        logger.debug("Verifying user: " + id);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Verifying user: {}", id);
+        }
         int updated;
         if (version < 0) {
             // Ignore
@@ -466,7 +477,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
         }
         ScimUser user = retrieve(id, zoneId);
         if (updated == 0) {
-            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(user.getId(),
+            throw new OptimisticLockingFailureException(ATTEMPT_UPDATE_ERROR_MESSAGE.formatted(user.getId(),
                     user.getVersion(), version));
         }
         if (updated > 1) {
@@ -478,14 +489,16 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     protected ScimUser deleteUser(ScimUser user, int version, String zoneId) {
         int updated = deleteUser(user.getId(), version, zoneId);
         if (updated == 0) {
-            throw new OptimisticLockingFailureException("Attempt to update a user (%s) with wrong version: expected=%d but found=%d".formatted(user.getId(),
+            throw new OptimisticLockingFailureException(ATTEMPT_UPDATE_ERROR_MESSAGE.formatted(user.getId(),
                     version, version));
         }
         return user;
     }
 
     protected int deleteUser(String userId, int version, String zoneId) {
-        logger.debug("Deleting user: " + userId);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Deleting user: {}", userId);
+        }
         int updated;
 
         if (version < 0) {
@@ -606,7 +619,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     }
 
     private void validateUserLimit(String zoneId, UserConfig userConfig) {
-        // get current limit of allowed users
+        // get the current limit of allowed users
         long maxAllowedUsers = userConfig == null ? -1 : userConfig.getMaxUsers();
         // check, if there is a limit (>0), that the limit is not reached with one user more (getUsersCountForZone + 1)
         if (maxAllowedUsers > 0 && maxAllowedUsers < (getUsersCountForZone(zoneId) + 1)) {

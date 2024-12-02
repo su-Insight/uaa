@@ -14,6 +14,9 @@
  */
 package org.cloudfoundry.identity.uaa.authentication;
 
+import lombok.Getter;
+
+@Getter
 public abstract class GenericPasswordPolicy<T extends GenericPasswordPolicy<T>> {
 
     private int minLength;
@@ -23,43 +26,22 @@ public abstract class GenericPasswordPolicy<T extends GenericPasswordPolicy<T>> 
     private int requireDigit;
     private int requireSpecialCharacter;
 
-    public GenericPasswordPolicy() {
+    protected GenericPasswordPolicy() {
         minLength = maxLength = requireUpperCaseCharacter = requireLowerCaseCharacter = requireDigit = requireSpecialCharacter = -1;
     }
 
-    public GenericPasswordPolicy(int minLength,
-            int maxLength,
-            int requireUpperCaseCharacter,
-            int requireLowerCaseCharacter,
-            int requireDigit,
-            int requireSpecialCharacter) {
+    protected GenericPasswordPolicy(int minLength,
+                                    int maxLength,
+                                    int requireUpperCaseCharacter,
+                                    int requireLowerCaseCharacter,
+                                    int requireDigit,
+                                    int requireSpecialCharacter) {
         this.minLength = minLength;
         this.maxLength = maxLength;
         this.requireUpperCaseCharacter = requireUpperCaseCharacter;
         this.requireLowerCaseCharacter = requireLowerCaseCharacter;
         this.requireDigit = requireDigit;
         this.requireSpecialCharacter = requireSpecialCharacter;
-
-    }
-
-    public int getMinLength() {
-        return minLength;
-    }
-
-    public int getMaxLength() {
-        return maxLength;
-    }
-
-    public int getRequireUpperCaseCharacter() {
-        return requireUpperCaseCharacter;
-    }
-
-    public int getRequireLowerCaseCharacter() {
-        return requireLowerCaseCharacter;
-    }
-
-    public int getRequireDigit() {
-        return requireDigit;
     }
 
     public T setMaxLength(int maxLength) {
@@ -85,10 +67,6 @@ public abstract class GenericPasswordPolicy<T extends GenericPasswordPolicy<T>> 
     public T setRequireUpperCaseCharacter(int requireUpperCaseCharacter) {
         this.requireUpperCaseCharacter = requireUpperCaseCharacter;
         return (T) this;
-    }
-
-    public int getRequireSpecialCharacter() {
-        return requireSpecialCharacter;
     }
 
     public T setRequireSpecialCharacter(int requireSpecialCharacter) {
@@ -126,8 +104,7 @@ public abstract class GenericPasswordPolicy<T extends GenericPasswordPolicy<T>> 
         if (requireDigit != that.requireDigit) {
             return false;
         }
-        return !(requireSpecialCharacter != that.requireSpecialCharacter);
-
+        return requireSpecialCharacter == that.requireSpecialCharacter;
     }
 
     @Override

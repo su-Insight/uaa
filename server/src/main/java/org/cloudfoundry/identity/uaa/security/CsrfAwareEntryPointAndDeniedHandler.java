@@ -14,8 +14,7 @@
 
 package org.cloudfoundry.identity.uaa.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.cloudfoundry.identity.uaa.authentication.UaaPrincipal;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -36,14 +35,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
+@Slf4j
 public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler, AuthenticationEntryPoint {
 
-    private static Logger logger = LoggerFactory.getLogger(CsrfAwareEntryPointAndDeniedHandler.class);
-
-    private LoginUrlAuthenticationEntryPoint notloggedInCsrfEntryPoint;
-    private LoginUrlAuthenticationEntryPoint loggedInCsrfEntryPoint;
-    private LoginUrlAuthenticationEntryPoint loginEntryPoint;
+    private final LoginUrlAuthenticationEntryPoint notloggedInCsrfEntryPoint;
+    private final LoginUrlAuthenticationEntryPoint loggedInCsrfEntryPoint;
+    private final LoginUrlAuthenticationEntryPoint loginEntryPoint;
 
     public CsrfAwareEntryPointAndDeniedHandler(String login, String redirectCsrf, String redirectNotLoggedIn) {
         if (redirectCsrf == null || !redirectCsrf.startsWith("/")) {
@@ -57,8 +54,7 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
         }
         loginEntryPoint = new LoginUrlAuthenticationEntryPoint(login);
         notloggedInCsrfEntryPoint = new LoginUrlAuthenticationEntryPoint(redirectNotLoggedIn);
-        loggedInCsrfEntryPoint = new LoginUrlAuthenticationEntryPoint(redirectCsrf)
-        {
+        loggedInCsrfEntryPoint = new LoginUrlAuthenticationEntryPoint(redirectCsrf) {
             @Override
             public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -92,11 +88,11 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
     }
 
     protected void internalHandle(HttpServletRequest request,
-            HttpServletResponse response,
-            Exception exception) throws IOException, ServletException {
+                                  HttpServletResponse response,
+                                  Exception exception) throws IOException, ServletException {
+
         AuthenticationException authEx = exception instanceof AuthenticationException ae ?
-                ae :
-                new InternalAuthenticationServiceException("Access denied.", exception);
+                ae : new InternalAuthenticationServiceException("Access denied.", exception);
 
         if (wantJson(request)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -122,17 +118,17 @@ public class CsrfAwareEntryPointAndDeniedHandler implements AccessDeniedHandler,
 
     @Override
     public void handle(HttpServletRequest request,
-            HttpServletResponse response,
-            AccessDeniedException accessDeniedException) throws IOException,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException,
             ServletException {
         request.setAttribute(WebAttributes.ACCESS_DENIED_403, accessDeniedException);
-        //if we get any other access denied we end up here
+        // if we get any other access denied, we end up here
         internalHandle(request, response, accessDeniedException);
     }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        //if there is insufficient authentication, this will be called
+        // if there is insufficient authentication, this will be called
         internalHandle(request, response, authException);
     }
 }
