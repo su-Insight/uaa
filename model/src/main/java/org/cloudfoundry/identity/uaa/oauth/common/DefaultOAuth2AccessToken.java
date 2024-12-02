@@ -189,7 +189,8 @@ public class DefaultOAuth2AccessToken implements Serializable, OAuth2AccessToken
         if (tokenParams.containsKey(EXPIRES_IN)) {
             long expiration = 0;
             try {
-                expiration = Long.parseLong(tokenParams.get(EXPIRES_IN));
+                // Convert to string before parseLong, tokenParams is not always a Map<String, String> might contain Integer
+                expiration = Long.parseLong(String.valueOf(tokenParams.get(EXPIRES_IN)));
             }
             catch (NumberFormatException e) {
                 // fall through...
