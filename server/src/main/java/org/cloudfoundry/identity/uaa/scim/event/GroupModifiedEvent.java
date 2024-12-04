@@ -127,7 +127,7 @@ public class GroupModifiedEvent extends AbstractUaaEvent {
             if (!group.equals(groupInfo.group)) {
                 return false;
             }
-            return !!Arrays.equals(members, groupInfo.members);
+            return Arrays.equals(members, groupInfo.members);
         }
 
         @Override

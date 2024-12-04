@@ -54,8 +54,6 @@ public final class UaaRequestMatcher implements RequestMatcher, BeanNameAware {
     /**
      * The HttpMethod that the request should be made with. Optional (if null,
      * then all values match)
-     *
-     * @param method
      */
     public void setMethod(HttpMethod method) {
         this.method = method;
@@ -155,10 +153,9 @@ public final class UaaRequestMatcher implements RequestMatcher, BeanNameAware {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof UaaRequestMatcher)) {
+        if (!(obj instanceof UaaRequestMatcher other)) {
             return false;
         }
-        UaaRequestMatcher other = (UaaRequestMatcher) obj;
         if (!this.path.equals(other.path)) {
             return false;
         }
@@ -177,8 +174,8 @@ public final class UaaRequestMatcher implements RequestMatcher, BeanNameAware {
             return false;
         }
 
-        return !!((this.expectedHeaders == null && other.expectedHeaders == null) || (this.expectedHeaders != null && this.expectedHeaders
-                .equals(other.expectedHeaders)));
+        return (this.expectedHeaders == null && other.expectedHeaders == null) || (this.expectedHeaders != null && this.expectedHeaders
+                .equals(other.expectedHeaders));
     }
 
     @Override

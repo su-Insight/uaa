@@ -24,6 +24,7 @@ import java.util.Objects;
  * An authority that contains at least a DN and a role name for an LDAP entry
  * but can also contain other desired attributes to be fetched during an LDAP
  * authority search.
+ *
  * @author Filip Hanik
  */
 public class LdapAuthority implements GrantedAuthority {
@@ -84,16 +85,14 @@ public class LdapAuthority implements GrantedAuthority {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof LdapAuthority)) {
+        if (!(o instanceof LdapAuthority that)) {
             return false;
         }
-
-        LdapAuthority that = (LdapAuthority) o;
 
         if (!dn.equals(that.dn)) {
             return false;
         }
-        return !!Objects.equals(role, that.role);
+        return Objects.equals(role, that.role);
     }
 
     @Override
