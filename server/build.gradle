@@ -33,8 +33,6 @@ dependencies {
     implementation(libraries.bouncyCastleTlsFips)
     implementation(libraries.bouncyCastlePkixFips)
 
-    implementation(libraries.guava)
-
     implementation(libraries.aspectJRt)
     implementation(libraries.aspectJWeaver)
 
@@ -105,7 +103,6 @@ dependencies {
     testImplementation(libraries.tomcatJdbc)
 
     testImplementation(libraries.jsonPathAssert)
-    testImplementation(libraries.guavaTestLib)
     testImplementation(libraries.xmlUnit)
     testImplementation(libraries.awaitility)
 
