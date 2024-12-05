@@ -213,7 +213,7 @@ public class SamlServiceProvider {
         } else if (!entityId.equals(other.entityId)) {
             return false;
         }
-        return !(version != other.version);
+        return version == other.version;
     }
 
     @Override

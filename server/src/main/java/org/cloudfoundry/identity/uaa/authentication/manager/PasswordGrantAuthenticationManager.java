@@ -214,8 +214,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
                 promptsToInclude.add(prompt.getName());
             }
         }
-        if (authentication.getDetails() instanceof UaaAuthenticationDetails) {
-            UaaAuthenticationDetails details = (UaaAuthenticationDetails) authentication.getDetails();
+        if (authentication.getDetails() instanceof UaaAuthenticationDetails details) {
             for (String prompt : promptsToInclude) {
                 String[] values = details.getParameterMap().get(prompt);
                 if (values == null || values.length != 1 || !hasText(values[0])) {
@@ -229,7 +228,7 @@ public class PasswordGrantAuthenticationManager implements AuthenticationManager
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         String idToken = null;
         try {
-            ResponseEntity<Map<String, String>> tokenResponse = rt.exchange(tokenUrl.toString(), HttpMethod.POST, request, new ParameterizedTypeReference<Map<String, String>>() {
+            ResponseEntity<Map<String, String>> tokenResponse = rt.exchange(tokenUrl.toString(), HttpMethod.POST, request, new ParameterizedTypeReference<>() {
             });
 
             if (tokenResponse.hasBody()) {

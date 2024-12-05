@@ -32,13 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 import static org.springframework.util.StringUtils.commaDelimitedListToStringArray;
+import static org.springframework.util.StringUtils.hasLength;
 import static org.springframework.util.StringUtils.hasText;
-import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * An {@link ApplicationContextInitializer} for a web application to enable it
@@ -150,8 +149,8 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
 
         return Arrays.stream(secretFiles)
                 .map(File::getAbsolutePath)
-                .map(path -> "file:%s".formatted(path))
-                .collect(Collectors.toList());
+                .map("file:%s"::formatted)
+                .toList();
     }
 
     private Resource getYamlFromEnvironmentVariable() {
@@ -171,7 +170,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
     ) {
         final List<String> resolvedLocations = fileConfigLocations.stream()
                 .map(applicationContext.getEnvironment()::resolvePlaceholders)
-                .collect(Collectors.toList());
+                .toList();
 
         resolvedLocations.stream()
                 .map(location -> "Testing for YAML resources at: %s".formatted(location))
@@ -181,7 +180,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
                 .map(applicationContext::getResource)
                 .filter(Objects::nonNull)
                 .filter(Resource::exists)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private void applyLog4jConfiguration(ConfigurableEnvironment environment, String contextPath) {
@@ -192,7 +191,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
             //we do not want that variable
             //this variable starts with -D, so we can ignore it.
             String location = environment.getProperty("logging.config");
-            if (location != null && location.trim().length() > 0) {
+            if (location != null && !location.trim().isEmpty()) {
                 PropertySource<?> environmentPropertySource = environment.getPropertySources().get(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME);
                 if (location.startsWith("-D") && environmentPropertySource != null && location.equals(environmentPropertySource.getProperty("LOGGING_CONFIG"))) {
                     System.out.println("Ignoring Log Config Location: " + location + ". Location is suspect to be a Tomcat startup script environment variable");
@@ -224,8 +223,8 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
     static void applySpringProfiles(ConfigurableEnvironment environment) {
         environment.setDefaultProfiles(new String[0]);
 
-        System.out.println("System property spring.profiles.active=[%s]".formatted(System.getProperty("spring.profiles.active")));
-        System.out.println("Environment property spring_profiles=[%s]".formatted(environment.getProperty("spring_profiles")));
+        System.out.printf("System property spring.profiles.active=[%s]%n", System.getProperty("spring.profiles.active"));
+        System.out.printf("Environment property spring_profiles=[%s]%n", environment.getProperty("spring_profiles"));
 
         if (environment.containsProperty("spring_profiles")) {
             setActiveProfiles(environment, StringUtils.tokenizeToStringArray(environment.getProperty("spring_profiles"), ",", true, true));
@@ -233,7 +232,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
         }
 
         String systemProfiles = System.getProperty("spring.profiles.active");
-        if (!isEmpty(systemProfiles)) {
+        if (hasLength(systemProfiles)) {
             setActiveProfiles(environment, commaDelimitedListToStringArray(systemProfiles));
             return;
         }

@@ -1,6 +1,7 @@
 package org.cloudfoundry.identity.uaa.scim.endpoints;
 
 import com.jayway.jsonpath.JsonPathException;
+import lombok.Getter;
 import org.cloudfoundry.identity.uaa.account.UserAccountStatus;
 import org.cloudfoundry.identity.uaa.account.event.UserAccountUnlockedEvent;
 import org.cloudfoundry.identity.uaa.alias.AliasPropertiesInvalidException;
@@ -95,13 +96,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static org.cloudfoundry.identity.uaa.codestore.ExpiringCodeType.REGISTRATION;
+import static org.springframework.util.StringUtils.hasLength;
 import static org.springframework.util.StringUtils.hasText;
-import static org.springframework.util.StringUtils.isEmpty;
-
-import lombok.Getter;
 
 /**
  * User provisioning and query endpoints. Implements the core API from the
@@ -232,7 +230,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @ResponseBody
     public ScimUser createUser(@RequestBody ScimUser user, HttpServletRequest request, HttpServletResponse response) {
         //default to UAA origin
-        if (isEmpty(user.getOrigin())) {
+        if (!hasLength(user.getOrigin())) {
             user.setOrigin(OriginKeys.UAA);
         }
 
@@ -244,9 +242,9 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         } else {
             //only validate for UAA users
             List<IdentityProvider> idpsForEmailDomain = DomainFilter.getIdpsForEmailDomain(identityProviderProvisioning.retrieveActive(identityZoneManager.getCurrentIdentityZoneId()), user.getEmails().get(0).getValue());
-            idpsForEmailDomain = idpsForEmailDomain.stream().filter(idp -> !idp.getOriginKey().equals(OriginKeys.UAA)).collect(Collectors.toList());
+            idpsForEmailDomain = idpsForEmailDomain.stream().filter(idp -> !idp.getOriginKey().equals(OriginKeys.UAA)).toList();
             if (!idpsForEmailDomain.isEmpty()) {
-                List<String> idpOrigins = idpsForEmailDomain.stream().map(IdentityProvider::getOriginKey).collect(Collectors.toList());
+                List<String> idpOrigins = idpsForEmailDomain.stream().map(IdentityProvider::getOriginKey).toList();
                 throw new ScimException("The user account is set up for single sign-on. Please use one of these origin(s) : %s".formatted(idpOrigins.toString()), HttpStatus.BAD_REQUEST);
             }
             passwordValidator.validate(user.getPassword());
@@ -308,10 +306,10 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}", method = RequestMethod.PUT)
     @ResponseBody
     public ScimUser updateUser(@RequestBody ScimUser user, @PathVariable String userId,
-            @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
-            HttpServletRequest request,
-            HttpServletResponse httpServletResponse,
-            OAuth2Authentication authentication) {
+                               @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
+                               HttpServletRequest request,
+                               HttpServletResponse httpServletResponse,
+                               OAuth2Authentication authentication) {
 
         throwWhenUserManagementIsDisallowed(user.getOrigin(), request);
         throwWhenInvalidSelfEdit(user, userId, request, authentication);
@@ -344,10 +342,10 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}", method = RequestMethod.PATCH)
     @ResponseBody
     public ScimUser patchUser(@RequestBody ScimUser patch, @PathVariable String userId,
-            @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
-            HttpServletRequest request,
-            HttpServletResponse response,
-            OAuth2Authentication authentication) {
+                              @RequestHeader(value = "If-Match", required = false, defaultValue = "NaN") String etag,
+                              HttpServletRequest request,
+                              HttpServletResponse response,
+                              OAuth2Authentication authentication) {
 
         if ("NaN".equals(etag)) {
             throw new ScimException("Missing If-Match for PUT", HttpStatus.BAD_REQUEST);
@@ -373,9 +371,9 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @ResponseBody
     @Transactional
     public ScimUser deleteUser(@PathVariable String userId,
-            @RequestHeader(value = "If-Match", required = false) String etag,
-            HttpServletRequest request,
-            HttpServletResponse httpServletResponse) {
+                               @RequestHeader(value = "If-Match", required = false) String etag,
+                               HttpServletRequest request,
+                               HttpServletResponse httpServletResponse) {
         int version = etag == null ? -1 : getVersion(userId, etag);
         ScimUser user = getUser(userId, httpServletResponse);
         throwWhenUserManagementIsDisallowed(user.getOrigin(), request);
@@ -433,8 +431,8 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}/verify-link", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<VerificationResponse> getUserVerificationLink(@PathVariable String userId,
-            @RequestParam(value = "client_id", required = false) String clientId,
-            @RequestParam(value = "redirect_uri") String redirectUri) {
+                                                                        @RequestParam(value = "client_id", required = false) String clientId,
+                                                                        @RequestParam(value = "redirect_uri") String redirectUri) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof OAuth2Authentication oAuth2Authentication) {
@@ -460,8 +458,8 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     @RequestMapping(value = "/Users/{userId}/verify", method = RequestMethod.GET)
     @ResponseBody
     public ScimUser verifyUser(@PathVariable String userId,
-            @RequestHeader(value = "If-Match", required = false) String etag,
-            HttpServletResponse httpServletResponse) {
+                               @RequestHeader(value = "If-Match", required = false) String etag,
+                               HttpServletResponse httpServletResponse) {
         int version = etag == null ? -1 : getVersion(userId, etag);
         ScimUser user = scimUserProvisioning.verifyUser(userId, version, identityZoneManager.getCurrentIdentityZoneId());
         scimUpdates.incrementAndGet();
@@ -619,7 +617,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
 
     @ExceptionHandler(UaaException.class)
     public ResponseEntity<UaaException> handleException(UaaException e) {
-        logger.info("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage());
+        logger.info("Handling error: {}, {}", e.getClass().getSimpleName(), e.getMessage());
         if (e instanceof InternalUserManagementDisabledException) {
             throw e;
         }
@@ -628,7 +626,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
 
     @ExceptionHandler
     public View handleException(Exception t, HttpServletRequest request) throws ScimException, InternalUserManagementDisabledException {
-        logger.error("Unhandled exception in SCIM user endpoints. " + t.getMessage());
+        logger.error("Unhandled exception in SCIM user endpoints. {}", t.getMessage());
 
         ScimException e = new ScimException("Unexpected error", t, HttpStatus.INTERNAL_SERVER_ERROR);
         if (t instanceof ScimException exception) {
@@ -693,7 +691,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     private void throwWhenUserManagementIsDisallowed(String origin, HttpServletRequest request) {
         Object attr = request.getAttribute(DisableInternalUserManagementFilter.DISABLE_INTERNAL_USER_MANAGEMENT);
         if (attr instanceof Boolean isUserManagementDisabled) {
-            if (isUserManagementDisabled && (OriginKeys.UAA.equals(origin) || isEmpty(origin))) {
+            if (isUserManagementDisabled && (OriginKeys.UAA.equals(origin) || !hasLength(origin))) {
                 throw new InternalUserManagementDisabledException(DisableUserManagementSecurityFilter.INTERNAL_USER_CREATION_IS_CURRENTLY_DISABLED);
             }
         }

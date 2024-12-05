@@ -13,12 +13,12 @@
  *******************************************************************************/
 package org.cloudfoundry.identity.uaa.approval;
 
-import org.cloudfoundry.identity.uaa.util.UaaStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.cloudfoundry.identity.uaa.approval.Approval.ApprovalStatus;
 import org.cloudfoundry.identity.uaa.audit.event.ApprovalModifiedEvent;
 import org.cloudfoundry.identity.uaa.audit.event.SystemDeletable;
+import org.cloudfoundry.identity.uaa.util.UaaStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -79,7 +79,7 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     private ApplicationEventPublisher applicationEventPublisher;
 
     public JdbcApprovalStore(JdbcTemplate jdbcTemplate) {
-        Assert.notNull(jdbcTemplate);
+        Assert.notNull(jdbcTemplate, "jdbcTemplate is required");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -88,7 +88,9 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     }
 
     public boolean refreshApproval(final Approval approval, final String zoneId) {
-        logger.debug("refreshing approval: [{}]", UaaStringUtils.getCleanedUserControlString(approval.toString()));
+        if (logger.isDebugEnabled()) {
+            logger.debug("refreshing approval: [{}]", UaaStringUtils.getCleanedUserControlString(approval.toString()));
+        }
         int refreshed = jdbcTemplate.update(REFRESH_AUTHZ_SQL, ps -> {
             ps.setTimestamp(1, new Timestamp(approval.getLastUpdatedAt().getTime()));
             ps.setTimestamp(2, new Timestamp(approval.getExpiresAt().getTime()));
@@ -106,7 +108,9 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
 
     @Override
     public boolean addApproval(final Approval approval, final String zoneId) {
-        logger.debug("adding approval: [{}]", UaaStringUtils.getCleanedUserControlString(approval.toString()));
+        if (logger.isDebugEnabled()) {
+            logger.debug("adding approval: [{}]", UaaStringUtils.getCleanedUserControlString(approval.toString()));
+        }
         try {
             refreshApproval(approval, zoneId); // try to refresh the approval
         } catch (DataIntegrityViolationException ex) { // could not find the
@@ -184,10 +188,10 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
         logger.debug("Purging expired approvals from database");
         try {
             int deleted = jdbcTemplate.update(DELETE_AUTHZ_SQL + " where expiresAt <= ?",
-                    ps -> { //PreparedStatementSetter
-                        ps.setTimestamp(1, new Timestamp(new Date().getTime()));
-                    });
-            logger.debug(deleted + " expired approvals deleted");
+                    //PreparedStatementSetter
+                    ps -> ps.setTimestamp(1, new Timestamp(new Date().getTime()))
+            );
+            logger.debug("{} expired approvals deleted", deleted);
         } catch (DataAccessException ex) {
             logger.error("Error purging expired approvals", ex);
             return false;
@@ -252,28 +256,28 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     @Override
     public int deleteByIdentityZone(String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_ZONE_APPROVALS, zoneId);
-        getLogger().debug("Deleted zone approvals '%s' and count:%s".formatted(zoneId, approvalCount));
+        getLogger().debug("Deleted zone approvals '{}' and count:{}", zoneId, approvalCount);
         return approvalCount;
     }
 
     @Override
     public int deleteByOrigin(String origin, String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_OF_USER_APPROVALS_BY_PROVIDER, origin, zoneId);
-        getLogger().debug("Deleted provider approvals '%s'/%s and count:%s".formatted(origin, zoneId, approvalCount));
+        getLogger().debug("Deleted provider approvals '{}'/{} and count:{}", origin, zoneId, approvalCount);
         return approvalCount;
     }
 
     @Override
     public int deleteByClient(String clientId, String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_CLIENT_APPROVALS, clientId, zoneId);
-        getLogger().debug("Deleted client '%s' and %s approvals".formatted(clientId, approvalCount));
+        getLogger().debug("Deleted client '{}' and {} approvals", clientId, approvalCount);
         return approvalCount;
     }
 
     @Override
     public int deleteByUser(String userId, String zoneId) {
         int approvalCount = jdbcTemplate.update(DELETE_USER_APPROVALS, userId, zoneId);
-        getLogger().debug("Deleted user '%s' and %s approvals".formatted(userId, approvalCount));
+        getLogger().debug("Deleted user '{}' and {} approvals", userId, approvalCount);
         return approvalCount;
     }
 
@@ -283,7 +287,6 @@ public class JdbcApprovalStore implements ApprovalStore, ApplicationEventPublish
     }
 
     private static class AuthorizationRowMapper implements RowMapper<Approval> {
-
         @Override
         public Approval mapRow(ResultSet rs, int rowNum) throws SQLException {
             String userId = rs.getString(1);

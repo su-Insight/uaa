@@ -115,7 +115,9 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
 
     @Override
     public Authentication authenticate(Authentication request) throws AuthenticationException {
-        logger.debug("Starting external authentication for:{}", UaaStringUtils.getCleanedUserControlString(request.toString()));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Starting external authentication for:{}", UaaStringUtils.getCleanedUserControlString(request.toString()));
+        }
         ExternalAuthenticationDetails authenticationData = getExternalAuthenticationDetails(request);
         UaaUser userFromRequest = getUser(request, authenticationData);
         if (userFromRequest == null) {
@@ -125,10 +127,10 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
         UaaUser userFromDb;
 
         try {
-            logger.debug(String.format("Searching for user by (username:%s , origin:%s)", userFromRequest.getUsername(), getOrigin()));
+            logger.debug("Searching for user by (username:{} , origin:{})", userFromRequest.getUsername(), getOrigin());
             userFromDb = userDatabase.retrieveUserByName(userFromRequest.getUsername(), getOrigin());
         } catch (UsernameNotFoundException e) {
-            logger.debug(String.format("Searching for user by (email:%s , origin:%s)", userFromRequest.getEmail(), getOrigin()));
+            logger.debug("Searching for user by (email:{} , origin:{})", userFromRequest.getEmail(), getOrigin());
             userFromDb = userDatabase.retrieveUserByEmail(userFromRequest.getEmail(), getOrigin());
         }
 
@@ -161,8 +163,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
     }
 
     protected void populateAuthenticationAttributes(UaaAuthentication authentication, Authentication request, ExternalAuthenticationDetails authenticationData) {
-        if (request.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) request.getPrincipal();
+        if (request.getPrincipal() instanceof UserDetails userDetails) {
             authentication.setUserAttributes(getUserAttributes(userDetails));
             authentication.setExternalGroups(new HashSet<>(getExternalUserAuthorities(userDetails)));
         }
@@ -174,10 +175,10 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
         if ((hasUserAttributes(authentication) || hasExternalGroups(authentication)) && getProviderProvisioning() != null) {
             IdentityProvider<ExternalIdentityProviderDefinition> provider = getProviderProvisioning().retrieveByOrigin(getOrigin(), IdentityZoneHolder.get().getId());
             if (provider.getConfig() != null && provider.getConfig().isStoreCustomAttributes()) {
-                logger.debug("Storing custom attributes for user_id:" + authentication.getPrincipal().getId());
+                logger.debug("Storing custom attributes for user_id:{}", authentication.getPrincipal().getId());
                 UserInfo userInfo = new UserInfo()
                         .setUserAttributes(authentication.getUserAttributes())
-                        .setRoles(new LinkedList(ofNullable(authentication.getExternalGroups()).orElse(emptySet())));
+                        .setRoles(new LinkedList<>(ofNullable(authentication.getExternalGroups()).orElse(emptySet())));
                 getUserDatabase().storeUserInfo(authentication.getPrincipal().getId(), userInfo);
             }
         }
@@ -227,10 +228,10 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
             userDetails = new User(username, credentials != null ? credentials.toString() : "",
                     true, true, true, true, UaaAuthority.USER_AUTHORITIES);
         } else if (request.getPrincipal() == null) {
-            logger.debug(this.getClass().getName() + "[" + name + "] cannot process null principal");
+            logger.debug("{}[{}] cannot process null principal", this.getClass().getName(), name);
             return null;
         } else {
-            logger.debug(this.getClass().getName() + "[" + name + "] cannot process request of type: " + request.getClass().getName());
+            logger.debug("{}[{}] cannot process request of type: {}" , this.getClass().getName(), name, request.getClass().getName());
             return null;
         }
 
@@ -284,7 +285,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
                 if (name.split("@").length == 2 && !name.startsWith("@") && !name.endsWith("@")) {
                     email = name;
                 } else {
-                    email = name.replaceAll("@", "") + "@user.from." + getOrigin() + ".cf";
+                    email = name.replace("@", "") + "@user.from." + getOrigin() + ".cf";
                 }
             } else {
                 email = name + "@user.from." + getOrigin() + ".cf";
@@ -315,5 +316,4 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
     public void setBeanName(String name) {
         this.name = name;
     }
-
 }
