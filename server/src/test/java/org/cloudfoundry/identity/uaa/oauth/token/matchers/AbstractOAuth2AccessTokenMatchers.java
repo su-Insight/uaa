@@ -14,7 +14,6 @@ import org.hamcrest.TypeSafeMatcher;
 import java.util.Collections;
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractOAuth2AccessTokenMatchers<T> extends TypeSafeMatcher<T> {

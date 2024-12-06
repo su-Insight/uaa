@@ -190,7 +190,7 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        List<ScimGroup> groupInfos = groups.keySet().stream().filter(n -> StringUtils.hasText(n)).map(this::getOrCreateGroup).collect(Collectors.toList());
+        List<ScimGroup> groupInfos = groups.keySet().stream().filter(StringUtils::hasText).map(this::getOrCreateGroup).collect(Collectors.toList());
         for (int i = 0; i < groupInfos.size(); i++) {
             ScimGroup g = groupInfos.get(i);
             String description = groups.get(g.getDisplayName());

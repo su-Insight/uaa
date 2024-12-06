@@ -22,7 +22,6 @@ import org.cloudfoundry.identity.uaa.oauth.token.AccessTokenRequest;
 import org.cloudfoundry.identity.uaa.oauth.token.DefaultAccessTokenRequest;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
-import org.junit.internal.AssumptionViolatedException;
 import org.junit.internal.runners.statements.RunBefores;
 import org.junit.rules.TestWatchman;
 import org.junit.runners.model.FrameworkMethod;

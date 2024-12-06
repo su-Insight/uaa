@@ -90,7 +90,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
@@ -1221,7 +1220,7 @@ class AuditCheckMockMvcTests {
                         GroupModifiedEvent.GroupInfo.class)
         );
 
-        verifyGroupAuditData(group, groupMemberIds, GroupCreatedEvent);
+        verifyGroupAuditData(groupMemberIds, GroupCreatedEvent);
 
         assertGroupMembershipLogMessage(testLogger.getLatestMessage(),
                 GroupCreatedEvent, group.getDisplayName(), group.getId(), jacob.getId(), emily.getId());
@@ -1254,7 +1253,7 @@ class AuditCheckMockMvcTests {
         assertEquals(new GroupModifiedEvent.GroupInfo(group.getDisplayName(), groupMemberIds),
                 JsonUtils.readValue(event.getAuditEvent().getData(), GroupModifiedEvent.GroupInfo.class));
 
-        verifyGroupAuditData(group, groupMemberIds, GroupModifiedEvent);
+        verifyGroupAuditData(groupMemberIds, GroupModifiedEvent);
 
         assertGroupMembershipLogMessage(testLogger.getLatestMessage(),
                 GroupModifiedEvent, group.getDisplayName(), group.getId(), jacob.getId(), emily.getId(), jonas.getId());
@@ -1280,7 +1279,7 @@ class AuditCheckMockMvcTests {
         assertEquals(new GroupModifiedEvent.GroupInfo(group.getDisplayName(), groupMemberIds),
                 JsonUtils.readValue(event.getAuditEvent().getData(), GroupModifiedEvent.GroupInfo.class));
 
-        verifyGroupAuditData(group, groupMemberIds, GroupDeletedEvent);
+        verifyGroupAuditData(groupMemberIds, GroupDeletedEvent);
 
         assertGroupMembershipLogMessage(testLogger.getLatestMessage(),
                 GroupDeletedEvent, group.getDisplayName(), group.getId(), jacob.getId(), emily.getId(), jonas.getId());
@@ -1299,7 +1298,7 @@ class AuditCheckMockMvcTests {
         return user;
     }
 
-    private void verifyGroupAuditData(ScimGroup group, String[] groupMemberIds, AuditEventType eventType) {
+    private void verifyGroupAuditData(String[] groupMemberIds, AuditEventType eventType) {
         ArgumentCaptor<AuditEvent> captor = ArgumentCaptor.forClass(AuditEvent.class);
         verify(mockAuditService, atLeast(1)).log(captor.capture(), anyString());
         List<AuditEvent> auditEvents = captor.getAllValues().stream().filter(e -> e.getType() == eventType).toList();
@@ -1381,7 +1380,7 @@ class AuditCheckMockMvcTests {
     }
 
     private void assertSingleClientAdminAuditEventFiredWith(AuditEventType expectedEventType, String[] expectedScopes, String[] expectedAuthorities) {
-        List<AbstractUaaEvent> events = testListener.getEvents().stream().filter(AbstractClientAdminEvent.class::isInstance).collect(Collectors.toList());
+        List<AbstractUaaEvent> events = testListener.getEvents().stream().filter(AbstractClientAdminEvent.class::isInstance).toList();
         assertNotNull(events);
         assertEquals(1, events.size());
 

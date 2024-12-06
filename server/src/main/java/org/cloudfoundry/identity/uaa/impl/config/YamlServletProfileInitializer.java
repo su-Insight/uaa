@@ -173,7 +173,7 @@ public class YamlServletProfileInitializer implements ApplicationContextInitiali
                 .toList();
 
         resolvedLocations.stream()
-                .map(location -> "Testing for YAML resources at: %s".formatted(location))
+                .map("Testing for YAML resources at: %s"::formatted)
                 .forEach(System.out::println);
 
         return resolvedLocations.stream()
