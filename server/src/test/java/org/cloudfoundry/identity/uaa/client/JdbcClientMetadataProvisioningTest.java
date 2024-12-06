@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.net.URL;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.cloudfoundry.identity.uaa.test.ModelTestUtils.getResourceAsString;
 import static org.hamcrest.Matchers.containsString;
@@ -137,7 +136,7 @@ class JdbcClientMetadataProvisioningTest {
                 .retrieveAll(identityZoneId)
                 .stream()
                 .map(ClientMetadata::getClientId)
-                .collect(Collectors.toList());
+                .toList();
 
         assertThat(clientIds, hasItem(clientId1));
         assertThat(clientIds, hasItem(clientId2));

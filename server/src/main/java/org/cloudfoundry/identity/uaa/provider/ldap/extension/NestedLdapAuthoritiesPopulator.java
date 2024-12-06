@@ -61,7 +61,6 @@ import static java.util.Collections.emptyList;
  * <p>
  * During an authentication
  */
-
 public class NestedLdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator {
     public static final String MEMBER_OF = "memberOf";
     private static final Logger logger = LoggerFactory.getLogger(NestedLdapAuthoritiesPopulator.class);

@@ -19,7 +19,6 @@ import org.cloudfoundry.identity.uaa.oauth.token.DefaultAccessTokenRequest;
 import org.cloudfoundry.identity.uaa.test.TestAccountSetup;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
-import org.junit.internal.AssumptionViolatedException;
 import org.junit.internal.runners.statements.RunBefores;
 import org.junit.rules.TestWatchman;
 import org.junit.runners.model.FrameworkMethod;
@@ -317,6 +316,7 @@ public final class OAuth2ContextSetup extends TestWatchman {
         setupConnectionFactory(client);
         client.setErrorHandler(new DefaultResponseErrorHandler() {
             // Pass errors through in response entity for status code analysis
+            @Override
             public boolean hasError(ClientHttpResponse response) throws IOException {
                 return false;
             }

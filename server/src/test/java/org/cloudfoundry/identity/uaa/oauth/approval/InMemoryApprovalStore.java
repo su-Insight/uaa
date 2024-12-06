@@ -18,7 +18,6 @@ import org.cloudfoundry.identity.uaa.approval.ApprovalStore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InMemoryApprovalStore implements ApprovalStore {
 
@@ -75,13 +74,13 @@ public class InMemoryApprovalStore implements ApprovalStore {
     public List<Approval> getApprovalsForUser(String userId, final String zoneId) {
         return store.stream()
                 .filter(approval -> userId.equals(approval.getUserId()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<Approval> getApprovalsForClient(String clientId, final String zoneId) {
         return store.stream()
                 .filter(approval -> clientId.equals(approval.getClientId()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

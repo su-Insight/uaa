@@ -26,7 +26,7 @@ public class EncryptionKeyService {
 
         List<EncryptionKey> keysWithoutPassphrase = encryptionKeys.stream()
                 .filter(encryptionKey -> UaaStringUtils.isNullOrEmpty(encryptionKey.getPassphrase()))
-                .collect(Collectors.toList());
+                .toList();
         if (!keysWithoutPassphrase.isEmpty()) {
             throw new NoActiveEncryptionKeyProvided(
                     "UAA cannot be started as encryption key passphrase for uaa.encryption.encryption_keys/[%s] is undefined".formatted(
@@ -35,7 +35,9 @@ public class EncryptionKeyService {
             );
         }
 
-        List<EncryptionKey> invalidLengthKeys = encryptionKeys.stream().filter(encryptionKey -> encryptionKey.getPassphrase().length() < 8).collect(Collectors.toList());
+        List<EncryptionKey> invalidLengthKeys = encryptionKeys.stream()
+                .filter(encryptionKey -> encryptionKey.getPassphrase().length() < 8)
+                .toList();
         if (!invalidLengthKeys.isEmpty()) {
             throw new NoActiveEncryptionKeyProvided(
                     "The required length of the encryption passphrases for [%s] need to be at least 8 characters long.".formatted(

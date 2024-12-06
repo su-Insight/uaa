@@ -1,10 +1,10 @@
 package org.cloudfoundry.identity.uaa.oauth.token;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.cloudfoundry.identity.uaa.audit.event.SystemDeletable;
 import org.cloudfoundry.identity.uaa.resources.jdbc.LimitSqlAdapter;
 import org.cloudfoundry.identity.uaa.util.TimeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import static org.cloudfoundry.identity.uaa.oauth.token.RevocableToken.TokenType.REFRESH_TOKEN;
 import static org.springframework.util.StringUtils.isEmpty;
@@ -51,8 +50,8 @@ public class JdbcRevocableTokenProvisioning implements RevocableTokenProvisionin
     private static final Duration EXPIRATION_CHECK_INTERVAL = Duration.ofSeconds(30);
 
     public JdbcRevocableTokenProvisioning(JdbcTemplate jdbcTemplate,
-            LimitSqlAdapter limitSqlAdapter,
-            TimeService timeService) {
+                                          LimitSqlAdapter limitSqlAdapter,
+                                          TimeService timeService) {
         this.rowMapper = new RevocableTokenRowMapper();
         this.template = jdbcTemplate;
         this.limitSqlAdapter = limitSqlAdapter;
@@ -209,7 +208,9 @@ public class JdbcRevocableTokenProvisioning implements RevocableTokenProvisionin
         if (isEmpty(clientId)) {
             throw new NullPointerException("Client ID can not be null when retrieving tokens.");
         }
-        return getUserTokens(userId, zoneId).stream().filter(r -> clientId.equals(r.getClientId())).collect(Collectors.toList());
+        return getUserTokens(userId, zoneId).stream()
+                .filter(r -> clientId.equals(r.getClientId()))
+                .toList();
     }
 
     @Override

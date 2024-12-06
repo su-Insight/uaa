@@ -21,14 +21,14 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTClaimsSetTransformer;
 import com.nimbusds.jwt.SignedJWT;
 import org.cloudfoundry.identity.uaa.oauth.client.ClientConstants;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants;
 import org.cloudfoundry.identity.uaa.oauth.token.Claims;
 import org.cloudfoundry.identity.uaa.user.UaaUser;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.springframework.security.core.GrantedAuthority;
-import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
-import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.MalformedURLException;
@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
@@ -73,10 +72,11 @@ public final class UaaTokenUtils {
 
     /**
      * This code is public domain.
+     * <p>
+     * The MurmurHash3 algorithm was created by Austin Appleby and put into the public domain.
      *
-     *  The MurmurHash3 algorithm was created by Austin Appleby and put into the public domain.
-     *  @see <a href="http://code.google.com/p/smhasher">http://code.google.com/p/smhasher</a>
-     *  @see <a href="https://github.com/yonik/java_util/blob/master/src/util/hash/MurmurHash3.java">https://github.com/yonik/java_util/blob/master/src/util/hash/MurmurHash3.java</a>
+     * @see <a href="http://code.google.com/p/smhasher">http://code.google.com/p/smhasher</a>
+     * @see <a href="https://github.com/yonik/java_util/blob/master/src/util/hash/MurmurHash3.java">https://github.com/yonik/java_util/blob/master/src/util/hash/MurmurHash3.java</a>
      */
     public static int murmurhash3x8632(byte[] data, int offset, int len, int seed) {
 
@@ -104,10 +104,10 @@ public final class UaaTokenUtils {
         switch (len & 0x03) {
             case 3:
                 k1 = (data[roundedEnd + 2] & 0xff) << 16;
-            // fallthrough
+                // fallthrough
             case 2:
                 k1 |= (data[roundedEnd + 1] & 0xff) << 8;
-            // fallthrough
+                // fallthrough
             case 1:
                 k1 |= data[roundedEnd] & 0xff;
                 k1 *= c1;
@@ -239,7 +239,7 @@ public final class UaaTokenUtils {
                 ofNullable(userGroups).orElse(emptySet())
                         .stream()
                         .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 

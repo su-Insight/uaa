@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -43,9 +42,9 @@ public class AccountsController {
 
     @RequestMapping(value = "/create_account", method = GET)
     public String activationEmail(Model model,
-            @RequestParam(value = "client_id", required = false) String clientId,
-            @RequestParam(value = "redirect_uri", required = false) String redirectUri,
-            HttpServletResponse response) {
+                                  @RequestParam(value = "client_id", required = false) String clientId,
+                                  @RequestParam(value = "redirect_uri", required = false) String redirectUri,
+                                  HttpServletResponse response) {
         if (!IdentityZoneHolder.get().getConfig().getLinks().getSelfService().isSelfServiceLinksEnabled()) {
             return handleSelfServiceDisabled(model, response, "error_message_code", "self_service_disabled");
         }
@@ -58,12 +57,12 @@ public class AccountsController {
 
     @RequestMapping(value = "/create_account.do", method = POST)
     public String sendActivationEmail(Model model, HttpServletResponse response,
-            @RequestParam(value = "client_id", required = false) String clientId,
-            @RequestParam(value = "redirect_uri", required = false) String redirectUri,
-            @Valid @ModelAttribute("email") ValidEmail email, BindingResult result,
-            @RequestParam("password") String password,
-            @RequestParam("password_confirmation") String passwordConfirmation,
-            @RequestParam(value = "does_user_consent", required = false) boolean doesUserConsent) {
+                                      @RequestParam(value = "client_id", required = false) String clientId,
+                                      @RequestParam(value = "redirect_uri", required = false) String redirectUri,
+                                      @Valid @ModelAttribute("email") ValidEmail email, BindingResult result,
+                                      @RequestParam("password") String password,
+                                      @RequestParam("password_confirmation") String passwordConfirmation,
+                                      @RequestParam(value = "does_user_consent", required = false) boolean doesUserConsent) {
 
         BrandingInformation zoneBranding = IdentityZoneHolder.get().getConfig().getBranding();
         if (zoneBranding != null && zoneBranding.getConsent() != null && !doesUserConsent) {
@@ -77,7 +76,7 @@ public class AccountsController {
         }
 
         List<IdentityProvider> identityProviderList = DomainFilter.getIdpsForEmailDomain(identityProviderProvisioning.retrieveAll(true, IdentityZoneHolder.get().getId()), email.getEmail());
-        identityProviderList = identityProviderList.stream().filter(idp -> !idp.getOriginKey().equals(OriginKeys.UAA)).collect(Collectors.toList());
+        identityProviderList = identityProviderList.stream().filter(idp -> !idp.getOriginKey().equals(OriginKeys.UAA)).toList();
         if (!identityProviderList.isEmpty()) {
             model.addAttribute("email", email.getEmail());
             return handleUnprocessableEntity(model, response, "error_message_code", "other_idp");
@@ -109,8 +108,8 @@ public class AccountsController {
 
     @RequestMapping(value = "/verify_user", method = GET)
     public String verifyUser(Model model,
-            @RequestParam("code") String code,
-            HttpServletResponse response, HttpSession session) {
+                             @RequestParam("code") String code,
+                             HttpServletResponse response, HttpSession session) {
 
         AccountCreationService.AccountCreationResponse accountCreation;
         try {

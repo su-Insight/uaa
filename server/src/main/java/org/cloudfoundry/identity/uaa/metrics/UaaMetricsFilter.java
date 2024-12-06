@@ -29,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @ManagedResource(
         objectName = "cloudfoundry.identity:name=ServerRequests",
@@ -173,8 +172,8 @@ public class UaaMetricsFilter extends OncePerRequestFilter implements UaaMetrics
         ClassPathResource resource = new ClassPathResource("performance-url-groups.yml");
         Yaml yaml = UaaYamlUtils.createYaml();
         try (InputStream in = resource.getInputStream()) {
-            List<Map<String, Object>> load = (List<Map<String, Object>>) yaml.load(in);
-            return load.stream().map(UrlGroup::from).collect(Collectors.toList());
+            List<Map<String, Object>> load = yaml.load(in);
+            return load.stream().map(UrlGroup::from).toList();
         }
     }
 

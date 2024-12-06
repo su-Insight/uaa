@@ -17,7 +17,6 @@ package org.cloudfoundry.identity.uaa.zone;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZoneManagementScopes {
@@ -80,7 +79,7 @@ public class ZoneManagementScopes {
         return UAA_SCOPES
                 .stream()
                 .filter(s -> !s.startsWith(ZONES_ZONE_ID_PREFIX))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static String[] getZoneSwitchingScopes(String identityZoneId) {

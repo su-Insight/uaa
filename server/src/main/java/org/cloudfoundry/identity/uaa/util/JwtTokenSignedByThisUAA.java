@@ -13,6 +13,35 @@
  *******************************************************************************/
 package org.cloudfoundry.identity.uaa.util;
 
+import com.google.common.collect.Lists;
+import com.nimbusds.jwt.JWTClaimsSet;
+import org.cloudfoundry.identity.uaa.oauth.KeyInfo;
+import org.cloudfoundry.identity.uaa.oauth.KeyInfoService;
+import org.cloudfoundry.identity.uaa.oauth.TokenRevokedException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.UnauthorizedClientException;
+import org.cloudfoundry.identity.uaa.oauth.jwt.ChainedSignatureVerifier;
+import org.cloudfoundry.identity.uaa.oauth.jwt.Jwt;
+import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
+import org.cloudfoundry.identity.uaa.oauth.jwt.SignatureVerifier;
+import org.cloudfoundry.identity.uaa.oauth.jwt.Verifier;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants;
+import org.cloudfoundry.identity.uaa.oauth.token.RevocableToken;
+import org.cloudfoundry.identity.uaa.oauth.token.RevocableTokenProvisioning;
+import org.cloudfoundry.identity.uaa.provider.NoSuchClientException;
+import org.cloudfoundry.identity.uaa.user.UaaUser;
+import org.cloudfoundry.identity.uaa.user.UaaUserDatabase;
+import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
+import org.cloudfoundry.identity.uaa.zone.MultitenantClientServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,40 +53,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
-
-import com.nimbusds.jwt.JWTClaimsSet;
-import org.cloudfoundry.identity.uaa.provider.NoSuchClientException;
-import org.cloudfoundry.identity.uaa.oauth.jwt.ChainedSignatureVerifier;
-import org.cloudfoundry.identity.uaa.oauth.jwt.SignatureVerifier;
-import org.cloudfoundry.identity.uaa.oauth.jwt.Verifier;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
-import org.cloudfoundry.identity.uaa.oauth.common.exceptions.UnauthorizedClientException;
-import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
-
-import com.google.common.collect.Lists;
-import org.cloudfoundry.identity.uaa.oauth.KeyInfo;
-import org.cloudfoundry.identity.uaa.oauth.KeyInfoService;
-import org.cloudfoundry.identity.uaa.oauth.TokenRevokedException;
-import org.cloudfoundry.identity.uaa.oauth.jwt.Jwt;
-import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
-import org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants;
-import org.cloudfoundry.identity.uaa.oauth.token.RevocableToken;
-import org.cloudfoundry.identity.uaa.oauth.token.RevocableTokenProvisioning;
-import org.cloudfoundry.identity.uaa.user.UaaUser;
-import org.cloudfoundry.identity.uaa.user.UaaUserDatabase;
-import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
-import org.cloudfoundry.identity.uaa.zone.MultitenantClientServices;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
 import static org.cloudfoundry.identity.uaa.oauth.client.ClientConstants.REQUIRED_USER_GROUPS;
 import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.AUD;
 import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.CID;
@@ -210,7 +208,7 @@ public abstract class JwtTokenSignedByThisUAA {
             } else {
                 List<String> grantedScopes =
                         authorities.stream()
-                                .map(GrantedAuthority::getAuthority).collect(toList());
+                                .map(GrantedAuthority::getAuthority).toList();
 
                 checkRequestedScopesAreGranted(grantedScopes);
             }
@@ -228,7 +226,7 @@ public abstract class JwtTokenSignedByThisUAA {
                 requestedScopes.stream().filter(
                         requestedScope -> grantedScopePatterns.stream()
                                 .noneMatch(grantedScopePattern -> grantedScopePattern.matcher(requestedScope).matches())
-                ).collect(toList());
+                ).toList();
         if (!missingScopes.isEmpty()) {
             String scopeClaimKey = scopeClaimKey().keyName();
             String message =
@@ -304,7 +302,7 @@ public abstract class JwtTokenSignedByThisUAA {
                 clientScopes = ofNullable(client.getAuthorities())
                         .map(a -> a.stream()
                                 .map(GrantedAuthority::getAuthority)
-                                .collect(toList()))
+                                .toList())
                         .orElse(Collections.emptyList());
             } else {
                 clientScopes = client.getScope();
@@ -363,13 +361,13 @@ public abstract class JwtTokenSignedByThisUAA {
             try {
                 audience = ((List<?>) audClaim).stream()
                         .map(String.class::cast)
-                        .collect(toList());
+                        .toList();
             } catch (ClassCastException ex) {
                 throw new InvalidTokenException("The token's audience claim is invalid or unparseable.", ex);
             }
         }
 
-        List<String> notInAudience = clients.stream().filter(c -> !audience.contains(c)).collect(toList());
+        List<String> notInAudience = clients.stream().filter(c -> !audience.contains(c)).toList();
         if (!notInAudience.isEmpty()) {
             String joinedAudiences = notInAudience.stream().map(c -> "".equals(c) ? "EMPTY_VALUE" : c).collect(Collectors.joining(", "));
             throw new InvalidTokenException("Some parties were not in the token audience: " + joinedAudiences, null);
@@ -440,7 +438,7 @@ public abstract class JwtTokenSignedByThisUAA {
         List<?> scopes = (List<?>) scopeClaim;
 
         if (scopes.stream().allMatch(String.class::isInstance)) {
-            return scopes.stream().map(String.class::cast).collect(toList());
+            return scopes.stream().map(String.class::cast).toList();
         } else {
             throw unparsableClaimException;
         }

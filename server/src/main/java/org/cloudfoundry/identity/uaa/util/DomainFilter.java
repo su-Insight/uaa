@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.constants.OriginKeys.UAA;
@@ -42,26 +41,23 @@ public class DomainFilter {
             //filter client providers
             List<String> clientFilter = getProvidersForClient(client);
             if (clientFilter != null) {
-                activeProviders =
-                        activeProviders.stream().filter(
-                                p -> clientFilter.contains(p.getOriginKey())
-                        ).collect(Collectors.toList());
+                activeProviders = activeProviders.stream()
+                        .filter(p -> clientFilter.contains(p.getOriginKey()))
+                        .toList();
             }
             //filter for email domain
             if (email.contains("@")) {
                 final String domain = email.substring(email.indexOf('@') + 1);
-                List<IdentityProvider> explicitlyMatched =
-                        activeProviders.stream().filter(
-                                p -> doesEmailDomainMatchProvider(p, domain, true)
-                        ).collect(Collectors.toList());
+                List<IdentityProvider> explicitlyMatched = activeProviders.stream()
+                        .filter(p -> doesEmailDomainMatchProvider(p, domain, true))
+                        .toList();
                 if (!explicitlyMatched.isEmpty() || !useUaaFallback) {
                     return explicitlyMatched;
                 }
 
-                activeProviders =
-                        activeProviders.stream().filter(
-                                p -> doesEmailDomainMatchProvider(p, domain, false)
-                        ).collect(Collectors.toList());
+                activeProviders = activeProviders.stream()
+                        .filter(p -> doesEmailDomainMatchProvider(p, domain, false))
+                        .toList();
             }
         }
         return activeProviders != null ? activeProviders : emptyList();
@@ -72,7 +68,9 @@ public class DomainFilter {
             return emptyList();
         }
         final String domain = email.substring(email.indexOf('@') + 1);
-        return activeProviders.stream().filter(provider -> doesEmailDomainMatchProvider(provider, domain, true)).collect(Collectors.toList());
+        return activeProviders.stream()
+                .filter(provider -> doesEmailDomainMatchProvider(provider, domain, true))
+                .toList();
     }
 
     protected static List<String> getProvidersForClient(ClientDetails client) {

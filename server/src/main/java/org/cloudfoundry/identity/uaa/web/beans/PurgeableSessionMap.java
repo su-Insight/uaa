@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static java.util.stream.Collectors.toList;
-
 @Component
 class PurgeableSessionMap extends ConcurrentHashMap<String, Session> {
     private static final Logger logger = LoggerFactory.getLogger(PurgeableSessionMap.class);
@@ -23,6 +21,6 @@ class PurgeableSessionMap extends ConcurrentHashMap<String, Session> {
     }
 
     public List<Session> expired() {
-        return values().stream().filter(Session::isExpired).collect(toList());
+        return values().stream().filter(Session::isExpired).toList();
     }
 }

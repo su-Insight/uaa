@@ -10,9 +10,9 @@ import org.cloudfoundry.identity.uaa.oauth.client.ClientJwtChangeRequest;
 import org.cloudfoundry.identity.uaa.oauth.jwk.JsonWebKey;
 import org.cloudfoundry.identity.uaa.oauth.jwk.JsonWebKeyHelper;
 import org.cloudfoundry.identity.uaa.oauth.jwk.JsonWebKeySet;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.UaaUrlUtils;
-import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -205,10 +204,7 @@ public class ClientJwtConfiguration implements Cloneable {
     /**
      * Creator from ClientDetails. Should abstract the persistence.
      * Use currently the client_jwt_config in UaaClientDetails
-     *
-     * @param clientDetails
-   * @return
-   */
+     */
     @JsonIgnore
     public static ClientJwtConfiguration readValue(UaaClientDetails clientDetails) {
         if (clientDetails == null ||
@@ -221,10 +217,7 @@ public class ClientJwtConfiguration implements Cloneable {
 
     /**
      * Creator from searialized ClientJwtConfiguration.
-     *
-     * @param clientJwtConfig
-   * @return
-   */
+     */
     @JsonIgnore
     public static ClientJwtConfiguration readValue(String clientJwtConfig) {
         return JsonUtils.readValue(clientJwtConfig, ClientJwtConfiguration.class);
@@ -233,10 +226,7 @@ public class ClientJwtConfiguration implements Cloneable {
     /**
      * Creator from ClientDetails. Should abstract the persistence.
      * Use currently the client_jwt_config in UaaClientDetails
-     *
-     * @param clientDetails
-   * @return
-   */
+     */
     @JsonIgnore
     public void writeValue(ClientDetails clientDetails) {
         if (clientDetails instanceof UaaClientDetails uaaClientDetails) {
@@ -247,10 +237,7 @@ public class ClientJwtConfiguration implements Cloneable {
     /**
      * Cleanup configuration in ClientDetails. Should abstract the persistence.
      * Use currently the client_jwt_config in UaaClientDetails
-     *
-     * @param clientDetails
-   * @return
-   */
+     */
     @JsonIgnore
     public static void resetConfiguration(ClientDetails clientDetails) {
         if (clientDetails instanceof UaaClientDetails uaaClientDetails) {
@@ -313,7 +300,7 @@ public class ClientJwtConfiguration implements Cloneable {
         ClientJwtConfiguration result = null;
         if (existingConfig.jwkSet != null && tobeDeleted.jwksUri != null) {
             JsonWebKeySet<JsonWebKey> existingKeySet = existingConfig.jwkSet;
-            List<JsonWebKey> keys = existingKeySet.getKeys().stream().filter(k -> !tobeDeleted.jwksUri.equals(k.getKid())).collect(Collectors.toList());
+            List<JsonWebKey> keys = existingKeySet.getKeys().stream().filter(k -> !tobeDeleted.jwksUri.equals(k.getKid())).toList();
             if (keys.isEmpty()) {
                 result = null;
             } else {

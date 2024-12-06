@@ -13,14 +13,6 @@
  *******************************************************************************/
 package org.cloudfoundry.identity.uaa.provider.saml.idp;
 
-import java.io.IOException;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
-import org.cloudfoundry.identity.uaa.util.JsonUtils;
-import org.springframework.util.StringUtils;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -30,6 +22,12 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.cloudfoundry.identity.uaa.util.JsonUtils;
+import org.springframework.util.StringUtils;
+
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.util.Date;
 
 @JsonSerialize(using = SamlServiceProvider.SamlServiceProviderSerializer.class)
 @JsonDeserialize(using = SamlServiceProvider.SamlServiceProviderDeserializer.class)
@@ -218,13 +216,7 @@ public class SamlServiceProvider {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("SamlServiceProvider{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", entityId='").append(entityId).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", active=").append(active);
-        sb.append('}');
-        return sb.toString();
+        return "SamlServiceProvider{id='%s', entityId='%s', name='%s', active=%b}".formatted(id, entityId, name, active);
     }
 
     public static class SamlServiceProviderSerializer extends JsonSerializer<SamlServiceProvider> {

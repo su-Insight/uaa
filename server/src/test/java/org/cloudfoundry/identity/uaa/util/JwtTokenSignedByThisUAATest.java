@@ -25,9 +25,11 @@ import org.cloudfoundry.identity.uaa.client.InMemoryClientDetailsService;
 import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.cloudfoundry.identity.uaa.oauth.KeyInfo;
 import org.cloudfoundry.identity.uaa.oauth.KeyInfoService;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
 import org.cloudfoundry.identity.uaa.oauth.jwt.ChainedSignatureVerifier;
 import org.cloudfoundry.identity.uaa.oauth.jwt.SignatureVerifier;
 import org.cloudfoundry.identity.uaa.oauth.jwt.UaaMacSigner;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants;
 import org.cloudfoundry.identity.uaa.oauth.token.RevocableToken;
 import org.cloudfoundry.identity.uaa.oauth.token.RevocableTokenProvisioning;
@@ -53,8 +55,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
-import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -224,7 +224,6 @@ public class JwtTokenSignedByThisUAATest {
 
         uaaUser = userDb.retrieveUserById(USER_ID);
         uaaUserGroups = uaaUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
     }
 
     @Test
@@ -686,8 +685,7 @@ public class JwtTokenSignedByThisUAATest {
         when(revocableTokenProvisioning.retrieve(
                 "8b14f193-8212-4af2-9927-e3ae903f94a6",
                 IdentityZoneHolder.get().getId()
-        )
-        ).thenThrow(new EmptyResultDataAccessException(1));
+        )).thenThrow(new EmptyResultDataAccessException(1));
 
         expectedException.expect(InvalidTokenException.class);
 

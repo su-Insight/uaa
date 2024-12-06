@@ -20,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.cloudfoundry.identity.uaa.account.event.PasswordChangeEventPublisher.DEFAULT_EMAIL_DOMAIN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -149,7 +148,7 @@ class PasswordChangeEventPublisherTests {
                 ScimUser.Email email = new ScimUser.Email();
                 email.setValue(emailAddress);
                 return email;
-            }).collect(Collectors.toList());
+            }).toList();
 
             scimUser.setEmails(emails);
         }

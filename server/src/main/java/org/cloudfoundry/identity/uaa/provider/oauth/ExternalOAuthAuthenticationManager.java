@@ -327,7 +327,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
                         if (values instanceof List list) {
                             List<String> strings = (List<String>) list.stream()
                                     .map(object -> Objects.toString(object, null))
-                                    .collect(Collectors.toList());
+                                    .toList();
                             userAttributes.put(key, strings);
                         } else if (values instanceof String string) {
                             userAttributes.put(key, Collections.singletonList(string));

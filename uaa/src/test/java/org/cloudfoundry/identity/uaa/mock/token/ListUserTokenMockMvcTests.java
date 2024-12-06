@@ -18,14 +18,14 @@ package org.cloudfoundry.identity.uaa.mock.token;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.cloudfoundry.identity.uaa.oauth.token.RevocableToken;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
-import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.util.LinkedMultiValueMap;
@@ -33,7 +33,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils.getClientCredentialsOAuthAccessToken;
@@ -122,8 +121,7 @@ class ListUserTokenMockMvcTests extends AbstractTokenMockMvcTests {
     }
 
     List<String> getTokenIds(List<RevocableToken> tokens) {
-        return tokens.stream().map(RevocableToken::getTokenId).collect(Collectors.toList());
-
+        return tokens.stream().map(RevocableToken::getTokenId).toList();
     }
 
     @Test
@@ -204,8 +202,8 @@ class ListUserTokenMockMvcTests extends AbstractTokenMockMvcTests {
     }
 
     List<RevocableToken> getTokenList(String urlTemplate,
-            String accessToken,
-            ResultMatcher status) throws Exception {
+                                      String accessToken,
+                                      ResultMatcher status) throws Exception {
         MvcResult result = mockMvc
                 .perform(
                         get(urlTemplate)
@@ -223,6 +221,4 @@ class ListUserTokenMockMvcTests extends AbstractTokenMockMvcTests {
             return emptyList();
         }
     }
-
-
 }

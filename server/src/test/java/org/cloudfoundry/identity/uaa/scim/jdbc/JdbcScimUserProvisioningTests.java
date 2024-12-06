@@ -1,47 +1,10 @@
 package org.cloudfoundry.identity.uaa.scim.jdbc;
 
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LOGIN_SERVER;
-import static org.cloudfoundry.identity.uaa.constants.OriginKeys.UAA;
-import static org.cloudfoundry.identity.uaa.util.AssertThrowsWithMessage.assertThrowsWithMessageThat;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
 import org.assertj.core.api.Assertions;
 import org.cloudfoundry.identity.uaa.annotations.WithDatabaseContext;
 import org.cloudfoundry.identity.uaa.audit.event.EntityDeletedEvent;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
 import org.cloudfoundry.identity.uaa.resources.JoinAttributeNameMapper;
 import org.cloudfoundry.identity.uaa.resources.SimpleAttributeNameMapper;
@@ -80,7 +43,43 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.util.Collections.singletonList;
+import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LOGIN_SERVER;
+import static org.cloudfoundry.identity.uaa.constants.OriginKeys.UAA;
+import static org.cloudfoundry.identity.uaa.util.AssertThrowsWithMessage.assertThrowsWithMessageThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @WithDatabaseContext
@@ -259,10 +258,10 @@ class JdbcScimUserProvisioningTests {
         assertNotNull(created.getId());
         assertEquals(LOGIN_SERVER, created.getOrigin());
         assertThat(jdbcTemplate.queryForObject(
-                "select count(*) from users where origin=? and identity_zone_id=?",
-                new Object[]{LOGIN_SERVER, IdentityZone.getUaaZoneId()},
-                Integer.class
-        ), is(1)
+                        "select count(*) from users where origin=? and identity_zone_id=?",
+                        new Object[]{LOGIN_SERVER, IdentityZone.getUaaZoneId()},
+                        Integer.class
+                ), is(1)
         );
         addMembership(jdbcTemplate, created.getId(), created.getOrigin(), IdentityZone.getUaaZoneId());
         assertThat(jdbcTemplate.queryForObject("select count(*) from group_membership where member_id=?", new Object[]{created.getId()}, Integer.class), is(1));
@@ -302,7 +301,7 @@ class JdbcScimUserProvisioningTests {
                     currentIdentityZoneId
             );
             Assertions.assertThat(result).isNotNull();
-            final List<String> usernames = result.stream().map(ScimUser::getUserName).collect(toList());
+            final List<String> usernames = result.stream().map(ScimUser::getUserName).toList();
             Assertions.assertThat(usernames).isSorted();
             return usernames;
         };
@@ -357,7 +356,7 @@ class JdbcScimUserProvisioningTests {
                 currentIdentityZoneId
         );
         Assertions.assertThat(result).isNotNull();
-        List<String> usernames = result.stream().map(ScimUser::getUserName).collect(toList());
+        List<String> usernames = result.stream().map(ScimUser::getUserName).toList();
         Assertions.assertThat(usernames).isSorted();
         verify(notInUse, never()).createJdbcPagingList(anyString(), any(Map.class), any(RowMapper.class), any(Integer.class));
         // another option to query without paging
@@ -393,7 +392,7 @@ class JdbcScimUserProvisioningTests {
         jdbcScimUserProvisioning.setPageSize(0);
         // MYSQL default, no LOWER statement in query
         joinConverter.setDbCaseInsensitive(true);
-        List<ScimUser>  result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
+        List<ScimUser> result = jdbcScimUserProvisioning.retrieveByScimFilterOnlyActive(
                 scimFilter,
                 null,
                 false,
@@ -441,7 +440,7 @@ class JdbcScimUserProvisioningTests {
                     currentIdentityZoneId
             );
             Assertions.assertThat(result).isNotNull();
-            final List<String> usernames = result.stream().map(ScimUser::getUserName).collect(toList());
+            final List<String> usernames = result.stream().map(ScimUser::getUserName).toList();
             Assertions.assertThat(usernames).isSorted();
             return usernames;
         };
@@ -1614,9 +1613,9 @@ class JdbcScimUserProvisioningTests {
     }
 
     private static void addMembership(final JdbcTemplate jdbcTemplate,
-            final String userId,
-            final String origin,
-            final String zoneId) {
+                                      final String userId,
+                                      final String origin,
+                                      final String zoneId) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         jdbcTemplate.update(INSERT_MEMBERSHIP, userId, userId, "USER", "authorities", timestamp, origin, zoneId);
     }

@@ -30,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import static java.util.Map.Entry.comparingByKey;
 
@@ -52,7 +51,7 @@ public class UaaMapUtils {
 
 
     public static Map<String, Object> getPropertiesStartingWith(ConfigurableEnvironment aEnv,
-            String aKeyPrefix) {
+                                                                String aKeyPrefix) {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> map = getAllProperties(aEnv);
         for (Entry<String, Object> entry : map.entrySet()) {
@@ -115,7 +114,7 @@ public class UaaMapUtils {
                 .entrySet()
                 .stream()
                 .sorted(comparingByKey())
-                .collect(Collectors.toList());
+                .toList();
         LinkedHashMap<K, V> result = new LinkedHashMap<>();
         for (Map.Entry<K, V> entry : sortedEntries) {
             Object value = entry.getValue();

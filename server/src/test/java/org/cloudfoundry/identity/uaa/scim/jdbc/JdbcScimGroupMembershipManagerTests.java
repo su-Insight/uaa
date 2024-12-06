@@ -3,6 +3,7 @@ package org.cloudfoundry.identity.uaa.scim.jdbc;
 import org.cloudfoundry.identity.uaa.annotations.WithDatabaseContext;
 import org.cloudfoundry.identity.uaa.audit.event.EntityDeletedEvent;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
 import org.cloudfoundry.identity.uaa.resources.jdbc.JdbcPagingListFactory;
 import org.cloudfoundry.identity.uaa.resources.jdbc.LimitSqlAdapter;
@@ -33,7 +34,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.cloudfoundry.identity.uaa.constants.OriginKeys.LDAP;
@@ -623,7 +622,7 @@ class JdbcScimGroupMembershipManagerTests {
 
         assertThat(groups.size(), equalTo(2));
 
-        List<String> groupIds = groups.stream().map(ScimGroup::getId).collect(Collectors.toList());
+        List<String> groupIds = groups.stream().map(ScimGroup::getId).toList();
         assertThat(groupIds, hasItem("g1"));
         assertThat(groupIds, hasItem("g2"));
     }
@@ -731,8 +730,8 @@ class JdbcScimGroupMembershipManagerTests {
             final JdbcTemplate jdbcTemplate,
             final String zoneId) throws SQLException {
         int existingMemberCount = jdbcTemplate.queryForObject("select count(*) from " +
-                dbUtils.getQuotedIdentifier("groups", jdbcTemplate) +
-                " g, group_membership gm where g.identity_zone_id=? and gm.group_id=g.id",
+                        dbUtils.getQuotedIdentifier("groups", jdbcTemplate) +
+                        " g, group_membership gm where g.identity_zone_id=? and gm.group_id=g.id",
                 new Object[]{zoneId}, Integer.class);
         assertEquals(expected, existingMemberCount, msg);
     }

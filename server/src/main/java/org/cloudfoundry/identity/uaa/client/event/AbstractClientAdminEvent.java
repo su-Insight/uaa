@@ -17,17 +17,16 @@ import org.cloudfoundry.identity.uaa.audit.AuditEvent;
 import org.cloudfoundry.identity.uaa.audit.AuditEventType;
 import org.cloudfoundry.identity.uaa.audit.event.AbstractUaaEvent;
 import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class AbstractClientAdminEvent extends AbstractUaaEvent {
 
@@ -60,7 +59,7 @@ public abstract class AbstractClientAdminEvent extends AbstractUaaEvent {
                         .getAuthorities()
                         .stream()
                         .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList());
+                        .toList();
         auditData.put("authorities", authorities);
         return createAuditRecord(
                 clientDetails.getClientId(),

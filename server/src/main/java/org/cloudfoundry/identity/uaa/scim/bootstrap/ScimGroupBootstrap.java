@@ -13,8 +13,6 @@
  *******************************************************************************/
 package org.cloudfoundry.identity.uaa.scim.bootstrap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.cloudfoundry.identity.uaa.scim.ScimCore;
 import org.cloudfoundry.identity.uaa.scim.ScimGroup;
 import org.cloudfoundry.identity.uaa.scim.ScimGroupMember;
@@ -27,6 +25,8 @@ import org.cloudfoundry.identity.uaa.scim.exception.ScimResourceNotFoundExceptio
 import org.cloudfoundry.identity.uaa.util.MapCollector;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.ResourcePropertySource;
@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ScimGroupBootstrap implements InitializingBean {
 
@@ -80,7 +79,7 @@ public class ScimGroupBootstrap implements InitializingBean {
     }
 
     public ScimGroupBootstrap(ScimGroupProvisioning scimGroupProvisioning, ScimUserProvisioning scimUserProvisioning,
-            ScimGroupMembershipManager membershipManager) {
+                              ScimGroupMembershipManager membershipManager) {
         this.scimGroupProvisioning = scimGroupProvisioning;
         this.scimUserProvisioning = scimUserProvisioning;
         this.membershipManager = membershipManager;
@@ -190,7 +189,10 @@ public class ScimGroupBootstrap implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        List<ScimGroup> groupInfos = groups.keySet().stream().filter(StringUtils::hasText).map(this::getOrCreateGroup).collect(Collectors.toList());
+        List<ScimGroup> groupInfos = new ArrayList<>(groups.keySet().stream()
+                .filter(StringUtils::hasText)
+                .map(this::getOrCreateGroup)
+                .toList());
         for (int i = 0; i < groupInfos.size(); i++) {
             ScimGroup g = groupInfos.get(i);
             String description = groups.get(g.getDisplayName());

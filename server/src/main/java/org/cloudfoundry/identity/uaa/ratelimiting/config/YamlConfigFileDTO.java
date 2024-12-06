@@ -1,18 +1,16 @@
 package org.cloudfoundry.identity.uaa.ratelimiting.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.cloudfoundry.identity.uaa.util.UaaYamlUtils;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.cloudfoundry.identity.uaa.util.UaaYamlUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -41,7 +39,7 @@ public class YamlConfigFileDTO {
             withoutCallerID = StringUtils.stripToNull(withoutCallerID);
             pathSelectors = pathSelectors == null ? List.of() : pathSelectors.stream()
                     .map(StringUtils::stripToNull).filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .toList();
             return (name == null) && (global == null)
                     && (withCallerCredentialsID == null) && (withCallerRemoteAddressID == null) && (withoutCallerID == null)
                     && pathSelectors.isEmpty();

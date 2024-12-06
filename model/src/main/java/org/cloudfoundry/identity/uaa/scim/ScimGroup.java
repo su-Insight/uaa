@@ -121,7 +121,7 @@ public class ScimGroup extends ScimCore<ScimGroup> {
                     patch.getMembers()
                             .stream()
                             .filter(member -> !"delete".equalsIgnoreCase(member.getOperation()))
-                            .collect(Collectors.toList())
+                            .toList()
             );
 
             setMembers(newMembers);

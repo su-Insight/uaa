@@ -1,10 +1,10 @@
 package org.cloudfoundry.identity.uaa.oauth.token;
 
 import com.nimbusds.jose.JWSSigner;
+import org.cloudfoundry.identity.uaa.extensions.PollutionPreventionExtension;
 import org.cloudfoundry.identity.uaa.oauth.KeyInfo;
 import org.cloudfoundry.identity.uaa.oauth.KeyInfoService;
 import org.cloudfoundry.identity.uaa.oauth.TokenKeyEndpoint;
-import org.cloudfoundry.identity.uaa.extensions.PollutionPreventionExtension;
 import org.cloudfoundry.identity.uaa.oauth.jwt.SignatureVerifier;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.MapCollector;
@@ -163,7 +163,7 @@ class TokenKeyEndpointTests {
 
         VerificationKeysListResponse keysResponse = tokenKeyEndpoint.getKeys(null);
         List<VerificationKeyResponse> keys = keysResponse.getKeys();
-        List<String> keyIds = keys.stream().map(VerificationKeyResponse::getId).collect(Collectors.toList());
+        List<String> keyIds = keys.stream().map(VerificationKeyResponse::getId).toList();
         assertThat(keyIds, containsInAnyOrder("RsaKey1", "RsaKey2", "RsaKey3"));
 
         HashMap<String, VerificationKeyResponse> keysMap = keys.stream().collect(new MapCollector<>(VerificationKeyResponse::getId, k -> k));
@@ -201,7 +201,7 @@ class TokenKeyEndpointTests {
 
         VerificationKeysListResponse keysResponse = tokenKeyEndpoint.getKeys(validUaaResource);
         List<VerificationKeyResponse> keys = keysResponse.getKeys();
-        List<String> keyIds = keys.stream().map(VerificationKeyResponse::getId).collect(Collectors.toList());
+        List<String> keyIds = keys.stream().map(VerificationKeyResponse::getId).toList();
         assertThat(keyIds, containsInAnyOrder("RsaKey1", "RsaKey2", "RsaKey3", "SymmetricKey"));
 
         VerificationKeyResponse symKeyResponse = keys.stream().filter(k -> "SymmetricKey".equals(k.getId())).findAny().get();
@@ -217,7 +217,7 @@ class TokenKeyEndpointTests {
 
         VerificationKeysListResponse keysResponse = tokenKeyEndpoint.getKeys(mock(Principal.class));
         List<VerificationKeyResponse> keysForZone = keysResponse.getKeys();
-        List<String> keyIds = keysForZone.stream().map(VerificationKeyResponse::getId).collect(Collectors.toList());
+        List<String> keyIds = keysForZone.stream().map(VerificationKeyResponse::getId).toList();
         assertThat(keyIds, containsInAnyOrder("key1", "key2"));
     }
 
@@ -257,11 +257,11 @@ class TokenKeyEndpointTests {
         TokenPolicy tokenPolicy = new TokenPolicy();
         Map<String, TokenPolicy.KeyInformation> keyInformationMap = Optional.ofNullable(keys).filter(Objects::nonNull).orElse(new HashMap<>())
                 .entrySet().stream().filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, e -> {
-            TokenPolicy.KeyInformation keyInfo = new TokenPolicy.KeyInformation();
-            keyInfo.setSigningKey(e.getValue());
-            keyInfo.setSigningCert(cert);
-            return keyInfo;
-        }));
+                    TokenPolicy.KeyInformation keyInfo = new TokenPolicy.KeyInformation();
+                    keyInfo.setSigningKey(e.getValue());
+                    keyInfo.setSigningCert(cert);
+                    return keyInfo;
+                }));
         tokenPolicy.setKeyInformation(keyInformationMap);
         config.setTokenPolicy(tokenPolicy);
         zone.setConfig(config);
