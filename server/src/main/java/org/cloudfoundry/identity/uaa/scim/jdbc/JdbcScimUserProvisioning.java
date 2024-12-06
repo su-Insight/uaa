@@ -15,6 +15,7 @@ package org.cloudfoundry.identity.uaa.scim.jdbc;
 
 import org.cloudfoundry.identity.uaa.audit.event.SystemDeletable;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
+import org.cloudfoundry.identity.uaa.logging.LogSanitizerUtil;
 import org.cloudfoundry.identity.uaa.resources.ResourceMonitor;
 import org.cloudfoundry.identity.uaa.resources.jdbc.AbstractQueryable;
 import org.cloudfoundry.identity.uaa.resources.jdbc.JdbcPagingListFactory;
@@ -466,7 +467,7 @@ public class JdbcScimUserProvisioning extends AbstractQueryable<ScimUser>
     public ScimUser verifyUser(String id, int version, String zoneId) throws ScimResourceNotFoundException,
             InvalidScimResourceException {
         if (logger.isDebugEnabled()) {
-            logger.debug("Verifying user: {}", id);
+            logger.debug("Verifying user: {}", LogSanitizerUtil.sanitize(id));
         }
         int updated;
         if (version < 0) {
