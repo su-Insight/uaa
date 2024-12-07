@@ -14,12 +14,10 @@
 package org.cloudfoundry.identity.uaa.provider.saml;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
 import org.cloudfoundry.identity.uaa.saml.SamlKey;
 import org.cloudfoundry.identity.uaa.util.KeyWithCert;
 import org.cloudfoundry.identity.uaa.zone.SamlConfig;
 
-import java.security.Security;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,10 +51,6 @@ public final class SamlKeyManagerFactory {
     //*****************************
 
     abstract static class BaseSamlKeyManagerImpl implements SamlKeyManager {
-
-        static {
-            Security.addProvider(new BouncyCastleFipsProvider());
-        }
 
         protected List<KeyWithCert> convertList(List<SamlKey> samlKeys) {
             List<KeyWithCert> result = new ArrayList<>();
