@@ -5,6 +5,10 @@ import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthenticationDetails;
 import org.cloudfoundry.identity.uaa.authentication.UaaPrincipal;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
+import org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils;
+import org.cloudfoundry.identity.uaa.oauth.provider.OAuth2Authentication;
+import org.cloudfoundry.identity.uaa.oauth.provider.TokenRequest;
+import org.cloudfoundry.identity.uaa.oauth.provider.code.JdbcAuthorizationCodeServices;
 import org.cloudfoundry.identity.uaa.util.TimeService;
 import org.cloudfoundry.identity.uaa.util.TimeServiceImpl;
 import org.cloudfoundry.identity.uaa.util.UaaStringUtils;
@@ -19,12 +23,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
-import org.springframework.security.oauth2.common.util.OAuth2Utils;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.TokenRequest;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
-import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidGrantException;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -89,7 +89,7 @@ class UaaTokenStoreTests {
         timeService = givenMockedTime();
         store = new UaaTokenStore(dataSource, timeService);
         legacyCodeServices = new JdbcAuthorizationCodeServices(dataSource);
-        BaseClientDetails client = new BaseClientDetails("clientid", null, "openid", "client_credentials,password", "oauth.login", null);
+        UaaClientDetails client = new UaaClientDetails("clientid", null, "openid", "client_credentials,password", "oauth.login", null);
         Map<String, String> parameters = new HashMap<>();
         parameters.put(OAuth2Utils.CLIENT_ID, client.getClientId());
 

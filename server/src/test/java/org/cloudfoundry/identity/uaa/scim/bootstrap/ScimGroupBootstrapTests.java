@@ -14,12 +14,15 @@ import org.cloudfoundry.identity.uaa.util.PredicateMatcher;
 import org.cloudfoundry.identity.uaa.util.TimeServiceImpl;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
+import org.cloudfoundry.identity.uaa.zone.JdbcIdentityZoneProvisioning;
+import org.cloudfoundry.identity.uaa.zone.beans.IdentityZoneManagerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
@@ -53,6 +56,9 @@ class ScimGroupBootstrapTests {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
+    NamedParameterJdbcTemplate namedJdbcTemplate;
+
+    @Autowired
     private LimitSqlAdapter limitSqlAdapter;
 
     @Autowired
@@ -61,10 +67,10 @@ class ScimGroupBootstrapTests {
     @BeforeEach
     void initScimGroupBootstrapTests() throws SQLException {
         JdbcTemplate template = jdbcTemplate;
-        JdbcPagingListFactory pagingListFactory = new JdbcPagingListFactory(template, limitSqlAdapter);
+        JdbcPagingListFactory pagingListFactory = new JdbcPagingListFactory(namedJdbcTemplate, limitSqlAdapter);
         DbUtils dbUtils = new DbUtils();
-        gDB = new JdbcScimGroupProvisioning(template, pagingListFactory, dbUtils);
-        uDB = new JdbcScimUserProvisioning(template, pagingListFactory, passwordEncoder);
+        gDB = new JdbcScimGroupProvisioning(namedJdbcTemplate, pagingListFactory, dbUtils);
+        uDB = new JdbcScimUserProvisioning(namedJdbcTemplate, pagingListFactory, passwordEncoder, new IdentityZoneManagerImpl(), new JdbcIdentityZoneProvisioning(jdbcTemplate));
         mDB = new JdbcScimGroupMembershipManager(template, new TimeServiceImpl(), uDB, null, dbUtils);
         mDB.setScimGroupProvisioning(gDB);
 

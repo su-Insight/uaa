@@ -2,9 +2,9 @@ package org.cloudfoundry.identity.uaa.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.cloudfoundry.identity.uaa.DefaultTestContext;
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.test.TestClient;
 import org.cloudfoundry.identity.uaa.test.UaaTestAccounts;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.PredicateMatcher;
 import org.cloudfoundry.identity.uaa.zone.MultitenantJdbcClientDetailsService;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -41,7 +40,7 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
     public WebApplicationContext webApplicationContext;
     private String adminClientTokenWithClientsWrite;
     private MultitenantJdbcClientDetailsService clients;
-    private RandomValueStringGenerator generator = new RandomValueStringGenerator(8);
+    private AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator(8);
     private String adminClientTokenWithClientsRead;
     @Autowired
     private MockMvc mockMvc;
@@ -75,7 +74,7 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
     }
 
     private String getUserAccessToken(String clientId) throws Exception {
-        BaseClientDetails newClient = new BaseClientDetails(clientId,
+        UaaClientDetails newClient = new UaaClientDetails(clientId,
                 "oauth",
                 "oauth.approvals",
                 "password",
@@ -100,10 +99,10 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
         String marissaToken = getUserAccessToken(clientId1);
 
         String clientId2 = generator.generate();
-        clients.addClientDetails(new BaseClientDetails(clientId2, null, null, null, null));
+        clients.addClientDetails(new UaaClientDetails(clientId2, null, null, null, null));
 
         String clientId3 = generator.generate();
-        clients.addClientDetails(new BaseClientDetails(clientId3, null, null, null, null));
+        clients.addClientDetails(new UaaClientDetails(clientId3, null, null, null, null));
         ClientMetadata client3Metadata = new ClientMetadata();
         client3Metadata.setClientId(clientId3);
         client3Metadata.setIdentityZoneId("uaa");
@@ -113,7 +112,7 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
         performUpdate(client3Metadata);
 
         String clientId4 = generator.generate();
-        clients.addClientDetails(new BaseClientDetails(clientId4, null, null, null, null));
+        clients.addClientDetails(new UaaClientDetails(clientId4, null, null, null, null));
         ClientMetadata client4Metadata = new ClientMetadata();
         client4Metadata.setClientId(clientId4);
         client4Metadata.setIdentityZoneId("uaa");
@@ -156,7 +155,7 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
     @Test
     void updateClientMetadata() throws Exception {
         String clientId = generator.generate();
-        clients.addClientDetails(new BaseClientDetails(clientId, null, null, null, null));
+        clients.addClientDetails(new UaaClientDetails(clientId, null, null, null, null));
 
         ClientMetadata updatedClientMetadata = new ClientMetadata();
         updatedClientMetadata.setClientId(clientId);
@@ -204,7 +203,7 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
     @Test
     void updateClientMetadata_WithNoClientIdInBody() throws Exception {
         String clientId = generator.generate();
-        clients.addClientDetails(new BaseClientDetails(clientId, null, null, null, null));
+        clients.addClientDetails(new UaaClientDetails(clientId, null, null, null, null));
 
         ClientMetadata updatedClientMetadata = new ClientMetadata();
         updatedClientMetadata.setClientId(null);
@@ -247,7 +246,7 @@ public class ClientMetadataAdminEndpointsMockMvcTest {
     @Test
     void updateClientMetadata_ClientIdMismatch() throws Exception {
         String clientId = generator.generate();
-        clients.addClientDetails(new BaseClientDetails(clientId, null, null, null, null));
+        clients.addClientDetails(new UaaClientDetails(clientId, null, null, null, null));
 
         ClientMetadata clientMetadata = new ClientMetadata();
         clientMetadata.setClientId("other-client-id");

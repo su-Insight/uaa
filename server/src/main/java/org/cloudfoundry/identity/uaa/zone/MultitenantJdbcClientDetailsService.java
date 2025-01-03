@@ -6,6 +6,10 @@ import org.cloudfoundry.identity.uaa.client.InvalidClientDetailsException;
 import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.cloudfoundry.identity.uaa.client.ClientJwtConfiguration;
 import org.cloudfoundry.identity.uaa.oauth.client.ClientConstants;
+import org.cloudfoundry.identity.uaa.oauth.common.util.DefaultJdbcListFactory;
+import org.cloudfoundry.identity.uaa.oauth.common.util.JdbcListFactory;
+import org.cloudfoundry.identity.uaa.provider.ClientAlreadyExistsException;
+import org.cloudfoundry.identity.uaa.provider.NoSuchClientException;
 import org.cloudfoundry.identity.uaa.resources.ResourceMonitor;
 import org.cloudfoundry.identity.uaa.security.ContextSensitiveOAuth2SecurityExpressionMethods;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
@@ -23,12 +27,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
-import org.springframework.security.oauth2.common.util.DefaultJdbcListFactory;
-import org.springframework.security.oauth2.common.util.JdbcListFactory;
-import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidClientException;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -89,7 +89,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
             "update oauth_client_details set ";
 
     private static final String DEFAULT_UPDATE_STATEMENT =
-            BASE_UPDATE_STATEMENT + CLIENT_FIELDS_FOR_UPDATE.replaceAll(", ", "=?, ")
+            BASE_UPDATE_STATEMENT + CLIENT_FIELDS_FOR_UPDATE.replace(", ", "=?, ")
                     + "=? where client_id = ? and identity_zone_id = ?";
 
     private static final String DEFAULT_UPDATE_SECRET_STATEMENT =
@@ -103,6 +103,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
 
     private static final String DELETE_CLIENTS_BY_ZONE =
             "delete from oauth_client_details where identity_zone_id = ?";
+    private static final String NO_CLIENT_FOUND_WITH_ID = "No client found with id = ";
 
     private RowMapper<ClientDetails> rowMapper = new ClientDetailsRowMapper();
 
@@ -115,13 +116,13 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
     private JdbcListFactory listFactory;
 
     public MultitenantJdbcClientDetailsService(
-            final JdbcTemplate jdbcTemplate,
+            final NamedParameterJdbcTemplate jdbcTemplate,
             final IdentityZoneManager identityZoneManager,
             final @Qualifier("cachingPasswordEncoder") PasswordEncoder passwordEncoder) {
         super(identityZoneManager);
         Assert.notNull(jdbcTemplate, "JDbcTemplate required");
-        this.jdbcTemplate = jdbcTemplate;
-        this.listFactory = new DefaultJdbcListFactory(new NamedParameterJdbcTemplate(jdbcTemplate));
+        this.jdbcTemplate = jdbcTemplate.getJdbcTemplate();
+        this.listFactory = new DefaultJdbcListFactory(jdbcTemplate);
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -147,17 +148,14 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
 
     private boolean exists(String clientId, String zoneId) {
         List<String> idResults = jdbcTemplate.queryForList(SINGLE_SELECT_STATEMENT, String.class, clientId, zoneId);
-        if (idResults != null && idResults.size() == 1) {
-            return true;
-        }
-        return false;
+        return idResults != null && idResults.size() == 1;
     }
 
     @Override
     public void updateClientDetails(ClientDetails clientDetails, String zoneId) throws NoSuchClientException {
         int count = jdbcTemplate.update(DEFAULT_UPDATE_STATEMENT, getFieldsForUpdate(clientDetails, zoneId));
         if (count != 1) {
-            throw new NoSuchClientException("No client found with id = " + clientDetails.getClientId() + " in identity zone id=" + zoneId);
+            throw new NoSuchClientException(NO_CLIENT_FOUND_WITH_ID + clientDetails.getClientId() + " in identity zone id=" + zoneId);
         }
     }
 
@@ -165,7 +163,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
     public void updateClientSecret(String clientId, String secret, String zoneId) throws NoSuchClientException {
         int count = jdbcTemplate.update(DEFAULT_UPDATE_SECRET_STATEMENT, secret != null ? passwordEncoder.encode(secret) : null, clientId, zoneId);
         if (count != 1) {
-            throw new NoSuchClientException("No client found with id = " + clientId);
+            throw new NoSuchClientException(NO_CLIENT_FOUND_WITH_ID + clientId);
         }
     }
 
@@ -173,7 +171,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
     public void updateClientJwtConfig(String clientId, String keyConfig, String zoneId) throws NoSuchClientException {
         int count = jdbcTemplate.update(DEFAULT_UPDATE_CLIENT_JWT_CONFIG_STATEMENT, keyConfig, clientId, zoneId);
         if (count != 1) {
-            throw new NoSuchClientException("No client found with id = " + clientId);
+            throw new NoSuchClientException(NO_CLIENT_FOUND_WITH_ID + clientId);
         }
     }
 
@@ -201,7 +199,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
 
     private Object[] getFieldsForUpdate(ClientDetails clientDetails, String zoneId) {
 
-        Map<String, Object> additionalInformation = new HashMap(clientDetails.getAdditionalInformation());
+        Map<String, Object> additionalInformation = new HashMap<>(clientDetails.getAdditionalInformation());
         Collection<String> requiredGroups = (Collection<String>) additionalInformation.remove(REQUIRED_USER_GROUPS);
 
         String json;
@@ -242,7 +240,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
         if (clientDetails.isAutoApprove("true")) {
             return "true"; // all scopes autoapproved
         }
-        Set<String> scopes = new HashSet<String>();
+        Set<String> scopes = new HashSet<>();
         for (String scope : clientDetails.getScope()) {
             if (clientDetails.isAutoApprove(scope)) {
                 scopes.add(scope);
@@ -260,7 +258,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
     public int deleteByClient(String clientId, String zoneId) {
         int count = jdbcTemplate.update(DEFAULT_DELETE_STATEMENT, clientId, zoneId);
         if (count == 0) {
-            throw new NoSuchClientException("No client found with id = " + clientId);
+            throw new NoSuchClientException(NO_CLIENT_FOUND_WITH_ID + clientId);
         }
         return count;
     }
@@ -279,7 +277,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
                 .append(encodedNewSecret);
         int count = jdbcTemplate.update(DEFAULT_UPDATE_SECRET_STATEMENT, newSecretBuilder.toString(), clientId, zoneId);
         if (count != 1) {
-            throw new NoSuchClientException("No client found with id = " + clientId);
+            throw new NoSuchClientException(NO_CLIENT_FOUND_WITH_ID + clientId);
         }
     }
 
@@ -297,8 +295,8 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
     public void addClientJwtConfig(String clientId, String keyConfig, String zoneId, boolean overwrite) throws NoSuchClientException {
         ClientJwtConfiguration clientJwtConfiguration = ClientJwtConfiguration.parse(keyConfig);
         if (clientJwtConfiguration != null) {
-            UaaClientDetails uaaClientDetails = (UaaClientDetails) loadClientByClientId(clientId, zoneId);
-            ClientJwtConfiguration existingConfig = ClientJwtConfiguration.readValue(uaaClientDetails);
+            UaaClientDetails uaaUaaClientDetails = (UaaClientDetails) loadClientByClientId(clientId, zoneId);
+            ClientJwtConfiguration existingConfig = ClientJwtConfiguration.readValue(uaaUaaClientDetails);
             ClientJwtConfiguration result = ClientJwtConfiguration.merge(existingConfig, clientJwtConfiguration, overwrite);
             if (result != null) {
                 updateClientJwtConfig(clientId, JsonUtils.writeValueAsString(result), zoneId);
@@ -317,8 +315,8 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
             clientJwtConfiguration = new ClientJwtConfiguration(keyConfig, null);
         }
         if (clientJwtConfiguration != null) {
-            UaaClientDetails uaaClientDetails = (UaaClientDetails) loadClientByClientId(clientId, zoneId);
-            ClientJwtConfiguration result = ClientJwtConfiguration.delete(ClientJwtConfiguration.readValue(uaaClientDetails), clientJwtConfiguration);
+            UaaClientDetails uaaUaaClientDetails = (UaaClientDetails) loadClientByClientId(clientId, zoneId);
+            ClientJwtConfiguration result = ClientJwtConfiguration.delete(ClientJwtConfiguration.readValue(uaaUaaClientDetails), clientJwtConfiguration);
             updateClientJwtConfig(clientId, result != null ? JsonUtils.writeValueAsString(result) : null, zoneId);
         } else {
             throw new InvalidClientDetailsException("Invalid jwt configuration configuration");
@@ -385,7 +383,7 @@ public class MultitenantJdbcClientDetailsService extends MultitenantClientServic
 
             //required_user_groups
             String requiredUserGroups = rs.getString(14);
-            if (StringUtils.isEmpty(requiredUserGroups)) {
+            if (!StringUtils.hasLength(requiredUserGroups)) {
                 details.addAdditionalInformation(REQUIRED_USER_GROUPS, emptySet());
             } else {
                 details.addAdditionalInformation(REQUIRED_USER_GROUPS, commaDelimitedListToSet(requiredUserGroups));

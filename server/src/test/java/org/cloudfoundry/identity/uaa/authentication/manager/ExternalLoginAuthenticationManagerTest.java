@@ -5,7 +5,6 @@ import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthenticationDetails;
 import org.cloudfoundry.identity.uaa.authentication.UaaPrincipal;
 import org.cloudfoundry.identity.uaa.authentication.event.IdentityProviderAuthenticationSuccessEvent;
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.provider.ExternalIdentityProviderDefinition;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
 import org.cloudfoundry.identity.uaa.provider.IdentityProviderProvisioning;
@@ -16,6 +15,7 @@ import org.cloudfoundry.identity.uaa.user.UaaUser;
 import org.cloudfoundry.identity.uaa.user.UaaUserDatabase;
 import org.cloudfoundry.identity.uaa.user.UaaUserPrototype;
 import org.cloudfoundry.identity.uaa.user.UserInfo;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -65,7 +65,7 @@ public class ExternalLoginAuthenticationManagerTest  {
     private String userName="testUserName";
     private String password = "";
     private UaaUser user;
-    private String userId = new RandomValueStringGenerator().generate();
+    private String userId = new AlphanumericRandomValueStringGenerator().generate();
     private ArgumentCaptor<ApplicationEvent> userArgumentCaptor;
     private IdentityProviderProvisioning providerProvisioning;
     private MultiValueMap<String, String> userAttributes;
@@ -171,7 +171,7 @@ public class ExternalLoginAuthenticationManagerTest  {
         UaaAuthenticationDetails uaaAuthenticationDetails = mock(UaaAuthenticationDetails.class);
         when(uaaAuthenticationDetails.getOrigin()).thenReturn(origin);
         when(uaaAuthenticationDetails.getClientId()).thenReturn(null);
-        when(uaaAuthenticationDetails.getSessionId()).thenReturn(new RandomValueStringGenerator().generate());
+        when(uaaAuthenticationDetails.getSessionId()).thenReturn(new AlphanumericRandomValueStringGenerator().generate());
         when(inputAuth.getDetails()).thenReturn(uaaAuthenticationDetails);
 
         Authentication result = manager.authenticate(inputAuth);
@@ -195,7 +195,7 @@ public class ExternalLoginAuthenticationManagerTest  {
         UaaAuthenticationDetails uaaAuthenticationDetails = mock(UaaAuthenticationDetails.class);
         when(uaaAuthenticationDetails.getOrigin()).thenReturn(origin);
         when(uaaAuthenticationDetails.getClientId()).thenReturn(null);
-        when(uaaAuthenticationDetails.getSessionId()).thenReturn(new RandomValueStringGenerator().generate());
+        when(uaaAuthenticationDetails.getSessionId()).thenReturn(new AlphanumericRandomValueStringGenerator().generate());
         when(inputAuth.getDetails()).thenReturn(uaaAuthenticationDetails);
         when(user.getUsername()).thenReturn(email);
         when(uaaUserDatabase.retrieveUserByName(email, origin))
@@ -217,7 +217,7 @@ public class ExternalLoginAuthenticationManagerTest  {
         UaaAuthenticationDetails uaaAuthenticationDetails = mock(UaaAuthenticationDetails.class);
         when(uaaAuthenticationDetails.getOrigin()).thenReturn(origin);
         when(uaaAuthenticationDetails.getClientId()).thenReturn(null);
-        when(uaaAuthenticationDetails.getSessionId()).thenReturn(new RandomValueStringGenerator().generate());
+        when(uaaAuthenticationDetails.getSessionId()).thenReturn(new AlphanumericRandomValueStringGenerator().generate());
         when(inputAuth.getDetails()).thenReturn(uaaAuthenticationDetails);
         when(uaaUserDatabase.retrieveUserByName(anyString(), eq(origin))).thenReturn(null);
         when(userDetails.getUsername()).thenReturn(null);
@@ -267,6 +267,38 @@ public class ExternalLoginAuthenticationManagerTest  {
         assertEquals(origin, event.getUser().getOrigin());
         assertEquals(actual, event.getUser().getEmail());
 
+    }
+
+    @Test
+    public void testEmptyEmail() {
+        String name = "filip";
+        String actual = name +  "@user.from."+origin+".cf";
+        String email = "";
+        userDetails = mock(UserDetails.class, withSettings().extraInterfaces(Mailable.class));
+        when(((Mailable)userDetails).getEmailAddress()).thenReturn(email);
+        mockUserDetails(userDetails);
+        mockUaaWithUser();
+
+        when(userDetails.getUsername()).thenReturn(name);
+        when(user.getUsername()).thenReturn(name);
+        when(uaaUserDatabase.retrieveUserByName(eq(name),eq(origin)))
+            .thenReturn(null)
+            .thenReturn(user);
+
+        Authentication result = manager.authenticate(inputAuth);
+        assertNotNull(result);
+        assertEquals(UaaAuthentication.class, result.getClass());
+        UaaAuthentication uaaAuthentication = (UaaAuthentication)result;
+        assertEquals(name,uaaAuthentication.getPrincipal().getName());
+        assertEquals(origin, uaaAuthentication.getPrincipal().getOrigin());
+        assertEquals(userId, uaaAuthentication.getPrincipal().getId());
+
+        userArgumentCaptor = ArgumentCaptor.forClass(ApplicationEvent.class);
+        verify(applicationEventPublisher,times(2)).publishEvent(userArgumentCaptor.capture());
+        assertEquals(2,userArgumentCaptor.getAllValues().size());
+        NewUserAuthenticatedEvent event = (NewUserAuthenticatedEvent)userArgumentCaptor.getAllValues().get(0);
+        assertEquals(origin, event.getUser().getOrigin());
+        assertEquals(actual, event.getUser().getEmail());
     }
 
     @Test(expected = BadCredentialsException.class)

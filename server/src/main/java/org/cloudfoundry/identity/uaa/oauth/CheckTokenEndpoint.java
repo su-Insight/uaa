@@ -2,10 +2,12 @@ package org.cloudfoundry.identity.uaa.oauth;
 
 import org.cloudfoundry.identity.uaa.error.ParameterParsingException;
 import org.cloudfoundry.identity.uaa.error.UaaException;
-import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
+import org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken;
+import org.cloudfoundry.identity.uaa.oauth.provider.error.WebResponseExceptionTranslator;
+import org.cloudfoundry.identity.uaa.oauth.provider.token.ResourceServerTokenServices;
 import org.cloudfoundry.identity.uaa.oauth.token.Claims;
-import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.TimeService;
+import org.cloudfoundry.identity.uaa.util.UaaTokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,14 +16,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.exceptions.InvalidScopeException;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
-import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidScopeException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.OAuth2Exception;
+import org.cloudfoundry.identity.uaa.oauth.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -34,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -116,9 +115,9 @@ public class CheckTokenEndpoint implements InitializingBean {
             throw new InvalidTokenException((x.getMessage()));
         }
 
-        Claims response = getClaimsForToken(token.getValue());
+        Claims response = UaaTokenUtils.getClaimsFromTokenString(token.getValue());
 
-        List<String> claimScopes = response.getScope().stream().map(String::toLowerCase).collect(Collectors.toList());
+        List<String> claimScopes = Optional.ofNullable(response.getScope()).orElse(emptyList()).stream().map(String::toLowerCase).collect(Collectors.toList());
 
         List<String> missingScopes = new ArrayList<>();
         for (String expectedScope : scopes) {
@@ -154,24 +153,6 @@ public class CheckTokenEndpoint implements InitializingBean {
         } else {
             throw new HttpRequestMethodNotSupportedException(request.getMethod());
         }
-    }
-
-    private Claims getClaimsForToken(String token) {
-        Jwt tokenJwt;
-        try {
-            tokenJwt = JwtHelper.decode(token);
-        } catch (Throwable t) {
-            throw new InvalidTokenException("Invalid token (could not decode): " + token);
-        }
-
-        Claims claims;
-        try {
-            claims = JsonUtils.readValue(tokenJwt.getClaims(), Claims.class);
-        } catch (JsonUtils.JsonUtilException e) {
-            throw new InvalidTokenException("Cannot read token claims", e);
-        }
-
-        return claims;
     }
 
     @ExceptionHandler(InvalidTokenException.class)

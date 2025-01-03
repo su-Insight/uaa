@@ -12,10 +12,17 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.cloudfoundry.identity.uaa.ServerRunning;
 import org.cloudfoundry.identity.uaa.account.UserAccountStatus;
 import org.cloudfoundry.identity.uaa.account.UserInfoResponse;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.integration.feature.TestClient;
-import org.cloudfoundry.identity.uaa.mfa.GoogleMfaProviderConfig;
-import org.cloudfoundry.identity.uaa.mfa.MfaProvider;
+import org.cloudfoundry.identity.uaa.oauth.client.OAuth2RestTemplate;
+import org.cloudfoundry.identity.uaa.oauth.client.http.OAuth2ErrorHandler;
+import org.cloudfoundry.identity.uaa.oauth.client.resource.AuthorizationCodeResourceDetails;
+import org.cloudfoundry.identity.uaa.oauth.client.resource.ClientCredentialsResourceDetails;
+import org.cloudfoundry.identity.uaa.oauth.common.AuthenticationScheme;
+import org.cloudfoundry.identity.uaa.oauth.common.DefaultOAuth2AccessToken;
+import org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtClientAuthentication;
 import org.cloudfoundry.identity.uaa.provider.AbstractExternalOAuthIdentityProviderDefinition;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
@@ -38,36 +45,49 @@ import org.hamcrest.Description;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.codec.Base64;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorHandler;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
-import org.springframework.security.oauth2.common.AuthenticationScheme;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -78,11 +98,14 @@ import static org.cloudfoundry.identity.uaa.security.web.CookieBasedCsrfTokenRep
 import static org.cloudfoundry.identity.uaa.util.UaaHttpRequestUtils.createRequestFactory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.security.oauth2.common.util.OAuth2Utils.USER_OAUTH_APPROVAL;
+import static org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils.USER_OAUTH_APPROVAL;
 import static org.springframework.util.StringUtils.hasText;
 
 public class IntegrationTestUtils {
@@ -188,27 +211,27 @@ public class IntegrationTestUtils {
         rest.exchange(request, Void.class);
     }
 
-    public static MfaProvider createGoogleMfaProvider(String url, String token, MfaProvider<GoogleMfaProviderConfig> provider, String zoneSwitchId) {
-        RestTemplate template = new RestTemplate();
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Accept", APPLICATION_JSON_VALUE);
-        headers.add("Authorization", "bearer " + token);
-        headers.add("Content-Type", APPLICATION_JSON_VALUE);
-        if (hasText(zoneSwitchId)) {
-            headers.add(IdentityZoneSwitchingFilter.HEADER, zoneSwitchId);
-        }
-        HttpEntity getHeaders = new HttpEntity<>(provider, headers);
-        ResponseEntity<MfaProvider> providerResponse = template.exchange(
-                url + "/mfa-providers",
-                HttpMethod.POST,
-                getHeaders,
-                MfaProvider.class
-        );
-        if (providerResponse.getStatusCode() == HttpStatus.CREATED) {
-            return providerResponse.getBody();
-        }
-        throw new RuntimeException("Invalid return code:" + providerResponse.getStatusCode());
+    public static boolean zoneExists(final String baseUrl, final String id, final String adminToken) throws URISyntaxException {
+        final RestTemplate restTemplate = new RestTemplate(createRequestFactory(true, 60_000));
 
+        final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(AUTHORIZATION, "Bearer " + adminToken);
+        headers.add(ACCEPT, APPLICATION_JSON_VALUE);
+
+        final RequestEntity<Map<Object, Object>> request = new RequestEntity<>(
+                headers,
+                HttpMethod.GET,
+                new URI(baseUrl + "/identity-zones/" + id)
+        );
+        try {
+            restTemplate.exchange(request, Map.class);
+        } catch (final RestClientException e) {
+            if (e instanceof HttpClientErrorException.NotFound) {
+                return false;
+            }
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     public static class RegexMatcher extends TypeSafeMatcher<String> {
@@ -686,7 +709,7 @@ public class IntegrationTestUtils {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
-    public static BaseClientDetails getClient(String token,
+    public static UaaClientDetails getClient(String token,
                                               String url,
                                               String clientId) {
         RestTemplate template = new RestTemplate();
@@ -697,20 +720,20 @@ public class IntegrationTestUtils {
 
         HttpEntity getHeaders = new HttpEntity<>(null, headers);
 
-        ResponseEntity<BaseClientDetails> response = template.exchange(
+        ResponseEntity<UaaClientDetails> response = template.exchange(
                 url + "/oauth/clients/" + clientId,
                 HttpMethod.GET,
                 getHeaders,
-                BaseClientDetails.class
+                UaaClientDetails.class
         );
 
         return response.getBody();
     }
 
-    public static BaseClientDetails createClientAsZoneAdmin(String zoneAdminToken,
+    public static UaaClientDetails createClientAsZoneAdmin(String zoneAdminToken,
                                                             String url,
                                                             String zoneId,
-                                                            BaseClientDetails client) {
+                                                            UaaClientDetails client) {
 
         RestTemplate template = new RestTemplate();
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -726,21 +749,21 @@ public class IntegrationTestUtils {
                 String.class
         );
         if (clientCreate.getStatusCode() == HttpStatus.CREATED) {
-            return JsonUtils.readValue(clientCreate.getBody(), BaseClientDetails.class);
+            return JsonUtils.readValue(clientCreate.getBody(), UaaClientDetails.class);
         }
         throw new RuntimeException("Invalid return code:" + clientCreate.getStatusCode());
     }
 
-    public static BaseClientDetails createClient(String adminToken,
+    public static UaaClientDetails createClient(String adminToken,
                                                  String url,
-                                                 BaseClientDetails client) {
+                                                 UaaClientDetails client) {
         return createOrUpdateClient(adminToken, url, null, client);
     }
 
-    public static BaseClientDetails createOrUpdateClient(String adminToken,
+    public static UaaClientDetails createOrUpdateClient(String adminToken,
                                                          String url,
                                                          String switchToZoneId,
-                                                         BaseClientDetails client) {
+                                                         UaaClientDetails client) {
 
         RestTemplate template = new RestTemplate();
         template.setErrorHandler(new DefaultResponseErrorHandler() {
@@ -764,7 +787,7 @@ public class IntegrationTestUtils {
                 String.class
         );
         if (clientCreate.getStatusCode() == HttpStatus.CREATED) {
-            return JsonUtils.readValue(clientCreate.getBody(), BaseClientDetails.class);
+            return JsonUtils.readValue(clientCreate.getBody(), UaaClientDetails.class);
         } else if (clientCreate.getStatusCode() == HttpStatus.CONFLICT) {
             HttpEntity putHeaders = new HttpEntity<>(JsonUtils.writeValueAsBytes(client), headers);
             ResponseEntity<String> clientUpdate = template.exchange(
@@ -774,7 +797,7 @@ public class IntegrationTestUtils {
                     String.class
             );
             if (clientUpdate.getStatusCode() == HttpStatus.OK) {
-                return JsonUtils.readValue(clientCreate.getBody(), BaseClientDetails.class);
+                return JsonUtils.readValue(clientCreate.getBody(), UaaClientDetails.class);
             } else {
                 throw new RuntimeException("Invalid update return code:" + clientUpdate.getStatusCode());
             }
@@ -784,7 +807,7 @@ public class IntegrationTestUtils {
 
     public static void updateClient(String url,
                                     String token,
-                                    BaseClientDetails client) {
+                                    UaaClientDetails client) {
 
         RestTemplate template = new RestTemplate();
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
@@ -794,11 +817,11 @@ public class IntegrationTestUtils {
 
         HttpEntity getHeaders = new HttpEntity<>(client, headers);
 
-        ResponseEntity<BaseClientDetails> response = template.exchange(
+        ResponseEntity<UaaClientDetails> response = template.exchange(
                 url + "/oauth/clients/" + client.getClientId(),
                 HttpMethod.PUT,
                 getHeaders,
-                BaseClientDetails.class
+                UaaClientDetails.class
         );
 
         response.getBody();
@@ -1160,8 +1183,8 @@ public class IntegrationTestUtils {
             headers.add("Cookie", cookie.getName() + "=" + cookie.getValue());
         }
         return headers;
-    } 	
-  
+    }
+
     public static String getAuthorizationResponse(ServerRunning serverRunning,
 			  String clientId,
 			  String username,
@@ -1252,7 +1275,7 @@ public class IntegrationTestUtils {
     	}
     	return location;
     }
-    
+
     public static ResponseEntity<Map> getTokens(ServerRunning serverRunning,
             									UaaTestAccounts testAccounts,
             									String clientId,
@@ -1567,6 +1590,26 @@ public class IntegrationTestUtils {
         public StatelessRequestFactory() {
             super(true, true);
         }
+    }
+
+    public static HttpHeaders getAuthenticatedHeaders(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + token);
+        return headers;
+    }
+
+    public static String createClientAdminTokenInZone(String baseUrl, String uaaAdminToken, String zoneId, IdentityZoneConfiguration config) {
+        RestTemplate identityClient = getClientCredentialsTemplate(getClientCredentialsResource(baseUrl,
+                new String[] { "zones.write", "zones.read", "scim.zones" }, "identity", "identitysecret"));
+        createZoneOrUpdateSubdomain(identityClient, baseUrl, zoneId, zoneId, config);
+        String zoneUrl = baseUrl.replace("localhost", zoneId + ".localhost");
+        UaaClientDetails zoneClient = new UaaClientDetails("admin-client-in-zone", null, "openid",
+            "authorization_code,client_credentials", "uaa.admin,scim.read,scim.write,zones.testzone1.admin ", zoneUrl);
+        zoneClient.setClientSecret("admin-secret-in-zone");
+        createOrUpdateClient(uaaAdminToken, baseUrl, zoneId, zoneClient);
+        return getClientCredentialsToken(zoneUrl, "admin-client-in-zone", "admin-secret-in-zone");
     }
 
 }

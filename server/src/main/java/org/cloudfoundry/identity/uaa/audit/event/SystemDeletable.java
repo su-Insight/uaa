@@ -16,15 +16,13 @@
 package org.cloudfoundry.identity.uaa.audit.event;
 
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
-import org.cloudfoundry.identity.uaa.mfa.MfaProvider;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.user.UaaUser;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
-import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.oauth2.provider.ClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 
 public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
     default void onApplicationEvent(EntityDeletedEvent<?> event) {
@@ -64,10 +62,6 @@ public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
             String zoneId = ((ScimUser) event.getDeleted()).getZoneId();
             getLogger().debug(String.format("Received SCIM user deletion event for zone_id:%s and user:%s", zoneId, userId));
             deleteByUser(userId, zoneId);
-        } else if (event.getDeleted() instanceof MfaProvider<?>) {
-            String providerId = ((MfaProvider) event.getDeleted()).getId();
-            String zoneId = IdentityZoneHolder.get().getId();
-            deleteByMfaProvider(providerId, zoneId);
         } else {
             getLogger().debug("Unsupported deleted event for deletion of object:" + event.getDeleted());
         }
@@ -92,10 +86,6 @@ public interface SystemDeletable extends ApplicationListener<AbstractUaaEvent> {
     }
 
     default int deleteByUser(String userId, String zoneId) {
-        return 0;
-    }
-
-    default int deleteByMfaProvider(String id, String zoneId) {
         return 0;
     }
 

@@ -15,15 +15,15 @@
 
 package org.cloudfoundry.identity.uaa.audit.event;
 
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.user.UaaUser;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -35,7 +35,7 @@ class EntityDeletedEventTest {
 
     @BeforeEach
     void setUp() {
-        randomId = new RandomValueStringGenerator().generate();
+        randomId = new AlphanumericRandomValueStringGenerator().generate();
     }
 
     @Test
@@ -55,11 +55,11 @@ class EntityDeletedEventTest {
     }
 
     @Test
-    void getAuditEvent_BaseClientDetails() {
-        BaseClientDetails mockBaseClientDetails = mock(BaseClientDetails.class);
-        when(mockBaseClientDetails.getClientId()).thenReturn(randomId);
+    void getAuditEvent_UaaBaseClientDetails() {
+        UaaClientDetails mockUaaClientDetails = mock(UaaClientDetails.class);
+        when(mockUaaClientDetails.getClientId()).thenReturn(randomId);
 
-        checkAuditEventData(mockBaseClientDetails, BaseClientDetails.class, randomId);
+        checkAuditEventData(mockUaaClientDetails, UaaClientDetails.class, randomId);
     }
 
     @Test

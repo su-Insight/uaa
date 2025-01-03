@@ -1,13 +1,13 @@
 package org.cloudfoundry.identity.uaa.oauth.beans;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.identity.uaa.util.UaaUrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.common.exceptions.RedirectMismatchException;
-import org.springframework.security.oauth2.provider.ClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.OAuth2Exception;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.RedirectMismatchException;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -178,7 +178,7 @@ public class LegacyRedirectResolver extends org.cloudfoundry.identity.uaa.oauth.
             return matcher.redirectMatches(requestedRedirect, redirectUri);
         }
 
-        private class CurrentVersionOfSpringResolverWithMethodExposedAndSubdomainsOff extends org.springframework.security.oauth2.provider.endpoint.DefaultRedirectResolver {
+        private class CurrentVersionOfSpringResolverWithMethodExposedAndSubdomainsOff extends org.cloudfoundry.identity.uaa.oauth.provider.endpoint.DefaultRedirectResolver {
             CurrentVersionOfSpringResolverWithMethodExposedAndSubdomainsOff() {
                 super();
                 setMatchSubdomains(false);

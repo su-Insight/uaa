@@ -3,6 +3,7 @@ package org.cloudfoundry.identity.uaa.scim.endpoints;
 import com.jayway.jsonpath.JsonPathException;
 import org.cloudfoundry.identity.uaa.account.UserAccountStatus;
 import org.cloudfoundry.identity.uaa.account.event.UserAccountUnlockedEvent;
+import org.cloudfoundry.identity.uaa.alias.EntityAliasFailedException;
 import org.cloudfoundry.identity.uaa.approval.Approval;
 import org.cloudfoundry.identity.uaa.approval.ApprovalStore;
 import org.cloudfoundry.identity.uaa.audit.event.EntityDeletedEvent;
@@ -10,7 +11,8 @@ import org.cloudfoundry.identity.uaa.codestore.ExpiringCode;
 import org.cloudfoundry.identity.uaa.codestore.ExpiringCodeStore;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.error.UaaException;
-import org.cloudfoundry.identity.uaa.mfa.UserMfaCredentialsProvisioning;
+import org.cloudfoundry.identity.uaa.oauth.provider.OAuth2Authentication;
+import org.cloudfoundry.identity.uaa.oauth.provider.expression.OAuth2ExpressionUtils;
 import org.cloudfoundry.identity.uaa.provider.IdentityProvider;
 import org.cloudfoundry.identity.uaa.provider.IdentityProviderProvisioning;
 import org.cloudfoundry.identity.uaa.resources.AttributeNameMapper;
@@ -25,6 +27,7 @@ import org.cloudfoundry.identity.uaa.scim.ScimCore;
 import org.cloudfoundry.identity.uaa.scim.ScimGroup;
 import org.cloudfoundry.identity.uaa.scim.ScimGroupMembershipManager;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
+import org.cloudfoundry.identity.uaa.scim.ScimUserAliasHandler;
 import org.cloudfoundry.identity.uaa.scim.ScimUserProvisioning;
 import org.cloudfoundry.identity.uaa.scim.exception.InvalidScimResourceException;
 import org.cloudfoundry.identity.uaa.scim.exception.ScimException;
@@ -57,11 +60,12 @@ import org.springframework.jmx.export.annotation.ManagedMetric;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.jmx.support.MetricType;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.expression.OAuth2ExpressionUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -85,13 +89,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.cloudfoundry.identity.uaa.codestore.ExpiringCodeType.REGISTRATION;
+import static org.springframework.util.StringUtils.hasText;
 import static org.springframework.util.StringUtils.isEmpty;
+
+import lombok.Getter;
 
 /**
  * User provisioning and query endpoints. Implements the core API from the
@@ -119,14 +127,23 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
     private final Map<Class<? extends Exception>, HttpStatus> statuses;
     private final PasswordValidator passwordValidator;
     private final ExpiringCodeStore codeStore;
-    private final UserMfaCredentialsProvisioning mfaCredentialsProvisioning;
     private final ApprovalStore approvalStore;
     private final ScimGroupMembershipManager membershipManager;
+    private final boolean aliasEntitiesEnabled;
+    @Getter
     private final int userMaxCount;
     private final HttpMessageConverter<?>[] messageConverters;
+    /**
+     * Update operations performed on alias users are not considered.
+     */
     private final AtomicInteger scimUpdates;
+    /**
+     * Deletion operations performed on alias users are not considered.
+     */
     private final AtomicInteger scimDeletes;
     private final Map<String, AtomicInteger> errorCounts;
+    private final ScimUserAliasHandler aliasHandler;
+    private final TransactionTemplate transactionTemplate;
 
     private ApplicationEventPublisher publisher;
 
@@ -142,10 +159,13 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
             final @Qualifier("exceptionToStatusMap") Map<Class<? extends Exception>, HttpStatus> statuses,
             final PasswordValidator passwordValidator,
             final ExpiringCodeStore codeStore,
-            final UserMfaCredentialsProvisioning mfaCredentialsProvisioning,
             final ApprovalStore approvalStore,
             final ScimGroupMembershipManager membershipManager,
-            final @Value("${userMaxCount:500}") int userMaxCount) {
+            final ScimUserAliasHandler aliasHandler,
+            final TransactionTemplate transactionTemplate,
+            final @Qualifier("aliasEntitiesEnabled") boolean aliasEntitiesEnabled,
+            final @Value("${userMaxCount:500}") int userMaxCount
+    ) {
         if (userMaxCount <= 0) {
             throw new IllegalArgumentException(
                     String.format("Invalid \"userMaxCount\" value (got %d). Should be positive number.", userMaxCount)
@@ -160,13 +180,15 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         this.statuses = statuses;
         this.passwordValidator = passwordValidator;
         this.codeStore = codeStore;
-        this.mfaCredentialsProvisioning = mfaCredentialsProvisioning;
         this.approvalStore = approvalStore;
+        this.aliasEntitiesEnabled = aliasEntitiesEnabled;
         this.userMaxCount = userMaxCount;
         this.membershipManager = membershipManager;
         this.messageConverters = new HttpMessageConverter[] {
                 new ExceptionReportHttpMessageConverter()
         };
+        this.aliasHandler = aliasHandler;
+        this.transactionTemplate = transactionTemplate;
         scimUpdates = new AtomicInteger();
         scimDeletes = new AtomicInteger();
         errorCounts = new ConcurrentHashMap<>();
@@ -225,15 +247,52 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
             passwordValidator.validate(user.getPassword());
         }
 
-        ScimUser scimUser = scimUserProvisioning.createUser(user, user.getPassword(), identityZoneManager.getCurrentIdentityZoneId());
+        user.setZoneId(identityZoneManager.getCurrentIdentityZoneId());
+
+        if (!aliasHandler.aliasPropertiesAreValid(user, null)) {
+            throw new ScimException("Alias ID and/or alias ZID are invalid.", HttpStatus.BAD_REQUEST);
+        }
+
+        final ScimUser scimUser;
+        if (aliasEntitiesEnabled) {
+            // create the user and an alias for it if necessary
+            scimUser = createScimUserWithAliasHandling(user);
+        } else {
+            // create the user without alias handling
+            scimUser = scimUserProvisioning.createUser(user, user.getPassword(), identityZoneManager.getCurrentIdentityZoneId());
+        }
+
         if (user.getApprovals() != null) {
             for (Approval approval : user.getApprovals()) {
                 approval.setUserId(scimUser.getId());
                 approvalStore.addApproval(approval, identityZoneManager.getCurrentIdentityZoneId());
             }
         }
-        scimUser = syncApprovals(syncGroups(scimUser));
-        addETagHeader(response, scimUser);
+        final ScimUser scimUserWithApprovalsAndGroups = syncApprovals(syncGroups(scimUser));
+        addETagHeader(response, scimUserWithApprovalsAndGroups);
+        return scimUserWithApprovalsAndGroups;
+    }
+
+    private ScimUser createScimUserWithAliasHandling(final ScimUser user) {
+        final ScimUser scimUser;
+        try {
+            scimUser = transactionTemplate.execute(txStatus -> {
+                final ScimUser originalScimUser = scimUserProvisioning.createUser(
+                        user,
+                        user.getPassword(),
+                        identityZoneManager.getCurrentIdentityZoneId()
+                );
+                return aliasHandler.ensureConsistencyOfAliasEntity(
+                        originalScimUser,
+                        null
+                );
+            });
+        } catch (final EntityAliasFailedException e) {
+            throw new ScimException(e.getMessage(), e, HttpStatus.resolve(e.getHttpStatus()));
+        }
+        if (scimUser == null) {
+            throw new IllegalStateException("The persisted user is not present after handling the alias.");
+        }
         return scimUser;
     }
 
@@ -258,15 +317,47 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         int version = getVersion(userId, etag);
         user.setVersion(version);
 
-        try {
-            ScimUser updated = scimUserProvisioning.update(userId, user, identityZoneManager.getCurrentIdentityZoneId());
-            scimUpdates.incrementAndGet();
-            ScimUser scimUser = syncApprovals(syncGroups(updated));
-            addETagHeader(httpServletResponse, scimUser);
-            return scimUser;
-        } catch (OptimisticLockingFailureException e) {
-            throw new ScimResourceConflictException(e.getMessage());
+        final ScimUser existingScimUser = scimUserProvisioning.retrieve(
+                userId,
+                identityZoneManager.getCurrentIdentityZoneId()
+        );
+        if (!aliasHandler.aliasPropertiesAreValid(user, existingScimUser)) {
+            throw new ScimException("The fields 'aliasId' and/or 'aliasZid' are invalid.", HttpStatus.BAD_REQUEST);
         }
+
+        final ScimUser scimUser;
+        try {
+            if (aliasEntitiesEnabled) {
+                // update user and create/update alias, if necessary
+                scimUser = updateUserWithAliasHandling(userId, user, existingScimUser);
+            } else {
+                // update user without alias handling
+                scimUser = scimUserProvisioning.update(userId, user, identityZoneManager.getCurrentIdentityZoneId());
+            }
+        } catch (final OptimisticLockingFailureException e) {
+            throw new ScimResourceConflictException(e.getMessage());
+        } catch (final EntityAliasFailedException e) {
+            throw new ScimException(e.getMessage(), e, HttpStatus.resolve(e.getHttpStatus()));
+        }
+
+        scimUpdates.incrementAndGet();
+        final ScimUser scimUserWithApprovalsAndGroups = syncApprovals(syncGroups(scimUser));
+        addETagHeader(httpServletResponse, scimUserWithApprovalsAndGroups);
+        return scimUserWithApprovalsAndGroups;
+    }
+
+    private ScimUser updateUserWithAliasHandling(final String userId, final ScimUser user, final ScimUser existingUser) {
+        return transactionTemplate.execute(txStatus -> {
+            final ScimUser updatedOriginalUser = scimUserProvisioning.update(
+                    userId,
+                    user,
+                    identityZoneManager.getCurrentIdentityZoneId()
+            );
+            return aliasHandler.ensureConsistencyOfAliasEntity(
+                    updatedOriginalUser,
+                    existingUser
+            );
+        });
     }
 
     @RequestMapping(value = "/Users/{userId}", method = RequestMethod.PATCH)
@@ -299,6 +390,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
 
     @RequestMapping(value = "/Users/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
+    @Transactional
     public ScimUser deleteUser(@PathVariable String userId,
                                @RequestHeader(value = "If-Match", required = false) String etag,
                                HttpServletRequest request,
@@ -306,6 +398,15 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         int version = etag == null ? -1 : getVersion(userId, etag);
         ScimUser user = getUser(userId, httpServletResponse);
         throwWhenUserManagementIsDisallowed(user.getOrigin(), request);
+
+        final boolean userHasAlias = hasText(user.getAliasZid());
+        if (userHasAlias && !aliasEntitiesEnabled) {
+            throw new UaaException(
+                    "Could not delete user with alias since alias entities are disabled.",
+                    HttpStatus.BAD_REQUEST.value()
+            );
+        }
+
         membershipManager.removeMembersByMemberId(userId, identityZoneManager.getCurrentIdentityZoneId());
         scimUserProvisioning.delete(userId, version, identityZoneManager.getCurrentIdentityZoneId());
         scimDeletes.incrementAndGet();
@@ -316,8 +417,35 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
                             SecurityContextHolder.getContext().getAuthentication(),
                             identityZoneManager.getCurrentIdentityZoneId())
             );
-            logger.debug("User delete event sent[" + userId + "]");
+            logger.debug("User delete event sent[{}]", userId);
         }
+
+        if (!userHasAlias) {
+            // no further action necessary
+            return user;
+        }
+
+        // also delete alias user, if present
+        final Optional<ScimUser> aliasUserOpt = aliasHandler.retrieveAliasEntity(user);
+        if (aliasUserOpt.isEmpty()) {
+            // ignore dangling reference to alias user
+            logger.warn("Attempted to delete alias of user '{}', but it was not present.", user.getId());
+            return user;
+        }
+        final ScimUser aliasUser = aliasUserOpt.get();
+        membershipManager.removeMembersByMemberId(aliasUser.getId(), aliasUser.getZoneId());
+        scimUserProvisioning.delete(aliasUser.getId(), aliasUser.getVersion(), aliasUser.getZoneId());
+        if (publisher != null) {
+            publisher.publishEvent(
+                    new EntityDeletedEvent<>(
+                            aliasUser,
+                            SecurityContextHolder.getContext().getAuthentication(),
+                            aliasUser.getZoneId()
+                    )
+            );
+            logger.debug("User delete event sent[{}]", userId);
+        }
+
         return user;
     }
 
@@ -414,7 +542,7 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
             }
         } catch (IllegalArgumentException e) {
             String msg = "Invalid filter expression: [" + filter + "]";
-            if (StringUtils.hasText(sortBy)) {
+            if (hasText(sortBy)) {
                 msg += " [" + sortBy + "]";
             }
             throw new ScimException(HtmlUtils.htmlEscape(msg), HttpStatus.BAD_REQUEST);
@@ -470,17 +598,10 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         return status;
     }
 
-    @RequestMapping(value = "/Users/{userId}/mfa", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteMfaRegistration(@PathVariable String userId) {
-        ScimUser user = scimUserProvisioning.retrieve(userId, identityZoneManager.getCurrentIdentityZoneId());
-
-        mfaCredentialsProvisioning.delete(user.getId());
-    }
-
-    private ScimUser syncGroups(ScimUser user) {
+    @Nullable
+    private ScimUser syncGroups(@Nullable ScimUser user) {
         if (user == null) {
-            return user;
+            return null;
         }
 
         Set<ScimGroup> directGroups = membershipManager.getGroupsWithMember(user.getId(), false, identityZoneManager.getCurrentIdentityZoneId());
@@ -498,6 +619,9 @@ public class ScimUserEndpoints implements InitializingBean, ApplicationEventPubl
         return user;
     }
 
+    /**
+     * Look up the approvals for the given user and keep only those that are currently active.
+     */
     private ScimUser syncApprovals(ScimUser user) {
         if (user == null || approvalStore == null) {
             return user;

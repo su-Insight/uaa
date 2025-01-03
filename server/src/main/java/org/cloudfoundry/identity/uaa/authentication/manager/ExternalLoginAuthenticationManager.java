@@ -1,6 +1,6 @@
 package org.cloudfoundry.identity.uaa.authentication.manager;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cloudfoundry.identity.uaa.authentication.AccountNotPreCreatedException;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthenticationDetails;
@@ -137,7 +137,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
             if (!isAddNewShadowUser()) {
                 throw new AccountNotPreCreatedException("The user account must be pre-created. Please contact your system administrator.");
             }
-            publish(new NewUserAuthenticatedEvent(userFromRequest));
+            publish(new NewUserAuthenticatedEvent(userFromRequest.authorities(List.of())));
             try {
                 userFromDb = userDatabase.retrieveUserByName(userFromRequest.getUsername(), getOrigin());
             } catch (UsernameNotFoundException ex) {
@@ -245,8 +245,8 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
             }
         }
 
-        if (email == null) {
-            email = generateEmailIfNull(name);
+        if (StringUtils.isEmpty(email)) {
+            email = generateEmailIfNullOrEmpty(name);
         }
 
         String givenName = null;
@@ -278,7 +278,7 @@ public class ExternalLoginAuthenticationManager<ExternalAuthenticationDetails> i
         return new UaaUser(userPrototype);
     }
 
-    protected String generateEmailIfNull(String name) {
+    protected String generateEmailIfNullOrEmpty(String name) {
         String email;
         if (name != null) {
             if (name.contains("@")) {

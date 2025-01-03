@@ -1,5 +1,6 @@
 package org.cloudfoundry.identity.uaa.scim.jdbc;
 
+import org.assertj.core.api.Assertions;
 import org.cloudfoundry.identity.uaa.annotations.WithDatabaseContext;
 import org.cloudfoundry.identity.uaa.resources.jdbc.JdbcPagingListFactory;
 import org.cloudfoundry.identity.uaa.resources.jdbc.LimitSqlAdapter;
@@ -7,12 +8,15 @@ import org.cloudfoundry.identity.uaa.scim.ScimGroup;
 import org.cloudfoundry.identity.uaa.scim.ScimGroupMember;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.scim.ScimUserProvisioning;
+import org.cloudfoundry.identity.uaa.scim.exception.ScimResourceConstraintFailedException;
+import org.cloudfoundry.identity.uaa.scim.exception.InvalidScimResourceException;
 import org.cloudfoundry.identity.uaa.scim.exception.ScimResourceNotFoundException;
 import org.cloudfoundry.identity.uaa.scim.test.TestUtils;
 import org.cloudfoundry.identity.uaa.util.beans.DbUtils;
 import org.cloudfoundry.identity.uaa.util.TimeServiceImpl;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
+import org.cloudfoundry.identity.uaa.zone.JdbcIdentityZoneProvisioning;
 import org.cloudfoundry.identity.uaa.zone.MultitenancyFixture;
 import org.cloudfoundry.identity.uaa.zone.ZoneManagementScopes;
 import org.cloudfoundry.identity.uaa.zone.event.IdentityZoneModifiedEvent;
@@ -24,7 +28,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
@@ -43,6 +48,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -53,6 +59,8 @@ class JdbcScimGroupProvisioningTests {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
     @Autowired
     private LimitSqlAdapter limitSqlAdapter;
 
@@ -85,12 +93,13 @@ class JdbcScimGroupProvisioningTests {
         zone.setId(zoneId);
         IdentityZoneHolder.set(zone);
         IdentityZoneHolder.get().getConfig().getUserConfig().setDefaultGroups(new ArrayList<>());
+        IdentityZoneHolder.get().getConfig().getUserConfig().setAllowedGroups(null);
 
         validateGroupCountInZone(0, zoneId);
 
         DbUtils dbUtils = new DbUtils();
-        dao = spy(new JdbcScimGroupProvisioning(jdbcTemplate,
-                new JdbcPagingListFactory(jdbcTemplate, limitSqlAdapter),
+        dao = spy(new JdbcScimGroupProvisioning(namedJdbcTemplate,
+                new JdbcPagingListFactory(namedJdbcTemplate, limitSqlAdapter),
                 dbUtils));
 
         users = mock(ScimUserProvisioning.class);
@@ -104,6 +113,7 @@ class JdbcScimGroupProvisioningTests {
                 new JdbcScimGroupExternalMembershipManager(jdbcTemplate, dbUtils);
         jdbcScimGroupExternalMembershipManager.setScimGroupProvisioning(dao);
         dao.setJdbcScimGroupExternalMembershipManager(jdbcScimGroupExternalMembershipManager);
+        dao.setJdbcIdentityZoneProvisioning(new JdbcIdentityZoneProvisioning(jdbcTemplate));
 
         g1Id = "g1";
         g2Id = "g2";
@@ -293,6 +303,30 @@ class JdbcScimGroupProvisioningTests {
     }
 
     @Test
+    void cannotCreateNotAllowedGroup() {
+        IdentityZoneHolder.get().getConfig().getUserConfig().setAllowedGroups(Arrays.asList("allowedGroup"));
+        assertThrowsWithMessageThat(
+            InvalidScimResourceException.class,
+            () -> internalCreateGroup("notAllowedGroup"),
+            containsString("is not allowed")
+        );
+    }
+
+    @Test
+    void cannotUpdateNotAllowedGroup() {
+        IdentityZoneHolder.get().getConfig().getUserConfig().setAllowedGroups(Arrays.asList("allowedGroup"));
+        ScimGroup g = dao.retrieve(g1Id, zoneId);
+        g.setDisplayName("notAllowedGroup");
+        g.setDescription("description-update");
+        try {
+           dao.update(g1Id, g, zoneId);
+           fail();
+        } catch(InvalidScimResourceException e) {
+            assertTrue(e.getMessage().contains("is not allowed"));
+        }
+    }
+
+    @Test
     void canUpdateGroup() {
         ScimGroup g = dao.retrieve(g1Id, zoneId);
         assertEquals(group1Description, g.getDisplayName());
@@ -349,6 +383,23 @@ class JdbcScimGroupProvisioningTests {
                 .forEach(scope ->
                         assertTrue(groups.contains(scope), "Scope:" + scope + " should have been bootstrapped into the new zone")
                 );
+    }
+
+    @Test
+    void testOnApplicationEvent_ShouldOnlyCreateSystemScopesInAllowList() {
+        final String id = generator.generate();
+        final IdentityZone zone = MultitenancyFixture.identityZone(id, "subdomain-" + id);
+        zone.getConfig().getUserConfig().setDefaultGroups(List.of("password.write"));
+        zone.getConfig().getUserConfig().setAllowedGroups(List.of("scim.read", "scim.write"));
+
+        final IdentityZoneModifiedEvent event = IdentityZoneModifiedEvent.identityZoneCreated(zone);
+        dao.onApplicationEvent(event);
+
+        final List<String> groupNames = dao.retrieveAll(id).stream().map(ScimGroup::getDisplayName).toList();
+        Assertions.assertThat(groupNames).hasSize(3).contains(
+                "scim.read", "scim.write", // part of allowed groups
+                "password.write" // part of default groups
+        );
     }
 
     @Nested
@@ -444,6 +495,36 @@ class JdbcScimGroupProvisioningTests {
                 () -> dao.query("displayName eq \"something\"'; select " + SQL_INJECTION_FIELDS
                         + " from groups where displayName='something''", zoneId)
         );
+    }
+
+    @Test
+    void createGroupNullZoneId() {
+        ScimGroup g = new ScimGroup(null, "null", null);
+        g.setDescription("description-create");
+        ScimGroupMember m1 = new ScimGroupMember("m1", ScimGroupMember.Type.USER);
+        ScimGroupMember m2 = new ScimGroupMember("m2", ScimGroupMember.Type.USER);
+        g.setMembers(Arrays.asList(m1, m2));
+        ScimGroup errorGroup = g;
+        assertThrows(ScimResourceConstraintFailedException.class, () -> dao.create(errorGroup, null));
+        g.setZoneId(zoneId);
+        assertThrows(ScimResourceConstraintFailedException.class, () -> dao.create(errorGroup, null));
+        g = dao.create(g, zoneId);
+        assertNotNull(g);
+        assertEquals(zoneId, g.getZoneId());
+    }
+
+    @Test
+    void deleteGroupByOrigin() {
+        ScimGroup g = new ScimGroup(UUID.randomUUID().toString(), "null", zoneId);
+        g.setDescription("description-create");
+        ScimGroupMember m1 = new ScimGroupMember("m1", ScimGroupMember.Type.GROUP);
+        m1.setOrigin("custom-origin");
+        ScimGroupMember m2 = new ScimGroupMember("m2", ScimGroupMember.Type.GROUP);
+        m2.setOrigin("custom-origin");
+        g.setMembers(Arrays.asList(m1, m2));
+        g = dao.create(g, zoneId);
+        dao.deleteByOrigin("custom-origin", zoneId);
+        assertEquals(0, memberships.getMembers(g.getId(), true, zoneId).size());
     }
 
     private void validateGroupCountInZone(int expected, String zoneId) {

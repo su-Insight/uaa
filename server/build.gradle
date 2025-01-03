@@ -8,13 +8,11 @@ dependencies {
 
     implementation(libraries.tomcatJdbc)
     providedCompile(libraries.tomcatEmbed)
-    implementation(libraries.javaxMail)
 
     implementation(libraries.jacksonDatabind)
     implementation(libraries.jsonPath) {
         exclude(module: "json-smart")
     }
-    implementation(libraries.zxing)
     implementation(libraries.springBeans)
     implementation(libraries.springContext)
     implementation(libraries.springContextSupport)
@@ -22,23 +20,19 @@ dependencies {
     implementation(libraries.springJdbc)
     implementation(libraries.springWeb)
     implementation(libraries.springSecurityCore)
-    implementation(libraries.springSecurityJwt)
     implementation(libraries.springSecurityWeb)
-    implementation(libraries.spingSamlEsapiDependencyVersion) {
+    implementation(libraries.springSecurityConfig)
+    implementation(libraries.springBootStarterMail)
+    implementation(libraries.owaspEsapi) {
         transitive = false
     }
     implementation(libraries.springSecuritySaml) {
         exclude(module: "bcprov-ext-jdk15on")
         exclude(module: "xalan")
     }
+    implementation(libraries.jodaTime)
     implementation(libraries.xmlSecurity)
     implementation(libraries.springSessionJdbc)
-
-    implementation(libraries.springSecurityOauth) {
-        exclude(module: "commons-codec")
-        exclude(module: "jackson-mapper-asl")
-        exclude(module: "spring-security-web")
-    }
 
     implementation(libraries.bouncyCastleProv)
     implementation(libraries.bouncyCastlePkix)
@@ -76,6 +70,7 @@ dependencies {
 
     implementation(libraries.snakeyaml)
 
+    implementation(libraries.springWebMvc)
     implementation(libraries.springSecurityLdap)
     implementation(libraries.springLdapCore)
     implementation(libraries.springLdapCoreTiger)
@@ -89,8 +84,6 @@ dependencies {
     implementation(libraries.velocity)
     implementation(libraries.xerces)
 
-    implementation(libraries.googleAuth)
-
     implementation(libraries.slf4jImpl)
     implementation(libraries.log4jCore)
 
@@ -99,6 +92,8 @@ dependencies {
 
     implementation(libraries.nimbusJwt)
     implementation(libraries.orgJson)
+
+    implementation(libraries.apacheHttpClient)
 
     testImplementation(project(":cloudfoundry-identity-model").sourceSets.test.output)
 
@@ -117,6 +112,8 @@ dependencies {
 
     testImplementation(libraries.jsonPathAssert)
     testImplementation(libraries.guavaTestLib)
+
+    implementation(libraries.commonsIo)
 }
 
 configurations.all {

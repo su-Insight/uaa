@@ -16,6 +16,7 @@ package org.cloudfoundry.identity.uaa.mock.token;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
 import org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils;
 import org.cloudfoundry.identity.uaa.oauth.token.RevocableToken;
@@ -27,9 +28,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.common.util.OAuth2Utils;
-import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 
 import java.util.Collections;
 import java.util.Map;
@@ -40,8 +40,8 @@ import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYP
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.*;
-import static org.springframework.security.oauth2.common.OAuth2AccessToken.ACCESS_TOKEN;
-import static org.springframework.security.oauth2.common.OAuth2AccessToken.REFRESH_TOKEN;
+import static org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken.ACCESS_TOKEN;
+import static org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken.REFRESH_TOKEN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -56,11 +56,11 @@ class UserTokenMockMvcTests extends AbstractTokenMockMvcTests {
     @Test
     void test_user_managed_token() throws Exception {
         String recipientId = "recipientClient"+new RandomValueStringGenerator().generate();
-        BaseClientDetails recipient = setUpClients(recipientId, "uaa.user", "uaa.user,test.scope", "password,"+GRANT_TYPE_REFRESH_TOKEN, true, TEST_REDIRECT_URI,
+        UaaClientDetails recipient = setUpClients(recipientId, "uaa.user", "uaa.user,test.scope", "password,"+GRANT_TYPE_REFRESH_TOKEN, true, TEST_REDIRECT_URI,
                 Collections.singletonList("uaa"), 50000);
 
         String requestorId = "requestingClient"+new RandomValueStringGenerator().generate();
-        BaseClientDetails requestor = setUpClients(requestorId, "uaa.user", "uaa.user", "password,"+GRANT_TYPE_USER_TOKEN, true, TEST_REDIRECT_URI,
+        UaaClientDetails requestor = setUpClients(requestorId, "uaa.user", "uaa.user", "password,"+GRANT_TYPE_USER_TOKEN, true, TEST_REDIRECT_URI,
                 Collections.singletonList("uaa"));
 
         String username = "testuser"+new RandomValueStringGenerator().generate();
@@ -116,11 +116,11 @@ class UserTokenMockMvcTests extends AbstractTokenMockMvcTests {
     @Test
     void test_client_credentials_token() throws Exception {
         String recipientId = "recipientClient"+new RandomValueStringGenerator().generate();
-        BaseClientDetails recipient = setUpClients(recipientId, "uaa.user", "uaa.user,test.scope", "password,"+GRANT_TYPE_REFRESH_TOKEN, true, TEST_REDIRECT_URI,
+        UaaClientDetails recipient = setUpClients(recipientId, "uaa.user", "uaa.user,test.scope", "password,"+GRANT_TYPE_REFRESH_TOKEN, true, TEST_REDIRECT_URI,
                 Collections.singletonList("uaa"), 50000);
 
         String requestorId = "requestingClient"+new RandomValueStringGenerator().generate();
-        BaseClientDetails requestor = setUpClients(requestorId, "uaa.user", "uaa.user", "client_credentials,"+GRANT_TYPE_USER_TOKEN, true, TEST_REDIRECT_URI,
+        UaaClientDetails requestor = setUpClients(requestorId, "uaa.user", "uaa.user", "client_credentials,"+GRANT_TYPE_USER_TOKEN, true, TEST_REDIRECT_URI,
                 Collections.singletonList("uaa"));
 
         String username = "testuser"+new RandomValueStringGenerator().generate();
@@ -152,11 +152,11 @@ class UserTokenMockMvcTests extends AbstractTokenMockMvcTests {
     @Test
     void test_invalid_grant_type() throws Exception {
         String recipientId = "recipientClient"+new RandomValueStringGenerator().generate();
-        BaseClientDetails recipient = setUpClients(recipientId, "uaa.user", "uaa.user,test.scope", "password,"+GRANT_TYPE_REFRESH_TOKEN, true, TEST_REDIRECT_URI,
+        UaaClientDetails recipient = setUpClients(recipientId, "uaa.user", "uaa.user,test.scope", "password,"+GRANT_TYPE_REFRESH_TOKEN, true, TEST_REDIRECT_URI,
                 Collections.singletonList("uaa"), 50000);
 
         String requestorId = "requestingClient"+new RandomValueStringGenerator().generate();
-        BaseClientDetails requestor = setUpClients(requestorId, "uaa.user", "uaa.user", "password", true, TEST_REDIRECT_URI,
+        UaaClientDetails requestor = setUpClients(requestorId, "uaa.user", "uaa.user", "password", true, TEST_REDIRECT_URI,
                 Collections.singletonList("uaa"));
 
         String username = "testuser"+new RandomValueStringGenerator().generate();
@@ -195,7 +195,7 @@ class UserTokenMockMvcTests extends AbstractTokenMockMvcTests {
             true
         );
 
-        BaseClientDetails client = new BaseClientDetails(
+        UaaClientDetails client = new UaaClientDetails(
             generator.generate(),
             null,
             "openid,uaa.user,tokens.",

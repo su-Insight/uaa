@@ -14,12 +14,16 @@
 package org.cloudfoundry.identity.uaa.provider.oauth;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
 import org.cloudfoundry.identity.uaa.authentication.manager.ExternalGroupAuthorizationEvent;
 import org.cloudfoundry.identity.uaa.authentication.manager.ExternalLoginAuthenticationManager;
 import org.cloudfoundry.identity.uaa.authentication.manager.InvitedUserAuthenticatedEvent;
+import org.cloudfoundry.identity.uaa.constants.ClientAuthentication;
 import org.cloudfoundry.identity.uaa.oauth.KeyInfo;
 import org.cloudfoundry.identity.uaa.oauth.KeyInfoService;
 import org.cloudfoundry.identity.uaa.oauth.TokenEndpointBuilder;
@@ -27,9 +31,11 @@ import org.cloudfoundry.identity.uaa.oauth.jwk.JsonWebKey;
 import org.cloudfoundry.identity.uaa.oauth.jwk.JsonWebKeyHelper;
 import org.cloudfoundry.identity.uaa.oauth.jwk.JsonWebKeySet;
 import org.cloudfoundry.identity.uaa.oauth.jwt.ChainedSignatureVerifier;
+import org.cloudfoundry.identity.uaa.oauth.jwt.SignatureVerifier;
 import org.cloudfoundry.identity.uaa.oauth.jwt.Jwt;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtClientAuthentication;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
+import org.cloudfoundry.identity.uaa.oauth.jwt.UaaMacSigner;
 import org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants;
 import org.cloudfoundry.identity.uaa.provider.AbstractExternalOAuthIdentityProviderDefinition;
 import org.cloudfoundry.identity.uaa.provider.ExternalIdentityProviderDefinition;
@@ -60,9 +66,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.jwt.crypto.sign.MacSigner;
-import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -377,8 +381,8 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
             Object verifiedObj = claims.get(emailVerifiedClaim == null ? "email_verified" : emailVerifiedClaim);
             boolean verified =  verifiedObj instanceof Boolean ? (Boolean)verifiedObj: false;
 
-            if (email == null) {
-                email = generateEmailIfNull(username);
+            if (!StringUtils.hasText(email)) {
+                email = generateEmailIfNullOrEmpty(username);
             }
 
             logger.debug(String.format("Returning user data for username:%s, email:%s", username, email));
@@ -594,7 +598,7 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
             RawExternalOAuthIdentityProviderDefinition narrowedConfig = (RawExternalOAuthIdentityProviderDefinition) config;
 
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "token " + idToken);
+            headers.add("Authorization", "Bearer " + idToken);
             headers.add("Accept", "application/json");
 
             URI requestUri;
@@ -627,8 +631,12 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
     }
 
     protected String hmacSignAndEncode(String data, String key) {
-        MacSigner macSigner = new MacSigner(key);
-        return new String(Base64.encodeBase64URLSafe(macSigner.sign(data.getBytes(StandardCharsets.UTF_8))), StandardCharsets.UTF_8);
+        try {
+            UaaMacSigner macSigner = new UaaMacSigner(key);
+            return macSigner.sign(new JWSHeader(JWSAlgorithm.HS256), data.getBytes(StandardCharsets.UTF_8)).toString();
+        } catch (JOSEException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private JwtTokenSignedByThisUAA validateToken(String idToken, AbstractExternalOAuthIdentityProviderDefinition config) {
@@ -705,7 +713,8 @@ public class ExternalOAuthAuthenticationManager extends ExternalLoginAuthenticat
         // https://docs.spring.io/spring-security/site/docs/5.3.1.RELEASE/reference/html5/#initiating-the-authorization-request
         if (config.getRelyingPartySecret() == null) {
             // no secret but jwtClientAuthentication
-            if (config instanceof OIDCIdentityProviderDefinition && ((OIDCIdentityProviderDefinition) config).getJwtClientAuthentication() != null) {
+            if (config instanceof OIDCIdentityProviderDefinition oidcDefinition && ClientAuthentication.PRIVATE_KEY_JWT.equals(
+                ClientAuthentication.getCalculatedMethod(config.getAuthMethod(), false, oidcDefinition.getJwtClientAuthentication() != null))) {
                 body = new JwtClientAuthentication(keyInfoService)
                     .getClientAuthenticationParameters(body, (OIDCIdentityProviderDefinition) config);
             }

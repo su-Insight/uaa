@@ -6,12 +6,12 @@ import org.cloudfoundry.identity.uaa.account.UserAccountStatus;
 import org.cloudfoundry.identity.uaa.approval.Approval;
 import org.cloudfoundry.identity.uaa.approval.ApprovalStore;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.mock.EndpointDocs;
 import org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.scim.ScimUserProvisioning;
 import org.cloudfoundry.identity.uaa.user.UaaUserDatabase;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneSwitchingFilter;
@@ -93,6 +93,18 @@ class ScimUserEndpointDocs extends EndpointDocs {
     private final String passwordDescription = "User's password, required if origin is set to `uaa`. May be be subject to validations if the UAA is configured with a password policy.";
     private final String phoneNumbersListDescription = "The user's phone numbers.";
     private final String phoneNumbersDescription = "The phone number.";
+    private final String aliasIdDescription = "The ID of the alias user.";
+    private final String aliasIdCreateRequestDescription = aliasIdDescription + " Must be set to `null`.";
+    private final String aliasIdUpdateRequestDescription = aliasIdDescription + " If the existing user had this field set, it must be set to the same value in the update request. " +
+            "If not, this field must be set to `null`.";
+    private final String aliasIdPatchRequestDescription = aliasIdDescription + " If set, this field must have the same value as in the existing user.";
+    private final String aliasZidDescription = "The ID of the identity zone in which an alias of this user is maintained.";
+    private final String aliasZidRequestDescription = aliasZidDescription + " If set, an alias user is created in this zone and `aliasId` is set accordingly. " +
+            "Must reference an existing identity zone that is different to the one referenced in `identityZoneId`. " +
+            "Alias users can only be created from or to the \"uaa\" identity zone, i.e., one of `identityZoneId` or `aliasZid` must be set to \"uaa\". " +
+            "Furthermore, alias users can only be created if the IdP referenced in `origin` also has an alias to the **same** zone as the user.";
+    private final String aliasZidUpdateRequestDescription = aliasZidRequestDescription + " If the existing user had this field set, it must be set to the same value in the update request.";
+    private final String aliasZidPatchRequestDescription = aliasZidRequestDescription + " If the existing user had this field set, it must not be set to a different value in the patch request.";
 
     private final String metaDesc = "SCIM object meta data.";
     private final String metaVersionDesc = "Object version.";
@@ -140,6 +152,8 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("resources[].zoneId").type(STRING).description(userZoneIdDescription),
             fieldWithPath("resources[].passwordLastModified").type(STRING).description(passwordLastModifiedDescription),
             fieldWithPath("resources[].externalId").type(STRING).description(externalIdDescription),
+            fieldWithPath("resources[].aliasId").optional(null).type(STRING).description(aliasIdDescription),
+            fieldWithPath("resources[].aliasZid").optional(null).type(STRING).description(aliasZidDescription),
             fieldWithPath("resources[].meta").type(OBJECT).description(metaDesc),
             fieldWithPath("resources[].meta.version").type(NUMBER).description(metaVersionDesc),
             fieldWithPath("resources[].meta.lastModified").type(STRING).description(metaLastModifiedDesc),
@@ -162,6 +176,8 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("verified").optional(true).type(BOOLEAN).description(userVerifiedDescription),
             fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription),
             fieldWithPath("externalId").optional(null).type(STRING).description(externalIdDescription),
+            fieldWithPath("aliasId").optional(null).type(STRING).description(aliasIdCreateRequestDescription),
+            fieldWithPath("aliasZid").optional(null).type(STRING).description(aliasZidRequestDescription),
             fieldWithPath("schemas").optional().ignored().type(ARRAY).description(schemasDescription),
             fieldWithPath("meta.*").optional().ignored().type(OBJECT).description("SCIM object meta data not read.")
     );
@@ -189,6 +205,8 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("zoneId").type(STRING).description(userZoneIdDescription),
             fieldWithPath("passwordLastModified").type(STRING).description(passwordLastModifiedDescription),
             fieldWithPath("externalId").type(STRING).description(externalIdDescription),
+            fieldWithPath("aliasId").optional().type(STRING).description(aliasIdDescription),
+            fieldWithPath("aliasZid").optional().type(STRING).description(aliasZidDescription),
             fieldWithPath("meta").type(OBJECT).description(metaDesc),
             fieldWithPath("meta.version").type(NUMBER).description(metaVersionDesc),
             fieldWithPath("meta.lastModified").type(STRING).description(metaLastModifiedDesc),
@@ -211,10 +229,12 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("approvals").ignored().type(ARRAY).description("Approvals are not created at this time"),
             fieldWithPath("active").optional(true).type(BOOLEAN).description(userActiveDescription),
             fieldWithPath("verified").optional(true).type(BOOLEAN).description(userVerifiedDescription),
-            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription),
+            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription + " The `origin` value cannot be changed in an update operation."),
             fieldWithPath("zoneId").ignored().type(STRING).description(userZoneIdDescription),
             fieldWithPath("passwordLastModified").ignored().type(STRING).description(passwordLastModifiedDescription),
             fieldWithPath("externalId").optional(null).type(STRING).description(externalIdDescription),
+            fieldWithPath("aliasId").optional(null).type(STRING).description(aliasIdUpdateRequestDescription),
+            fieldWithPath("aliasZid").optional(null).type(STRING).description(aliasZidUpdateRequestDescription),
             fieldWithPath("meta.*").ignored().type(OBJECT).description("SCIM object meta data not read.")
     );
 
@@ -249,6 +269,8 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("lastLogonTime").optional(null).type(NUMBER).description(userLastLogonTimeDescription),
             fieldWithPath("previousLogonTime").optional(null).type(NUMBER).description(userLastLogonTimeDescription),
             fieldWithPath("externalId").type(STRING).description(externalIdDescription),
+            fieldWithPath("aliasId").optional().type(STRING).description(aliasIdDescription),
+            fieldWithPath("aliasZid").optional().type(STRING).description(aliasZidDescription),
             fieldWithPath("meta").type(OBJECT).description(metaDesc),
             fieldWithPath("meta.version").type(NUMBER).description(metaVersionDesc),
             fieldWithPath("meta.lastModified").type(STRING).description(metaLastModifiedDesc),
@@ -271,10 +293,12 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("approvals").ignored().type(ARRAY).description("Approvals are not created at this time"),
             fieldWithPath("active").optional(true).type(BOOLEAN).description(userActiveDescription),
             fieldWithPath("verified").optional(true).type(BOOLEAN).description(userVerifiedDescription),
-            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription),
+            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription + " The `origin` value cannot be changed in a patch operation."),
             fieldWithPath("zoneId").ignored().type(STRING).description(userZoneIdDescription),
             fieldWithPath("passwordLastModified").ignored().type(STRING).description(passwordLastModifiedDescription),
             fieldWithPath("externalId").optional(null).type(STRING).description(externalIdDescription),
+            fieldWithPath("aliasId").optional(null).type(STRING).description(aliasIdPatchRequestDescription),
+            fieldWithPath("aliasZid").optional(null).type(STRING).description(aliasZidPatchRequestDescription),
             fieldWithPath("meta.*").ignored().type(OBJECT).description("SCIM object meta data not read."),
             fieldWithPath("meta.attributes").optional(null).type(ARRAY).description(metaAttributesDesc)
     );
@@ -354,7 +378,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
     }
 
     ScimUser createScimUserObject() {
-        String username = new RandomValueStringGenerator().generate() + "@test.org";
+        String username = new AlphanumericRandomValueStringGenerator().generate() + "@test.org";
         ScimUser user = new ScimUser(null, username, "given name", "family name");
         user.setPrimaryEmail(username);
         user.setPassword("secret");
@@ -724,7 +748,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
     void getUserVerificationLink() throws Exception {
         String accessToken = testClient.getClientCredentialsOAuthAccessToken("admin", "adminsecret", "uaa.admin");
 
-        String email = "joel" + new RandomValueStringGenerator().generate() + "@example.com";
+        String email = "joel" + new AlphanumericRandomValueStringGenerator().generate() + "@example.com";
         ScimUser joel = new ScimUser(null, email, "Joel", "D'sa");
         joel.setVerified(false);
         joel.addEmail(email);
@@ -776,34 +800,6 @@ class ScimUserEndpointDocs extends EndpointDocs {
                 .accept(APPLICATION_JSON);
 
         mockMvc.perform(get)
-                .andExpect(status().isOk())
-                .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()),
-                        pathParameters, requestHeaders))
-        ;
-    }
-
-    @Test
-    void deleteMfaRegistration() throws Exception {
-        String accessToken = testClient.getClientCredentialsOAuthAccessToken("admin", "adminsecret", "uaa.admin");
-
-        String email = "tom.mugwort@example.com";
-        ScimUser tommy = new ScimUser(null, email, "Tom", "Mugwort");
-        tommy.setVerified(false);
-        tommy.addEmail(email);
-        tommy = userProvisioning.createUser(tommy, "pas5Word", IdentityZoneHolder.get().getId());
-
-        Snippet requestHeaders = requestHeaders(headerWithName("Authorization").description("Access token with `zones.<zoneId>.admin` or `uaa.admin` required."),
-                IDENTITY_ZONE_ID_HEADER,
-                IDENTITY_ZONE_SUBDOMAIN_HEADER);
-
-        Snippet pathParameters = pathParameters(
-                RequestDocumentation.parameterWithName("userId").description("Unique user identifier.")
-        );
-
-        MockHttpServletRequestBuilder delete = RestDocumentationRequestBuilders.delete("/Users/{userId}/mfa", tommy.getId())
-                .header("Authorization", "Bearer " + accessToken);
-
-        mockMvc.perform(delete)
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()),
                         pathParameters, requestHeaders))

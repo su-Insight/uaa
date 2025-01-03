@@ -14,14 +14,22 @@ package org.cloudfoundry.identity.uaa.integration;
 
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.assertj.core.api.Assertions;
 import org.cloudfoundry.identity.uaa.ServerRunning;
 import org.cloudfoundry.identity.uaa.integration.util.IntegrationTestUtils;
+import org.cloudfoundry.identity.uaa.oauth.client.http.OAuth2ErrorHandler;
+import org.cloudfoundry.identity.uaa.oauth.client.test.OAuth2ContextConfiguration;
+import org.cloudfoundry.identity.uaa.oauth.client.test.OAuth2ContextSetup;
+import org.cloudfoundry.identity.uaa.oauth.common.DefaultOAuth2AccessToken;
+import org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken;
 import org.cloudfoundry.identity.uaa.scim.ScimGroup;
 import org.cloudfoundry.identity.uaa.scim.ScimGroupMember;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.security.web.CookieBasedCsrfTokenRepository;
 import org.cloudfoundry.identity.uaa.test.TestAccountSetup;
 import org.cloudfoundry.identity.uaa.test.UaaTestAccounts;
+import org.cloudfoundry.identity.uaa.util.JsonUtils;
+import org.cloudfoundry.identity.uaa.zone.IdentityZoneConfiguration;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.junit.After;
 import org.junit.Before;
@@ -30,30 +38,28 @@ import org.junit.Test;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.crypto.codec.Base64;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorHandler;
-import org.springframework.security.oauth2.client.test.OAuth2ContextConfiguration;
-import org.springframework.security.oauth2.client.test.OAuth2ContextSetup;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import static org.cloudfoundry.identity.uaa.integration.util.IntegrationTestUtils.doesSupportZoneDNS;
 import static org.cloudfoundry.identity.uaa.integration.util.IntegrationTestUtils.getHeaders;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.cloudfoundry.identity.uaa.security.web.CookieBasedCsrfTokenRepository.DEFAULT_CSRF_COOKIE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.springframework.security.oauth2.common.util.OAuth2Utils.USER_OAUTH_APPROVAL;
+import static org.cloudfoundry.identity.uaa.oauth.common.util.OAuth2Utils.USER_OAUTH_APPROVAL;
 
 @OAuth2ContextConfiguration(OAuth2ContextConfiguration.ClientCredentials.class)
 public class ScimGroupEndpointsIntegrationTests {
@@ -67,6 +73,8 @@ public class ScimGroupEndpointsIntegrationTests {
     private final String CF_MGR = "cf_mgr_" + new RandomValueStringGenerator().generate().toLowerCase();
 
     private final String CFID = "cfid_" + new RandomValueStringGenerator().generate().toLowerCase();
+
+    private final List<String> allowedGroups = List.of(DELETE_ME, CF_DEV, CF_MGR, CFID);
 
     private final String groupEndpoint = "/Groups";
 
@@ -205,6 +213,113 @@ public class ScimGroupEndpointsIntegrationTests {
         // Check we can GET the group
         ScimGroup g2 = client.getForObject(serverRunning.getUrl(groupEndpoint + "/{id}"), ScimGroup.class, g1.getId());
         assertEquals(g1, g2);
+    }
+
+    @Test
+    public void createAllowedGroupSucceeds() throws URISyntaxException {
+        String testZoneId = "testzone1";
+        assertTrue("Expected testzone1.localhost and testzone2.localhost to resolve to 127.0.0.1", doesSupportZoneDNS());
+        String adminToken = IntegrationTestUtils.getClientCredentialsToken(serverRunning.getBaseUrl(), "admin", "adminsecret");
+        IdentityZoneConfiguration config = new IdentityZoneConfiguration();
+        config.getUserConfig().setAllowedGroups(allowedGroups);
+        String zoneUrl = serverRunning.getBaseUrl().replace("localhost", testZoneId + ".localhost");
+        String inZoneAdminToken = IntegrationTestUtils.createClientAdminTokenInZone(serverRunning.getBaseUrl(), adminToken, testZoneId, config);
+        ScimGroup g1 = new ScimGroup(null, CFID, testZoneId);
+        // Check we can GET the group
+        ScimGroup g2 = IntegrationTestUtils.createOrUpdateGroup(inZoneAdminToken, null, zoneUrl, g1);
+        assertEquals(g1.getDisplayName(), g2.getDisplayName());
+        assertEquals(g1.getDisplayName(), IntegrationTestUtils.getGroup(inZoneAdminToken, null, zoneUrl, g1.getDisplayName()).getDisplayName());
+        IntegrationTestUtils.deleteZone(serverRunning.getBaseUrl(), testZoneId, adminToken);
+    }
+
+    @Test
+    public void createNotAllowedGroupFailsCorrectly() throws URISyntaxException {
+        String testZoneId = "testzone1";
+        assertTrue("Expected testzone1.localhost and testzone2.localhost to resolve to 127.0.0.1", doesSupportZoneDNS());
+        final String NOT_ALLOWED = "not_allowed_" + new RandomValueStringGenerator().generate().toLowerCase();
+        String adminToken = IntegrationTestUtils.getClientCredentialsToken(serverRunning.getBaseUrl(), "admin", "adminsecret");
+        ScimGroup g1 = new ScimGroup(null, NOT_ALLOWED, testZoneId);
+        IdentityZoneConfiguration config = new IdentityZoneConfiguration();
+        config.getUserConfig().setAllowedGroups(allowedGroups);
+        String zoneUrl = serverRunning.getBaseUrl().replace("localhost", testZoneId + ".localhost");
+        String inZoneAdminToken = IntegrationTestUtils.createClientAdminTokenInZone(serverRunning.getBaseUrl(), adminToken, testZoneId, config);
+        RestTemplate template = new RestTemplate();
+        HttpEntity entity = new HttpEntity<>(JsonUtils.writeValueAsBytes(g1), IntegrationTestUtils.getAuthenticatedHeaders(inZoneAdminToken));
+        try {
+            template.exchange(zoneUrl + "/Groups", HttpMethod.POST, entity, HashMap.class);
+            fail("must fail");
+        } catch (HttpClientErrorException e) {
+            assertTrue(e.getStatusCode().is4xxClientError());
+            assertEquals(400, e.getRawStatusCode());
+            assertThat(e.getMessage(),
+                containsString("The group with displayName: "+ g1.getDisplayName() +" is not allowed in Identity Zone " + testZoneId));
+        } finally {
+            IntegrationTestUtils.deleteZone(serverRunning.getBaseUrl(), testZoneId, adminToken);
+        }
+    }
+
+    @Test
+    public void relyOnDefaultGroupsShouldAllowedGroupSucceed() throws URISyntaxException {
+        String testZoneId = "testzone1";
+        assertTrue("Expected testzone1.localhost and testzone2.localhost to resolve to 127.0.0.1", doesSupportZoneDNS());
+        String adminToken = IntegrationTestUtils.getClientCredentialsToken(serverRunning.getBaseUrl(), "admin", "adminsecret");
+
+        final String ccReadGroupName = "cloud_controller_service_permissions.read";
+
+        /* allowed groups are empty, but 'cloud_controller_service_permissions.read' is part of the default groups
+         * -> this group should therefore nevertheless be created during zone creation */
+        final IdentityZoneConfiguration config = new IdentityZoneConfiguration();
+        config.getUserConfig().setAllowedGroups(List.of());
+        config.getUserConfig().setDefaultGroups(defaultGroups);
+
+        final String zoneUrl = serverRunning.getBaseUrl().replace("localhost", testZoneId + ".localhost");
+        // this creates/updates the zone with the new config -> also creates/updates the default groups
+        final String inZoneAdminToken = IntegrationTestUtils.createClientAdminTokenInZone(serverRunning.getBaseUrl(), adminToken, testZoneId, config);
+
+        // Check we can GET the group
+        final ScimGroup ccGroupFromGetCall = IntegrationTestUtils.getGroup(inZoneAdminToken, null, zoneUrl, ccReadGroupName);
+        assertNotNull(ccGroupFromGetCall);
+        assertEquals(ccReadGroupName, ccGroupFromGetCall.getDisplayName());
+
+        IntegrationTestUtils.deleteZone(serverRunning.getBaseUrl(), testZoneId, adminToken);
+    }
+
+    @Test
+    public void changeDefaultGroupsAllowedGroupsUsageShouldSucceed() throws URISyntaxException {
+        String testZoneId = "testzone1";
+        assertTrue("Expected testzone1.localhost and testzone2.localhost to resolve to 127.0.0.1", doesSupportZoneDNS());
+        String adminToken = IntegrationTestUtils.getClientCredentialsToken(serverRunning.getBaseUrl(), "admin", "adminsecret");
+        IdentityZoneConfiguration config = new IdentityZoneConfiguration();
+
+        // ensure zone does not exist
+        if (IntegrationTestUtils.zoneExists(serverRunning.getBaseUrl(), testZoneId, adminToken)) {
+            IntegrationTestUtils.deleteZone(serverRunning.getBaseUrl(), testZoneId, adminToken);
+        }
+
+        // add a new group to the allowed groups
+        final String ALLOWED = "allowed_" + new RandomValueStringGenerator().generate().toLowerCase();
+        List<String> newDefaultGroups = new ArrayList<String>(defaultGroups);
+        newDefaultGroups.add(ALLOWED);
+        config.getUserConfig().setAllowedGroups(List.of());
+        config.getUserConfig().setDefaultGroups(newDefaultGroups);
+        String zoneUrl = serverRunning.getBaseUrl().replace("localhost", testZoneId + ".localhost");
+        // this creates the zone as well as all default groups
+        String inZoneAdminToken = IntegrationTestUtils.createClientAdminTokenInZone(serverRunning.getBaseUrl(), adminToken, testZoneId, config);
+
+        // creating the newly allowed group should fail, as it already exists
+        RestTemplate template = new RestTemplate();
+        ScimGroup g1 = new ScimGroup(null, ALLOWED, testZoneId);
+        HttpEntity entity = new HttpEntity<>(JsonUtils.writeValueAsBytes(g1), IntegrationTestUtils.getAuthenticatedHeaders(inZoneAdminToken));
+        try {
+            final HttpClientErrorException.Conflict exception = assertThrows(
+                    HttpClientErrorException.Conflict.class,
+                    () -> template.exchange(zoneUrl + "/Groups", HttpMethod.POST, entity, HashMap.class)
+            );
+            Assertions.assertThat(exception.getMessage())
+                    .contains("A group with displayName: %s already exists.".formatted(ALLOWED));
+        } finally {
+            IntegrationTestUtils.deleteZone(serverRunning.getBaseUrl(), testZoneId, adminToken);
+        }
     }
 
     @Test
@@ -417,7 +532,7 @@ public class ScimGroupEndpointsIntegrationTests {
     private void createTestClient(String name, String secret, String scope) {
         OAuth2AccessToken token = getClientCredentialsAccessToken("clients.read,clients.write,clients.admin");
         HttpHeaders headers = getAuthenticatedHeaders(token);
-        BaseClientDetails client = new BaseClientDetails(name, "", scope, "authorization_code,password",
+        UaaClientDetails client = new UaaClientDetails(name, "", scope, "authorization_code,password",
                 "scim.read,scim.write", "http://redirect.uri");
         client.setClientSecret(secret);
         ResponseEntity<Void> result = serverRunning.getRestTemplate().exchange(serverRunning.getUrl("/oauth/clients"),
