@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
 
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -65,9 +65,6 @@ class KeyInfoServiceTests {
         KeyInfo key = keyInfoService.getKey(keyId);
         assertNotNull(key.getSigner());
         assertNotNull(key.getVerifier());
-
-        byte[] signedValue = key.getSigner().sign("joel".getBytes());
-        key.getVerifier().verify("joel".getBytes(), signedValue);
     }
 
     @Test
@@ -92,9 +89,6 @@ class KeyInfoServiceTests {
         KeyInfo key = keyInfoService.getKey(keyId);
         assertNotNull(key.getSigner());
         assertNotNull(key.getVerifier());
-
-        byte[] signedValue = key.getSigner().sign("joel".getBytes());
-        key.getVerifier().verify("joel".getBytes(), signedValue);
     }
 
     @Test

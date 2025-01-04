@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -430,6 +431,14 @@ class UaaStringUtilsTest {
         assertEquals("", UaaStringUtils.getSafeParameterValue(new String[] {"  "}));
         assertEquals("", UaaStringUtils.getSafeParameterValue(new String[] {}));
         assertEquals("", UaaStringUtils.getSafeParameterValue(null));
+    }
+
+    @Test
+    void getArrayDefaultValue() {
+        assertEquals(List.of("1", "2").stream().sorted().collect(Collectors.toList()),
+            UaaStringUtils.getValuesOrDefaultValue(Set.of("1", "2"), "1").stream().sorted().collect(Collectors.toList()));
+        assertEquals(List.of("1"), UaaStringUtils.getValuesOrDefaultValue(Set.of(), "1"));
+        assertEquals(List.of("1"), UaaStringUtils.getValuesOrDefaultValue(null, "1"));
     }
 
     private static void replaceZoneVariables(IdentityZone zone) {

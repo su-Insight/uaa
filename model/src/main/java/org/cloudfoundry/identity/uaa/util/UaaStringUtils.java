@@ -15,11 +15,13 @@ package org.cloudfoundry.identity.uaa.util;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +49,8 @@ public final class UaaStringUtils {
     private static final Pattern CTRL_PATTERN = Pattern.compile("[\n\r\t]");
 
     public static final String EMPTY_STRING = "";
+
+    public static final String DEFAULT_UAA_URL = "http://localhost:8080/uaa";
 
     private UaaStringUtils() {
     }
@@ -316,5 +320,13 @@ public final class UaaStringUtils {
             return EMPTY_STRING;
         }
         return StringUtils.hasText(value[0]) ? value[0] : EMPTY_STRING;
+    }
+
+    public static List<String> getValuesOrDefaultValue(Set<String> values, String defaultValue) {
+        if (ObjectUtils.isEmpty(values)) {
+            return List.of(defaultValue);
+        } else {
+            return new ArrayList<>(values);
+        }
     }
 }
