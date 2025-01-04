@@ -16,12 +16,14 @@ package org.cloudfoundry.identity.uaa.provider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 
 import java.lang.reflect.ParameterizedType;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends AbstractExternalOAuthIdentityProviderDefinition> extends ExternalIdentityProviderDefinition {
     public enum OAuthGroupMappingMode {
@@ -39,25 +41,20 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
     private boolean clientAuthInBody = false;
     private boolean skipSslValidation;
     private String relyingPartyId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String relyingPartySecret;
     private List<String> scopes;
     private String issuer;
     private String responseType = "code";
     private String userPropagationParameter;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private OAuthGroupMappingMode groupMappingMode;
     private boolean pkce = true;
-
-    public URL getAuthUrl() {
-        return authUrl;
-    }
+    private boolean performRpInitiatedLogout = true;
 
     public T setAuthUrl(URL authUrl) {
         this.authUrl = authUrl;
         return (T) this;
-    }
-
-    public URL getTokenUrl() {
-        return tokenUrl;
     }
 
     public T setTokenUrl(URL tokenUrl) {
@@ -65,17 +62,9 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    public URL getTokenKeyUrl() {
-        return tokenKeyUrl;
-    }
-
     public T setTokenKeyUrl(URL tokenKeyUrl) {
         this.tokenKeyUrl = tokenKeyUrl;
         return (T) this;
-    }
-
-    public String getTokenKey() {
-        return tokenKey;
     }
 
     public T setTokenKey(String tokenKey) {
@@ -83,17 +72,9 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    public URL getUserInfoUrl() {
-        return userInfoUrl;
-    }
-
     public T setUserInfoUrl(URL userInfoUrl) {
         this.userInfoUrl = userInfoUrl;
         return (T) this;
-    }
-
-    public URL getLogoutUrl() {
-        return logoutUrl;
     }
 
     public T setLogoutUrl(URL logoutUrl) {
@@ -101,17 +82,9 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    public String getLinkText() {
-        return linkText;
-    }
-
     public T setLinkText(String linkText) {
         this.linkText = linkText;
         return (T) this;
-    }
-
-    public boolean isClientAuthInBody() {
-        return clientAuthInBody;
     }
 
     public T setClientAuthInBody(boolean clientAuthInBody) {
@@ -119,17 +92,9 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    public boolean isShowLinkText() {
-        return showLinkText;
-    }
-
     public T setShowLinkText(boolean showLinkText) {
         this.showLinkText = showLinkText;
         return (T) this;
-    }
-
-    public String getRelyingPartyId() {
-        return relyingPartyId;
     }
 
     public T setRelyingPartyId(String relyingPartyId) {
@@ -137,18 +102,9 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public String getRelyingPartySecret() {
-        return relyingPartySecret;
-    }
-
     public T setRelyingPartySecret(String relyingPartySecret) {
         this.relyingPartySecret = relyingPartySecret;
         return (T) this;
-    }
-
-    public boolean isSkipSslValidation() {
-        return skipSslValidation;
     }
 
     public T setSkipSslValidation(boolean skipSslValidation) {
@@ -156,17 +112,9 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    public List<String> getScopes() {
-        return scopes;
-    }
-
     public T setScopes(List<String> scopes) {
         this.scopes = scopes;
         return (T) this;
-    }
-
-    public String getIssuer() {
-        return issuer;
     }
 
     public T setIssuer(String issuer) {
@@ -174,27 +122,14 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         return (T) this;
     }
 
-    public String getResponseType() {
-        return responseType;
-    }
-
     public T setResponseType(String responseType) {
         this.responseType = responseType;
         return (T) this;
     }
 
-    public String getUserPropagationParameter() {
-        return userPropagationParameter;
-    }
-
     public T setUserPropagationParameter(String userPropagationParameter) {
         this.userPropagationParameter = userPropagationParameter;
         return (T) this;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL) // prevent json data for default
-    public OAuthGroupMappingMode getGroupMappingMode() {
-        return groupMappingMode;
     }
 
     public T setGroupMappingMode(OAuthGroupMappingMode externalGroupMappingMode) {
@@ -210,8 +145,8 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         this.pkce = pkce;
     }
 
-    public boolean isPkce() {
-        return this.pkce;
+    public void setPerformRpInitiatedLogout(boolean performRpInitiatedLogout) {
+        this.performRpInitiatedLogout = performRpInitiatedLogout;
     }
 
     @JsonIgnore
@@ -247,6 +182,7 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         if (!Objects.equals(userPropagationParameter, that.userPropagationParameter)) return false;
         if (!Objects.equals(groupMappingMode, that.groupMappingMode)) return false;
         if (pkce != that.pkce) return false;
+        if (performRpInitiatedLogout != that.performRpInitiatedLogout) return false;
         return Objects.equals(responseType, that.responseType);
 
     }
@@ -271,6 +207,7 @@ public abstract class AbstractExternalOAuthIdentityProviderDefinition<T extends 
         result = 31 * result + (groupMappingMode != null ? groupMappingMode.hashCode() : 0);
         result = 31 * result + (responseType != null ? responseType.hashCode() : 0);
         result = 31 * result + (pkce ? 1 : 0);
+        result = 31 * result + (performRpInitiatedLogout ? 1 : 0);
         return result;
     }
 }

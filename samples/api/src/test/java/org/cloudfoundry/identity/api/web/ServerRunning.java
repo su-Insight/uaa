@@ -12,11 +12,12 @@
  *******************************************************************************/
 package org.cloudfoundry.identity.api.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.cloudfoundry.identity.uaa.oauth.client.test.RestTemplateHolder;
 import org.cloudfoundry.identity.uaa.test.UrlHelper;
 import org.junit.Assume;
 import org.junit.internal.AssumptionViolatedException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.rules.TestWatchman;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -26,7 +27,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.security.oauth2.client.test.RestTemplateHolder;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestOperations;
@@ -123,7 +123,7 @@ public class ServerRunning extends TestWatchman implements RestTemplateHolder, U
             RestTemplate client = new RestTemplate();
             client.getForEntity(new UriTemplate(getUrl("/uaa/login", uaaPort)).toString(), String.class);
             client.getForEntity(new UriTemplate(getUrl("/api/index.html")).toString(), String.class);
-            logger.debug("Basic connectivity test passed");
+            logger.debug(() -> "Basic connectivity test passed");
         } catch (RestClientException e) {
             failTest();
         }

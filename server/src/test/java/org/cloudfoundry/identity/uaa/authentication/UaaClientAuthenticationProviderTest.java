@@ -2,12 +2,13 @@ package org.cloudfoundry.identity.uaa.authentication;
 
 import org.cloudfoundry.identity.uaa.account.UaaUserDetails;
 import org.cloudfoundry.identity.uaa.annotations.WithDatabaseContext;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 import org.cloudfoundry.identity.uaa.client.UaaClient;
 import org.cloudfoundry.identity.uaa.client.UaaClientDetailsUserDetailsService;
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.oauth.client.ClientConstants;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtClientAuthentication;
 import org.cloudfoundry.identity.uaa.user.UaaUser;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.cloudfoundry.identity.uaa.zone.MultitenantJdbcClientDetailsService;
@@ -15,7 +16,7 @@ import org.cloudfoundry.identity.uaa.zone.beans.IdentityZoneManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,8 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -43,14 +43,14 @@ import static org.mockito.Mockito.when;
 @WithDatabaseContext
 class UaaClientAuthenticationProviderTest {
 
-    private RandomValueStringGenerator generator = new RandomValueStringGenerator();
+    private AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator();
     private MultitenantJdbcClientDetailsService jdbcClientDetailsService;
     private ClientDetails client;
     private ClientDetailsAuthenticationProvider authenticationProvider;
     private JwtClientAuthentication jwtClientAuthentication;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -61,18 +61,18 @@ class UaaClientAuthenticationProviderTest {
         jwtClientAuthentication = mock(JwtClientAuthentication.class);
         when(mockIdentityZoneManager.getCurrentIdentityZoneId()).thenReturn(IdentityZone.getUaaZoneId());
 
-        jdbcClientDetailsService = new MultitenantJdbcClientDetailsService(jdbcTemplate, mockIdentityZoneManager, passwordEncoder);
+        jdbcClientDetailsService = new MultitenantJdbcClientDetailsService(namedJdbcTemplate, mockIdentityZoneManager, passwordEncoder);
         UaaClientDetailsUserDetailsService clientDetailsService = new UaaClientDetailsUserDetailsService(jdbcClientDetailsService);
         client = createClient();
         authenticationProvider = new ClientDetailsAuthenticationProvider(clientDetailsService, passwordEncoder, jwtClientAuthentication);
     }
 
-    public BaseClientDetails createClient() {
+    public UaaClientDetails createClient() {
         return createClient(null, null);
     }
 
-    public BaseClientDetails createClient(String addtionalKey, Object value) {
-        BaseClientDetails details = new BaseClientDetails(generator.generate(), "", "", "client_credentials", "uaa.resource");
+    public UaaClientDetails createClient(String addtionalKey, Object value) {
+        UaaClientDetails details = new UaaClientDetails(generator.generate(), "", "", "client_credentials", "uaa.resource");
         details.setClientSecret(SECRET);
         if (addtionalKey != null) {
             details.addAdditionalInformation(addtionalKey, value);
@@ -130,6 +130,19 @@ class UaaClientAuthenticationProviderTest {
         client = createClient(ClientConstants.ALLOW_PUBLIC, "true");
         UsernamePasswordAuthenticationToken a = getAuthenticationToken("authorization_code");
         authenticationProvider.additionalAuthenticationChecks(new UaaClient("client", "secret", Collections.emptyList(), client.getAdditionalInformation(), null), a);
+        assertNotNull(a);
+    }
+
+    @Test
+    void provider_authenticate_client_with_empty_password_public_string() {
+        IdentityZoneHolder.get().getConfig().getTokenPolicy().setRefreshTokenRotate(true);
+        UaaClientDetails clientDetails = new UaaClientDetails(generator.generate(), "", "", "password", "uaa.resource");
+        clientDetails.setClientSecret("");
+        jdbcClientDetailsService.addClientDetails(clientDetails);
+        client = clientDetails;
+        UsernamePasswordAuthenticationToken a = getAuthenticationToken("password");
+        when(a.getCredentials()).thenReturn("");
+        authenticationProvider.additionalAuthenticationChecks(new UaaClient("cf", passwordEncoder.encode(""), Collections.emptyList(), client.getAdditionalInformation(), null), a);
         assertNotNull(a);
     }
 
@@ -212,7 +225,7 @@ class UaaClientAuthenticationProviderTest {
 
     @Test
     void provider_authenticate_client_without_secret_user_without_secret() {
-        client = new BaseClientDetails(generator.generate(), "", "", "client_credentials", "uaa.resource");
+        client = new UaaClientDetails(generator.generate(), "", "", "client_credentials", "uaa.resource");
         jdbcClientDetailsService.addClientDetails(client);
         UsernamePasswordAuthenticationToken a = mock(UsernamePasswordAuthenticationToken.class);
         UaaAuthenticationDetails uaaAuthenticationDetails = mock(UaaAuthenticationDetails.class);

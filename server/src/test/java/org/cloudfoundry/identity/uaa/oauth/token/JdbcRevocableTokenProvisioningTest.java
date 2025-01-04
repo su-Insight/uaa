@@ -4,15 +4,14 @@ import org.cloudfoundry.identity.uaa.annotations.WithDatabaseContext;
 import org.cloudfoundry.identity.uaa.audit.event.AbstractUaaEvent;
 import org.cloudfoundry.identity.uaa.audit.event.EntityDeletedEvent;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.resources.jdbc.LimitSqlAdapter;
 import org.cloudfoundry.identity.uaa.user.UaaUser;
 import org.cloudfoundry.identity.uaa.user.UaaUserPrototype;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.util.TimeServiceImpl;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.cloudfoundry.identity.uaa.zone.MultitenancyFixture;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +48,7 @@ class JdbcRevocableTokenProvisioningTest {
 
     private JdbcRevocableTokenProvisioning jdbcRevocableTokenProvisioning;
     private RevocableToken revocableToken;
-    private RandomValueStringGenerator generator;
+    private AlphanumericRandomValueStringGenerator generator;
     private Random random;
 
     @Autowired
@@ -60,7 +59,7 @@ class JdbcRevocableTokenProvisioningTest {
 
     @BeforeEach
     void setUp() {
-        generator = new RandomValueStringGenerator();
+        generator = new AlphanumericRandomValueStringGenerator();
         random = new Random();
 
         JdbcTemplate template = spy(jdbcTemplate);
@@ -88,7 +87,7 @@ class JdbcRevocableTokenProvisioningTest {
     @ParameterizedTest
     @ArgumentsSource(IdentityZoneArgumentsProvider.class)
     void onApplicationEventCallsInternalDeleteMethod(IdentityZone zone) {
-        BaseClientDetails clientDetails = new BaseClientDetails("id", "", "", "", "", "");
+        UaaClientDetails clientDetails = new UaaClientDetails("id", "", "", "", "", "");
         IdentityZoneHolder.set(zone);
         reset(jdbcRevocableTokenProvisioning);
         jdbcRevocableTokenProvisioning.onApplicationEvent(new EntityDeletedEvent<>(clientDetails, mock(UaaAuthentication.class), IdentityZoneHolder.getCurrentZoneId()));
@@ -99,7 +98,7 @@ class JdbcRevocableTokenProvisioningTest {
     @ParameterizedTest
     @ArgumentsSource(IdentityZoneArgumentsProvider.class)
     void revocableTokensDeletedWhenClientIs(IdentityZone zone) {
-        BaseClientDetails clientDetails = new BaseClientDetails(TEST_CLIENT_ID, "", "", "", "", "");
+        UaaClientDetails clientDetails = new UaaClientDetails(TEST_CLIENT_ID, "", "", "", "", "");
         IdentityZoneHolder.set(zone);
         jdbcRevocableTokenProvisioning.create(revocableToken, IdentityZoneHolder.get().getId());
         assertEquals(1, getCountOfTokens(jdbcTemplate));
@@ -187,7 +186,7 @@ class JdbcRevocableTokenProvisioningTest {
     void listUserTokenForClient() {
         List<RevocableToken> expectedTokens = new ArrayList<>();
         int count = 37;
-        RandomValueStringGenerator generator = new RandomValueStringGenerator(36);
+        AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator(36);
         for (int i = 0; i < count; i++) {
             RevocableToken revocableToken = createRevocableToken(generator.generate(), TEST_USER_ID, TEST_CLIENT_ID, random);
             jdbcRevocableTokenProvisioning.create(revocableToken, IdentityZoneHolder.get().getId());
@@ -387,7 +386,7 @@ class JdbcRevocableTokenProvisioningTest {
         String userId = TEST_USER_ID;
         List<RevocableToken> expectedTokens = new ArrayList<>();
         int count = 37;
-        RandomValueStringGenerator generator = new RandomValueStringGenerator(36);
+        AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator(36);
         for (int i = 0; i < count; i++) {
             if (client) {
                 userId = generator.generate();

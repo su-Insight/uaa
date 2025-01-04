@@ -1,6 +1,5 @@
 package org.cloudfoundry.identity.uaa.client;
 
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.mock.clients.AdminClientCreator;
 import org.cloudfoundry.identity.uaa.resources.SearchResults;
 import org.cloudfoundry.identity.uaa.scim.ScimGroup;
@@ -8,14 +7,14 @@ import org.cloudfoundry.identity.uaa.scim.ScimGroupMember;
 import org.cloudfoundry.identity.uaa.scim.endpoints.ScimGroupEndpoints;
 import org.cloudfoundry.identity.uaa.scim.endpoints.ScimUserEndpoints;
 import org.cloudfoundry.identity.uaa.test.UaaTestAccounts;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.zone.MultitenantJdbcClientDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.snippet.Snippet;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -41,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ClientMetadataAdminEndpointDocs extends AdminClientCreator {
 
-  private RandomValueStringGenerator generator = new RandomValueStringGenerator(8);
+  private AlphanumericRandomValueStringGenerator generator = new AlphanumericRandomValueStringGenerator(8);
   private MultitenantJdbcClientDetailsService clients;
   private String adminClientTokenWithClientsWrite;
   private String adminUserToken;
@@ -129,10 +128,10 @@ class ClientMetadataAdminEndpointDocs extends AdminClientCreator {
     String marissaToken = getUserAccessToken(clientId1);
 
     String clientId2 = generator.generate();
-    clients.addClientDetails(new BaseClientDetails(clientId2, null, null, null, null));
+    clients.addClientDetails(new UaaClientDetails(clientId2, null, null, null, null));
 
     String clientId3 = generator.generate();
-    clients.addClientDetails(new BaseClientDetails(clientId3, null, null, null, null));
+    clients.addClientDetails(new UaaClientDetails(clientId3, null, null, null, null));
     ClientMetadata client3Metadata = new ClientMetadata();
     client3Metadata.setClientId(clientId3);
     client3Metadata.setIdentityZoneId("uaa");
@@ -142,7 +141,7 @@ class ClientMetadataAdminEndpointDocs extends AdminClientCreator {
     performUpdate(client3Metadata);
 
     String clientId4 = generator.generate();
-    clients.addClientDetails(new BaseClientDetails(clientId4, null, null, null, null));
+    clients.addClientDetails(new UaaClientDetails(clientId4, null, null, null, null));
     ClientMetadata client4Metadata = new ClientMetadata();
     client4Metadata.setClientId(clientId4);
     client4Metadata.setIdentityZoneId("uaa");
@@ -213,7 +212,7 @@ class ClientMetadataAdminEndpointDocs extends AdminClientCreator {
     }
 
     private void createClient(String clientId) throws Exception {
-        BaseClientDetails newClient = new BaseClientDetails(clientId, "oauth", "oauth.approvals", "password", "oauth.login","http://redirect.url");
+        UaaClientDetails newClient = new UaaClientDetails(clientId, "oauth", "oauth.approvals", "password", "oauth.login","http://redirect.url");
         newClient.setClientSecret("secret");
         MockHttpServletRequestBuilder createClient = post("/oauth/clients")
             .header("Authorization", "Bearer " + adminUserToken)

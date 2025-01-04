@@ -19,16 +19,27 @@ import org.cloudfoundry.identity.uaa.audit.event.TokenIssuedEvent;
 import org.cloudfoundry.identity.uaa.authentication.Origin;
 import org.cloudfoundry.identity.uaa.authentication.UaaAuthentication;
 import org.cloudfoundry.identity.uaa.authentication.UaaPrincipal;
+import org.cloudfoundry.identity.uaa.client.UaaClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.common.DefaultOAuth2RefreshToken;
+import org.cloudfoundry.identity.uaa.oauth.common.OAuth2AccessToken;
+import org.cloudfoundry.identity.uaa.oauth.common.OAuth2RefreshToken;
 import org.cloudfoundry.identity.uaa.oauth.jwt.JwtHelper;
+import org.cloudfoundry.identity.uaa.oauth.openid.IdToken;
 import org.cloudfoundry.identity.uaa.oauth.openid.IdTokenCreationException;
 import org.cloudfoundry.identity.uaa.oauth.openid.IdTokenCreator;
 import org.cloudfoundry.identity.uaa.oauth.openid.IdTokenGranter;
 import org.cloudfoundry.identity.uaa.oauth.openid.UserAuthenticationData;
+import org.cloudfoundry.identity.uaa.oauth.provider.AuthorizationRequest;
+import org.cloudfoundry.identity.uaa.oauth.provider.OAuth2Authentication;
+import org.cloudfoundry.identity.uaa.oauth.provider.OAuth2Request;
+import org.cloudfoundry.identity.uaa.oauth.provider.TokenRequest;
 import org.cloudfoundry.identity.uaa.oauth.refresh.CompositeExpiringOAuth2RefreshToken;
 import org.cloudfoundry.identity.uaa.oauth.refresh.RefreshTokenCreator;
 import org.cloudfoundry.identity.uaa.oauth.refresh.RefreshTokenRequestData;
+import org.cloudfoundry.identity.uaa.oauth.provider.token.AuthorizationServerTokenServices;
 import org.cloudfoundry.identity.uaa.oauth.token.Claims;
 import org.cloudfoundry.identity.uaa.oauth.token.CompositeToken;
+import org.cloudfoundry.identity.uaa.oauth.provider.token.ResourceServerTokenServices;
 import org.cloudfoundry.identity.uaa.oauth.token.RevocableToken;
 import org.cloudfoundry.identity.uaa.oauth.token.RevocableTokenProvisioning;
 import org.cloudfoundry.identity.uaa.provider.oauth.ExternalOAuthUserAuthority;
@@ -41,6 +52,7 @@ import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.util.TimeService;
 import org.cloudfoundry.identity.uaa.util.JwtTokenSignedByThisUAA;
 import org.cloudfoundry.identity.uaa.util.UaaSecurityContextUtils;
+import org.cloudfoundry.identity.uaa.util.UaaStringUtils;
 import org.cloudfoundry.identity.uaa.util.UaaTokenUtils;
 import org.cloudfoundry.identity.uaa.zone.MultitenantClientServices;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
@@ -55,20 +67,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
-import org.springframework.security.oauth2.common.exceptions.InvalidScopeException;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
-import org.springframework.security.oauth2.provider.AuthorizationRequest;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.TokenRequest;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidGrantException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidScopeException;
+import org.cloudfoundry.identity.uaa.oauth.common.exceptions.InvalidTokenException;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -123,6 +126,7 @@ import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.USER_NAME
 import static org.cloudfoundry.identity.uaa.oauth.token.ClaimConstants.ZONE_ID;
 import static org.cloudfoundry.identity.uaa.oauth.token.RevocableToken.TokenType.ACCESS_TOKEN;
 import static org.cloudfoundry.identity.uaa.oauth.token.RevocableToken.TokenType.REFRESH_TOKEN;
+import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.CLIENT_AUTH_EMPTY;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.CLIENT_AUTH_NONE;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_CLIENT_CREDENTIALS;
 import static org.cloudfoundry.identity.uaa.oauth.token.TokenConstants.GRANT_TYPE_REFRESH_TOKEN;
@@ -139,6 +143,7 @@ import static org.springframework.util.StringUtils.hasText;
  * consumption of UAA tokens.
  *
  */
+@Component("tokenServices")
 public class UaaTokenServices implements AuthorizationServerTokenServices, ResourceServerTokenServices, ApplicationEventPublisherAware {
 
     private static final Set<String> NON_ADDITIONAL_ROOT_CLAIMS = Set.of(
@@ -243,7 +248,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
         boolean isRevocable = isRevocable(claims, isOpaque);
 
         UaaUser user = new UaaUser(userDatabase.retrieveUserPrototypeById(claims.getUserId()));
-        BaseClientDetails client = (BaseClientDetails) clientDetailsService.loadClientByClientId(claims.getCid());
+        UaaClientDetails client = (UaaClientDetails) clientDetailsService.loadClientByClientId(claims.getCid());
 
         long refreshTokenExpireMillis = claims.getExp().longValue() * MILLIS_PER_SECOND;
         if (new Date(refreshTokenExpireMillis).before(timeService.getCurrentDate())) {
@@ -339,8 +344,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
 
     Claims getClaims(Map<String, Object> refreshTokenClaims) {
         try {
-            String s = JsonUtils.writeValueAsString(refreshTokenClaims);
-            return JsonUtils.readValue(s, Claims.class);
+            return JsonUtils.convertValue(refreshTokenClaims, Claims.class);
         } catch (JsonUtils.JsonUtilException e) {
             logger.error("Cannot read token claims", e);
             throw new InvalidTokenException("Cannot read token claims", e);
@@ -450,8 +454,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
 
         compositeToken.setAdditionalInformation(info);
 
-        String content;
-        Map<String, ?> jwtAccessToken = createJWTAccessToken(
+        Map<String, Object> jwtAccessToken = createJWTAccessToken(
                 compositeToken,
                 user,
                 userAuthenticationTime,
@@ -463,23 +466,18 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
                 revocableHashSignature,
                 isRevocable,
                 additionalRootClaims);
-        try {
-            content = JsonUtils.writeValueAsString(jwtAccessToken);
-        } catch (JsonUtils.JsonUtilException e) {
-            throw new IllegalStateException("Cannot convert access token to JSON", e);
-        }
-        String token = JwtHelper.encode(content, getActiveKeyInfo()).getEncoded();
+        String token = JwtHelper.encode(jwtAccessToken, getActiveKeyInfo()).getEncoded();
         compositeToken.setValue(token);
-        BaseClientDetails clientDetails = (BaseClientDetails) clientDetailsService.loadClientByClientId(clientId);
+        UaaClientDetails clientDetails = (UaaClientDetails) clientDetailsService.loadClientByClientId(clientId);
 
         if (idTokenGranter.shouldSendIdToken(user, clientDetails, requestedScopes, grantType)) {
-            String idTokenContent;
+            IdToken idTokenContent;
             try {
-                idTokenContent = JsonUtils.writeValueAsString(idTokenCreator.create(clientDetails, user, userAuthenticationData));
+                idTokenContent = idTokenCreator.create(clientDetails, user, userAuthenticationData);
             } catch (RuntimeException | IdTokenCreationException ignored) {
                 throw new IllegalStateException("Cannot convert id token to JSON");
             }
-            String encodedIdTokenContent = JwtHelper.encode(idTokenContent, keyInfoService.getActiveKey()).getEncoded();
+            String encodedIdTokenContent = JwtHelper.encode(idTokenContent.getClaimMap(), keyInfoService.getActiveKey()).getEncoded();
             compositeToken.setIdTokenValue(encodedIdTokenContent);
         }
 
@@ -490,7 +488,8 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
 
     private static Map<String, Object> addRootClaimEntry(Map<String, Object> additionalRootClaims, String entry, String value) {
         Map<String, Object> claims = additionalRootClaims != null ? additionalRootClaims : new HashMap<>();
-        claims.put(entry, value);
+        // set externally none as client_auth_method if internally empty
+        claims.put(entry, CLIENT_AUTH_EMPTY.equals(value) ? CLIENT_AUTH_NONE : value);
         return claims;
     }
 
@@ -499,7 +498,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
             .orElseThrow(() -> new InternalAuthenticationServiceException("Unable to sign token, misconfigured JWT signing keys"));
     }
 
-    private Map<String, ?> createJWTAccessToken(OAuth2AccessToken token,
+    private Map<String, Object> createJWTAccessToken(OAuth2AccessToken token,
                                                 UaaUser user,
                                                 Date userAuthenticationTime,
                                                 Collection<GrantedAuthority> clientScopes,
@@ -548,7 +547,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
             claims.put(ZONE_ID,IdentityZoneHolder.get().getId());
         }
 
-        claims.put(AUD, resourceIds);
+        claims.put(AUD, UaaStringUtils.getValuesOrDefaultValue(resourceIds, clientId));
 
         for (String excludedClaim : getExcludedClaims()) {
             claims.remove(excludedClaim);
@@ -593,7 +592,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
         Set<String> authNContextClassRef = null;
 
         OAuth2Request oAuth2Request = authentication.getOAuth2Request();
-        BaseClientDetails client = (BaseClientDetails) clientDetailsService.loadClientByClientId(oAuth2Request.getClientId(), IdentityZoneHolder.get().getId());
+        UaaClientDetails client = (UaaClientDetails) clientDetailsService.loadClientByClientId(oAuth2Request.getClientId(), IdentityZoneHolder.get().getId());
         Collection<GrantedAuthority> clientScopes = null;
 
         // Clients should really by different kinds of users
@@ -905,7 +904,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
         }
         String clientId = (String)claims.get(CID);
         String userId = (String)claims.get(USER_ID);
-        BaseClientDetails client = (BaseClientDetails) clientDetailsService.loadClientByClientId(clientId, IdentityZoneHolder.get().getId());
+        UaaClientDetails client = (UaaClientDetails) clientDetailsService.loadClientByClientId(clientId, IdentityZoneHolder.get().getId());
         // Only check user access tokens
         if (null != userId) {
             ArrayList<String> tokenScopes = (ArrayList<String>) claims.get(SCOPE);

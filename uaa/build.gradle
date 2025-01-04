@@ -26,13 +26,11 @@ dependencies {
         exclude(module: "jna")
     }
     implementation(project(":cloudfoundry-identity-statsd-lib"))
+    implementation(project(":cloudfoundry-identity-model"))
+    implementation(libraries.springSecurityConfig)
+    implementation(libraries.springSecurityWeb)
     implementation(libraries.springBootStarter)
     implementation(libraries.springBootStarterWeb)
-    implementation(libraries.springSecurityOauth) {
-        exclude(module: "commons-codec")
-        exclude(module: "jackson-mapper-asl")
-        exclude(module: "spring-security-web")
-    }
     implementation(libraries.thymeLeaf) {
         exclude(module: "ognl")
     }
@@ -65,7 +63,6 @@ dependencies {
         exclude(module: "slf4j-api")
     }
     testImplementation(libraries.flywayCore)
-    testImplementation(libraries.googleAuth)
     testImplementation(libraries.hibernateValidator)
     testImplementation(libraries.junit)
     testImplementation(libraries.selenium)
@@ -74,7 +71,6 @@ dependencies {
         exclude(module: "mail")
         exclude(module: "activation")
     }
-    testImplementation(libraries.zxing)
     testImplementation(libraries.jsonAssert)
     testImplementation(libraries.jsonPathAssert)
     testImplementation(libraries.unboundIdScimSdk) {
@@ -87,15 +83,20 @@ dependencies {
     testImplementation(libraries.springContextSupport)
     testImplementation(libraries.springSessionJdbc)
     testImplementation(libraries.springTest)
-    testImplementation(libraries.springSecurityJwt)
     testImplementation(libraries.springSecurityLdap)
-    testImplementation(libraries.springSecuritySaml)
+    testImplementation(libraries.springSecuritySaml) {
+        exclude(module: "commons-httpclient")
+    }
     testImplementation(libraries.springSecurityTest)
+    testImplementation(libraries.springBootStarterMail)
     testImplementation(libraries.mockito)
     testImplementation(libraries.tomcatJdbc)
     testImplementation(libraries.springRestdocs)
-    testImplementation(libraries.javaxMail)
     testImplementation(libraries.greenmail)
+    testImplementation(libraries.jodaTime)
+    testImplementation(libraries.commonsIo)
+    testImplementation(libraries.owaspEsapi)
+    testImplementation(libraries.apacheHttpClient)
 }
 
 ext {

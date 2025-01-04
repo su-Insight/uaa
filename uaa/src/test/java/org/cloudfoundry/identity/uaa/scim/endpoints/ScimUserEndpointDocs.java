@@ -6,12 +6,12 @@ import org.cloudfoundry.identity.uaa.account.UserAccountStatus;
 import org.cloudfoundry.identity.uaa.approval.Approval;
 import org.cloudfoundry.identity.uaa.approval.ApprovalStore;
 import org.cloudfoundry.identity.uaa.constants.OriginKeys;
-import org.cloudfoundry.identity.uaa.login.util.RandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.mock.EndpointDocs;
 import org.cloudfoundry.identity.uaa.mock.util.MockMvcUtils;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.cloudfoundry.identity.uaa.scim.ScimUserProvisioning;
 import org.cloudfoundry.identity.uaa.user.UaaUserDatabase;
+import org.cloudfoundry.identity.uaa.util.AlphanumericRandomValueStringGenerator;
 import org.cloudfoundry.identity.uaa.util.JsonUtils;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder;
 import org.cloudfoundry.identity.uaa.zone.IdentityZoneSwitchingFilter;
@@ -211,7 +211,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("approvals").ignored().type(ARRAY).description("Approvals are not created at this time"),
             fieldWithPath("active").optional(true).type(BOOLEAN).description(userActiveDescription),
             fieldWithPath("verified").optional(true).type(BOOLEAN).description(userVerifiedDescription),
-            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription),
+            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription + " The `origin` value cannot be changed in an update operation."),
             fieldWithPath("zoneId").ignored().type(STRING).description(userZoneIdDescription),
             fieldWithPath("passwordLastModified").ignored().type(STRING).description(passwordLastModifiedDescription),
             fieldWithPath("externalId").optional(null).type(STRING).description(externalIdDescription),
@@ -271,7 +271,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
             fieldWithPath("approvals").ignored().type(ARRAY).description("Approvals are not created at this time"),
             fieldWithPath("active").optional(true).type(BOOLEAN).description(userActiveDescription),
             fieldWithPath("verified").optional(true).type(BOOLEAN).description(userVerifiedDescription),
-            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription),
+            fieldWithPath("origin").optional(OriginKeys.UAA).type(STRING).description(userOriginDescription + " The `origin` value cannot be changed in a patch operation."),
             fieldWithPath("zoneId").ignored().type(STRING).description(userZoneIdDescription),
             fieldWithPath("passwordLastModified").ignored().type(STRING).description(passwordLastModifiedDescription),
             fieldWithPath("externalId").optional(null).type(STRING).description(externalIdDescription),
@@ -354,7 +354,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
     }
 
     ScimUser createScimUserObject() {
-        String username = new RandomValueStringGenerator().generate() + "@test.org";
+        String username = new AlphanumericRandomValueStringGenerator().generate() + "@test.org";
         ScimUser user = new ScimUser(null, username, "given name", "family name");
         user.setPrimaryEmail(username);
         user.setPassword("secret");
@@ -724,7 +724,7 @@ class ScimUserEndpointDocs extends EndpointDocs {
     void getUserVerificationLink() throws Exception {
         String accessToken = testClient.getClientCredentialsOAuthAccessToken("admin", "adminsecret", "uaa.admin");
 
-        String email = "joel" + new RandomValueStringGenerator().generate() + "@example.com";
+        String email = "joel" + new AlphanumericRandomValueStringGenerator().generate() + "@example.com";
         ScimUser joel = new ScimUser(null, email, "Joel", "D'sa");
         joel.setVerified(false);
         joel.addEmail(email);
@@ -776,34 +776,6 @@ class ScimUserEndpointDocs extends EndpointDocs {
                 .accept(APPLICATION_JSON);
 
         mockMvc.perform(get)
-                .andExpect(status().isOk())
-                .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()),
-                        pathParameters, requestHeaders))
-        ;
-    }
-
-    @Test
-    void deleteMfaRegistration() throws Exception {
-        String accessToken = testClient.getClientCredentialsOAuthAccessToken("admin", "adminsecret", "uaa.admin");
-
-        String email = "tom.mugwort@example.com";
-        ScimUser tommy = new ScimUser(null, email, "Tom", "Mugwort");
-        tommy.setVerified(false);
-        tommy.addEmail(email);
-        tommy = userProvisioning.createUser(tommy, "pas5Word", IdentityZoneHolder.get().getId());
-
-        Snippet requestHeaders = requestHeaders(headerWithName("Authorization").description("Access token with `zones.<zoneId>.admin` or `uaa.admin` required."),
-                IDENTITY_ZONE_ID_HEADER,
-                IDENTITY_ZONE_SUBDOMAIN_HEADER);
-
-        Snippet pathParameters = pathParameters(
-                RequestDocumentation.parameterWithName("userId").description("Unique user identifier.")
-        );
-
-        MockHttpServletRequestBuilder delete = RestDocumentationRequestBuilders.delete("/Users/{userId}/mfa", tommy.getId())
-                .header("Authorization", "Bearer " + accessToken);
-
-        mockMvc.perform(delete)
                 .andExpect(status().isOk())
                 .andDo(document("{ClassName}/{methodName}", preprocessResponse(prettyPrint()),
                         pathParameters, requestHeaders))

@@ -4,6 +4,7 @@ import org.cloudfoundry.identity.uaa.annotations.WithDatabaseContext;
 import org.cloudfoundry.identity.uaa.audit.event.EntityDeletedEvent;
 import org.cloudfoundry.identity.uaa.authentication.SystemAuthentication;
 import org.cloudfoundry.identity.uaa.oauth.client.ClientConstants;
+import org.cloudfoundry.identity.uaa.provider.ClientAlreadyExistsException;
 import org.cloudfoundry.identity.uaa.zone.IdentityZone;
 import org.cloudfoundry.identity.uaa.zone.MultitenantJdbcClientDetailsService;
 import org.cloudfoundry.identity.uaa.zone.beans.IdentityZoneManager;
@@ -16,14 +17,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.util.RandomValueStringGenerator;
-import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.NoSuchClientException;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import org.cloudfoundry.identity.uaa.oauth.common.util.RandomValueStringGenerator;
+import org.cloudfoundry.identity.uaa.oauth.provider.ClientDetails;
+import org.cloudfoundry.identity.uaa.provider.NoSuchClientException;
 import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
@@ -78,6 +78,9 @@ class ClientAdminBootstrapTests {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
+
     private String autoApproveId;
 
     private String allowPublicId;
@@ -90,7 +93,7 @@ class ClientAdminBootstrapTests {
         IdentityZoneManager mockIdentityZoneManager = mock(IdentityZoneManager.class);
         when(mockIdentityZoneManager.getCurrentIdentityZoneId()).thenReturn(IdentityZone.getUaaZoneId());
 
-        multitenantJdbcClientDetailsService = spy(new MultitenantJdbcClientDetailsService(jdbcTemplate, mockIdentityZoneManager, passwordEncoder));
+        multitenantJdbcClientDetailsService = spy(new MultitenantJdbcClientDetailsService(namedJdbcTemplate, mockIdentityZoneManager, passwordEncoder));
 
         clientMetadataProvisioning = new JdbcClientMetadataProvisioning(multitenantJdbcClientDetailsService, jdbcTemplate);
 
@@ -416,7 +419,7 @@ class ClientAdminBootstrapTests {
         @Test
         void overrideClient() {
             String clientId = randomValueStringGenerator.generate();
-            BaseClientDetails foo = new BaseClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
+            UaaClientDetails foo = new UaaClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
             foo.setClientSecret("secret");
             multitenantJdbcClientDetailsService.addClientDetails(foo);
             reset(multitenantJdbcClientDetailsService);
@@ -456,7 +459,7 @@ class ClientAdminBootstrapTests {
             @Test
             void overrideClient_usingDefaultOverride() {
                 String clientId = randomValueStringGenerator.generate();
-                BaseClientDetails foo = new BaseClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
+                UaaClientDetails foo = new UaaClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
                 foo.setClientSecret("secret");
                 multitenantJdbcClientDetailsService.addClientDetails(foo);
                 reset(multitenantJdbcClientDetailsService);
@@ -478,7 +481,7 @@ class ClientAdminBootstrapTests {
         @Test
         void overrideClientWithEmptySecret() {
             String clientId = randomValueStringGenerator.generate();
-            BaseClientDetails foo = new BaseClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
+            UaaClientDetails foo = new UaaClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
             foo.setClientSecret("secret");
             multitenantJdbcClientDetailsService.addClientDetails(foo);
 
@@ -503,7 +506,7 @@ class ClientAdminBootstrapTests {
         @Test
         void doNotOverrideClientWithNullSecret() {
             String clientId = randomValueStringGenerator.generate();
-            BaseClientDetails foo = new BaseClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
+            UaaClientDetails foo = new UaaClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
             foo.setClientSecret("secret");
             multitenantJdbcClientDetailsService.addClientDetails(foo);
 
@@ -528,7 +531,7 @@ class ClientAdminBootstrapTests {
         @Test
         void overrideClientByDefault() {
             String clientId = randomValueStringGenerator.generate();
-            BaseClientDetails foo = new BaseClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
+            UaaClientDetails foo = new UaaClientDetails(clientId, "", "openid", "client_credentials,password", "uaa.none");
             foo.setClientSecret("secret");
             multitenantJdbcClientDetailsService.addClientDetails(foo);
             reset(multitenantJdbcClientDetailsService);
@@ -711,7 +714,7 @@ class ClientAdminBootstrapTests {
     private static void createClientInDb(
             final String clientId,
             final MultitenantJdbcClientDetailsService multitenantJdbcClientDetailsService) {
-        BaseClientDetails foo = new BaseClientDetails(clientId, "none", "openid", "authorization_code,refresh_token", "uaa.none");
+        UaaClientDetails foo = new UaaClientDetails(clientId, "none", "openid", "authorization_code,refresh_token", "uaa.none");
         foo.setClientSecret("secret");
         foo.setRegisteredRedirectUri(Collections.singleton("http://localhost/callback"));
         multitenantJdbcClientDetailsService.addClientDetails(foo);
