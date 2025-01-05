@@ -18,6 +18,7 @@ versions.seleniumVersion = "4.18.1"
 versions.braveVersion = "6.0.3"
 versions.jacksonVersion = "2.17.1"
 versions.jsonPathVersion = "2.9.0"
+versions.opensaml = "4.0.1" // Spring Security 5.8.x allows OpenSAML 3 or 4. OpenSAML 3 has reached its end-of-life. Spring Security 6 drops support for 3, using 4.
 
 // Versions we're overriding from the Spring Boot Bom (Dependabot does not issue PRs to bump these versions, so we need to manually bump them)
 ext["mariadb.version"] = "2.7.12" // Bumping to v3 breaks some pipeline jobs (and compatibility with Amazon Aurora MySQL), so pinning to v2 for now. v2 (current version) is stable and will be supported until about September 2025 (https://mariadb.com/kb/en/about-mariadb-connector-j/).
@@ -103,7 +104,7 @@ libraries.springRetry = "org.springframework.retry:spring-retry"
 libraries.springSecurityConfig = "org.springframework.security:spring-security-config:${versions.springSecurityVersion}"
 libraries.springSecurityCore = "org.springframework.security:spring-security-core:${versions.springSecurityVersion}"
 libraries.springSecurityLdap = "org.springframework.security:spring-security-ldap:${versions.springSecurityVersion}"
-libraries.springSecuritySaml = "org.springframework.security.extensions:spring-security-saml2-core:${versions.springSecuritySamlVersion}"
+libraries.springSecuritySamlServiceProvider = "org.springframework.security:spring-security-saml2-service-provider:${versions.springSecurityVersion}"
 libraries.springSecurityTaglibs = "org.springframework.security:spring-security-taglibs:${versions.springSecurityVersion}"
 libraries.springSecurityTest = "org.springframework.security:spring-security-test:${versions.springSecurityVersion}"
 libraries.springSecurityWeb = "org.springframework.security:spring-security-web:${versions.springSecurityVersion}"
