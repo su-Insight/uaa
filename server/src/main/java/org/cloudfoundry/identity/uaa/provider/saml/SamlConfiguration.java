@@ -1,10 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:security="http://www.springframework.org/schema/security"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">
+package org.cloudfoundry.identity.uaa.provider.saml;
 
+import lombok.Data;
+import org.cloudfoundry.identity.uaa.saml.SamlKey;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
+
+@Data
+@Configuration
+@ConfigurationProperties(prefix="login.saml")
+public class SamlConfiguration {
+    private String activeKeyId;
+
+    private Map<String, SamlKey> keys;
+
+    private Boolean wantAssertionSigned = true;
+
+    public SamlKey getActiveSamlKey() {
+        return keys.get(activeKeyId);
+    }
+
+}
+
+
+/* --- previous XML configuration ---
 
     <!-- Register authentication manager with SAML provider -->
     <security:authentication-manager id="samlAuthenticationManager">
@@ -57,10 +77,6 @@
         <property name="metadata" ref="metadata"/>
     </bean>
 
-    <bean id="samlEntityID" class="java.lang.String">
-        <constructor-arg value="${login.entityID:unit-test-sp}"/>
-    </bean>
-
     <bean id="samlSPAlias" class="java.lang.String">
         <constructor-arg value="${login.saml.entityIDAlias:${login.entityID:unit-test-sp}}"/>
     </bean>
@@ -81,6 +97,7 @@
         <property name="entityId" ref="samlEntityID"/>
         <property name="keyManager" ref="zoneAwareSamlSpKeyManager"/>
     </bean>
+
 
     <!-- Filter automatically generates default SP metadata -->
     <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
@@ -302,7 +319,7 @@
     <bean id="fixedHttpMetaDataProvider" class="org.cloudfoundry.identity.uaa.provider.saml.FixedHttpMetaDataProvider" />
 
     <bean id="defaultSamlConfig" class="org.cloudfoundry.identity.uaa.provider.saml.SamlConfigurationBean">
-        <property name="signatureAlgorithm" value="${login.saml.signatureAlgorithm:SHA256}"/>
+        <property name="signatureAlgorithm" value="${login.saml.signatureAlgorithm:SHA1}"/>
     </bean>
 
     <beans profile="fileMetadata">
@@ -316,4 +333,5 @@
             <constructor-arg value="${login.idpMetadata:null}"/>
         </bean>
     </beans>
-</beans>
+
+--- end of previous xml configuration --- */
